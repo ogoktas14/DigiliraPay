@@ -216,7 +216,8 @@ class digiliraPayApi {
         let authCredentials = digilira.auth.init(name: dictionary?["name"] as? String,
                                                   surname: dictionary?["surname"] as? String,
                                                   token: dictionary?["token"] as? String,
-                                                  status: dictionary?["status"] as? Int64
+                                                  status: dictionary?["status"] as? Int64,
+                                                  pincode: dictionary?["pincode"] as? Int32
         )
         return authCredentials
         
@@ -255,7 +256,8 @@ class digiliraPayApi {
                                                        ltcAddress: json["ltcAddress"] as? String,
                                                        wallet: json["wallet"] as? String,
                                                        token: json["token"] as? String,
-                                                       status: json["status"] as? Int64)
+                                                       status: json["status"] as? Int64,
+                                                       pincode: json["pincode"] as? Int32)
                      
                     try? Locksmith.deleteDataForUserAccount(userAccount: "auth")
                     
@@ -263,7 +265,8 @@ class digiliraPayApi {
                         "token": json["token"] as Any,
                         "name": json["firstName"] as Any,
                         "surname": json["lastName"] as Any,
-                        "status": json["status"] as Any
+                        "status": json["status"] as Any,
+                        "pincode": json["pincode"] as Any
                     ], forUserAccount: "auth")
             
                     returnCompletion(kullanici)

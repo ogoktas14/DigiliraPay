@@ -68,6 +68,7 @@ class MainScreen: UIViewController {
     var walletOperationsViewOrigin = CGPoint(x: 0, y: 0)
     
     var kullanici: digilira.user?
+    var pinkodaktivasyon: Bool? = false
     
     var Balances: NodeService.DTO.AddressAssetsBalance?
     var Filtered: [NodeService.DTO.AssetBalance?] = []
@@ -125,7 +126,9 @@ class MainScreen: UIViewController {
         
         
         //BC.rollback(wallet: kullanici!.wallet!)
-        
+        if pinkodaktivasyon! {
+            openPinView()
+        }
         
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(refreshWeatherData(_:)), for: UIControl.Event.valueChanged)
@@ -206,7 +209,7 @@ class MainScreen: UIViewController {
     @objc func onDidReceiveData(_ sender: Notification) {
         // Do what you need, including updating IBOutlets
         self.QR = UserDefaults.standard.object(forKey: "QRURL") as! String?
-        
+        self.dismissVErifyAccountView(user: kullanici!)
         getOrder(address: self.QR!)
         
         

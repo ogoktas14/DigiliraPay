@@ -180,6 +180,7 @@ class LetsStartVC: UIViewController {
         {
             let vc = segue.destination as? MainScreen
             vc?.kullanici = kullanici
+            vc?.pinkodaktivasyon = true
         }
     }
     

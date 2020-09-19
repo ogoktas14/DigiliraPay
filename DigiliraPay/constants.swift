@@ -66,6 +66,7 @@ struct digilira {
         var wallet: String?
         var token: String?
         var status: Int64?
+        var pincode: Int32?
     }
     
     struct odemeStatus: Encodable {
@@ -86,6 +87,7 @@ struct digilira {
         var surname: String?
         var token: String?
         var status: Int64?
+        var pincode: Int32?
     }
     struct wallet: Encodable {
         var seed: String?
