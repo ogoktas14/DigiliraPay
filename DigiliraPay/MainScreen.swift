@@ -251,8 +251,11 @@ class MainScreen: UIViewController {
     
     
     @objc private func refreshWeatherData(_ sender: Any) {
+        if isSuccessView {
+            refreshControl.endRefreshing()
+            return
+        }
         fetch()
-        
         coinTableView.reloadData()
         refreshControl.endRefreshing()
         
@@ -456,6 +459,7 @@ class MainScreen: UIViewController {
     
     @objc func closeSendView()
     {
+        profileMenuButton.isHidden = false
         closeCoinSendView()
         dismissLoadView()
     }
@@ -804,6 +808,9 @@ extension MainScreen: TransactionPopupDelegate2 {
         
         menuView.isHidden = false
         
+            accountButton.isHidden = false
+            profileMenuButton.isHidden = false
+        
         UIView.animate(withDuration: 1) {
             self.successView.frame.origin.y = (self.contentView.frame.maxY)
             self.successView.alpha = 0
@@ -858,7 +865,7 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
             }
             
             sendMoneyBackButton.isHidden = true
-            profileMenuButton.isHidden = false
+
             let headerHeight = headerView.frame.size.height
             sendMoneyView.removeFromSuperview()
             UIView.animate(withDuration: 0.4, animations: {
@@ -915,6 +922,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
             UIView.animate(withDuration: 0.3)
             {
                 self.qrView.frame.origin.y = 0
+                self.qrView.alpha = 1
             }
             
         case 1:
@@ -940,6 +948,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
             UIView.animate(withDuration: 0.3)
             {
                 self.qrView.frame.origin.y = 0
+                self.qrView.alpha = 1
             }
         default:
             print("ok")
@@ -978,6 +987,8 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
     
     func showSuccess(mode: Int)
     {
+        accountButton.isHidden = true
+        profileMenuButton.isHidden = true
         
         if isSuccessView {
 
@@ -1075,7 +1086,7 @@ extension MainScreen: LoadCoinDelegate
     {
         isShowLoadCoinView = false
         sendMoneyBackButton.isHidden = true
-        profileMenuButton.isHidden = false
+  
         UIView.animate(withDuration: 0.3) {
             self.qrView.frame.origin.y = self.view.frame.height
         }
@@ -1089,6 +1100,7 @@ extension MainScreen: VerifyAccountDelegate
         self.kullanici = user
         UIView.animate(withDuration: 0.3) {
             self.qrView.frame.origin.y = self.view.frame.height
+            self.qrView.alpha = 0
         }
         menuXib.isHidden = false
         bottomView.isHidden = false
