@@ -1,0 +1,969 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		002B281A2386E5E6007BE3AD /* digiSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 002B28192386E5E6007BE3AD /* digiSocket.swift */; };
+		003B35DC23564409004EE63F /* TransactionPopupDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 003B35DB23564409004EE63F /* TransactionPopupDelegate.swift */; };
+		0060807E23795453006FFBD2 /* constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0060807D23795453006FFBD2 /* constants.swift */; };
+		00608083237B404F006FFBD2 /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00608082237B404F006FFBD2 /* LocalAuthentication.framework */; };
+		006B1EE3234CA67B0045B6B4 /* func.swift in Sources */ = {isa = PBXBuildFile; fileRef = 006B1EE2234CA67B0045B6B4 /* func.swift */; };
+		006B1EE6234CC25B0045B6B4 /* custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 006B1EE5234CC25B0045B6B4 /* custom.swift */; };
+		006B1EE8234CC2720045B6B4 /* dPayApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 006B1EE7234CC2720045B6B4 /* dPayApi.swift */; };
+		0080FAC4234CA0B900B6D636 /* blockchain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0080FAC3234CA0B900B6D636 /* blockchain.swift */; };
+		00C592B223A556AA0036A346 /* TransactionDetailPopup.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00C592B123A556AA0036A346 /* TransactionDetailPopup.xib */; };
+		28AA4F6D6F9B6977B988457B /* Pods_DigiliraPay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B7278F70D172AF69D354796 /* Pods_DigiliraPay.framework */; };
+		880541F62319692D004EE85F /* TableViewCellExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880541F52319692C004EE85F /* TableViewCellExtension.swift */; };
+		880541FA2319702B004EE85F /* CoinTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880541F82319702B004EE85F /* CoinTableViewCell.swift */; };
+		880541FB2319702B004EE85F /* CoinTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 880541F92319702B004EE85F /* CoinTableViewCell.xib */; };
+		880664EF22FEFF5B00C4DF69 /* OnBoardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880664EE22FEFF5B00C4DF69 /* OnBoardingView.swift */; };
+		88114F622321602800AB3B5A /* ProfileUpgradeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 88114F612321602800AB3B5A /* ProfileUpgradeView.xib */; };
+		88114F642321604100AB3B5A /* ProfilUpgradeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88114F632321604100AB3B5A /* ProfilUpgradeView.swift */; };
+		88114F6623216A8E00AB3B5A /* sendWithQR.xib in Resources */ = {isa = PBXBuildFile; fileRef = 88114F6523216A8E00AB3B5A /* sendWithQR.xib */; };
+		88114F6823216A9500AB3B5A /* sendWithQR.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88114F6723216A9500AB3B5A /* sendWithQR.swift */; };
+		88114F6A2321703800AB3B5A /* SendWithQrDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88114F692321703800AB3B5A /* SendWithQrDelegate.swift */; };
+		882AAB0322FC96DD004CDAA6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882AAB0222FC96DD004CDAA6 /* AppDelegate.swift */; };
+		882AAB0522FC96DD004CDAA6 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882AAB0422FC96DD004CDAA6 /* SceneDelegate.swift */; };
+		882AAB0722FC96DD004CDAA6 /* OnBoardingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882AAB0622FC96DD004CDAA6 /* OnBoardingVC.swift */; };
+		882AAB0A22FC96DD004CDAA6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB0822FC96DD004CDAA6 /* Main.storyboard */; };
+		882AAB0C22FC96DE004CDAA6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB0B22FC96DE004CDAA6 /* Assets.xcassets */; };
+		882AAB0F22FC96DE004CDAA6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB0D22FC96DE004CDAA6 /* LaunchScreen.storyboard */; };
+		882AAB3E22FCAAEE004CDAA6 /* Montserrat-MediumItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB1922FCAAEE004CDAA6 /* Montserrat-MediumItalic.otf */; };
+		882AAB3F22FCAAEE004CDAA6 /* Montserrat-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB1A22FCAAEE004CDAA6 /* Montserrat-Bold.otf */; };
+		882AAB4022FCAAEE004CDAA6 /* Montserrat-BlackItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB1B22FCAAEE004CDAA6 /* Montserrat-BlackItalic.otf */; };
+		882AAB4122FCAAEE004CDAA6 /* SIL Open Font License.txt in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB1C22FCAAEE004CDAA6 /* SIL Open Font License.txt */; };
+		882AAB4222FCAAEE004CDAA6 /* MontserratAlternates-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB1D22FCAAEE004CDAA6 /* MontserratAlternates-Black.otf */; };
+		882AAB4322FCAAEE004CDAA6 /* MontserratAlternates-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB1E22FCAAEE004CDAA6 /* MontserratAlternates-LightItalic.otf */; };
+		882AAB4422FCAAEE004CDAA6 /* MontserratAlternates-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB1F22FCAAEE004CDAA6 /* MontserratAlternates-Medium.otf */; };
+		882AAB4522FCAAEE004CDAA6 /* Montserrat-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB2022FCAAEE004CDAA6 /* Montserrat-BoldItalic.otf */; };
+		882AAB4622FCAAEE004CDAA6 /* Montserrat-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB2122FCAAEE004CDAA6 /* Montserrat-Light.otf */; };
+		882AAB4722FCAAEE004CDAA6 /* Montserrat-ThinItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB2222FCAAEE004CDAA6 /* Montserrat-ThinItalic.otf */; };
+		882AAB4822FCAAEE004CDAA6 /* Montserrat-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB2322FCAAEE004CDAA6 /* Montserrat-Thin.otf */; };
+		882AAB4922FCAAEE004CDAA6 /* MontserratAlternates-MediumItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB2422FCAAEE004CDAA6 /* MontserratAlternates-MediumItalic.otf */; };
+		882AAB4A22FCAAEE004CDAA6 /* Montserrat-ExtraLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB2522FCAAEE004CDAA6 /* Montserrat-ExtraLight.otf */; };
+		882AAB4B22FCAAEE004CDAA6 /* MontserratAlternates-BlackItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB2622FCAAEE004CDAA6 /* MontserratAlternates-BlackItalic.otf */; };
+		882AAB4C22FCAAEE004CDAA6 /* MontserratAlternates-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB2722FCAAEE004CDAA6 /* MontserratAlternates-Bold.otf */; };
+		882AAB4D22FCAAEE004CDAA6 /* MontserratAlternates-ExtraLightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB2822FCAAEE004CDAA6 /* MontserratAlternates-ExtraLightItalic.otf */; };
+		882AAB4E22FCAAEE004CDAA6 /* MontserratAlternates-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB2922FCAAEE004CDAA6 /* MontserratAlternates-Thin.otf */; };
+		882AAB4F22FCAAEE004CDAA6 /* Montserrat-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB2A22FCAAEE004CDAA6 /* Montserrat-LightItalic.otf */; };
+		882AAB5022FCAAEE004CDAA6 /* Montserrat-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB2B22FCAAEE004CDAA6 /* Montserrat-Medium.otf */; };
+		882AAB5122FCAAEE004CDAA6 /* MontserratAlternates-SemiBoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB2C22FCAAEE004CDAA6 /* MontserratAlternates-SemiBoldItalic.otf */; };
+		882AAB5222FCAAEE004CDAA6 /* Montserrat-SemiBoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB2D22FCAAEE004CDAA6 /* Montserrat-SemiBoldItalic.otf */; };
+		882AAB5322FCAAEE004CDAA6 /* Montserrat-ExtraBoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB2E22FCAAEE004CDAA6 /* Montserrat-ExtraBoldItalic.otf */; };
+		882AAB5422FCAAEE004CDAA6 /* Montserrat-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB2F22FCAAEE004CDAA6 /* Montserrat-Italic.otf */; };
+		882AAB5522FCAAEE004CDAA6 /* MontserratAlternates-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB3022FCAAEE004CDAA6 /* MontserratAlternates-SemiBold.otf */; };
+		882AAB5622FCAAEE004CDAA6 /* Montserrat-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB3122FCAAEE004CDAA6 /* Montserrat-Regular.otf */; };
+		882AAB5722FCAAEE004CDAA6 /* MontserratAlternates-ExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB3222FCAAEE004CDAA6 /* MontserratAlternates-ExtraBold.otf */; };
+		882AAB5822FCAAEE004CDAA6 /* MontserratAlternates-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB3322FCAAEE004CDAA6 /* MontserratAlternates-BoldItalic.otf */; };
+		882AAB5922FCAAEE004CDAA6 /* Montserrat-ExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB3422FCAAEE004CDAA6 /* Montserrat-ExtraBold.otf */; };
+		882AAB5A22FCAAEE004CDAA6 /* Montserrat-ExtraLightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB3522FCAAEE004CDAA6 /* Montserrat-ExtraLightItalic.otf */; };
+		882AAB5B22FCAAEE004CDAA6 /* MontserratAlternates-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB3622FCAAEE004CDAA6 /* MontserratAlternates-Light.otf */; };
+		882AAB5C22FCAAEE004CDAA6 /* MontserratAlternates-ExtraLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB3722FCAAEE004CDAA6 /* MontserratAlternates-ExtraLight.otf */; };
+		882AAB5D22FCAAEE004CDAA6 /* MontserratAlternates-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB3822FCAAEE004CDAA6 /* MontserratAlternates-Regular.otf */; };
+		882AAB5E22FCAAEE004CDAA6 /* MontserratAlternates-ThinItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB3922FCAAEE004CDAA6 /* MontserratAlternates-ThinItalic.otf */; };
+		882AAB5F22FCAAEE004CDAA6 /* Montserrat-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB3A22FCAAEE004CDAA6 /* Montserrat-Black.otf */; };
+		882AAB6022FCAAEE004CDAA6 /* MontserratAlternates-ExtraBoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB3B22FCAAEE004CDAA6 /* MontserratAlternates-ExtraBoldItalic.otf */; };
+		882AAB6122FCAAEE004CDAA6 /* MontserratAlternates-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB3C22FCAAEE004CDAA6 /* MontserratAlternates-Italic.otf */; };
+		882AAB6222FCAAEE004CDAA6 /* Montserrat-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB3D22FCAAEE004CDAA6 /* Montserrat-SemiBold.otf */; };
+		882B9B6722FEFAA500D6E7B6 /* OnBoardingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 882B9B6622FEFAA500D6E7B6 /* OnBoardingView.xib */; };
+		882E99BD232301BB0061C7AC /* LetsStartSkipDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882E99BC232301BB0061C7AC /* LetsStartSkipDelegate.swift */; };
+		88309EB2231E73C600F96C05 /* TransactionPopup.xib in Resources */ = {isa = PBXBuildFile; fileRef = 88309EB1231E73C600F96C05 /* TransactionPopup.xib */; };
+		88309EB4231E73DC00F96C05 /* TransactionPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88309EB3231E73DC00F96C05 /* TransactionPopup.swift */; };
+		88309EB8231E7FC600F96C05 /* QRView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 88309EB7231E7FC600F96C05 /* QRView.xib */; };
+		88309EBA231E7FD200F96C05 /* QRView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88309EB9231E7FD200F96C05 /* QRView.swift */; };
+		88309EBE231FD08500F96C05 /* LoadCoinDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88309EBD231FD08500F96C05 /* LoadCoinDelegate.swift */; };
+		88309EC0231FD36000F96C05 /* VerifyAccountView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 88309EBF231FD36000F96C05 /* VerifyAccountView.xib */; };
+		88309EC2231FD38200F96C05 /* VerifyAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88309EC1231FD38200F96C05 /* VerifyAccountView.swift */; };
+		885C1662233371C00018D5EF /* LetsStartWordsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 885C1661233371C00018D5EF /* LetsStartWordsView.swift */; };
+		888F26AF233E89B800AB7E4C /* PinView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 888F26AE233E89B800AB7E4C /* PinView.xib */; };
+		888F26B1233E8DF500AB7E4C /* PinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888F26B0233E8DF500AB7E4C /* PinView.swift */; };
+		888F26B3233E9DF700AB7E4C /* PinViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888F26B2233E9DF700AB7E4C /* PinViewDelegate.swift */; };
+		8891704523058673005AAA02 /* LetsStartVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891704423058673005AAA02 /* LetsStartVC.swift */; };
+		889F2A2123158BAB00ACD656 /* MenuView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 889F2A2023158BAB00ACD656 /* MenuView.xib */; };
+		889F2A2323158C5D00ACD656 /* ProfileMenuview.xib in Resources */ = {isa = PBXBuildFile; fileRef = 889F2A2223158C5D00ACD656 /* ProfileMenuview.xib */; };
+		889F2A2523158D5400ACD656 /* ProfileMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889F2A2423158D5400ACD656 /* ProfileMenuView.swift */; };
+		889F2A272316D8D400ACD656 /* Languages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889F2A262316D8D400ACD656 /* Languages.swift */; };
+		88A6BA45232020E7002640D6 /* VerifyAccountDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A6BA44232020E7002640D6 /* VerifyAccountDelegate.swift */; };
+		88A6BA4723203570002640D6 /* LegalView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 88A6BA4623203570002640D6 /* LegalView.xib */; };
+		88A6BA4923203580002640D6 /* LegalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A6BA4823203580002640D6 /* LegalView.swift */; };
+		88A6BA4B232039D7002640D6 /* LegalDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A6BA4A232039D7002640D6 /* LegalDelegate.swift */; };
+		88A6BA512321485A002640D6 /* ImportAccountVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A6BA502321485A002640D6 /* ImportAccountVC.swift */; };
+		88BEDFAE23101AC80003C371 /* Verify&StartView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 88BEDFAD23101AC80003C371 /* Verify&StartView.xib */; };
+		88BEDFB023101AD80003C371 /* Verify&StartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BEDFAF23101AD80003C371 /* Verify&StartView.swift */; };
+		88CA93612319741A008F894B /* MenuViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CA93602319741A008F894B /* MenuViewDelegate.swift */; };
+		88CA93642319792A008F894B /* WalletView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 88CA93632319792A008F894B /* WalletView.xib */; };
+		88CA93662319793B008F894B /* WalletView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CA93652319793B008F894B /* WalletView.swift */; };
+		88CA9368231979C3008F894B /* WalletOperationButtonSView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 88CA9367231979C3008F894B /* WalletOperationButtonSView.xib */; };
+		88CA936A231979CD008F894B /* WalletOperationButtonSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CA9369231979CD008F894B /* WalletOperationButtonSView.swift */; };
+		88CA936D2319A6C6008F894B /* transactionHistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CA936B2319A6C6008F894B /* transactionHistoryCell.swift */; };
+		88CA936E2319A6C6008F894B /* transactionHistoryCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 88CA936C2319A6C6008F894B /* transactionHistoryCell.xib */; };
+		88CA9370231A4750008F894B /* TransactionDetailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 88CA936F231A4750008F894B /* TransactionDetailView.xib */; };
+		88CA9372231A475F008F894B /* TransactionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CA9371231A475F008F894B /* TransactionDetailView.swift */; };
+		88CA9377231A488A008F894B /* TransactionHistoryDetailCellHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CA9375231A488A008F894B /* TransactionHistoryDetailCellHeader.swift */; };
+		88CA9378231A488A008F894B /* TransactionHistoryDetailCellHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 88CA9376231A488A008F894B /* TransactionHistoryDetailCellHeader.xib */; };
+		88CA937B231A48A0008F894B /* TransactionHistoryDetailCellDeatils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CA9379231A48A0008F894B /* TransactionHistoryDetailCellDeatils.swift */; };
+		88CA937C231A48A0008F894B /* TransactionHistoryDetailCellDeatils.xib in Resources */ = {isa = PBXBuildFile; fileRef = 88CA937A231A48A0008F894B /* TransactionHistoryDetailCellDeatils.xib */; };
+		88CA937F231A4AE6008F894B /* UIViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CA937E231A4AE6008F894B /* UIViewExtensions.swift */; };
+		88CA9381231A4B04008F894B /* UIScrollViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CA9380231A4B04008F894B /* UIScrollViewExtensions.swift */; };
+		88CA9383231A5F46008F894B /* TransactionDetailCloseDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CA9382231A5F46008F894B /* TransactionDetailCloseDelegate.swift */; };
+		88CA9385231AFD2A008F894B /* CoinSendView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 88CA9384231AFD2A008F894B /* CoinSendView.xib */; };
+		88CA9387231AFD3E008F894B /* CoinSendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CA9386231AFD3E008F894B /* CoinSendView.swift */; };
+		88CA9389231B9866008F894B /* OperationButtonsDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CA9388231B9866008F894B /* OperationButtonsDelegate.swift */; };
+		88CA938B231B9E1C008F894B /* SendCoinDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CA938A231B9E1C008F894B /* SendCoinDelegate.swift */; };
+		88CA938D231BD0A3008F894B /* ProfileSettingsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 88CA938C231BD0A3008F894B /* ProfileSettingsView.xib */; };
+		88CA938F231BD0AE008F894B /* ProfileSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CA938E231BD0AE008F894B /* ProfileSettingsView.swift */; };
+		88CA9391231CF4AE008F894B /* ProfileMenuDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CA9390231CF4AE008F894B /* ProfileMenuDelegate.swift */; };
+		88E03346233CB68400620541 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 88E03345233CB68400620541 /* Colors.xcassets */; };
+		88F3F957230FD92600D81F2B /* LetsStartWordView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 88F3F956230FD92600D81F2B /* LetsStartWordView.xib */; };
+		88F4A1BB2312AD63007172A6 /* MainScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F4A1BA2312AD63007172A6 /* MainScreen.swift */; };
+		88F4A1BF2312AF7B007172A6 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F4A1BE2312AF7B007172A6 /* MenuView.swift */; };
+		88F4A1C42312CA56007172A6 /* MockImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 88F4A1C32312CA56007172A6 /* MockImages.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		002B28192386E5E6007BE3AD /* digiSocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = digiSocket.swift; sourceTree = "<group>"; };
+		003B3508234E2299004EE63F /* WavesSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = WavesSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		003B3509234E2299004EE63F /* WavesSDKCrypto.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = WavesSDKCrypto.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		003B350A234E2299004EE63F /* WavesSDKExtensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = WavesSDKExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		003B35DB23564409004EE63F /* TransactionPopupDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionPopupDelegate.swift; sourceTree = "<group>"; };
+		0060807D23795453006FFBD2 /* constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = constants.swift; sourceTree = "<group>"; };
+		00608081237B1573006FFBD2 /* DigiliraPayRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DigiliraPayRelease.entitlements; sourceTree = "<group>"; };
+		00608082237B404F006FFBD2 /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
+		006B1EE2234CA67B0045B6B4 /* func.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = func.swift; sourceTree = "<group>"; };
+		006B1EE5234CC25B0045B6B4 /* custom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = custom.swift; sourceTree = "<group>"; };
+		006B1EE7234CC2720045B6B4 /* dPayApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dPayApi.swift; sourceTree = "<group>"; };
+		0080FAC3234CA0B900B6D636 /* blockchain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = blockchain.swift; sourceTree = "<group>"; };
+		00C592B123A556AA0036A346 /* TransactionDetailPopup.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TransactionDetailPopup.xib; sourceTree = "<group>"; };
+		232267938E12104C73060CF6 /* Pods-DigiliraPay.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DigiliraPay.debug.xcconfig"; path = "Target Support Files/Pods-DigiliraPay/Pods-DigiliraPay.debug.xcconfig"; sourceTree = "<group>"; };
+		6B7278F70D172AF69D354796 /* Pods_DigiliraPay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DigiliraPay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		71F87FB64A359B715E1F208F /* Pods-DigiliraPay.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DigiliraPay.release.xcconfig"; path = "Target Support Files/Pods-DigiliraPay/Pods-DigiliraPay.release.xcconfig"; sourceTree = "<group>"; };
+		880541F52319692C004EE85F /* TableViewCellExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCellExtension.swift; sourceTree = "<group>"; };
+		880541F82319702B004EE85F /* CoinTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinTableViewCell.swift; sourceTree = "<group>"; };
+		880541F92319702B004EE85F /* CoinTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CoinTableViewCell.xib; sourceTree = "<group>"; };
+		880664EE22FEFF5B00C4DF69 /* OnBoardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnBoardingView.swift; sourceTree = "<group>"; };
+		88114F612321602800AB3B5A /* ProfileUpgradeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileUpgradeView.xib; sourceTree = "<group>"; };
+		88114F632321604100AB3B5A /* ProfilUpgradeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilUpgradeView.swift; sourceTree = "<group>"; };
+		88114F6523216A8E00AB3B5A /* sendWithQR.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = sendWithQR.xib; sourceTree = "<group>"; };
+		88114F6723216A9500AB3B5A /* sendWithQR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sendWithQR.swift; sourceTree = "<group>"; };
+		88114F692321703800AB3B5A /* SendWithQrDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendWithQrDelegate.swift; sourceTree = "<group>"; };
+		8816BE7D233F48A900318309 /* DigiliraPay.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DigiliraPay.entitlements; sourceTree = "<group>"; };
+		882AAAFF22FC96DD004CDAA6 /* DigiliraPAY.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DigiliraPAY.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		882AAB0222FC96DD004CDAA6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		882AAB0422FC96DD004CDAA6 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		882AAB0622FC96DD004CDAA6 /* OnBoardingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnBoardingVC.swift; sourceTree = "<group>"; };
+		882AAB0922FC96DD004CDAA6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		882AAB0B22FC96DE004CDAA6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		882AAB0E22FC96DE004CDAA6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		882AAB1022FC96DE004CDAA6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		882AAB1922FCAAEE004CDAA6 /* Montserrat-MediumItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-MediumItalic.otf"; sourceTree = "<group>"; };
+		882AAB1A22FCAAEE004CDAA6 /* Montserrat-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Bold.otf"; sourceTree = "<group>"; };
+		882AAB1B22FCAAEE004CDAA6 /* Montserrat-BlackItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-BlackItalic.otf"; sourceTree = "<group>"; };
+		882AAB1C22FCAAEE004CDAA6 /* SIL Open Font License.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "SIL Open Font License.txt"; sourceTree = "<group>"; };
+		882AAB1D22FCAAEE004CDAA6 /* MontserratAlternates-Black.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MontserratAlternates-Black.otf"; sourceTree = "<group>"; };
+		882AAB1E22FCAAEE004CDAA6 /* MontserratAlternates-LightItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MontserratAlternates-LightItalic.otf"; sourceTree = "<group>"; };
+		882AAB1F22FCAAEE004CDAA6 /* MontserratAlternates-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MontserratAlternates-Medium.otf"; sourceTree = "<group>"; };
+		882AAB2022FCAAEE004CDAA6 /* Montserrat-BoldItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-BoldItalic.otf"; sourceTree = "<group>"; };
+		882AAB2122FCAAEE004CDAA6 /* Montserrat-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Light.otf"; sourceTree = "<group>"; };
+		882AAB2222FCAAEE004CDAA6 /* Montserrat-ThinItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-ThinItalic.otf"; sourceTree = "<group>"; };
+		882AAB2322FCAAEE004CDAA6 /* Montserrat-Thin.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Thin.otf"; sourceTree = "<group>"; };
+		882AAB2422FCAAEE004CDAA6 /* MontserratAlternates-MediumItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MontserratAlternates-MediumItalic.otf"; sourceTree = "<group>"; };
+		882AAB2522FCAAEE004CDAA6 /* Montserrat-ExtraLight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-ExtraLight.otf"; sourceTree = "<group>"; };
+		882AAB2622FCAAEE004CDAA6 /* MontserratAlternates-BlackItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MontserratAlternates-BlackItalic.otf"; sourceTree = "<group>"; };
+		882AAB2722FCAAEE004CDAA6 /* MontserratAlternates-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MontserratAlternates-Bold.otf"; sourceTree = "<group>"; };
+		882AAB2822FCAAEE004CDAA6 /* MontserratAlternates-ExtraLightItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MontserratAlternates-ExtraLightItalic.otf"; sourceTree = "<group>"; };
+		882AAB2922FCAAEE004CDAA6 /* MontserratAlternates-Thin.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MontserratAlternates-Thin.otf"; sourceTree = "<group>"; };
+		882AAB2A22FCAAEE004CDAA6 /* Montserrat-LightItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-LightItalic.otf"; sourceTree = "<group>"; };
+		882AAB2B22FCAAEE004CDAA6 /* Montserrat-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Medium.otf"; sourceTree = "<group>"; };
+		882AAB2C22FCAAEE004CDAA6 /* MontserratAlternates-SemiBoldItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MontserratAlternates-SemiBoldItalic.otf"; sourceTree = "<group>"; };
+		882AAB2D22FCAAEE004CDAA6 /* Montserrat-SemiBoldItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-SemiBoldItalic.otf"; sourceTree = "<group>"; };
+		882AAB2E22FCAAEE004CDAA6 /* Montserrat-ExtraBoldItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-ExtraBoldItalic.otf"; sourceTree = "<group>"; };
+		882AAB2F22FCAAEE004CDAA6 /* Montserrat-Italic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Italic.otf"; sourceTree = "<group>"; };
+		882AAB3022FCAAEE004CDAA6 /* MontserratAlternates-SemiBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MontserratAlternates-SemiBold.otf"; sourceTree = "<group>"; };
+		882AAB3122FCAAEE004CDAA6 /* Montserrat-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Regular.otf"; sourceTree = "<group>"; };
+		882AAB3222FCAAEE004CDAA6 /* MontserratAlternates-ExtraBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MontserratAlternates-ExtraBold.otf"; sourceTree = "<group>"; };
+		882AAB3322FCAAEE004CDAA6 /* MontserratAlternates-BoldItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MontserratAlternates-BoldItalic.otf"; sourceTree = "<group>"; };
+		882AAB3422FCAAEE004CDAA6 /* Montserrat-ExtraBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-ExtraBold.otf"; sourceTree = "<group>"; };
+		882AAB3522FCAAEE004CDAA6 /* Montserrat-ExtraLightItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-ExtraLightItalic.otf"; sourceTree = "<group>"; };
+		882AAB3622FCAAEE004CDAA6 /* MontserratAlternates-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MontserratAlternates-Light.otf"; sourceTree = "<group>"; };
+		882AAB3722FCAAEE004CDAA6 /* MontserratAlternates-ExtraLight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MontserratAlternates-ExtraLight.otf"; sourceTree = "<group>"; };
+		882AAB3822FCAAEE004CDAA6 /* MontserratAlternates-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MontserratAlternates-Regular.otf"; sourceTree = "<group>"; };
+		882AAB3922FCAAEE004CDAA6 /* MontserratAlternates-ThinItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MontserratAlternates-ThinItalic.otf"; sourceTree = "<group>"; };
+		882AAB3A22FCAAEE004CDAA6 /* Montserrat-Black.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Black.otf"; sourceTree = "<group>"; };
+		882AAB3B22FCAAEE004CDAA6 /* MontserratAlternates-ExtraBoldItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MontserratAlternates-ExtraBoldItalic.otf"; sourceTree = "<group>"; };
+		882AAB3C22FCAAEE004CDAA6 /* MontserratAlternates-Italic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MontserratAlternates-Italic.otf"; sourceTree = "<group>"; };
+		882AAB3D22FCAAEE004CDAA6 /* Montserrat-SemiBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-SemiBold.otf"; sourceTree = "<group>"; };
+		882B9B6622FEFAA500D6E7B6 /* OnBoardingView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OnBoardingView.xib; sourceTree = "<group>"; };
+		882E99BC232301BB0061C7AC /* LetsStartSkipDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LetsStartSkipDelegate.swift; sourceTree = "<group>"; };
+		88309EB1231E73C600F96C05 /* TransactionPopup.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransactionPopup.xib; sourceTree = "<group>"; };
+		88309EB3231E73DC00F96C05 /* TransactionPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionPopup.swift; sourceTree = "<group>"; };
+		88309EB7231E7FC600F96C05 /* QRView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = QRView.xib; sourceTree = "<group>"; };
+		88309EB9231E7FD200F96C05 /* QRView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRView.swift; sourceTree = "<group>"; };
+		88309EBD231FD08500F96C05 /* LoadCoinDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadCoinDelegate.swift; sourceTree = "<group>"; };
+		88309EBF231FD36000F96C05 /* VerifyAccountView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VerifyAccountView.xib; sourceTree = "<group>"; };
+		88309EC1231FD38200F96C05 /* VerifyAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyAccountView.swift; sourceTree = "<group>"; };
+		885C1661233371C00018D5EF /* LetsStartWordsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LetsStartWordsView.swift; sourceTree = "<group>"; };
+		888F26AE233E89B800AB7E4C /* PinView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PinView.xib; sourceTree = "<group>"; };
+		888F26B0233E8DF500AB7E4C /* PinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinView.swift; sourceTree = "<group>"; };
+		888F26B2233E9DF700AB7E4C /* PinViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinViewDelegate.swift; sourceTree = "<group>"; };
+		8891704423058673005AAA02 /* LetsStartVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LetsStartVC.swift; sourceTree = "<group>"; };
+		889F2A2023158BAB00ACD656 /* MenuView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MenuView.xib; sourceTree = "<group>"; };
+		889F2A2223158C5D00ACD656 /* ProfileMenuview.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileMenuview.xib; sourceTree = "<group>"; };
+		889F2A2423158D5400ACD656 /* ProfileMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileMenuView.swift; sourceTree = "<group>"; };
+		889F2A262316D8D400ACD656 /* Languages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Languages.swift; sourceTree = "<group>"; };
+		88A6BA44232020E7002640D6 /* VerifyAccountDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyAccountDelegate.swift; sourceTree = "<group>"; };
+		88A6BA4623203570002640D6 /* LegalView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LegalView.xib; sourceTree = "<group>"; };
+		88A6BA4823203580002640D6 /* LegalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegalView.swift; sourceTree = "<group>"; };
+		88A6BA4A232039D7002640D6 /* LegalDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegalDelegate.swift; sourceTree = "<group>"; };
+		88A6BA502321485A002640D6 /* ImportAccountVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportAccountVC.swift; sourceTree = "<group>"; };
+		88BEDFAD23101AC80003C371 /* Verify&StartView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "Verify&StartView.xib"; sourceTree = "<group>"; };
+		88BEDFAF23101AD80003C371 /* Verify&StartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Verify&StartView.swift"; sourceTree = "<group>"; };
+		88CA93602319741A008F894B /* MenuViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewDelegate.swift; sourceTree = "<group>"; };
+		88CA93632319792A008F894B /* WalletView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletView.xib; sourceTree = "<group>"; };
+		88CA93652319793B008F894B /* WalletView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletView.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		88CA9367231979C3008F894B /* WalletOperationButtonSView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletOperationButtonSView.xib; sourceTree = "<group>"; };
+		88CA9369231979CD008F894B /* WalletOperationButtonSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletOperationButtonSView.swift; sourceTree = "<group>"; };
+		88CA936B2319A6C6008F894B /* transactionHistoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = transactionHistoryCell.swift; sourceTree = "<group>"; };
+		88CA936C2319A6C6008F894B /* transactionHistoryCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = transactionHistoryCell.xib; sourceTree = "<group>"; };
+		88CA936F231A4750008F894B /* TransactionDetailView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransactionDetailView.xib; sourceTree = "<group>"; };
+		88CA9371231A475F008F894B /* TransactionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionDetailView.swift; sourceTree = "<group>"; };
+		88CA9375231A488A008F894B /* TransactionHistoryDetailCellHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistoryDetailCellHeader.swift; sourceTree = "<group>"; };
+		88CA9376231A488A008F894B /* TransactionHistoryDetailCellHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransactionHistoryDetailCellHeader.xib; sourceTree = "<group>"; };
+		88CA9379231A48A0008F894B /* TransactionHistoryDetailCellDeatils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistoryDetailCellDeatils.swift; sourceTree = "<group>"; };
+		88CA937A231A48A0008F894B /* TransactionHistoryDetailCellDeatils.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransactionHistoryDetailCellDeatils.xib; sourceTree = "<group>"; };
+		88CA937E231A4AE6008F894B /* UIViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtensions.swift; sourceTree = "<group>"; };
+		88CA9380231A4B04008F894B /* UIScrollViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIScrollViewExtensions.swift; sourceTree = "<group>"; };
+		88CA9382231A5F46008F894B /* TransactionDetailCloseDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionDetailCloseDelegate.swift; sourceTree = "<group>"; };
+		88CA9384231AFD2A008F894B /* CoinSendView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CoinSendView.xib; sourceTree = "<group>"; };
+		88CA9386231AFD3E008F894B /* CoinSendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinSendView.swift; sourceTree = "<group>"; };
+		88CA9388231B9866008F894B /* OperationButtonsDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationButtonsDelegate.swift; sourceTree = "<group>"; };
+		88CA938A231B9E1C008F894B /* SendCoinDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendCoinDelegate.swift; sourceTree = "<group>"; };
+		88CA938C231BD0A3008F894B /* ProfileSettingsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileSettingsView.xib; sourceTree = "<group>"; };
+		88CA938E231BD0AE008F894B /* ProfileSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSettingsView.swift; sourceTree = "<group>"; };
+		88CA9390231CF4AE008F894B /* ProfileMenuDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileMenuDelegate.swift; sourceTree = "<group>"; };
+		88E03345233CB68400620541 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
+		88F3F956230FD92600D81F2B /* LetsStartWordView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LetsStartWordView.xib; sourceTree = "<group>"; };
+		88F4A1BA2312AD63007172A6 /* MainScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreen.swift; sourceTree = "<group>"; };
+		88F4A1BE2312AF7B007172A6 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
+		88F4A1C32312CA56007172A6 /* MockImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = MockImages.xcassets; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		882AAAFC22FC96DD004CDAA6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				00608083237B404F006FFBD2 /* LocalAuthentication.framework in Frameworks */,
+				28AA4F6D6F9B6977B988457B /* Pods_DigiliraPay.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		006B1EE4234CC2530045B6B4 /* custom */ = {
+			isa = PBXGroup;
+			children = (
+				006B1EE5234CC25B0045B6B4 /* custom.swift */,
+			);
+			name = custom;
+			sourceTree = "<group>";
+		};
+		0080FAC2234CA09B00B6D636 /* blockchain */ = {
+			isa = PBXGroup;
+			children = (
+				0080FAC3234CA0B900B6D636 /* blockchain.swift */,
+				006B1EE2234CA67B0045B6B4 /* func.swift */,
+				006B1EE7234CC2720045B6B4 /* dPayApi.swift */,
+				0060807D23795453006FFBD2 /* constants.swift */,
+				002B28192386E5E6007BE3AD /* digiSocket.swift */,
+			);
+			name = blockchain;
+			sourceTree = "<group>";
+		};
+		880541F72319693B004EE85F /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				880541F52319692C004EE85F /* TableViewCellExtension.swift */,
+				88CA937E231A4AE6008F894B /* UIViewExtensions.swift */,
+				88CA9380231A4B04008F894B /* UIScrollViewExtensions.swift */,
+			);
+			name = Extensions;
+			sourceTree = "<group>";
+		};
+		882AAAF622FC96DD004CDAA6 = {
+			isa = PBXGroup;
+			children = (
+				882AAB0122FC96DD004CDAA6 /* DigiliraPay */,
+				882AAB0022FC96DD004CDAA6 /* Products */,
+				9D9CFF69165CF1FB51D08BF6 /* Pods */,
+				8F72ADF997802C10AF217F7C /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		882AAB0022FC96DD004CDAA6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				882AAAFF22FC96DD004CDAA6 /* DigiliraPAY.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		882AAB0122FC96DD004CDAA6 /* DigiliraPay */ = {
+			isa = PBXGroup;
+			children = (
+				00608081237B1573006FFBD2 /* DigiliraPayRelease.entitlements */,
+				006B1EE4234CC2530045B6B4 /* custom */,
+				0080FAC2234CA09B00B6D636 /* blockchain */,
+				8816BE7D233F48A900318309 /* DigiliraPay.entitlements */,
+				882AAB0222FC96DD004CDAA6 /* AppDelegate.swift */,
+				882AAB0422FC96DD004CDAA6 /* SceneDelegate.swift */,
+				882B9B6A22FEFAF300D6E7B6 /* Views */,
+				882B9B6C22FEFB0D00D6E7B6 /* Controllers */,
+				889F2A282316D8DD00ACD656 /* Utility */,
+				880541F72319693B004EE85F /* Extensions */,
+				88CA93622319741E008F894B /* Delegates */,
+				88F4A1C22312CA40007172A6 /* Media */,
+				882AAB1022FC96DE004CDAA6 /* Info.plist */,
+				882AAB1822FCAAEE004CDAA6 /* montserrat */,
+			);
+			path = DigiliraPay;
+			sourceTree = "<group>";
+		};
+		882AAB1822FCAAEE004CDAA6 /* montserrat */ = {
+			isa = PBXGroup;
+			children = (
+				882AAB1922FCAAEE004CDAA6 /* Montserrat-MediumItalic.otf */,
+				882AAB1A22FCAAEE004CDAA6 /* Montserrat-Bold.otf */,
+				882AAB1B22FCAAEE004CDAA6 /* Montserrat-BlackItalic.otf */,
+				882AAB1C22FCAAEE004CDAA6 /* SIL Open Font License.txt */,
+				882AAB1D22FCAAEE004CDAA6 /* MontserratAlternates-Black.otf */,
+				882AAB1E22FCAAEE004CDAA6 /* MontserratAlternates-LightItalic.otf */,
+				882AAB1F22FCAAEE004CDAA6 /* MontserratAlternates-Medium.otf */,
+				882AAB2022FCAAEE004CDAA6 /* Montserrat-BoldItalic.otf */,
+				882AAB2122FCAAEE004CDAA6 /* Montserrat-Light.otf */,
+				882AAB2222FCAAEE004CDAA6 /* Montserrat-ThinItalic.otf */,
+				882AAB2322FCAAEE004CDAA6 /* Montserrat-Thin.otf */,
+				882AAB2422FCAAEE004CDAA6 /* MontserratAlternates-MediumItalic.otf */,
+				882AAB2522FCAAEE004CDAA6 /* Montserrat-ExtraLight.otf */,
+				882AAB2622FCAAEE004CDAA6 /* MontserratAlternates-BlackItalic.otf */,
+				882AAB2722FCAAEE004CDAA6 /* MontserratAlternates-Bold.otf */,
+				882AAB2822FCAAEE004CDAA6 /* MontserratAlternates-ExtraLightItalic.otf */,
+				882AAB2922FCAAEE004CDAA6 /* MontserratAlternates-Thin.otf */,
+				882AAB2A22FCAAEE004CDAA6 /* Montserrat-LightItalic.otf */,
+				882AAB2B22FCAAEE004CDAA6 /* Montserrat-Medium.otf */,
+				882AAB2C22FCAAEE004CDAA6 /* MontserratAlternates-SemiBoldItalic.otf */,
+				882AAB2D22FCAAEE004CDAA6 /* Montserrat-SemiBoldItalic.otf */,
+				882AAB2E22FCAAEE004CDAA6 /* Montserrat-ExtraBoldItalic.otf */,
+				882AAB2F22FCAAEE004CDAA6 /* Montserrat-Italic.otf */,
+				882AAB3022FCAAEE004CDAA6 /* MontserratAlternates-SemiBold.otf */,
+				882AAB3122FCAAEE004CDAA6 /* Montserrat-Regular.otf */,
+				882AAB3222FCAAEE004CDAA6 /* MontserratAlternates-ExtraBold.otf */,
+				882AAB3322FCAAEE004CDAA6 /* MontserratAlternates-BoldItalic.otf */,
+				882AAB3422FCAAEE004CDAA6 /* Montserrat-ExtraBold.otf */,
+				882AAB3522FCAAEE004CDAA6 /* Montserrat-ExtraLightItalic.otf */,
+				882AAB3622FCAAEE004CDAA6 /* MontserratAlternates-Light.otf */,
+				882AAB3722FCAAEE004CDAA6 /* MontserratAlternates-ExtraLight.otf */,
+				882AAB3822FCAAEE004CDAA6 /* MontserratAlternates-Regular.otf */,
+				882AAB3922FCAAEE004CDAA6 /* MontserratAlternates-ThinItalic.otf */,
+				882AAB3A22FCAAEE004CDAA6 /* Montserrat-Black.otf */,
+				882AAB3B22FCAAEE004CDAA6 /* MontserratAlternates-ExtraBoldItalic.otf */,
+				882AAB3C22FCAAEE004CDAA6 /* MontserratAlternates-Italic.otf */,
+				882AAB3D22FCAAEE004CDAA6 /* Montserrat-SemiBold.otf */,
+			);
+			path = montserrat;
+			sourceTree = "<group>";
+		};
+		882B9B6A22FEFAF300D6E7B6 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				882AAB0822FC96DD004CDAA6 /* Main.storyboard */,
+				882B9B6622FEFAA500D6E7B6 /* OnBoardingView.xib */,
+				882AAB0D22FC96DE004CDAA6 /* LaunchScreen.storyboard */,
+				88F3F956230FD92600D81F2B /* LetsStartWordView.xib */,
+				88BEDFAD23101AC80003C371 /* Verify&StartView.xib */,
+				889F2A2023158BAB00ACD656 /* MenuView.xib */,
+				889F2A2223158C5D00ACD656 /* ProfileMenuview.xib */,
+				880541F92319702B004EE85F /* CoinTableViewCell.xib */,
+				88CA93632319792A008F894B /* WalletView.xib */,
+				88CA9367231979C3008F894B /* WalletOperationButtonSView.xib */,
+				88CA936C2319A6C6008F894B /* transactionHistoryCell.xib */,
+				88CA936F231A4750008F894B /* TransactionDetailView.xib */,
+				88CA9376231A488A008F894B /* TransactionHistoryDetailCellHeader.xib */,
+				88CA937A231A48A0008F894B /* TransactionHistoryDetailCellDeatils.xib */,
+				88CA9384231AFD2A008F894B /* CoinSendView.xib */,
+				88CA938C231BD0A3008F894B /* ProfileSettingsView.xib */,
+				00C592B123A556AA0036A346 /* TransactionDetailPopup.xib */,
+				88309EB1231E73C600F96C05 /* TransactionPopup.xib */,
+				88309EB7231E7FC600F96C05 /* QRView.xib */,
+				88309EBF231FD36000F96C05 /* VerifyAccountView.xib */,
+				88A6BA4623203570002640D6 /* LegalView.xib */,
+				88114F612321602800AB3B5A /* ProfileUpgradeView.xib */,
+				88114F6523216A8E00AB3B5A /* sendWithQR.xib */,
+				888F26AE233E89B800AB7E4C /* PinView.xib */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		882B9B6C22FEFB0D00D6E7B6 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				882AAB0622FC96DD004CDAA6 /* OnBoardingVC.swift */,
+				880664EE22FEFF5B00C4DF69 /* OnBoardingView.swift */,
+				8891704423058673005AAA02 /* LetsStartVC.swift */,
+				885C1661233371C00018D5EF /* LetsStartWordsView.swift */,
+				88BEDFAF23101AD80003C371 /* Verify&StartView.swift */,
+				88F4A1BA2312AD63007172A6 /* MainScreen.swift */,
+				88F4A1BE2312AF7B007172A6 /* MenuView.swift */,
+				889F2A2423158D5400ACD656 /* ProfileMenuView.swift */,
+				880541F82319702B004EE85F /* CoinTableViewCell.swift */,
+				88CA93652319793B008F894B /* WalletView.swift */,
+				88CA9369231979CD008F894B /* WalletOperationButtonSView.swift */,
+				88CA936B2319A6C6008F894B /* transactionHistoryCell.swift */,
+				88CA9371231A475F008F894B /* TransactionDetailView.swift */,
+				88CA9375231A488A008F894B /* TransactionHistoryDetailCellHeader.swift */,
+				88CA9379231A48A0008F894B /* TransactionHistoryDetailCellDeatils.swift */,
+				88CA9386231AFD3E008F894B /* CoinSendView.swift */,
+				88CA938E231BD0AE008F894B /* ProfileSettingsView.swift */,
+				88309EB3231E73DC00F96C05 /* TransactionPopup.swift */,
+				88309EB9231E7FD200F96C05 /* QRView.swift */,
+				88309EC1231FD38200F96C05 /* VerifyAccountView.swift */,
+				88A6BA4823203580002640D6 /* LegalView.swift */,
+				88A6BA502321485A002640D6 /* ImportAccountVC.swift */,
+				88114F632321604100AB3B5A /* ProfilUpgradeView.swift */,
+				88114F6723216A9500AB3B5A /* sendWithQR.swift */,
+				888F26B0233E8DF500AB7E4C /* PinView.swift */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		889F2A282316D8DD00ACD656 /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				889F2A262316D8D400ACD656 /* Languages.swift */,
+			);
+			name = Utility;
+			sourceTree = "<group>";
+		};
+		88CA93622319741E008F894B /* Delegates */ = {
+			isa = PBXGroup;
+			children = (
+				88CA93602319741A008F894B /* MenuViewDelegate.swift */,
+				88CA9382231A5F46008F894B /* TransactionDetailCloseDelegate.swift */,
+				88CA9388231B9866008F894B /* OperationButtonsDelegate.swift */,
+				88CA938A231B9E1C008F894B /* SendCoinDelegate.swift */,
+				88CA9390231CF4AE008F894B /* ProfileMenuDelegate.swift */,
+				88309EBD231FD08500F96C05 /* LoadCoinDelegate.swift */,
+				88A6BA44232020E7002640D6 /* VerifyAccountDelegate.swift */,
+				88A6BA4A232039D7002640D6 /* LegalDelegate.swift */,
+				88114F692321703800AB3B5A /* SendWithQrDelegate.swift */,
+				882E99BC232301BB0061C7AC /* LetsStartSkipDelegate.swift */,
+				888F26B2233E9DF700AB7E4C /* PinViewDelegate.swift */,
+				003B35DB23564409004EE63F /* TransactionPopupDelegate.swift */,
+			);
+			name = Delegates;
+			sourceTree = "<group>";
+		};
+		88F4A1C22312CA40007172A6 /* Media */ = {
+			isa = PBXGroup;
+			children = (
+				882AAB0B22FC96DE004CDAA6 /* Assets.xcassets */,
+				88F4A1C32312CA56007172A6 /* MockImages.xcassets */,
+				88E03345233CB68400620541 /* Colors.xcassets */,
+			);
+			path = Media;
+			sourceTree = "<group>";
+		};
+		8F72ADF997802C10AF217F7C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				00608082237B404F006FFBD2 /* LocalAuthentication.framework */,
+				003B3508234E2299004EE63F /* WavesSDK.framework */,
+				003B3509234E2299004EE63F /* WavesSDKCrypto.framework */,
+				003B350A234E2299004EE63F /* WavesSDKExtensions.framework */,
+				6B7278F70D172AF69D354796 /* Pods_DigiliraPay.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9D9CFF69165CF1FB51D08BF6 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				232267938E12104C73060CF6 /* Pods-DigiliraPay.debug.xcconfig */,
+				71F87FB64A359B715E1F208F /* Pods-DigiliraPay.release.xcconfig */,
+			);
+			name = Pods;
+			path = ../Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		882AAAFE22FC96DD004CDAA6 /* DigiliraPay */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 882AAB1322FC96DE004CDAA6 /* Build configuration list for PBXNativeTarget "DigiliraPay" */;
+			buildPhases = (
+				EC10D0D893F4028FF348C73E /* [CP] Check Pods Manifest.lock */,
+				882AAAFB22FC96DD004CDAA6 /* Sources */,
+				882AAAFC22FC96DD004CDAA6 /* Frameworks */,
+				882AAAFD22FC96DD004CDAA6 /* Resources */,
+				96C0EC7617232C9DA949B134 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DigiliraPay;
+			productName = DigiliraPay;
+			productReference = 882AAAFF22FC96DD004CDAA6 /* DigiliraPAY.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		882AAAF722FC96DD004CDAA6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1100;
+				LastUpgradeCheck = 1100;
+				ORGANIZATIONNAME = Ilao;
+				TargetAttributes = {
+					882AAAFE22FC96DD004CDAA6 = {
+						CreatedOnToolsVersion = 11.0;
+					};
+				};
+			};
+			buildConfigurationList = 882AAAFA22FC96DD004CDAA6 /* Build configuration list for PBXProject "DigiliraPay" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 882AAAF622FC96DD004CDAA6;
+			productRefGroup = 882AAB0022FC96DD004CDAA6 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				882AAAFE22FC96DD004CDAA6 /* DigiliraPay */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		882AAAFD22FC96DD004CDAA6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				88BEDFAE23101AC80003C371 /* Verify&StartView.xib in Resources */,
+				882AAB5722FCAAEE004CDAA6 /* MontserratAlternates-ExtraBold.otf in Resources */,
+				880541FB2319702B004EE85F /* CoinTableViewCell.xib in Resources */,
+				88CA93642319792A008F894B /* WalletView.xib in Resources */,
+				882AAB5922FCAAEE004CDAA6 /* Montserrat-ExtraBold.otf in Resources */,
+				882AAB5F22FCAAEE004CDAA6 /* Montserrat-Black.otf in Resources */,
+				882AAB4122FCAAEE004CDAA6 /* SIL Open Font License.txt in Resources */,
+				882AAB5D22FCAAEE004CDAA6 /* MontserratAlternates-Regular.otf in Resources */,
+				882AAB4222FCAAEE004CDAA6 /* MontserratAlternates-Black.otf in Resources */,
+				882AAB5A22FCAAEE004CDAA6 /* Montserrat-ExtraLightItalic.otf in Resources */,
+				88CA9370231A4750008F894B /* TransactionDetailView.xib in Resources */,
+				882AAB3F22FCAAEE004CDAA6 /* Montserrat-Bold.otf in Resources */,
+				882AAB4B22FCAAEE004CDAA6 /* MontserratAlternates-BlackItalic.otf in Resources */,
+				882AAB6222FCAAEE004CDAA6 /* Montserrat-SemiBold.otf in Resources */,
+				882AAB0F22FC96DE004CDAA6 /* LaunchScreen.storyboard in Resources */,
+				88309EB2231E73C600F96C05 /* TransactionPopup.xib in Resources */,
+				882AAB4522FCAAEE004CDAA6 /* Montserrat-BoldItalic.otf in Resources */,
+				88CA936E2319A6C6008F894B /* transactionHistoryCell.xib in Resources */,
+				882AAB5E22FCAAEE004CDAA6 /* MontserratAlternates-ThinItalic.otf in Resources */,
+				88F4A1C42312CA56007172A6 /* MockImages.xcassets in Resources */,
+				882AAB4722FCAAEE004CDAA6 /* Montserrat-ThinItalic.otf in Resources */,
+				88309EC0231FD36000F96C05 /* VerifyAccountView.xib in Resources */,
+				882AAB4422FCAAEE004CDAA6 /* MontserratAlternates-Medium.otf in Resources */,
+				88114F6623216A8E00AB3B5A /* sendWithQR.xib in Resources */,
+				882AAB4922FCAAEE004CDAA6 /* MontserratAlternates-MediumItalic.otf in Resources */,
+				882AAB4A22FCAAEE004CDAA6 /* Montserrat-ExtraLight.otf in Resources */,
+				88CA9385231AFD2A008F894B /* CoinSendView.xib in Resources */,
+				88CA9378231A488A008F894B /* TransactionHistoryDetailCellHeader.xib in Resources */,
+				88CA9368231979C3008F894B /* WalletOperationButtonSView.xib in Resources */,
+				88CA937C231A48A0008F894B /* TransactionHistoryDetailCellDeatils.xib in Resources */,
+				882AAB4022FCAAEE004CDAA6 /* Montserrat-BlackItalic.otf in Resources */,
+				882AAB5022FCAAEE004CDAA6 /* Montserrat-Medium.otf in Resources */,
+				88F3F957230FD92600D81F2B /* LetsStartWordView.xib in Resources */,
+				88CA938D231BD0A3008F894B /* ProfileSettingsView.xib in Resources */,
+				889F2A2123158BAB00ACD656 /* MenuView.xib in Resources */,
+				882AAB4D22FCAAEE004CDAA6 /* MontserratAlternates-ExtraLightItalic.otf in Resources */,
+				882AAB6022FCAAEE004CDAA6 /* MontserratAlternates-ExtraBoldItalic.otf in Resources */,
+				889F2A2323158C5D00ACD656 /* ProfileMenuview.xib in Resources */,
+				00C592B223A556AA0036A346 /* TransactionDetailPopup.xib in Resources */,
+				882AAB4322FCAAEE004CDAA6 /* MontserratAlternates-LightItalic.otf in Resources */,
+				882AAB5422FCAAEE004CDAA6 /* Montserrat-Italic.otf in Resources */,
+				882AAB4F22FCAAEE004CDAA6 /* Montserrat-LightItalic.otf in Resources */,
+				882AAB4822FCAAEE004CDAA6 /* Montserrat-Thin.otf in Resources */,
+				882AAB4E22FCAAEE004CDAA6 /* MontserratAlternates-Thin.otf in Resources */,
+				882AAB5B22FCAAEE004CDAA6 /* MontserratAlternates-Light.otf in Resources */,
+				882AAB5322FCAAEE004CDAA6 /* Montserrat-ExtraBoldItalic.otf in Resources */,
+				888F26AF233E89B800AB7E4C /* PinView.xib in Resources */,
+				882AAB5622FCAAEE004CDAA6 /* Montserrat-Regular.otf in Resources */,
+				882AAB3E22FCAAEE004CDAA6 /* Montserrat-MediumItalic.otf in Resources */,
+				88E03346233CB68400620541 /* Colors.xcassets in Resources */,
+				882AAB0C22FC96DE004CDAA6 /* Assets.xcassets in Resources */,
+				882AAB0A22FC96DD004CDAA6 /* Main.storyboard in Resources */,
+				882AAB5C22FCAAEE004CDAA6 /* MontserratAlternates-ExtraLight.otf in Resources */,
+				882AAB5822FCAAEE004CDAA6 /* MontserratAlternates-BoldItalic.otf in Resources */,
+				882AAB4C22FCAAEE004CDAA6 /* MontserratAlternates-Bold.otf in Resources */,
+				882B9B6722FEFAA500D6E7B6 /* OnBoardingView.xib in Resources */,
+				882AAB6122FCAAEE004CDAA6 /* MontserratAlternates-Italic.otf in Resources */,
+				882AAB5222FCAAEE004CDAA6 /* Montserrat-SemiBoldItalic.otf in Resources */,
+				882AAB5522FCAAEE004CDAA6 /* MontserratAlternates-SemiBold.otf in Resources */,
+				882AAB5122FCAAEE004CDAA6 /* MontserratAlternates-SemiBoldItalic.otf in Resources */,
+				882AAB4622FCAAEE004CDAA6 /* Montserrat-Light.otf in Resources */,
+				88309EB8231E7FC600F96C05 /* QRView.xib in Resources */,
+				88A6BA4723203570002640D6 /* LegalView.xib in Resources */,
+				88114F622321602800AB3B5A /* ProfileUpgradeView.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		96C0EC7617232C9DA949B134 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-DigiliraPay/Pods-DigiliraPay-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/Curve25519/Curve25519.framework",
+				"${BUILT_PRODUCTS_DIR}/Gloss/Gloss.framework",
+				"${BUILT_PRODUCTS_DIR}/IQKeyboardManagerSwift/IQKeyboardManagerSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/Locksmith/Locksmith.framework",
+				"${BUILT_PRODUCTS_DIR}/Moya/Moya.framework",
+				"${BUILT_PRODUCTS_DIR}/QRCodeReader.swift/QRCodeReader.framework",
+				"${BUILT_PRODUCTS_DIR}/QRCoder/QRCoder.framework",
+				"${BUILT_PRODUCTS_DIR}/Result/Result.framework",
+				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/Socket.IO-Client-Swift/SocketIO.framework",
+				"${BUILT_PRODUCTS_DIR}/Starscream/Starscream.framework",
+				"${BUILT_PRODUCTS_DIR}/WavesSDK/WavesSDK.framework",
+				"${BUILT_PRODUCTS_DIR}/WavesSDKCrypto/WavesSDKCrypto.framework",
+				"${BUILT_PRODUCTS_DIR}/WavesSDKExtensions/WavesSDKExtensions.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Curve25519.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Gloss.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IQKeyboardManagerSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Locksmith.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Moya.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/QRCodeReader.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/QRCoder.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SocketIO.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Starscream.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WavesSDK.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WavesSDKCrypto.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WavesSDKExtensions.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-DigiliraPay/Pods-DigiliraPay-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EC10D0D893F4028FF348C73E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-DigiliraPay-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		882AAAFB22FC96DD004CDAA6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				006B1EE8234CC2720045B6B4 /* dPayApi.swift in Sources */,
+				006B1EE6234CC25B0045B6B4 /* custom.swift in Sources */,
+				88CA937F231A4AE6008F894B /* UIViewExtensions.swift in Sources */,
+				88A6BA512321485A002640D6 /* ImportAccountVC.swift in Sources */,
+				88F4A1BB2312AD63007172A6 /* MainScreen.swift in Sources */,
+				88BEDFB023101AD80003C371 /* Verify&StartView.swift in Sources */,
+				88CA9387231AFD3E008F894B /* CoinSendView.swift in Sources */,
+				88A6BA45232020E7002640D6 /* VerifyAccountDelegate.swift in Sources */,
+				88114F6823216A9500AB3B5A /* sendWithQR.swift in Sources */,
+				885C1662233371C00018D5EF /* LetsStartWordsView.swift in Sources */,
+				88CA936A231979CD008F894B /* WalletOperationButtonSView.swift in Sources */,
+				882AAB0722FC96DD004CDAA6 /* OnBoardingVC.swift in Sources */,
+				88CA938F231BD0AE008F894B /* ProfileSettingsView.swift in Sources */,
+				88CA938B231B9E1C008F894B /* SendCoinDelegate.swift in Sources */,
+				88F4A1BF2312AF7B007172A6 /* MenuView.swift in Sources */,
+				006B1EE3234CA67B0045B6B4 /* func.swift in Sources */,
+				88309EBE231FD08500F96C05 /* LoadCoinDelegate.swift in Sources */,
+				88114F642321604100AB3B5A /* ProfilUpgradeView.swift in Sources */,
+				889F2A272316D8D400ACD656 /* Languages.swift in Sources */,
+				88CA9377231A488A008F894B /* TransactionHistoryDetailCellHeader.swift in Sources */,
+				888F26B3233E9DF700AB7E4C /* PinViewDelegate.swift in Sources */,
+				88CA9389231B9866008F894B /* OperationButtonsDelegate.swift in Sources */,
+				88309EBA231E7FD200F96C05 /* QRView.swift in Sources */,
+				0060807E23795453006FFBD2 /* constants.swift in Sources */,
+				88309EC2231FD38200F96C05 /* VerifyAccountView.swift in Sources */,
+				003B35DC23564409004EE63F /* TransactionPopupDelegate.swift in Sources */,
+				88CA9391231CF4AE008F894B /* ProfileMenuDelegate.swift in Sources */,
+				0080FAC4234CA0B900B6D636 /* blockchain.swift in Sources */,
+				88A6BA4923203580002640D6 /* LegalView.swift in Sources */,
+				882E99BD232301BB0061C7AC /* LetsStartSkipDelegate.swift in Sources */,
+				88CA9381231A4B04008F894B /* UIScrollViewExtensions.swift in Sources */,
+				889F2A2523158D5400ACD656 /* ProfileMenuView.swift in Sources */,
+				88114F6A2321703800AB3B5A /* SendWithQrDelegate.swift in Sources */,
+				88CA93612319741A008F894B /* MenuViewDelegate.swift in Sources */,
+				002B281A2386E5E6007BE3AD /* digiSocket.swift in Sources */,
+				880664EF22FEFF5B00C4DF69 /* OnBoardingView.swift in Sources */,
+				88CA9383231A5F46008F894B /* TransactionDetailCloseDelegate.swift in Sources */,
+				880541FA2319702B004EE85F /* CoinTableViewCell.swift in Sources */,
+				882AAB0322FC96DD004CDAA6 /* AppDelegate.swift in Sources */,
+				888F26B1233E8DF500AB7E4C /* PinView.swift in Sources */,
+				8891704523058673005AAA02 /* LetsStartVC.swift in Sources */,
+				88309EB4231E73DC00F96C05 /* TransactionPopup.swift in Sources */,
+				88A6BA4B232039D7002640D6 /* LegalDelegate.swift in Sources */,
+				88CA9372231A475F008F894B /* TransactionDetailView.swift in Sources */,
+				88CA937B231A48A0008F894B /* TransactionHistoryDetailCellDeatils.swift in Sources */,
+				882AAB0522FC96DD004CDAA6 /* SceneDelegate.swift in Sources */,
+				880541F62319692D004EE85F /* TableViewCellExtension.swift in Sources */,
+				88CA936D2319A6C6008F894B /* transactionHistoryCell.swift in Sources */,
+				88CA93662319793B008F894B /* WalletView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		882AAB0822FC96DD004CDAA6 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				882AAB0922FC96DD004CDAA6 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		882AAB0D22FC96DE004CDAA6 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				882AAB0E22FC96DE004CDAA6 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		882AAB1122FC96DE004CDAA6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.3;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		882AAB1222FC96DE004CDAA6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		882AAB1422FC96DE004CDAA6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 232267938E12104C73060CF6 /* Pods-DigiliraPay.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPay.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 17;
+				DEVELOPMENT_TEAM = 5TJACH7D4X;
+				INFOPLIST_FILE = DigiliraPay/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.digilira.payment;
+				PRODUCT_NAME = DigiliraPAY;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		882AAB1522FC96DE004CDAA6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 71F87FB64A359B715E1F208F /* Pods-DigiliraPay.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPayRelease.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 17;
+				DEVELOPMENT_TEAM = 5TJACH7D4X;
+				INFOPLIST_FILE = DigiliraPay/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.digilira.payment;
+				PRODUCT_NAME = DigiliraPAY;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		882AAAFA22FC96DD004CDAA6 /* Build configuration list for PBXProject "DigiliraPay" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				882AAB1122FC96DE004CDAA6 /* Debug */,
+				882AAB1222FC96DE004CDAA6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		882AAB1322FC96DE004CDAA6 /* Build configuration list for PBXNativeTarget "DigiliraPay" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				882AAB1422FC96DE004CDAA6 /* Debug */,
+				882AAB1522FC96DE004CDAA6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 882AAAF722FC96DD004CDAA6 /* Project object */;
+}

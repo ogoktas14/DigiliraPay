@@ -1,0 +1,267 @@
+//
+//  PinView.swift
+//  DigiliraPay
+//
+//  Created by Yusuf Özgül on 27.09.2019.
+//  Copyright © 2019 Ilao. All rights reserved.
+//
+
+import UIKit
+
+class PinView: UIView {
+
+    @IBOutlet weak var pinAreaView: UIView!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var pinArea1: UIView!
+    @IBOutlet weak var pinArea2: UIView!
+    @IBOutlet weak var pinArea3: UIView!
+    @IBOutlet weak var pinArea4: UIView!
+    
+    @IBOutlet weak var pinArea1Label: UILabel!
+    @IBOutlet weak var pinArea2Label: UILabel!
+    @IBOutlet weak var pinArea3Label: UILabel!
+    @IBOutlet weak var pinArea4Label: UILabel!
+    
+    @IBOutlet weak var successfulView: UIView!
+    @IBOutlet weak var goHomeButtonView: UIView!
+    
+    
+    weak var delegate: PinViewDelegate?
+    
+    let enteredColor = UIColor(red:0.40, green:0.64, blue:1.00, alpha:1.0)
+    let unEnteredColor = UIColor(red:0.90, green:0.84, blue:0.84, alpha:1.0)
+    
+    var entered = [false, false, false, false]
+    
+    private var firstCode = ""
+    private var lastCode = ""
+    
+    var isVerify = false
+    
+    override func awakeFromNib()
+    {
+        titleLabel.text = "4 basamaklı pin oluşturun"
+        setView()
+        
+        
+        let gradient = CAGradientLayer()
+        gradient.colors = [UIColor.black.cgColor, UIColor(red:0.30, green:0.30, blue:0.30, alpha:1.0).cgColor]
+        gradient.startPoint = CGPoint(x: 0.0, y: 0.0)
+        gradient.endPoint = CGPoint(x: 1.0, y: 0.0)
+        gradient.frame = goHomeButtonView.bounds
+        goHomeButtonView.layer.addSublayer(gradient)
+        
+        goHomeButtonView.clipsToBounds = true
+        goHomeButtonView.layer.cornerRadius = 6
+    }
+    
+    func setView()
+    {
+        pinArea1Label.isHidden = true
+        pinArea2Label.isHidden = true
+        pinArea3Label.isHidden = true
+        pinArea4Label.isHidden = true
+        
+        pinArea1.backgroundColor = unEnteredColor
+        pinArea2.backgroundColor = unEnteredColor
+        pinArea3.backgroundColor = unEnteredColor
+        pinArea4.backgroundColor = unEnteredColor
+        
+        pinArea1.clipsToBounds = true
+        pinArea2.clipsToBounds = true
+        pinArea3.clipsToBounds = true
+        pinArea4.clipsToBounds = true
+        
+        pinArea1.layer.cornerRadius = pinArea1.frame.height / 2
+        pinArea2.layer.cornerRadius = pinArea2.frame.height / 2
+        pinArea3.layer.cornerRadius = pinArea3.frame.height / 2
+        pinArea4.layer.cornerRadius = pinArea4.frame.height / 2
+        
+        
+    }
+    
+    func enterPin( _ number: Int)
+    {
+        if isVerify { firstCode = firstCode + String(number)}
+        else { lastCode = lastCode + String(number)}
+        if !entered[0]
+        {
+            pinArea1Label.text = String(number)
+            UIView.animate(withDuration: 0.3) {
+                self.pinArea1.alpha = 0
+                self.pinArea1Label.isHidden = false
+            }
+            entered[0] = true
+        }
+        else if !entered[1]
+        {
+            pinArea2Label.text = String(number)
+            UIView.animate(withDuration: 0.3) {
+                self.pinArea2.alpha = 0
+                self.pinArea2Label.isHidden = false
+                
+                self.pinArea1.backgroundColor = self.enteredColor
+                self.pinArea1.alpha = 1
+                self.pinArea1Label.isHidden = true
+            }
+            entered[1] = true
+        }
+        else if !entered[2]
+        {
+            pinArea3Label.text = String(number)
+            UIView.animate(withDuration: 0.3) {
+                self.pinArea3.alpha = 0
+                self.pinArea3Label.isHidden = false
+                
+                self.pinArea2.backgroundColor = self.enteredColor
+                self.pinArea2.alpha = 1
+                self.pinArea2Label.isHidden = true
+            }
+
+            entered[2] = true
+        }
+        else if !entered[3]
+        {
+            pinArea4Label.text = String(number)
+            UIView.animate(withDuration: 0.3) {
+                self.pinArea4.alpha = 0
+                self.pinArea4Label.isHidden = false
+                
+                self.pinArea3.backgroundColor = self.enteredColor
+                self.pinArea3.alpha = 1
+                self.pinArea3Label.isHidden = true
+            }
+            entered[3] = true
+            if isVerify { checkVerify() }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                if self.entered[3] { self.goVerify() }
+                
+            }
+        }
+    }
+    
+    func goVerify()
+    {
+        titleLabel.text = "4 basamaklı pin doğrulayın"
+        entered = [false, false, false, false]
+        isVerify = true
+        
+        pinArea1Label.isHidden = true
+        pinArea2Label.isHidden = true
+        pinArea3Label.isHidden = true
+        pinArea4Label.isHidden = true
+        
+        pinArea1.alpha = 1
+        pinArea2.alpha = 1
+        pinArea3.alpha = 1
+        pinArea4.alpha = 1
+        
+        pinArea1.backgroundColor = unEnteredColor
+        pinArea2.backgroundColor = unEnteredColor
+        pinArea3.backgroundColor = unEnteredColor
+        pinArea4.backgroundColor = unEnteredColor
+    }
+    func checkVerify()
+    {
+        guard isVerify else { return }
+        if firstCode == lastCode
+        {
+            UIView.animate(withDuration: 0.2) {
+                self.successfulView.alpha = 1
+            }
+        }
+        else
+        {
+            goVerify()
+            titleLabel.text = "4 basamaklı pin oluşturun"
+            isVerify = false
+            firstCode.removeAll()
+            lastCode.removeAll()
+            pinAreaView.shake()
+        }
+    }
+    
+    func deletePin()
+    {
+        guard entered[0] else { return }
+        
+        if isVerify { firstCode.removeLast() }
+        else { lastCode.removeLast()}
+        
+        if entered[3]
+        {
+            pinArea4Label.isHidden = true
+            pinArea4.backgroundColor = unEnteredColor
+            pinArea4.alpha = 1
+            pinArea4.isHidden = false
+            entered[3] = false
+        }
+        else if entered[2]
+        {
+            pinArea3Label.isHidden = true
+            pinArea3.backgroundColor = unEnteredColor
+            pinArea3.isHidden = false
+            pinArea3.alpha = 1
+            entered[2] = false
+        }
+        else if entered[1]
+        {
+            pinArea2Label.isHidden = true
+            pinArea2.backgroundColor = unEnteredColor
+            pinArea2.isHidden = false
+            pinArea2.alpha = 1
+            entered[1] = false
+        }
+        else if entered[0]
+        {
+            pinArea1Label.isHidden = true
+            pinArea1.backgroundColor = unEnteredColor
+            pinArea1.isHidden = false
+            pinArea1.alpha = 1
+            entered[0] = false
+        }
+    }
+    
+    @IBAction func tap1Button(_ sender: Any)
+    { enterPin(1) }
+    @IBAction func tap2Button( _ sender: Any)
+    { enterPin(2) }
+    @IBAction func tap3Button( _ sender: Any)
+    { enterPin(3) }
+    @IBAction func tap4Button( _ sender: Any)
+    { enterPin(4) }
+    @IBAction func tap5Button( _ sender: Any)
+    { enterPin(5) }
+    @IBAction func tap6Button( _ sender: Any)
+    { enterPin(6) }
+    @IBAction func tap7Button( _ sender: Any)
+    { enterPin(7) }
+    @IBAction func tap8Button( _ sender: Any)
+    { enterPin(8) }
+    @IBAction func tap9Button( _ sender: Any)
+    { enterPin(9) }
+    @IBAction func tap0Button( _ sender: Any)
+    { enterPin(0) }
+    @IBAction func tapDelButton( _ sender: Any)
+    { deletePin() }
+    
+    
+    @IBAction func closeView(_ sender: Any)
+    {
+        delegate?.closePinView()
+    }
+    @IBAction func goHomeButton(_ sender: Any)
+    {
+        delegate?.closePinView()
+    }
+}
+
+extension UIView {
+    func shake() {
+        let animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
+        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
+        animation.duration = 0.6
+        animation.values = [-20.0, 20.0, -20.0, 20.0, -10.0, 10.0, -5.0, 5.0, 0.0 ]
+        layer.add(animation, forKey: "shake")
+    }
+}

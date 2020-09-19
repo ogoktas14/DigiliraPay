@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Montserrat-SemiBold.otf">
+            <string>Montserrat-SemiBold</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="WalletView" customModule="DigiliraPAY" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="796"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="İŞLEM GEÇMİŞİ" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w0n-Du-ySH">
+                    <rect key="frame" x="20" y="20" width="94.5" height="15"/>
+                    <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="12"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ehI-s3-V7r">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="796"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HENÜZ HERHANGİ BİR İŞLEMİNİZ BULUNMAMAKTADIR" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s3f-b7-fd6">
+                            <rect key="frame" x="20" y="21" width="374" height="15"/>
+                            <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="12"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="emptybg" translatesAutoresizingMaskIntoConstraints="NO" id="iqN-ZQ-ZjC">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="796"/>
+                        </imageView>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="iqN-ZQ-ZjC" secondAttribute="bottom" id="0xf-WA-VCW"/>
+                        <constraint firstAttribute="trailing" secondItem="s3f-b7-fd6" secondAttribute="trailing" constant="20" id="Jw8-Ak-DwG"/>
+                        <constraint firstAttribute="trailing" secondItem="iqN-ZQ-ZjC" secondAttribute="trailing" id="SDm-6I-zRA"/>
+                        <constraint firstItem="s3f-b7-fd6" firstAttribute="leading" secondItem="ehI-s3-V7r" secondAttribute="leading" constant="20" id="hvr-4o-W7B"/>
+                        <constraint firstItem="iqN-ZQ-ZjC" firstAttribute="top" secondItem="ehI-s3-V7r" secondAttribute="top" id="l8p-35-Iyy"/>
+                        <constraint firstItem="s3f-b7-fd6" firstAttribute="top" secondItem="ehI-s3-V7r" secondAttribute="top" constant="21" id="nQc-gq-rpn"/>
+                        <constraint firstItem="iqN-ZQ-ZjC" firstAttribute="leading" secondItem="ehI-s3-V7r" secondAttribute="leading" id="zwh-zN-x5r"/>
+                    </constraints>
+                </view>
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gEO-0l-Ce8">
+                    <rect key="frame" x="0.0" y="49" width="414" height="747"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="ehI-s3-V7r" secondAttribute="bottom" id="2oH-nt-kq3"/>
+                <constraint firstItem="ehI-s3-V7r" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="6k1-kg-UvS"/>
+                <constraint firstItem="ehI-s3-V7r" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="9Xo-LS-o7X"/>
+                <constraint firstItem="w0n-Du-ySH" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="20" id="Cyx-73-Oqc"/>
+                <constraint firstItem="gEO-0l-Ce8" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="Pdd-rP-BbR"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="gEO-0l-Ce8" secondAttribute="bottom" id="QR0-vb-JWi"/>
+                <constraint firstItem="w0n-Du-ySH" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="ZLp-1K-2MK"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="gEO-0l-Ce8" secondAttribute="trailing" id="dIF-fw-lsc"/>
+                <constraint firstItem="gEO-0l-Ce8" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="5" id="fMh-17-T3e"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="ehI-s3-V7r" secondAttribute="trailing" id="xiV-jK-vvh"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="emptyInfo" destination="s3f-b7-fd6" id="XZr-xr-wXv"/>
+                <outlet property="emptyView" destination="ehI-s3-V7r" id="ka4-q3-DkI"/>
+                <outlet property="headerLabel" destination="w0n-Du-ySH" id="HGz-Mj-w4n"/>
+                <outlet property="transactionHistory" destination="gEO-0l-Ce8" id="ten-aV-JVd"/>
+            </connections>
+            <point key="canvasLocation" x="137.68115942028987" y="150.66964285714286"/>
+        </view>
+        <panGestureRecognizer minimumNumberOfTouches="1" id="Pjl-y0-qrK"/>
+    </objects>
+    <resources>
+        <image name="emptybg" width="920" height="1124"/>
+    </resources>
+</document>
