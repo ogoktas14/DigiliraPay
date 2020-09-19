@@ -584,12 +584,16 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
             }
         }
         
+        if !isSuccessView {
+            bottomView.isHidden = false
+        }
+        
         
         headerInfoLabel.isHidden = true
         homeAmountLabel.isHidden = true
         logoView.isHidden = false
         menuXib.isHidden = false
-        bottomView.isHidden = false
+        
         
     }
     
