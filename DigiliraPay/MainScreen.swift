@@ -79,7 +79,8 @@ class MainScreen: UIViewController {
         "FjTB2DdymTfpYbCCdcFwoRbHQnEhQD11CUm6nAF7P1UD": "Bitcoin",
         "LVf3qaCtb9tieS1bHD8gg5XjWvqpBm5TaDxeSVcqPwn": "Ethereum",
         "49hWHwJcTwV7bq76NebfpEj8N4DpF8iYKDSAVHK9w9gF" : "Litecoin",
-        "HGoEZAsEQpbA3DJyV9J3X1JCTTBuwUB6PE19g1kUYXsH" : "Waves"]
+        "HGoEZAsEQpbA3DJyV9J3X1JCTTBuwUB6PE19g1kUYXsH" : "Waves",
+        "2CrDXATWpvrriHHr1cVpQM65CaP3m7MJ425xz3tn9zMr" : "Charity"]
     
     let BC = Blockchain()
     
@@ -520,12 +521,18 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if isSuccessView { //eger basarili ekrani aciksa kapat
+            return
+        }
         goWalletScreen(coin: indexPath.item)
         menuXib.setSelector(view: menuXib.walletView)
         
     }
     
     @objc func handleTap(recognizer: MyTapGesture) {
+        if isSuccessView { //eger basarili ekrani aciksa kapat
+            return
+        }
         goWalletScreen(coin: recognizer.floatValue)
         menuXib.setSelector(view: menuXib.walletView)
         

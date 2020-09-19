@@ -120,6 +120,8 @@ class Blockchain {
             return "Litecoin"
         case "HGoEZAsEQpbA3DJyV9J3X1JCTTBuwUB6PE19g1kUYXsH":
             return "Waves"
+        case "2CrDXATWpvrriHHr1cVpQM65CaP3m7MJ425xz3tn9zMr":
+            return "Charity"
         default:
             return "null"
         }
