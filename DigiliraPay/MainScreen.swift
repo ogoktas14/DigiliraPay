@@ -735,6 +735,8 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
             
             sendMoneyView.amountTextField.text = (Double(params.amount) / Double(100000000)).description
             sendMoneyView.receiptTextField.text = params.merchant
+            sendMoneyView.amountTextField.isEnabled = false
+            sendMoneyView.receiptTextField.isEnabled = false
                         
             sendMoneyView.totalQuantity.text = ""
             sendMoneyView.commissionAmount.text = ""
