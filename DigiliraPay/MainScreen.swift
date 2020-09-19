@@ -205,9 +205,9 @@ class MainScreen: UIViewController {
     
     @objc func onDidReceiveData(_ sender: Notification) {
         // Do what you need, including updating IBOutlets
-        let A = UserDefaults.standard.object(forKey: "QRURL")
+        self.QR = UserDefaults.standard.object(forKey: "QRURL") as! String?
         
-        getOrder(address: A as! String)
+        getOrder(address: self.QR!)
         
         
     }
@@ -459,6 +459,7 @@ class MainScreen: UIViewController {
     
     @objc func closeSendView()
     {
+        self.QR = nil //qr bilgisi sifirlama
         profileMenuButton.isHidden = false
         closeCoinSendView()
         dismissLoadView()
@@ -847,6 +848,7 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
     
     func closeCoinSendView()
     {
+        self.QR = nil //qr bilgisi sifirlama
         if isShowSendCoinView
         {
             isShowSendCoinView = false
@@ -1097,6 +1099,11 @@ extension MainScreen: VerifyAccountDelegate
 {
     func dismissVErifyAccountView(user: digilira.user) // profil doğrulama sayfasının kapatılması
     {
+        print(self.QR ?? "no qr")
+        
+        if (self.QR != nil) {
+            getOrder(address: self.QR!)
+        }
         self.kullanici = user
         UIView.animate(withDuration: 0.3) {
             self.qrView.frame.origin.y = self.view.frame.height
