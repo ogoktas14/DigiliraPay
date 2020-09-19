@@ -14,6 +14,7 @@ import Foundation
        var assetId: String
        var amount: Int64
        var fee: Int64
+    var fiat: Double
        var attachment:String
    }
 

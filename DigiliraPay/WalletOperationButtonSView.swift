@@ -47,6 +47,7 @@ class WalletOperationButtonSView: UIView {
             assetId: "",
             amount: 0,
             fee: 900000,
+            fiat: 0,
             attachment: "")
         delegate?.send(params: empty)
     }

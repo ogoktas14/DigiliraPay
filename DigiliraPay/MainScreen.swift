@@ -744,7 +744,7 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
                         
             sendMoneyView.totalQuantity.text = ""
             sendMoneyView.commissionAmount.text = ""
-            sendMoneyView.amountEquivalent.text = ""
+            sendMoneyView.amountEquivalent.text = params.fiat.description + " ₺"
             
             sendMoneyView.delegate = self
             walletOperationView.translatesAutoresizingMaskIntoConstraints = true
@@ -1174,6 +1174,7 @@ extension MainScreen: SendWithQrDelegate
                                 assetId: ORDER.asset!,
                                 amount: ORDER.rate,
                                 fee: 900000,
+                                fiat: ORDER.totalPrice!,
                                 attachment: ORDER._id
         )
         send(params: data)
