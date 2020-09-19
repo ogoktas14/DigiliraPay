@@ -903,7 +903,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 18;
 				DEVELOPMENT_TEAM = 5TJACH7D4X;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -911,6 +911,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.digilira.payment;
 				PRODUCT_NAME = DigiliraPAY;
 				SUPPORTS_MACCATALYST = NO;
@@ -926,7 +927,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPayRelease.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 18;
 				DEVELOPMENT_TEAM = 5TJACH7D4X;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -934,6 +935,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.digilira.payment;
 				PRODUCT_NAME = DigiliraPAY;
 				SUPPORTS_MACCATALYST = NO;

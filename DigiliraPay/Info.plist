@@ -15,7 +15,7 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -34,7 +34,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Ödeme yapabilmek veya kripto varlıklarınızı transfer edebilmek için kamera erişimine izin vermeniz gerekmektedir.</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>İşlemlerinizi güvenli bir şekilde yürütebilmeniz için Face ID&apos;yi aktif etmeniz gerekmektedir.</string>
+	<string>İşlemlerinizi güvenli bir şekilde yürütebilmeniz için Face ID'yi aktif etmeniz gerekmektedir.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
