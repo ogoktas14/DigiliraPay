@@ -65,6 +65,7 @@ class MainScreen: UIViewController {
     
     var isAlive = false
     var isNewPin = false
+    var isFirstLaunch = true
     
     var walletOperationsViewOrigin = CGPoint(x: 0, y: 0)
     
@@ -258,7 +259,7 @@ class MainScreen: UIViewController {
             return
         }
         fetch()
-        coinTableView.reloadData()
+        //coinTableView.reloadData()
         refreshControl.endRefreshing()
         
         
@@ -273,6 +274,8 @@ class MainScreen: UIViewController {
                 self.Balances = (seed)
                 self.setTableView()
                 self.setWalletView()
+                self.coinTableView.reloadData()
+
             }
         }
         
@@ -421,8 +424,12 @@ class MainScreen: UIViewController {
         
         contentScrollView.contentSize.width = contentScrollView.frame.width * CGFloat(contentScrollView.subviews.count)
         
-        if pinkodaktivasyon! {
-            openPinView()
+        if isFirstLaunch {
+            
+            if pinkodaktivasyon! {
+                openPinView()
+            }
+            isFirstLaunch = false
         }
         
         if QR != nil {
@@ -635,13 +642,16 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
             logoView.isHidden = true
             
             headerInfoLabel.textColor = UIColor(red:0.94, green:0.56, blue:0.10, alpha:1.0)
-            
-            headerInfoLabel.text = Assets[(Filtered[coin]?.issueTransaction.assetId)!]
+            if Filtered.count != 0 {
+                headerInfoLabel.text = Assets[(Filtered[coin]?.issueTransaction.assetId)!]
+                let double = Double(Filtered[coin]!.balance) / Double(100000000)
+                homeAmountLabel.text = (double).description
+            } else {
+                headerInfoLabel.text = "Bakiye"
+                homeAmountLabel.text = "0.0"
+
+            }
             walletOperationView = UIView().loadNib(name: "WalletOperationButtonSView") as! WalletOperationButtonSView
-            let double = Double(Filtered[coin]!.balance) / Double(100000000)
-            
-            homeAmountLabel.text = (double).description
-            
             walletOperationView.frame = CGRect(x: 0,
                                                y: homeAmountLabel.frame.maxY + 20,
                                                width: view.frame.width,
@@ -1286,6 +1296,29 @@ extension MainScreen: PinViewDelegate
             self.sendWithQRView.frame.origin.y = self.self.view.frame.height
             self.sendWithQRView.alpha = 0
         }
+    }
+    
+    func updatePinCode (code:Int32) {
+        let user = digilira.pin.init(
+            pincode:code
+        )
+        
+        digiliraPay.request(  rURL: digilira.api.url + digilira.api.userUpdate,
+                              JSON: try? digiliraPay.jsonEncoder.encode(user),
+                              METHOD: digilira.requestMethod.put,
+                              AUTH: true
+        ) { (json) in
+            
+            DispatchQueue.main.async {
+                print(json)
+
+                self.digiliraPay.login() { (json) in
+                    DispatchQueue.main.async {
+                        self.kullanici = json
+                    }
+                 }
+            }
+         }
     }
     
     

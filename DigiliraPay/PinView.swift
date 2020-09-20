@@ -184,29 +184,6 @@ class PinView: UIView {
         pinArea4.backgroundColor = unEnteredColor
     }
     
-    func updatePinCode (code:Int32) {
-        let user = digilira.pin.init(
-            pincode:code
-        )
-        
-        digiliraPay.request(  rURL: digilira.api.url + digilira.api.userUpdate,
-                              JSON: try? digiliraPay.jsonEncoder.encode(user),
-                              METHOD: digilira.requestMethod.put,
-                              AUTH: true
-        ) { (json) in
-            
-            DispatchQueue.main.async {
-                print(json)
-
-                self.digiliraPay.login() { (json) in
-                    DispatchQueue.main.async {
-                        print(json)
-                    }
-                 }
-            }
-         }
-    }
-    
     
     func checkVerify()
     {
@@ -217,10 +194,11 @@ class PinView: UIView {
                 delegate?.closePinView()
             } else {
                 if !isUpdateMode {
-                updatePinCode(code: Int32(lastCode)!)
-                UIView.animate(withDuration: 0.2) {
-                    self.successfulView.alpha = 1
-                }
+
+                    delegate?.closePinView()
+                    delegate?.updatePinCode(code: Int32(lastCode)!)
+                    
+
                 }
             }
             
