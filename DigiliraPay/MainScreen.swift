@@ -125,12 +125,7 @@ class MainScreen: UIViewController {
         socketConn()
         coinTableView.refreshControl = refreshControl
         
-        
-        //BC.rollback(wallet: kullanici!.wallet!)
-        if pinkodaktivasyon! {
-            openPinView()
-        }
-        
+
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(refreshWeatherData(_:)), for: UIControl.Event.valueChanged)
         
@@ -158,6 +153,9 @@ class MainScreen: UIViewController {
         
         view.addGestureRecognizer(tap)
         
+        
+        //BC.rollback(wallet: kullanici!.wallet!)
+
         
         
     }
@@ -269,7 +267,7 @@ class MainScreen: UIViewController {
     }
     
     
-    func fetch() { 
+    func fetch() {
         BC.checkAssetBalance(address: kullanici!.wallet!){ (seed) in
             DispatchQueue.main.async {
                 self.Balances = (seed)
@@ -422,6 +420,10 @@ class MainScreen: UIViewController {
         contentScrollView.addSubview(walletView)
         
         contentScrollView.contentSize.width = contentScrollView.frame.width * CGFloat(contentScrollView.subviews.count)
+        
+        if pinkodaktivasyon! {
+            openPinView()
+        }
         
         if QR != nil {
             getOrder(address: QR!)

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		002B281A2386E5E6007BE3AD /* digiSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 002B28192386E5E6007BE3AD /* digiSocket.swift */; };
 		003B35DC23564409004EE63F /* TransactionPopupDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 003B35DB23564409004EE63F /* TransactionPopupDelegate.swift */; };
+		00520EC4251786E6003F5B4C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 00520EC2251786E6003F5B4C /* Main.storyboard */; };
 		0060807E23795453006FFBD2 /* constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0060807D23795453006FFBD2 /* constants.swift */; };
 		00608083237B404F006FFBD2 /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00608082237B404F006FFBD2 /* LocalAuthentication.framework */; };
 		006B1EE3234CA67B0045B6B4 /* func.swift in Sources */ = {isa = PBXBuildFile; fileRef = 006B1EE2234CA67B0045B6B4 /* func.swift */; };
@@ -29,7 +30,6 @@
 		882AAB0322FC96DD004CDAA6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882AAB0222FC96DD004CDAA6 /* AppDelegate.swift */; };
 		882AAB0522FC96DD004CDAA6 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882AAB0422FC96DD004CDAA6 /* SceneDelegate.swift */; };
 		882AAB0722FC96DD004CDAA6 /* OnBoardingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882AAB0622FC96DD004CDAA6 /* OnBoardingVC.swift */; };
-		882AAB0A22FC96DD004CDAA6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB0822FC96DD004CDAA6 /* Main.storyboard */; };
 		882AAB0C22FC96DE004CDAA6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB0B22FC96DE004CDAA6 /* Assets.xcassets */; };
 		882AAB0F22FC96DE004CDAA6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB0D22FC96DE004CDAA6 /* LaunchScreen.storyboard */; };
 		882AAB3E22FCAAEE004CDAA6 /* Montserrat-MediumItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB1922FCAAEE004CDAA6 /* Montserrat-MediumItalic.otf */; };
@@ -130,6 +130,7 @@
 		003B3509234E2299004EE63F /* WavesSDKCrypto.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = WavesSDKCrypto.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		003B350A234E2299004EE63F /* WavesSDKExtensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = WavesSDKExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		003B35DB23564409004EE63F /* TransactionPopupDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionPopupDelegate.swift; sourceTree = "<group>"; };
+		00520EC3251786E6003F5B4C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "../../../ios-master copy 3/DigiliraPay/DigiliraPay/Base.lproj/Main.storyboard"; sourceTree = "<group>"; };
 		0060807D23795453006FFBD2 /* constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = constants.swift; sourceTree = "<group>"; };
 		00608081237B1573006FFBD2 /* DigiliraPayRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DigiliraPayRelease.entitlements; sourceTree = "<group>"; };
 		00608082237B404F006FFBD2 /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
@@ -155,7 +156,6 @@
 		882AAB0222FC96DD004CDAA6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		882AAB0422FC96DD004CDAA6 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		882AAB0622FC96DD004CDAA6 /* OnBoardingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnBoardingVC.swift; sourceTree = "<group>"; };
-		882AAB0922FC96DD004CDAA6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		882AAB0B22FC96DE004CDAA6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		882AAB0E22FC96DE004CDAA6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		882AAB1022FC96DE004CDAA6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -380,7 +380,7 @@
 		882B9B6A22FEFAF300D6E7B6 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				882AAB0822FC96DD004CDAA6 /* Main.storyboard */,
+				00520EC2251786E6003F5B4C /* Main.storyboard */,
 				882B9B6622FEFAA500D6E7B6 /* OnBoardingView.xib */,
 				882AAB0D22FC96DE004CDAA6 /* LaunchScreen.storyboard */,
 				88F3F956230FD92600D81F2B /* LetsStartWordView.xib */,
@@ -605,12 +605,12 @@
 				882AAB4E22FCAAEE004CDAA6 /* MontserratAlternates-Thin.otf in Resources */,
 				882AAB5B22FCAAEE004CDAA6 /* MontserratAlternates-Light.otf in Resources */,
 				882AAB5322FCAAEE004CDAA6 /* Montserrat-ExtraBoldItalic.otf in Resources */,
+				00520EC4251786E6003F5B4C /* Main.storyboard in Resources */,
 				888F26AF233E89B800AB7E4C /* PinView.xib in Resources */,
 				882AAB5622FCAAEE004CDAA6 /* Montserrat-Regular.otf in Resources */,
 				882AAB3E22FCAAEE004CDAA6 /* Montserrat-MediumItalic.otf in Resources */,
 				88E03346233CB68400620541 /* Colors.xcassets in Resources */,
 				882AAB0C22FC96DE004CDAA6 /* Assets.xcassets in Resources */,
-				882AAB0A22FC96DD004CDAA6 /* Main.storyboard in Resources */,
 				882AAB5C22FCAAEE004CDAA6 /* MontserratAlternates-ExtraLight.otf in Resources */,
 				882AAB5822FCAAEE004CDAA6 /* MontserratAlternates-BoldItalic.otf in Resources */,
 				882AAB4C22FCAAEE004CDAA6 /* MontserratAlternates-Bold.otf in Resources */,
@@ -763,10 +763,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		882AAB0822FC96DD004CDAA6 /* Main.storyboard */ = {
+		00520EC2251786E6003F5B4C /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				882AAB0922FC96DD004CDAA6 /* Base */,
+				00520EC3251786E6003F5B4C /* Base */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
