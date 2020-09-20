@@ -91,7 +91,7 @@ class OnBoardingVC: UIViewController {
         let importGesture = UITapGestureRecognizer(target: self, action: #selector(impoertAccount))
         importAccountView.addGestureRecognizer(importGesture)
         
-        let main = UITapGestureRecognizer(target: self, action: #selector(goMainVC))
+        let main = UITapGestureRecognizer(target: self, action: #selector(letsGO))
         importAccountView.addGestureRecognizer(main)
         
         NotificationCenter.default.addObserver(self, selector: #selector(onDidReceiveData(_:)), name: .didReceiveData, object: nil)
@@ -146,7 +146,9 @@ class OnBoardingVC: UIViewController {
     
     @objc func impoertAccount()
     {
-        performSegue(withIdentifier: "toImportAccountVC", sender: nil)
+        performSegue(withIdentifier: "toLetsStartVC", sender: nil)
+
+        //performSegue(withIdentifier: "toImportAccountVC", sender: nil)
     }
 }
 
