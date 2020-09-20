@@ -188,6 +188,13 @@ class PinView: UIView {
     func checkVerify()
     {
         guard isVerify else { return }
+        if lastCode.count < 4
+        {
+        for n in lastCode.count...3 {
+            lastCode = "0" + lastCode
+        }
+        
+        }
         if firstCode == lastCode
         {
             if isEntryMode {
