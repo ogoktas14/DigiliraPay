@@ -113,7 +113,8 @@ class VerifyAccountView: UIView
             lastName: surnameText.text,
             tcno: tcText.text,
             tel: telText.text,
-            mail: mailText.text
+            mail: mailText.text,
+            status: 1
         )
             
         digiliraPay.request(  rURL: digilira.api.url + digilira.api.userUpdate,

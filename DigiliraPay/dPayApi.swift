@@ -245,6 +245,9 @@ class digiliraPayApi {
                 
                 DispatchQueue.main.async {
                     
+                    var pin =  Int32((json["pincode"] as? String)!)
+
+                    
                     let kullanici = digilira.user.init(username: json["username"] as? String,
                                                        firstName: json["firstName"] as? String,
                                                        lastName: json["lastName"] as? String,
@@ -257,7 +260,7 @@ class digiliraPayApi {
                                                        wallet: json["wallet"] as? String,
                                                        token: json["token"] as? String,
                                                        status: json["status"] as? Int64,
-                                                       pincode: json["pincode"] as? Int32)
+                                                       pincode: pin)
                      
                     try? Locksmith.deleteDataForUserAccount(userAccount: "auth")
                     

@@ -24,8 +24,10 @@ class PinView: UIView {
     
     @IBOutlet weak var successfulView: UIView!
     @IBOutlet weak var goHomeButtonView: UIView!
+    @IBOutlet weak var goBackButtonView: UIView!
     
-    
+    let digiliraPay = digiliraPayApi()
+
     weak var delegate: PinViewDelegate?
     
     let enteredColor = UIColor(red:0.40, green:0.64, blue:1.00, alpha:1.0)
@@ -37,10 +39,15 @@ class PinView: UIView {
     private var lastCode = ""
     
     var isVerify = false
+    var isEntryMode = false
+    var isUpdateMode = false
+    var isInit = false
     
+    var kullanici: digilira.user?
+
     override func awakeFromNib()
     {
-        titleLabel.text = "4 basamaklı pin oluşturun"
+        titleLabel.text = "Pini Girin"
         setView()
         
         
@@ -140,9 +147,24 @@ class PinView: UIView {
         }
     }
     
+    func setCode() {
+        isVerify = isEntryMode
+
+        if isEntryMode {
+            self.goBackButtonView.isHidden = true
+            self.lastCode = String((kullanici?.pincode)!)
+        }
+        if isUpdateMode {
+            self.lastCode = String((kullanici?.pincode)!)
+            isVerify = true
+        }
+    }
+    
     func goVerify()
     {
-        titleLabel.text = "4 basamaklı pin doğrulayın"
+        if !isVerify {
+            titleLabel.text = "Pini Doğrulayın"
+        }
         entered = [false, false, false, false]
         isVerify = true
         
@@ -161,23 +183,73 @@ class PinView: UIView {
         pinArea3.backgroundColor = unEnteredColor
         pinArea4.backgroundColor = unEnteredColor
     }
+    
+    func updatePinCode (code:Int32) {
+        let user = digilira.pin.init(
+            pincode:code
+        )
+        
+        digiliraPay.request(  rURL: digilira.api.url + digilira.api.userUpdate,
+                              JSON: try? digiliraPay.jsonEncoder.encode(user),
+                              METHOD: digilira.requestMethod.put,
+                              AUTH: true
+        ) { (json) in
+            
+            DispatchQueue.main.async {
+                print(json)
+
+                self.digiliraPay.login() { (json) in
+                    DispatchQueue.main.async {
+                        print(json)
+                    }
+                 }
+            }
+         }
+    }
+    
+    
     func checkVerify()
     {
         guard isVerify else { return }
         if firstCode == lastCode
         {
-            UIView.animate(withDuration: 0.2) {
-                self.successfulView.alpha = 1
+            if isEntryMode {
+                delegate?.closePinView()
+            } else {
+                if !isUpdateMode {
+                updatePinCode(code: Int32(lastCode)!)
+                UIView.animate(withDuration: 0.2) {
+                    self.successfulView.alpha = 1
+                }
+                }
             }
+            
+            if isUpdateMode {
+                goVerify()
+
+                firstCode.removeAll()
+                titleLabel.text = "Yeni Pini Girin"
+                isVerify = false
+                lastCode.removeAll()
+                isUpdateMode=false
+                
+                
+            }
+            
         }
         else
         {
             goVerify()
-            titleLabel.text = "4 basamaklı pin oluşturun"
-            isVerify = false
-            firstCode.removeAll()
-            lastCode.removeAll()
             pinAreaView.shake()
+            firstCode.removeAll()
+
+            if !isEntryMode && !isUpdateMode  {
+            titleLabel.text = "Pini Girin"
+            isVerify = false
+            lastCode.removeAll()
+             
+            }
+            
         }
     }
     

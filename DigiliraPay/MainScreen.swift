@@ -64,6 +64,7 @@ class MainScreen: UIViewController {
     private let refreshControl = UIRefreshControl()
     
     var isAlive = false
+    var isNewPin = false
     
     var walletOperationsViewOrigin = CGPoint(x: 0, y: 0)
     
@@ -1067,6 +1068,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         showLegal()
     }
     func showPinView() {
+        isNewPin = true
         openPinView()
     }
 }
@@ -1251,6 +1253,19 @@ extension MainScreen: PinViewDelegate
         { view.removeFromSuperview() }
         sendWithQRView.translatesAutoresizingMaskIntoConstraints = true
         let pinView = UIView().loadNib(name: "PinView") as! PinView
+        pinView.kullanici = kullanici
+        
+        if !isNewPin {
+            if kullanici?.pincode != -1 {
+                pinView.isEntryMode = true
+            }
+        }else {
+            pinView.isEntryMode = false
+            pinView.isUpdateMode = true
+
+        }
+        pinView.setCode()
+
         pinView.delegate = self
         pinView.frame = CGRect(x: 0,
                                y: 0,

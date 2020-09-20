@@ -69,6 +69,10 @@ struct digilira {
         var pincode: Int32?
     }
     
+    struct pin: Encodable {
+        var pincode: Int32?
+    }
+    
     struct odemeStatus: Encodable {
         var id: String
         var txid: String?
