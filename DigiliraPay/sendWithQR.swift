@@ -177,6 +177,7 @@ class sendWithQR: UIView {
     
     @IBAction func exitButton(_ sender: Any)
     {
+        captureSession.stopRunning()
         delegate?.dismissSendWithQr()
     }
 }

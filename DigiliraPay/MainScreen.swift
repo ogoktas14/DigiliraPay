@@ -1130,7 +1130,6 @@ extension MainScreen: VerifyAccountDelegate
                 getOrder(address: self.QR!)
             }
             
-            getOrder(address: self.QR!)
         
         self.kullanici = user
         UIView.animate(withDuration: 0.3) {
