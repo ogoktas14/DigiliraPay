@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -60,7 +61,7 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                             </subviews>
-                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             <constraints>
                                 <constraint firstItem="NHd-8z-a4I" firstAttribute="centerX" secondItem="mtb-ld-ujV" secondAttribute="centerX" id="2Bf-Od-blm"/>
                                 <constraint firstItem="NHd-8z-a4I" firstAttribute="centerY" secondItem="mtb-ld-ujV" secondAttribute="centerY" id="UR3-QY-4I1"/>
@@ -186,7 +187,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
-                                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstItem="XGb-Ok-CBm" firstAttribute="leading" secondItem="3be-1k-nDH" secondAttribute="leading" id="SAH-ne-omw"/>
                                         <constraint firstItem="XGb-Ok-CBm" firstAttribute="centerY" secondItem="3be-1k-nDH" secondAttribute="centerY" id="dPk-6f-A6V"/>
@@ -443,6 +444,7 @@ kripto para gönderebilir ancak bu aşamada alışverişlerinizde kripto paralar
                     </constraints>
                 </view>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="ZG5-Ii-d8C" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="BK3-qP-bLk"/>
@@ -462,7 +464,6 @@ kripto para gönderebilir ancak bu aşamada alışverişlerinizde kripto paralar
                 <constraint firstItem="Zj3-7D-wIQ" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="uLi-mV-Idu"/>
                 <constraint firstItem="ZG5-Ii-d8C" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="xau-ZW-BFw"/>
             </constraints>
-            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>
                 <outlet property="cameraButtonView" destination="mtb-ld-ujV" id="8Ij-QS-16a"/>
                 <outlet property="descLabel" destination="nGX-1i-TFA" id="Lza-01-zFI"/>
@@ -486,5 +487,8 @@ kripto para gönderebilir ancak bu aşamada alışverişlerinizde kripto paralar
         <image name="QRViewBG" width="414" height="896"/>
         <image name="TransactionPopupSucces" width="264" height="263"/>
         <image name="verifyProfilePhoto" width="592" height="568"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>

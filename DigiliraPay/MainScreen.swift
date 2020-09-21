@@ -61,6 +61,8 @@ class MainScreen: UIViewController {
     var isShowLoadCoinView = false
     var isSuccessView = false
     
+    var isKeyboard = false
+    
     private let refreshControl = UIRefreshControl()
     
     var isAlive = false
@@ -236,12 +238,16 @@ class MainScreen: UIViewController {
         
     }
     @objc func keyboardWillShow(notification: NSNotification) {
+        if !isKeyboard {
+            isKeyboard = true
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            self.view.frame.origin.y -= keyboardSize.height
+            self.view.frame.origin.y -= 150
+        }
         }
     }
     
     @objc func keyboardWillHide(notification: NSNotification) {
+        isKeyboard = false
         self.view.frame.origin.y = 0
         
         
@@ -1239,9 +1245,7 @@ extension MainScreen : WebSocketDelegate {
     }
     
     func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
-        print(error)
-        isAlive = false
-        
+        isAlive = false        
     }
     
     func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
