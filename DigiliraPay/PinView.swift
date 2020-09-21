@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import LocalAuthentication
 
 class PinView: UIView {
 
@@ -42,12 +43,15 @@ class PinView: UIView {
     var isEntryMode = false
     var isUpdateMode = false
     var isInit = false
+    var wrongEntry = 0
+        
+    var QR:String?
     
     var kullanici: digilira.user?
 
     override func awakeFromNib()
     {
-        titleLabel.text = "Pini Girin"
+
         setView()
         
         
@@ -149,9 +153,12 @@ class PinView: UIView {
     
     func setCode() {
         isVerify = isEntryMode
-
+        if isInit {
+            titleLabel.text = "Bir Pin Belirleyin"
+        }
         if isEntryMode {
             self.goBackButtonView.isHidden = true
+            
             self.lastCode = String((kullanici?.pincode)!)
         }
         if isUpdateMode {
@@ -190,9 +197,12 @@ class PinView: UIView {
         guard isVerify else { return }
         if lastCode.count < 4
         {
-        for n in lastCode.count...3 {
-            lastCode = "0" + lastCode
-        }
+            
+            while lastCode.count < 4  {
+                lastCode = "0" + lastCode
+
+            }
+   
         
         }
         if firstCode == lastCode
@@ -201,11 +211,8 @@ class PinView: UIView {
                 delegate?.closePinView()
             } else {
                 if !isUpdateMode {
-
                     delegate?.closePinView()
                     delegate?.updatePinCode(code: Int32(lastCode)!)
-                    
-
                 }
             }
             
@@ -213,7 +220,7 @@ class PinView: UIView {
                 goVerify()
 
                 firstCode.removeAll()
-                titleLabel.text = "Yeni Pini Girin"
+                titleLabel.text = "Yeni Pin Belirleyin"
                 isVerify = false
                 lastCode.removeAll()
                 isUpdateMode=false
@@ -224,6 +231,45 @@ class PinView: UIView {
         }
         else
         {
+            
+            if wrongEntry > 4 {
+
+                    
+                    let context = LAContext()
+                    var error: NSError?
+
+                    if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+                        let reason = "Pin bilgisinin sıfırlanabilmesi için biyometrik onayınız gerekmektedir."
+
+                        context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) {
+                            [weak self] success, authenticationError in
+
+                            DispatchQueue.main.async { [self] in
+                                if success {
+
+                                    self?.goVerify()
+                                    self?.isEntryMode = false
+                                    self?.firstCode.removeAll()
+                                    self?.titleLabel.text = "Yeni Pin Belirleyin"
+                                    self?.isVerify = false
+                                    self?.lastCode.removeAll()
+                                    self?.isUpdateMode=false
+                                    
+                                } else {
+                                    // error
+                                }
+                            }
+                        }
+                    } else {
+                        // no biometry
+                    }
+                    
+                
+
+            }
+            
+            wrongEntry += 1
+            
             goVerify()
             pinAreaView.shake()
             firstCode.removeAll()

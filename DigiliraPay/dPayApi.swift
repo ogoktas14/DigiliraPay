@@ -181,7 +181,7 @@ class digiliraPayApi {
         var error: NSError?
 
         if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-            let reason = "Identify yourself!"
+            let reason = "Transferin gerçekleşebilmesi için biometrik onayınız gerekmektedir!"
 
             context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) {
                 [weak self] success, authenticationError in

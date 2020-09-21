@@ -473,6 +473,8 @@ class MainScreen: UIViewController {
     @objc func closeSendView()
     {
         self.QR = nil //qr bilgisi sifirlama
+        UserDefaults.standard.set("EMPTY", forKey: "QRURL")
+
         profileMenuButton.isHidden = false
         closeCoinSendView()
         dismissLoadView()
@@ -1116,11 +1118,14 @@ extension MainScreen: VerifyAccountDelegate
 {
     func dismissVErifyAccountView(user: digilira.user) // profil doğrulama sayfasının kapatılması
     {
-        print(self.QR ?? "no qr")
         
-        if (self.QR != nil) {
+            if QR != "EMPTY" && QR != nil {
+                UserDefaults.standard.set("EMPTY", forKey: "QRURL")
+                getOrder(address: self.QR!)
+            }
+            
             getOrder(address: self.QR!)
-        }
+        
         self.kullanici = user
         UIView.animate(withDuration: 0.3) {
             self.qrView.frame.origin.y = self.view.frame.height
@@ -1270,6 +1275,8 @@ extension MainScreen: PinViewDelegate
         if !isNewPin {
             if kullanici?.pincode != -1 {
                 pinView.isEntryMode = true
+            }else {
+                pinView.isInit = true
             }
         }else {
             pinView.isEntryMode = false
@@ -1296,6 +1303,16 @@ extension MainScreen: PinViewDelegate
             self.sendWithQRView.frame.origin.y = self.self.view.frame.height
             self.sendWithQRView.alpha = 0
         }
+        
+        
+        QR = UserDefaults.standard.object(forKey: "QRURL") as! String?
+
+        if QR != "EMPTY" && QR != nil {
+            UserDefaults.standard.set("EMPTY", forKey: "QRURL")
+            getOrder(address: self.QR!)
+        }
+
+
     }
     
     func updatePinCode (code:Int32) {
