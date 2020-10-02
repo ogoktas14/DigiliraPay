@@ -39,7 +39,8 @@ class OnBoardingVC: UIViewController {
         importAccountView.isHidden = true
         pageControl.isHidden = true
          
-        
+        UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
+
         let dictionary = Locksmith.loadDataForUserAccount(userAccount: "sensitive")
         
         if dictionary != nil {

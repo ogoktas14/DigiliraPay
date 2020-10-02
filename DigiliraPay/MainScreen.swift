@@ -68,6 +68,7 @@ class MainScreen: UIViewController {
     var isAlive = false
     var isNewPin = false
     var isFirstLaunch = true
+    var isTouchIDCanceled = false
     
     var walletOperationsViewOrigin = CGPoint(x: 0, y: 0)
     
@@ -76,6 +77,9 @@ class MainScreen: UIViewController {
     
     var Balances: NodeService.DTO.AddressAssetsBalance?
     var Filtered: [NodeService.DTO.AssetBalance?] = []
+    
+    var onPinSuccess: ((_ result: Bool)->())?
+
     
     var headerHeightBuffer: CGFloat?
     var QR:String?
@@ -128,15 +132,70 @@ class MainScreen: UIViewController {
         socketConn()
         coinTableView.refreshControl = refreshControl
         
+//        when requested asset balances
+        BC.onAssetBalance = { result in
+            self.Balances = (result)
+            self.setTableView()
+            self.setWalletView()
+            self.coinTableView.reloadData()
+        }
+        
+        
+        BC.onTransferTransaction = { res in
+            let attachment = String(decoding: (WavesCrypto.shared.base58decode( input: res.dictionary["attachment"] as! String)!), as: UTF8.self)
+            let txid = res.dictionary["id"] as? String
+            
+            self.sendMessage(SocketMessage.init(id: attachment,
+                                                status: "VERIFYING",
+                                                txid: txid))
+            DispatchQueue.main.async {
+                self.showSuccess(mode: 1)
+            }
+            self.bottomView.isHidden = true
+            self.closeCoinSendView()
+            self.goHomeScreen()
+            
+            self.BC.verifyTrx(txid: txid!, id: attachment)
+            
+        }
+        
+        BC.onVerified = { res in
+            NotificationCenter.default.post(name: .didCompleteTask, object: nil)
+            DispatchQueue.main.async {
+                self.showSuccess(mode: 2)
+            }
+            
+            let id = res["id"] as? String
+            let attachment = String(decoding: (WavesCrypto.shared.base58decode( input: res["attachment"] as! String)!), as: UTF8.self)
+            
+            let odeme = digilira.odemeStatus.init(id: attachment, txid: id!, status: "2")
+            self.sendMessage(SocketMessage.init(id: attachment, status: "SUCCESSFUL", txid: id!))
+            self.digiliraPay.setOdemeAliniyor(JSON: try? self.digiliraPay.jsonEncoder.encode(odeme))
+        }
+        
+        BC.onError = { res in
+            switch res {
+            case "Canceled by user.":
+                self.closeCoinSendView()
+                break
+            case "Fallback authentication mechanism selected.":
+                self.isTouchIDCanceled = true
+                self.openPinView()
+                break
+            default:
+                break
+            }
+            
+        }
+
+        
+        
 
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(refreshWeatherData(_:)), for: UIControl.Event.valueChanged)
         
         NotificationCenter.default.addObserver( self, selector: #selector(keyboardWillShow(notification:)), name:  UIResponder.keyboardWillShowNotification, object: nil )
-        
-        
         NotificationCenter.default.addObserver( self, selector: #selector(keyboardWillHide(notification:)), name:  UIResponder.keyboardWillHideNotification, object: nil )
-        
         NotificationCenter.default.addObserver(self, selector: #selector(onDidReceiveData(_:)), name: .didReceiveData, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(onTrxCompleted), name: .didCompleteTask, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(onOrderClicked), name: .orderClick, object: nil)
@@ -155,11 +214,6 @@ class MainScreen: UIViewController {
         //tap.cancelsTouchesInView = false
         
         view.addGestureRecognizer(tap)
-        
-        
-        //BC.rollback(wallet: kullanici!.wallet!)
-
-        
         
     }
     
@@ -267,55 +321,14 @@ class MainScreen: UIViewController {
         fetch()
         //coinTableView.reloadData()
         refreshControl.endRefreshing()
-        
-        
-        
-        
+
     }
     
     
     func fetch() {
-        BC.checkAssetBalance(address: kullanici!.wallet!){ (seed) in
-            DispatchQueue.main.async {
-                self.Balances = (seed)
-                self.setTableView()
-                self.setWalletView()
-                self.coinTableView.reloadData()
-
-            }
-        }
-        
+        BC.checkAssetBalance(address: kullanici!.wallet!)
     }
-    
-    
-    func verifyTrx(txid: String, id:String) {
         
-        digiliraPay.request(rURL: digilira.node.url + "/transactions/info/" + txid,
-                            METHOD: digilira.requestMethod.get
-        ) { (json) in
-            DispatchQueue.main.async {
-                if json["message"] != nil {
-                    print(json["message"]!)
-                    sleep(1)
-                    self.verifyTrx(txid: txid, id:id)
-                } else {
-                    
-                    NotificationCenter.default.post(name: .didCompleteTask, object: nil)
-                    self.showSuccess(mode: 2)
-                    
-                    let odeme = digilira.odemeStatus.init(id: id, txid: txid, status: "2")
-                    self.sendMessage(SocketMessage.init(id: id, status: "SUCCESSFUL", txid: txid))
-                    self.digiliraPay.setOdemeAliniyor(JSON: try? self.digiliraPay.jsonEncoder.encode(odeme))
-                    
-                    print(json)
-                }
-            }
-            
-        }
-        
-    }
-    
-    
     override func viewWillAppear(_ animated: Bool)
     {
         loadMenu()
@@ -853,19 +866,24 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
 {
     func sendCoin(params:SendTrx) // gelen parametrelerle birlikte gönder butonuna basıldı.
     {
-        // MARK: TODO
-        print(params)
+        BC.getSensitive(pin:false)
         
-        BC.sendTransaction(recipient: params.recipient, fee: 900000, amount: params.amount, assetId: params.assetId, attachment: params.attachment){(res) in
+        BC.onSensitive = { [self] wallet in
+            BC.sendTransaction2(recipient: params.recipient, fee: 900000, amount: params.amount, assetId: params.assetId, attachment: params.attachment, wallet:wallet)
+        }
+        
+        self.onPinSuccess = { [self] res in
+            switch res {
+            case true:
+                BC.getSensitive(pin:res)
+                break
+            case false:
+                if isShowSendCoinView {
+                    self.closeSendView()
+                }
+                break
+            }
             
-            
-            self.sendMessage(SocketMessage.init(id: params.attachment, status: "VERIFYING", txid: res.dictionary["id"] as? String))
-            self.showSuccess(mode: 1)
-            self.bottomView.isHidden = true
-            self.closeCoinSendView()
-            self.goHomeScreen()
-            
-            self.verifyTrx(txid: res.dictionary["id"] as! String, id: params.attachment)
         }
         
     }
@@ -1275,6 +1293,11 @@ extension MainScreen: PinViewDelegate
         let pinView = UIView().loadNib(name: "PinView") as! PinView
         pinView.kullanici = kullanici
         
+        if isTouchIDCanceled {
+            pinView.isTouchIDCanceled = true
+            self.isTouchIDCanceled = false
+        }
+        
         if !isNewPin {
             if kullanici?.pincode != -1 {
                 pinView.isEntryMode = true
@@ -1299,6 +1322,10 @@ extension MainScreen: PinViewDelegate
             self.sendWithQRView.frame.origin.y = 0
             self.sendWithQRView.alpha = 1
         }
+    }
+    
+    func pinSuccess(res: Bool) {
+        self.onPinSuccess!(res)
     }
     
     func closePinView() {

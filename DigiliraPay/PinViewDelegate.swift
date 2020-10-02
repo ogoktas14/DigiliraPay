@@ -11,4 +11,5 @@ import Foundation
 protocol PinViewDelegate: class {
     func closePinView()
     func updatePinCode(code:Int32)
+    func pinSuccess(res:Bool)
 }

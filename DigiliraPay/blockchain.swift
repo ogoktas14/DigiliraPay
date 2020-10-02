@@ -13,6 +13,7 @@ import WavesSDKExtensions
 import RxSwift
 import Locksmith
 import Foundation
+import LocalAuthentication
 
 
 class Blockchain {
@@ -22,6 +23,7 @@ class Blockchain {
     private var disposeBag: DisposeBag = DisposeBag()
     
     private let wavesCrypto: WavesCrypto = WavesCrypto()
+    
     let digiliraPay = digiliraPayApi()
     
     func arrayWithSize(_ s: String) -> [UInt8] {
@@ -29,84 +31,103 @@ class Blockchain {
         return toByteArray(Int16(b.count)) + b
     }
     
+    var onAssetBalance: ((_ result: NodeService.DTO.AddressAssetsBalance)->())?
+    var onTransferTransaction: ((_ result: NodeService.DTO.Transaction)->())?
+    var onVerified: ((_ result: [String : AnyObject])->())?
+    var onSensitive: ((_ result: digilira.wallet)->())?
+    var onError: ((_ result: String)->())?
+    var onPinSuccess: ((_ result: Bool)->())?
+
+    func checkAssetBalance(address: String ) {
+        WavesSDK.shared.services.nodeServices.assetsNodeService
+            .assetsBalances(address: address)
+            .observeOn(MainScheduler.asyncInstance)
+            .subscribe(onNext: { (balances) in
+                self.onAssetBalance?(balances)
+            })
+    }
     
-    
-    func rollback (wallet: String) {
-        
-        self.checkAssetBalance(address: wallet){ (balances) in
-            DispatchQueue.main.async {
-                
-                balances.balances.forEach { word in
-                    print(word.assetId)
-                    self.sendTransaction(
-                        recipient: "3NCpyPuNzUaB7LFS4KBzwzWVnXmjur582oy",
-                        fee: 900000,
-                        amount: word.balance,
-                        assetId: word.assetId,
-                        attachment: "12345678"){(res) in
-                            
-                        }
-                }
-            }
-        }
+
+    func sendTransaction2(recipient: String, fee: Int64, amount:Int64, assetId:String, attachment:String, wallet:digilira.wallet) {
         
 
-         
+            guard let chainId = WavesSDK.shared.enviroment.chainId else { return }
+            guard WavesCrypto.shared.address(seed: wallet.seed!, chainId: chainId) != nil else { return }
+            guard let senderPublicKey = WavesCrypto.shared.publicKey(seed: wallet.seed!) else { return }
+
+            let feeAssetId = ""
+            let buf: [UInt8] = Array(attachment.utf8)
+            let attachment58 = WavesCrypto.shared.base58encode(input: buf)
+            let timestamp = Int64(Date().timeIntervalSince1970) * 1000
+             
+            var queryModel = NodeService.Query.Transaction.Transfer(recipient: recipient,
+                                                                  assetId: assetId,
+                                                                  amount: amount,
+                                                                  fee: fee,
+                                                                  attachment: attachment58!,
+                                                                  feeAssetId: feeAssetId,
+                                                                  timestamp: timestamp,
+                                                                  senderPublicKey: senderPublicKey, chainId: chainId)
+             
+            
+            // sign transfer transaction using seed
+            queryModel.sign(seed: wallet.seed!)
+             
+            let send = NodeService.Query.Transaction.transfer(queryModel)
+            
+            WavesSDK.shared.services
+                .nodeServices // You can choose different Waves services: node, matcher and data service
+                .transactionNodeService // Here methods of service
+                .transactions(query: send)
+                .observeOn(MainScheduler.asyncInstance)
+                .subscribe(onNext: { [weak self] (tx) in
+                    self!.onTransferTransaction?(tx)
+                })
+                .disposed(by: disposeBag)
+            
+        
+        
+
     }
     
+     
+    func verifyTrx(txid: String, id:String) {
+        getTransactionId(rURL: digilira.node.url + "/transactions/info/" + txid)
+    }
     
-    
-    func sendTransaction(recipient: String, fee: Int64, amount:Int64, assetId:String, attachment:String, returnCompletion: @escaping (NodeService.DTO.Transaction) -> () ) {
-         
-        digiliraPay.getSeed() { (json) in
-            DispatchQueue.main.async {
-                
-                if (json.seed != "") { //hatali dogrulama
-                     
-                    let chainId = WavesSDK.shared.enviroment.chainId!
-                    let senderPublicKey = WavesCrypto.shared.publicKey(seed: json.seed!)!
+    func getTransactionId(rURL: String) {
+        
+        let url = rURL
+        
+        var request = URLRequest(url: URL(string: rURL)!)
+        request.httpMethod = digilira.requestMethod.get
+        
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let httpResponse = response as? HTTPURLResponse {
+                print(httpResponse.statusCode)
+                if httpResponse.statusCode == 404 {
+                    sleep(1)
                     
-                    
-                    let buf: [UInt8] = Array(attachment.utf8)
-                    let attachment58 = WavesCrypto.shared.base58encode(input: buf)
-                    
-                    let feeAssetId = ""
-                    
-                    let timestamp = Int64(Date().timeIntervalSince1970) * 1000
-                    
-                    var queryModel = NodeService.Query.Transaction.Transfer(recipient: recipient,
-                                                                            assetId: assetId,
-                                                                            amount: amount,
-                                                                            fee: fee,
-                                                                            attachment: attachment58!,
-                                                                            feeAssetId: feeAssetId,
-                                                                            timestamp: timestamp,
-                                                                            senderPublicKey: senderPublicKey, chainId: chainId)
-                    queryModel.sign(seed: json.seed!)
-                    
-                    print(queryModel)
-                    
-                    let send = NodeService.Query.Transaction.transfer(queryModel)
-                    
-                    
-                    WavesSDK.shared.services
-                        .nodeServices // You can choose different Waves services: node, matcher and data service
-                        .transactionNodeService // Here methods of service
-                        .transactions(query: send)
-                        .observeOn(MainScheduler.asyncInstance)
-                        .subscribe(onNext: {(tx) in
-                            returnCompletion(tx)
-                        })
-                        .disposed(by: self.disposeBag)
-                    
-                    //return queryModel.self.attachment
-                     
+                    self.getTransactionId(rURL: url)
+                }else {
+                    guard let dataResponse = data,
+                        error == nil else {
+                            print(error?.localizedDescription ?? "Response Error")
+                            return }
+                    do{
+                        let jsonResponse = try JSONSerialization.jsonObject(with: dataResponse) as! Dictionary<String, AnyObject>
+                        self.onVerified!(jsonResponse)
+                    } catch let parsingError {
+                        print("Error", parsingError)
+                    }
                 }
-                 
             }
         }
-          
+        task.resume()
+        
+        
     }
+    
     
     
     func returnAsset (assetId: String) -> String {
@@ -164,7 +185,7 @@ class Blockchain {
                     .transactions(query: send)
                     .observeOn(MainScheduler.asyncInstance)
                     .subscribe(onNext: { [weak self] (tx) in
-                        print(tx) // Do something on success, now we have wavesBalance.balance in satoshi in Long
+                        //print(tx) // Do something on success, now we have wavesBalance.balance in satoshi in Long
                         
                     })
                 
@@ -198,7 +219,7 @@ class Blockchain {
                     .addressBalance(address: address)
                     .observeOn(MainScheduler.asyncInstance)
                     .subscribe(onNext: { [weak self] (balances) in
-                        print(balances)
+                        //print(balances)
                         let BC = Blockchain()
                         
                         if balances.balance < 1400000 {
@@ -226,16 +247,6 @@ class Blockchain {
             })
     }
     
-    func   checkAssetBalance(address: String, returnCompletion: @escaping (NodeService.DTO.AddressAssetsBalance) -> () ) {
-        WavesSDK.shared.services.nodeServices.assetsNodeService
-            .assetsBalances(address: address)
-            .observeOn(MainScheduler.asyncInstance)
-            .subscribe(onNext: { (balances) in
-                returnCompletion(balances)
-            })
-        
-    }
-    
     func checkSmart(address: String) {
         
         
@@ -253,7 +264,7 @@ class Blockchain {
                 
                 DispatchQueue.main.async { // Correct
                     
-                    print(json)
+                    //print(json)
                     
                     if json["complexity"] as! Int64 == 0 {
                         self.checkBalance(address: address)
@@ -272,6 +283,46 @@ class Blockchain {
         task.resume()
         
     }
+    
+    func getSensitive(pin:Bool) {
+
+        let context = LAContext()
+        var error: NSError?
+        
+        if pin {
+            let dictionary = Locksmith.loadDataForUserAccount(userAccount: "sensitive")
+            let seed = digilira.wallet.init(seed: dictionary?["seed"] as? String)
+            self.onSensitive!(seed)
+        }else {
+          
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            let reason = "Transferin gerçekleşebilmesi için biometrik onayınız gerekmektedir!"
+
+            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) {
+                [weak self] success, authenticationError in
+
+                DispatchQueue.main.async {
+                    
+                    if success {
+                        let dictionary = Locksmith.loadDataForUserAccount(userAccount: "sensitive")
+                        let seed = digilira.wallet.init(seed: dictionary?["seed"] as? String)
+                        
+                        self!.onSensitive!(seed)
+                    } else {
+                        // error
+                        self!.onError!(authenticationError!.localizedDescription)
+                    }
+                    
+                }
+            }
+        } else {
+            // no biometry
+        }
+        
+        }
+    }
+    
+    
     
     
     

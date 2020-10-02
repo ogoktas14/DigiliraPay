@@ -8,6 +8,7 @@
 
 import UIKit
 import LocalAuthentication
+import Locksmith
 
 class PinView: UIView {
 
@@ -28,6 +29,7 @@ class PinView: UIView {
     @IBOutlet weak var goBackButtonView: UIView!
     
     let digiliraPay = digiliraPayApi()
+    
 
     weak var delegate: PinViewDelegate?
     
@@ -43,10 +45,12 @@ class PinView: UIView {
     var isEntryMode = false
     var isUpdateMode = false
     var isInit = false
+    var isTouchIDCanceled = false
     var wrongEntry = 0
         
     var QR:String?
-    
+    let BC = Blockchain()
+
     var kullanici: digilira.user?
 
     override func awakeFromNib()
@@ -153,6 +157,7 @@ class PinView: UIView {
     
     func setCode() {
         isVerify = isEntryMode
+
         if isInit {
             titleLabel.text = "Bir Pin Belirleyin"
         }
@@ -164,6 +169,9 @@ class PinView: UIView {
         if isUpdateMode {
             self.lastCode = String((kullanici?.pincode)!)
             isVerify = true
+        }
+        if isTouchIDCanceled {
+            self.goBackButtonView.isHidden = false
         }
     }
     
@@ -207,6 +215,10 @@ class PinView: UIView {
         }
         if firstCode == lastCode
         {
+            if (isTouchIDCanceled) {
+                isTouchIDCanceled = false
+                delegate?.pinSuccess(res:true)
+            }
             if isEntryMode {
                 delegate?.closePinView()
             } else {
@@ -351,6 +363,9 @@ class PinView: UIView {
     
     @IBAction func closeView(_ sender: Any)
     {
+        if !isUpdateMode {
+            delegate?.pinSuccess(res:false)
+        }
         delegate?.closePinView()
     }
     @IBAction func goHomeButton(_ sender: Any)

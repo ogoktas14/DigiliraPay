@@ -114,17 +114,12 @@ class digiliraPayApi {
     
     
     func setOdemeAliniyor(JSON : Data?) {
-
-
         if let json = try! JSONSerialization.jsonObject(with: JSON!, options: []) as? [String: Any] {
             // try to read out a string array
             if let status = json["status"] as? String {
                 if (status == "2") {
-                        
                         //guard let url = URL(string: "https://api.digilirapay.com/v7/?h=" + (json["id"] as! String)) else { return }
                         //UIApplication.shared.open(url)
-
-                    
                 }
             }
         }
@@ -142,28 +137,6 @@ class digiliraPayApi {
     }
     
     
-    func verifyTrx(txid: String, id:String) {
-        
-        request(rURL: digilira.node.url + "/transactions/info/" + txid,
-                METHOD: digilira.requestMethod.get
-        ) { (json) in
-            DispatchQueue.main.async {
-                if json["message"] != nil {
-                    print(json["message"]!)
-                    sleep(1)
-                    self.verifyTrx(txid: txid, id:id)
-                } else {
-                    let odeme = digilira.odemeStatus.init(id: id, txid: txid, status: "2")
-  
-                    self.setOdemeAliniyor(JSON:  try? self.jsonEncoder.encode(odeme))
-                    
-                    print(json)
-            }
-        }
-        
-    }
-        
-    }
     
     
     func credentials (PARAMS: String) -> digilira.login {
@@ -174,39 +147,7 @@ class digiliraPayApi {
         return loginCredentials
     }
     
-    func tid(returnCompletion: @escaping (digilira.wallet) -> () ) {
 
-        
-        let context = LAContext()
-        var error: NSError?
-
-        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-            let reason = "Transferin gerçekleşebilmesi için biometrik onayınız gerekmektedir!"
-
-            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) {
-                [weak self] success, authenticationError in
-
-                DispatchQueue.main.async {
-                    if success {
-
-                        let dictionary = Locksmith.loadDataForUserAccount(userAccount: "sensitive")
-
-                        let seed = digilira.wallet.init(seed: dictionary?["seed"] as? String)
-                        
-                        returnCompletion (seed)
-                    } else {
-                        // error
-                        let seed = digilira.wallet.init(seed:"")
-                        returnCompletion (seed)
-                    }
-                }
-            }
-        } else {
-            // no biometry
-        }
-        
-        
-    }
 
 
     func auth() -> digilira.auth {
@@ -223,16 +164,6 @@ class digiliraPayApi {
         
     }
     
-    func getSeed(returnCompletion: @escaping (digilira.wallet) -> () )   {
-              tid() { (json) in
-                DispatchQueue.main.async {
-                      returnCompletion (json)
-               }
-             }
-
-    }
-    
-   
     
     func login(returnCompletion: @escaping (digilira.user) -> () ) {
 
@@ -247,7 +178,6 @@ class digiliraPayApi {
                     
                     var pin =  Int32((json["pincode"] as? String)!)
 
-                    
                     let kullanici = digilira.user.init(username: json["username"] as? String,
                                                        firstName: json["firstName"] as? String,
                                                        lastName: json["lastName"] as? String,
@@ -276,19 +206,10 @@ class digiliraPayApi {
 
                 }
             }
-            
-            
-            
-        
-        
-        
+         
     }
- 
-    
     
 }
-
-
 
 class OpenUrlManager {
     static var openUrl: URL?
