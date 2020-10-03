@@ -35,7 +35,7 @@ class Blockchain {
     var onAssetBalance: ((_ result: NodeService.DTO.AddressAssetsBalance)->())?
     var onTransferTransaction: ((_ result: NodeService.DTO.Transaction)->())?
     var onVerified: ((_ result: [String : AnyObject])->())?
-    var onSensitive: ((_ result: digilira.wallet)->())?
+    var onSensitive: ((_ result: digilira.wallet, _ err: String)->())?
     var onError: ((_ result: String)->())?
     var onPinSuccess: ((_ result: Bool)->())?
     var onSmartAvailable: ((_ result: Bool)->())?
@@ -49,7 +49,7 @@ class Blockchain {
             })
             .disposed(by: disposeBag)
     }
-    
+        
 
     func sendTransaction2(recipient: String, fee: Int64, amount:Int64, assetId:String, attachment:String, wallet:digilira.wallet) {
             guard let chainId = WavesSDK.shared.enviroment.chainId else { return }
@@ -83,6 +83,8 @@ class Blockchain {
                 .observeOn(MainScheduler.asyncInstance)
                 .subscribe(onNext: { [weak self] (tx) in
                     self!.onTransferTransaction?(tx)
+                }, onError: { (error ) -> Void in
+                    self.onError!(error.localizedDescription)
                 })
                 .disposed(by: disposeBag)
     }
@@ -228,50 +230,31 @@ class Blockchain {
     
     func getSensitive(pin:Bool) {
 
-        let context = LAContext()
-        var error: NSError?
-        
         if pin {
             let dictionary = Locksmith.loadDataForUserAccount(userAccount: "sensitive")
             let seed = digilira.wallet.init(seed: dictionary?["seed"] as? String)
-            self.onSensitive!(seed)
-        }else {
-          
-        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-            let reason = "Transferin gerçekleşebilmesi için biometrik onayınız gerekmektedir!"
-
-            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) {
-                [weak self] success, authenticationError in
-
-                DispatchQueue.main.async {
-                    
-                    if success {
-                        let dictionary = Locksmith.loadDataForUserAccount(userAccount: "sensitive")
-                        let seed = digilira.wallet.init(seed: dictionary?["seed"] as? String)
-                        
-                        self!.onSensitive!(seed)
-                    } else {
-                        // error
-                        self!.onError!(authenticationError!.localizedDescription)
-                    }
-                    
-                }
-            }
-        } else {
-            self.onError!("Fallback authentication mechanism selected.")
-            // no biometry
+            self.onSensitive!(seed, "ok")
+            return
         }
         
+        
+        digiliraPay.onTouchID = { res, err in
+            if res == true {
+                let dictionary = Locksmith.loadDataForUserAccount(userAccount: "sensitive")
+                let seed = digilira.wallet.init(seed: dictionary?["seed"] as? String)
+                
+                self.onSensitive!(seed, "ok")
+            } else {
+                self.onSensitive!(digilira.wallet.init(seed: ""), err)
+            }
         }
+        
+        digiliraPay.touchID(reason: "Transferin gerçekleşebilmesi için biometrik onayınız gerekmektedir!")
+        
+
+        
+         
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
+ 
 }

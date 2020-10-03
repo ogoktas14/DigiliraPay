@@ -22,7 +22,7 @@ class digiliraPayApi {
     var token:String?
     
     let jsonEncoder = JSONEncoder()
-    var onTouchID: ((_ result: Bool)->())?
+    var onTouchID: ((_ result: Bool, _ status: String)->())?
     var onError: ((_ result: String)->())?
 
       func request(rURL: String, JSON: Data? = nil,
@@ -70,32 +70,37 @@ class digiliraPayApi {
     
     
     
-    func touchID() {
+    func touchID(reason: String) {
 
         let context = LAContext()
         var error: NSError?
+        
+        if let isSecure = UserDefaults.standard.value(forKey: "isSecure") as? Bool
+        {
+            if isSecure == false {
+                DispatchQueue.main.async {
+                    self.onTouchID!(false, "Fallback authentication mechanism selected.")
+                //self.onError!("Fallback authentication mechanism selected.")
+                }
+                return
+            }
+        }
           
         if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-            let reason = "Parmak izini okutarak giriş yapabilirsin."
-
             context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) {
                 [weak self] success, authenticationError in
 
                 DispatchQueue.main.async {
                     
                     if success {
-                        self?.onTouchID!(true)
+                        self?.onTouchID!(true, "ok")
                     } else {
-                        self?.onTouchID!(false)
-                        print(authenticationError!.localizedDescription)
-                        self?.onError!(authenticationError!.localizedDescription)
+                        self?.onTouchID!(false, authenticationError!.localizedDescription)
                     }
                 }
             }
         } else {
-            self.onTouchID!(false)
-            self.onError!("Fallback authentication mechanism selected.")
-            // no biometry
+            self.onTouchID!(false, "Fallback authentication mechanism selected.")
         }
          
     }

@@ -59,9 +59,9 @@ class PinView: UIView {
 
         setView()
         
-        digiliraPay.onTouchID = { [self] res in
+        digiliraPay.onTouchID = { res, err in
             if res == true {
-                delegate?.closePinView()
+                self.delegate?.closePinView()
             }
         }
         
@@ -174,7 +174,7 @@ class PinView: UIView {
         }
         
         if isEntryMode && !isTouchIDCanceled {
-            digiliraPay.touchID()
+            digiliraPay.touchID(reason: "Parmak izini okutarak giriş yapabilirsin.")
             self.goBackButtonView.isHidden = true
             
             self.lastCode = String((kullanici?.pincode)!)

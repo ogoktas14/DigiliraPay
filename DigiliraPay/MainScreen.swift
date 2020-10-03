@@ -182,6 +182,13 @@ class MainScreen: UIViewController {
                 self.isTouchIDCanceled = true
                 self.openPinView()
                 break
+            case "The operation couldn’t be completed. (WavesSDK.NetworkError error 0.)":
+                let alert = UIAlertController(title: "Bir Hata Oluştu..", message: "Maalesef şu an işleminizi gerçekleştiremiyoruz. Lütfen birazdan tekrar deneyin.", preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
+
+                self.present(alert, animated: true, completion: nil)
+                self.closeSendView()
+                break
             default:
                 break
             }
@@ -864,7 +871,7 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
 {
     func sendCoin(params:SendTrx) // gelen parametrelerle birlikte gönder butonuna basıldı.
     {
-        var ifPin = kullanici?.pincode
+        let ifPin = kullanici?.pincode
         
         if ifPin == -1 {
             openPinView()
@@ -872,8 +879,27 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
             
             BC.getSensitive(pin:false)
             
-            BC.onSensitive = { [self] wallet in
-                BC.sendTransaction2(recipient: params.recipient, fee: 900000, amount: params.amount, assetId: params.assetId, attachment: params.attachment, wallet:wallet)
+            BC.onSensitive = { [self] wallet, err in
+                switch err {
+                case "ok":
+                    BC.sendTransaction2(recipient: params.recipient, fee: 900000, amount: params.amount, assetId: params.assetId, attachment: params.attachment, wallet:wallet)
+                    break
+                case "Canceled by user.":
+                    let alert = UIAlertController(title: "Hatalı Pin Kodu", message: "İşleminiz iptal edilmiştir.", preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
+
+                    self.present(alert, animated: true, completion: nil)
+                    self.closeSendView()
+                    return
+                    
+                case "Fallback authentication mechanism selected.":
+                    self.isTouchIDCanceled = true
+                    self.openPinView()
+                break
+                default: break
+                    
+                }
+ 
             }
             
             self.onPinSuccess = { [self] res in
@@ -1049,15 +1075,16 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         if isSuccessView {
 
             successView.titleLabel.text = "BAŞARILI"
-            successView.remainingAmount.text = ""
-            successView.remainingAmountInfoLabel.text = ""
-            successView.infoLabel.text = ""
+            successView.remainingAmount.text = "11111113132231ffdf"
+            successView.remainingAmountInfoLabel.text = "fsdfdsfdsfdsfdsfdsffds"
+            successView.infoLabel.text = "564565656456"
             
             successView.buttonLabrl.text = "Tamam"
             
             successView.headerImage.isHidden = false
+            successView.headerImage.image = UIImage(named: "sendericon")!
             successView.buttonView.isHidden = false
-            successView.backgroundColor = UIColor.green
+            successView.backgroundColor = UIColor(red: 0.39, green: 0.91, blue: 0.39, alpha: 1.00)
         }else {
             
             successView = UIView().loadNib(name: "TransactionPopup") as! TransactionPopup
@@ -1065,7 +1092,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
             successView.frame = CGRect(x: 20,
                                        y: contentScrollView.frame.maxY,
                                        width: contentScrollView.frame.width - 40,
-                                       height: contentScrollView.frame.width )
+                                       height: contentScrollView.frame.width - 100 )
             
             
             menuView.isHidden = true
@@ -1074,12 +1101,14 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
             successView.titleLabel.text = "DOĞRULANIYOR"
             successView.backgroundColor = UIColor.white
             
-            successView.remainingAmount.text = ""
-            successView.remainingAmountInfoLabel.text = ""
-            successView.infoLabel.text = ""
+            successView.remainingAmount.text = "fsdfdsfdsfdsfdsfdsfds"
+            successView.remainingAmountInfoLabel.text = "fsdffdsfdsfds"
+            successView.infoLabel.text = "fsdfdsfsdfdsfdsfdsfsd"
             
-
-            successView.headerImage.isHidden = true
+            
+            
+            successView.headerImage.image = UIImage(named: "transactionTime")!
+            successView.headerImage.isHidden = false
             successView.buttonView.isHidden = true
 
             isSuccessView = true
@@ -1089,7 +1118,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
             successView.layer.shadowOffset = .zero
             successView.layer.shadowRadius = 3
             successView.layer.cornerRadius = 20
-            successView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+            successView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner, .layerMaxXMaxYCorner, .layerMinXMaxYCorner]
             
             
             successView.delegate = self
