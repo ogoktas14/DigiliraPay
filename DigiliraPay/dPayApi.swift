@@ -22,8 +22,9 @@ class digiliraPayApi {
     var token:String?
     
     let jsonEncoder = JSONEncoder()
+    var onTouchID: ((_ result: Bool)->())?
+    var onError: ((_ result: String)->())?
 
-    
       func request(rURL: String, JSON: Data? = nil,
                      PARAMS: String = "", METHOD: String, AUTH: Bool = false,
                      returnCompletion: @escaping ([String:Any]) -> () ) {
@@ -66,6 +67,38 @@ class digiliraPayApi {
           
           
       }
+    
+    
+    
+    func touchID() {
+
+        let context = LAContext()
+        var error: NSError?
+          
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            let reason = "Parmak izini okutarak giriş yapabilirsin."
+
+            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) {
+                [weak self] success, authenticationError in
+
+                DispatchQueue.main.async {
+                    
+                    if success {
+                        self?.onTouchID!(true)
+                    } else {
+                        self?.onTouchID!(false)
+                        print(authenticationError!.localizedDescription)
+                        self?.onError!(authenticationError!.localizedDescription)
+                    }
+                }
+            }
+        } else {
+            self.onTouchID!(false)
+            self.onError!("Fallback authentication mechanism selected.")
+            // no biometry
+        }
+         
+    }
     
     
     

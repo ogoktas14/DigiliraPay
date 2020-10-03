@@ -21,6 +21,7 @@ class Blockchain {
     
     private var balances: NodeService.DTO.AddressAssetsBalance?
     private var disposeBag: DisposeBag = DisposeBag()
+    private var disposeBag2: DisposeBag = DisposeBag()
     
     private let wavesCrypto: WavesCrypto = WavesCrypto()
     
@@ -37,6 +38,7 @@ class Blockchain {
     var onSensitive: ((_ result: digilira.wallet)->())?
     var onError: ((_ result: String)->())?
     var onPinSuccess: ((_ result: Bool)->())?
+    var onSmartAvailable: ((_ result: Bool)->())?
 
     func checkAssetBalance(address: String ) {
         WavesSDK.shared.services.nodeServices.assetsNodeService
@@ -45,12 +47,11 @@ class Blockchain {
             .subscribe(onNext: { (balances) in
                 self.onAssetBalance?(balances)
             })
+            .disposed(by: disposeBag)
     }
     
 
     func sendTransaction2(recipient: String, fee: Int64, amount:Int64, assetId:String, attachment:String, wallet:digilira.wallet) {
-        
-
             guard let chainId = WavesSDK.shared.enviroment.chainId else { return }
             guard WavesCrypto.shared.address(seed: wallet.seed!, chainId: chainId) != nil else { return }
             guard let senderPublicKey = WavesCrypto.shared.publicKey(seed: wallet.seed!) else { return }
@@ -84,10 +85,6 @@ class Blockchain {
                     self!.onTransferTransaction?(tx)
                 })
                 .disposed(by: disposeBag)
-            
-        
-        
-
     }
     
      
@@ -124,8 +121,6 @@ class Blockchain {
             }
         }
         task.resume()
-        
-        
     }
     
     
@@ -157,23 +152,20 @@ class Blockchain {
     }
     
     func smartD() {
-        
-
         let dictionary = Locksmith.loadDataForUserAccount(userAccount: "sensitive")
         let wallet = digilira.wallet.init(seed: dictionary?["seed"] as? String)
  
-                guard let chainId = WavesSDK.shared.enviroment.chainId else { return }
+        guard let chainId = WavesSDK.shared.enviroment.chainId else { return }
         guard let senderPublicKey = WavesCrypto.shared.publicKey(seed: wallet.seed!) else { return }
                 
-                let fee: Int64 = 1400000
-                let timestamp = Int64(Date().timeIntervalSince1970) * 1000
+        let fee: Int64 = 1400000
+        let timestamp = Int64(Date().timeIntervalSince1970) * 1000
                 
-                var queryModel = NodeService.Query.Transaction.SetScript.init(chainId: chainId,
+        var queryModel = NodeService.Query.Transaction.SetScript.init(chainId: chainId,
                                                                               fee: fee,
                                                                               timestamp: timestamp,
                                                                               senderPublicKey: senderPublicKey,
                                                                               script: digilira.smartAccount.script)
-                
                 
         queryModel.sign(seed: wallet.seed!)
                 
@@ -183,58 +175,28 @@ class Blockchain {
                     .nodeServices
                     .transactionNodeService
                     .transactions(query: send)
-                    .observeOn(MainScheduler.asyncInstance)
-                    .subscribe(onNext: { [weak self] (tx) in
-                        //print(tx) // Do something on success, now we have wavesBalance.balance in satoshi in Long
-                        
+                    .asObservable()
+                    .subscribe(onNext: {(tx) in
+                        print(tx) // Do something on success, now we have wavesBalance.balance in satoshi in Long
+                    }, onError: {(error) in
+                        print(error)
                     })
-                
-                
-        
-        
-        
-        
-        
     }
-    
-    func retry(address: String) {
-        
-        checkBalance(address: address);
-        
-    }
-    
-    
-    
+     
     func checkBalance(address: String) {
-        
-
-                
-                guard let chainId = WavesSDK.shared.enviroment.chainId else { return }
-                //guard let address = WavesCrypto.shared.address(seed: json.seed!, chainId: chainId) else { return }
-                
-                
                 WavesSDK.shared.services
                     .nodeServices
                     .addressesNodeService
                     .addressBalance(address: address)
-                    .observeOn(MainScheduler.asyncInstance)
-                    .subscribe(onNext: { [weak self] (balances) in
-                        //print(balances)
-                        let BC = Blockchain()
-                        
+                    .subscribe(onNext: { (balances) in
                         if balances.balance < 1400000 {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                                print("retry")
-                                BC.retry(address: address)
-                            }
+                            sleep(1)
+                            self.checkBalance(address: address)
                         }else {
-                            BC.smartD()
+                            self.smartD()
                         }
                     })
-                 
-            
-        
-         
+                    .disposed(by: disposeBag)
     }
     
     
@@ -245,43 +207,23 @@ class Blockchain {
             .subscribe({(history) in
                 returnCompletion(history.element?.transactions)
             })
+            .disposed(by: disposeBag)
     }
     
     func checkSmart(address: String) {
-        
-        
-        let url = URL(string:  digilira.node.url + "/addresses/scriptInfo/" + address)
-        
-        var request = URLRequest(url: url!)
-        
-        
-        request.httpMethod = "GET"
-        
-        let session = URLSession.shared
-        let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-            do {
-                let json = try JSONSerialization.jsonObject(with: data!) as! Dictionary<String, AnyObject>
-                
-                DispatchQueue.main.async { // Correct
-                    
-                    //print(json)
-                    
-                    if json["complexity"] as! Int64 == 0 {
-                        self.checkBalance(address: address)
-                        
-                    }else {
-                        print("SMART ACCOUNT")
-                    }
-                    
-                    
+        WavesSDK.shared.services
+            .nodeServices
+            .addressesNodeService
+            .scriptInfo(address: address)
+            .asObservable()
+            .subscribe(onNext:{(smart) in
+                print(smart.complexity)
+                if smart.complexity == 0 {
+                    // not so smart
+                    self.checkBalance(address: address)
                 }
-            } catch {
-                print("error")
-            }
-        })
-        
-        task.resume()
-        
+            })
+            .disposed(by: disposeBag)
     }
     
     func getSensitive(pin:Bool) {
@@ -316,6 +258,7 @@ class Blockchain {
                 }
             }
         } else {
+            self.onError!("Fallback authentication mechanism selected.")
             // no biometry
         }
         

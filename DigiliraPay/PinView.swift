@@ -47,6 +47,7 @@ class PinView: UIView {
     var isInit = false
     var isTouchIDCanceled = false
     var wrongEntry = 0
+    var isPaymentMode = false
         
     var QR:String?
     let BC = Blockchain()
@@ -58,6 +59,16 @@ class PinView: UIView {
 
         setView()
         
+        digiliraPay.onTouchID = { [self] res in
+            if res == true {
+                delegate?.closePinView()
+            }
+        }
+        
+        
+        digiliraPay.onError = { res in
+            print(res)
+        }
         
         let gradient = CAGradientLayer()
         gradient.colors = [UIColor.black.cgColor, UIColor(red:0.30, green:0.30, blue:0.30, alpha:1.0).cgColor]
@@ -161,7 +172,9 @@ class PinView: UIView {
         if isInit {
             titleLabel.text = "Bir Pin Belirleyin"
         }
-        if isEntryMode {
+        
+        if isEntryMode && !isTouchIDCanceled {
+            digiliraPay.touchID()
             self.goBackButtonView.isHidden = true
             
             self.lastCode = String((kullanici?.pincode)!)
@@ -171,6 +184,7 @@ class PinView: UIView {
             isVerify = true
         }
         if isTouchIDCanceled {
+            self.lastCode = String((kullanici?.pincode)!)
             self.goBackButtonView.isHidden = false
         }
     }
@@ -217,9 +231,12 @@ class PinView: UIView {
         {
             if (isTouchIDCanceled) {
                 isTouchIDCanceled = false
+                isUpdateMode = false
+                isEntryMode = false
                 delegate?.pinSuccess(res:true)
             }
             if isEntryMode {
+
                 delegate?.closePinView()
             } else {
                 if !isUpdateMode {
@@ -245,8 +262,9 @@ class PinView: UIView {
         {
             
             if wrongEntry > 4 {
-
-                    
+                    wrongEntry = 0
+                    if (!isTouchIDCanceled) {
+                     
                     let context = LAContext()
                     var error: NSError?
 
@@ -276,7 +294,11 @@ class PinView: UIView {
                         // no biometry
                     }
                     
-                
+                    }else {
+
+                        delegate?.pinSuccess(res:false)
+                        delegate?.closePinView()
+                    }
 
             }
             
@@ -363,7 +385,7 @@ class PinView: UIView {
     
     @IBAction func closeView(_ sender: Any)
     {
-        if !isUpdateMode {
+        if isTouchIDCanceled {
             delegate?.pinSuccess(res:false)
         }
         delegate?.closePinView()

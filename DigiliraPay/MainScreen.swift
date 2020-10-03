@@ -281,9 +281,7 @@ class MainScreen: UIViewController {
         print(sender.userInfo)
 
         let alert = UIAlertController(title: "Sipariş detayları", message: "Sipariş detayları için kendinize iyi bakın.", preferredStyle: .alert)
-
         alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: nil))
-
         self.present(alert, animated: true)
         
         
@@ -866,25 +864,39 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
 {
     func sendCoin(params:SendTrx) // gelen parametrelerle birlikte gönder butonuna basıldı.
     {
-        BC.getSensitive(pin:false)
+        var ifPin = kullanici?.pincode
         
-        BC.onSensitive = { [self] wallet in
-            BC.sendTransaction2(recipient: params.recipient, fee: 900000, amount: params.amount, assetId: params.assetId, attachment: params.attachment, wallet:wallet)
-        }
-        
-        self.onPinSuccess = { [self] res in
-            switch res {
-            case true:
-                BC.getSensitive(pin:res)
-                break
-            case false:
-                if isShowSendCoinView {
-                    self.closeSendView()
+        if ifPin == -1 {
+            openPinView()
+        }else {
+            
+            BC.getSensitive(pin:false)
+            
+            BC.onSensitive = { [self] wallet in
+                BC.sendTransaction2(recipient: params.recipient, fee: 900000, amount: params.amount, assetId: params.assetId, attachment: params.attachment, wallet:wallet)
+            }
+            
+            self.onPinSuccess = { [self] res in
+                switch res {
+                case true:
+                    BC.getSensitive(pin:res)
+                    break
+                case false:
+                    if isShowSendCoinView {
+                        let alert = UIAlertController(title: "Hatalı Pin Kodu", message: "İşleminiz iptal edilmiştir.", preferredStyle: UIAlertController.Style.alert)
+                        alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
+
+                        self.present(alert, animated: true, completion: nil)
+                        self.closeSendView()
+                    }
+                    break
                 }
-                break
+                
             }
             
         }
+         
+        
         
     }
     
@@ -1299,14 +1311,29 @@ extension MainScreen: PinViewDelegate
         }
         
         if !isNewPin {
+            
             if kullanici?.pincode != -1 {
+                
                 pinView.isEntryMode = true
             }else {
+                let alert = UIAlertController(title: "Pin Oluşturun", message: "Ödeme yapabilmek ve kripto varlıklarınızı transfer edebilmek için bir pin kodu oluşturmanız gerekmektedir.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: nil))
+                self.present(alert, animated: true)
+                
                 pinView.isInit = true
             }
         }else {
-            pinView.isEntryMode = false
-            pinView.isUpdateMode = true
+            
+            if kullanici?.pincode != -1 {
+                pinView.isEntryMode = false
+                pinView.isUpdateMode = true
+            }else{
+                    let alert = UIAlertController(title: "Pin Oluşturun", message: "Ödeme yapabilmek ve kripto varlıklarınızı transfer edebilmek için bir pin kodu oluşturmanız gerekmektedir.", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: nil))
+                    self.present(alert, animated: true)
+                    
+                    pinView.isInit = true
+            }
 
         }
         pinView.setCode()
