@@ -154,8 +154,7 @@ class Blockchain {
     }
     
     func smartD() {
-        let dictionary = Locksmith.loadDataForUserAccount(userAccount: "sensitive")
-        let wallet = digilira.wallet.init(seed: dictionary?["seed"] as? String)
+        let wallet = getSeed();
  
         guard let chainId = WavesSDK.shared.enviroment.chainId else { return }
         guard let senderPublicKey = WavesCrypto.shared.publicKey(seed: wallet.seed!) else { return }
@@ -231,29 +230,81 @@ class Blockchain {
     func getSensitive(pin:Bool) {
 
         if pin {
-            let dictionary = Locksmith.loadDataForUserAccount(userAccount: "sensitive")
-            let seed = digilira.wallet.init(seed: dictionary?["seed"] as? String)
-            self.onSensitive!(seed, "ok")
+            self.onSensitive!(getSeed(), "ok")
             return
         }
         
         
         digiliraPay.onTouchID = { res, err in
             if res == true {
-                let dictionary = Locksmith.loadDataForUserAccount(userAccount: "sensitive")
-                let seed = digilira.wallet.init(seed: dictionary?["seed"] as? String)
-                
-                self.onSensitive!(seed, "ok")
+                self.onSensitive!(self.getSeed(), "ok")
             } else {
                 self.onSensitive!(digilira.wallet.init(seed: ""), err)
             }
         }
         
         digiliraPay.touchID(reason: "Transferin gerçekleşebilmesi için biometrik onayınız gerekmektedir!")
+   
+    }
+    
+    private func getSeed() -> digilira.wallet {
         
-
+        var seed = digilira.wallet.init(seed: "")
         
+        let dictionary = Locksmith.loadDataForUserAccount(userAccount: "sensitive")
+        if dictionary != nil {
+            seed = digilira.wallet.init(seed: dictionary?["seed"] as? String)
+        }
+        return seed
+    }
+    
+    func checkIfUser() -> Bool {
+        //try? Locksmith.deleteDataForUserAccount(userAccount: "sensitive")
+        if getSeed().seed == "" {return false}
+        return true
+    }
+    
+    
+    func create (imported: Bool = false, importedSeed: String = "", returnCompletion: @escaping (String) -> () ) {
+        
+        let uuid = NSUUID().uuidString
+        var seed = importedSeed
+        
+        if !imported {
+            seed = wavesCrypto.randomSeed()
+        }
+        
+        let address = wavesCrypto.address(seed: seed, chainId: "T")
+        
+        let username = NSUUID().uuidString
+        
+        let user = digilira.user.init(username: username,
+                                   password: uuid,
+                                   firstName: "Ad",
+                                   lastName: "Soyad",
+                                   tcno: "11111111111",
+                                   tel: "0000000000",
+                                   mail: "0000000000",
+                                   btcAddress: "",
+                                   ethAddress: "",
+                                   ltcAddress: "",
+                                   wallet: address!,
+                                   imported: imported
+        )
          
+        
+        digiliraPay.request(rURL: digilira.api.url + "/users/register",
+                            JSON:  try? digiliraPay.jsonEncoder.encode(user),
+                            METHOD: digilira.requestMethod.post
+        ) { (json, statusCode) in
+            DispatchQueue.main.async {
+                try? Locksmith.saveData(data: ["password": uuid, "seed": seed, "username": username], forUserAccount: "sensitive")
+                returnCompletion(address!)
+            }
+         }
+ 
+ 
+        
     }
     
  

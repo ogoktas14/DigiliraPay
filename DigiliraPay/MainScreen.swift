@@ -49,6 +49,7 @@ class MainScreen: UIViewController {
     var sendMoneyView = CoinSendView()
     var loadMoneyView = QRView()
     var successView = TransactionPopup()
+    var seedView = LetsStartWordsView()
     
     var tapProfileMenuGesture = UITapGestureRecognizer()
     var tapCloseProfileMenuGesture = UITapGestureRecognizer()
@@ -149,7 +150,7 @@ class MainScreen: UIViewController {
                                                 status: "VERIFYING",
                                                 txid: txid))
             DispatchQueue.main.async {
-                self.showSuccess(mode: 1)
+                self.showSuccess(mode: 1, transaction: res.dictionary)
             }
             self.bottomView.isHidden = true
             self.closeCoinSendView()
@@ -162,7 +163,7 @@ class MainScreen: UIViewController {
         BC.onVerified = { res in
             NotificationCenter.default.post(name: .didCompleteTask, object: nil)
             DispatchQueue.main.async {
-                self.showSuccess(mode: 2)
+                self.showSuccess(mode: 2, transaction: res)
             }
             
             let id = res["id"] as? String
@@ -473,6 +474,7 @@ class MainScreen: UIViewController {
             UIView.animate(withDuration: 0.3, animations: {
                 self.profileView.center.x = self.profileView.frame.width / 2
             })
+            
             headerView.isUserInteractionEnabled = false
             tapProfileMenuGesture.isEnabled = false
             tapCloseProfileMenuGesture.isEnabled = true
@@ -502,6 +504,8 @@ class MainScreen: UIViewController {
         profileMenuButton.isHidden = false
         closeCoinSendView()
         dismissLoadView()
+        
+ 
     }
     
     @objc func tapAccountButton()
@@ -877,7 +881,6 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
             openPinView()
         }else {
             
-            BC.getSensitive(pin:false)
             
             BC.onSensitive = { [self] wallet, err in
                 switch err {
@@ -919,6 +922,9 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
                 }
                 
             }
+            
+            
+            BC.getSensitive(pin:false)
             
         }
          
@@ -971,6 +977,38 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
 }
 extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları gibi yan menü işlemleri
 {
+    func showSeedView() {
+        
+        
+        
+        closeProfileView()
+        for view in sendWithQRView.subviews
+        { view.removeFromSuperview() }
+        sendWithQRView.translatesAutoresizingMaskIntoConstraints = true
+
+        
+        let letsStartView4: LetsStartWordsView = UIView().loadNib(name: "LetsStartWordView") as! LetsStartWordsView
+        
+        letsStartView4.delegate = self
+        
+        letsStartView4.setTitles(title: "Anahtar kelimelerini", subTitle: "asla kaybetme!", desc: "Eğer uygulaman silinirse veya cüzdanını başka bir cihaza aktarman gerekirse bu kelimelere ihtiyaç duyacaksın.")
+        letsStartView4.frame = CGRect(x: 0,
+                                       y: 100,
+                                       width: view.frame.width,
+                                       height: view.frame.height)
+        
+        letsStartView4.backgroundColor = UIColor.white
+        letsStartView4.okButtonView.isHidden = false
+        
+        sendWithQRView.addSubview(letsStartView4)
+        sendWithQRView.isHidden = false
+        UIView.animate(withDuration: 0.4) {
+            self.sendWithQRView.frame.origin.y = 0
+            self.sendWithQRView.alpha = 1
+        }
+        
+    }
+    
     func verifyProfile()
     {
         qrView.frame.origin.y = view.frame.height
@@ -1067,20 +1105,25 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
     }
     
     
-    func showSuccess(mode: Int)
+    func showSuccess(mode: Int, transaction: [String : Any])
     {
         accountButton.isHidden = true
         profileMenuButton.isHidden = true
         
+        let asset = BC.returnAsset(assetId: (transaction["assetId"] as?  String)!)
+        let amount = String ((transaction["amount"] as? Float64)! / (100000000))
+        print(transaction)
+        
         if isSuccessView {
-
-            successView.titleLabel.text = "BAŞARILI"
-            successView.remainingAmount.text = "11111113132231ffdf"
-            successView.remainingAmountInfoLabel.text = "fsdfdsfdsfdsfdsfdsffds"
-            successView.infoLabel.text = "564565656456"
+            
+            successView.titleLabel.text = "ÖDEME BAŞARILI"
+            successView.remainingAmount.text = amount + " " + asset
+            successView.remainingAmountInfoLabel.text = "Gönderildi!"
+            successView.infoLabel.text = ""
             
             successView.buttonLabrl.text = "Tamam"
             
+            successView.remainingAmount.isHidden = false
             successView.headerImage.isHidden = false
             successView.headerImage.image = UIImage(named: "sendericon")!
             successView.buttonView.isHidden = false
@@ -1088,7 +1131,8 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         }else {
             
             successView = UIView().loadNib(name: "TransactionPopup") as! TransactionPopup
-            
+            successView.remainingAmountInfoLabel.textColor = UIColor.black
+
             successView.frame = CGRect(x: 20,
                                        y: contentScrollView.frame.maxY,
                                        width: contentScrollView.frame.width - 40,
@@ -1101,16 +1145,18 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
             successView.titleLabel.text = "DOĞRULANIYOR"
             successView.backgroundColor = UIColor.white
             
-            successView.remainingAmount.text = "fsdfdsfdsfdsfdsfdsfds"
-            successView.remainingAmountInfoLabel.text = "fsdffdsfdsfds"
-            successView.infoLabel.text = "fsdfdsfsdfdsfdsfdsfsd"
+            successView.remainingAmount.text = amount + " " + asset
+            successView.remainingAmountInfoLabel.text = "Gönderiliyor.."
+            successView.infoLabel.text = "Transferiniz blokzincire yazılıyor."
             
             
             
             successView.headerImage.image = UIImage(named: "transactionTime")!
             successView.headerImage.isHidden = false
             successView.buttonView.isHidden = true
-
+            
+            successView.remainingAmount.isHidden = false
+            
             isSuccessView = true
             
             successView.layer.shadowColor = UIColor.black.cgColor
@@ -1150,6 +1196,17 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         isNewPin = true
         openPinView()
     }
+}
+
+extension MainScreen: seedViewDelegate {
+    func closeSeedView() {
+        UIView.animate(withDuration: 0.3) {
+            self.sendWithQRView.frame.origin.y = self.self.view.frame.height
+            self.sendWithQRView.alpha = 0
+        }
+    }
+    
+    
 }
 
 
@@ -1410,12 +1467,16 @@ extension MainScreen: PinViewDelegate
                               JSON: try? digiliraPay.jsonEncoder.encode(user),
                               METHOD: digilira.requestMethod.put,
                               AUTH: true
-        ) { (json) in
+        ) { (json, statusCode) in
             
             DispatchQueue.main.async {
-                print(json)
+                
+                let alert = UIAlertController(title: "Pin Kodu Güncellendi", message: "Pin kodunuzu unutmayın, cüzdanınızı başka bir cihaza aktarırken ihtiyacınız olacaktır.", preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
 
-                self.digiliraPay.login() { (json) in
+                self.present(alert, animated: true, completion: nil)
+
+                self.digiliraPay.login() { (json, status) in
                     DispatchQueue.main.async {
                         self.kullanici = json
                     }

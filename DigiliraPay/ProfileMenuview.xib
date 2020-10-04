@@ -20,7 +20,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="ProfileMenuView" customModule="DigiliraPAY" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="331" height="705"/>
+            <rect key="frame" x="0.0" y="0.0" width="331" height="768"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="openedMenuButton" translatesAutoresizingMaskIntoConstraints="NO" id="FYJ-X2-WQW">
@@ -36,7 +36,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TcM-xd-ejI">
-                    <rect key="frame" x="16" y="154" width="299" height="538"/>
+                    <rect key="frame" x="16" y="154" width="299" height="601"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RVO-Jg-al1">
                             <rect key="frame" x="8" y="8" width="283" height="0.0"/>
@@ -359,6 +359,7 @@
                 <outlet property="profileVerifyLabel" destination="GiJ-uf-lkF" id="qPS-4k-eoc"/>
                 <outlet property="securityLabel" destination="d50-nx-NzY" id="0Zg-Yt-tIy"/>
                 <outlet property="securityPinLabel" destination="vmV-2f-1SM" id="QzE-f6-Qq2"/>
+                <outlet property="seedView" destination="ru0-Zf-mBD" id="XxT-qn-zve"/>
                 <outlet property="termsofUseAlertImage" destination="q9Q-bB-up9" id="2Z6-qf-5dM"/>
                 <outlet property="termsofUseLabel" destination="Lum-3b-OMI" id="t1b-eM-7Rm"/>
                 <outlet property="termsofUseView" destination="va4-gy-RL6" id="QVa-bq-RFP"/>
@@ -367,7 +368,7 @@
                 <outlet property="userTextLabel" destination="Z2V-5B-8sc" id="duI-Ah-bJD"/>
                 <outlet property="verifyProfileView" destination="lmT-cI-9ud" id="D66-dT-NBx"/>
             </connections>
-            <point key="canvasLocation" x="26.811594202898554" y="28.459821428571427"/>
+            <point key="canvasLocation" x="26.811594202898554" y="49.553571428571423"/>
         </view>
     </objects>
     <resources>

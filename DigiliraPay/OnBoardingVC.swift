@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Locksmith
 
 class OnBoardingVC: UIViewController {
 
@@ -20,18 +19,12 @@ class OnBoardingVC: UIViewController {
     
     var onBoardingScrollView = UIScrollView()
     let digiliraPay = digiliraPayApi()
+    let BC = Blockchain()
     
     var kullanici: digilira.user?
 
     var trxs:[digilira.transfer] = []
     var QR: String?
-
-    
-    
-    func fetch() {
-
-         
-    }
 
     
     private func initial2() {
@@ -41,36 +34,51 @@ class OnBoardingVC: UIViewController {
          
         UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
 
-        let dictionary = Locksmith.loadDataForUserAccount(userAccount: "sensitive")
-        
-        if dictionary != nil {
-            
-            digiliraPay.login() { (json) in
+        if BC.checkIfUser() {
+            digiliraPay.login() { (json, status) in
                 DispatchQueue.main.async {
                     print(json)
-                    self.kullanici = json
-
-                    self.goMainVC()
-                    let BC = Blockchain()
-                    BC.checkSmart(address: self.kullanici!.wallet!)
+                    
+                    switch  status {
+                    
+                    case 503:
+                        let alert = UIAlertController(title: "Bir Hata Oluştu", message: "Şu anda hizmet veremiyoruz. Lütfen daha sonra yeniden deneyin.", preferredStyle: .alert)
+                        
+                        alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
+                            exit(1)
+                        }))
+                        self.present(alert, animated: true)
+                        
+                        break;
+                    case 400, 404:
+                        
+                        let alert = UIAlertController(title: "Kullanıcı Bulunamadı", message: "Cüzdanınızı içeri aktararak başka bir cihazda açtıysanız bu cihazdan giriş yapamazsınız. Böyle bir işlem yapmadıysanız anahtar kelimelerinizi kullanarak cüzdanınızı yeniden tanımlayabilirsiniz.", preferredStyle: .alert)
+                        
+                        alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
+                            self.letsGoView.isHidden = false
+                            self.importAccountView.isHidden = false
+                        }))
+                        self.present(alert, animated: true)
+                        
+                        break
+                        
+                    case 200:
+                        self.kullanici = json
+                        self.goMainVC()
+                        self.BC.checkSmart(address: self.kullanici!.wallet!)
+                        break
+                        
+                    default:
+                        break
+                    }
                     
 
                 }
              }
         } else {
-            print("EMPTY")
-                   let digiliraPay = createWallet()
-
-                   digiliraPay.create(){ (seed) in
-                       DispatchQueue.main.async {
-                                                            
-                        self.letsGoView.isHidden = false
-                        self.importAccountView.isHidden = false
-  
-                       }
-                   }
+                self.letsGoView.isHidden = false
+                self.importAccountView.isHidden = false
         }
-        
     }
     
     
@@ -92,8 +100,6 @@ class OnBoardingVC: UIViewController {
         let importGesture = UITapGestureRecognizer(target: self, action: #selector(impoertAccount))
         importAccountView.addGestureRecognizer(importGesture)
         
-        let main = UITapGestureRecognizer(target: self, action: #selector(letsGO))
-        importAccountView.addGestureRecognizer(main)
         
         NotificationCenter.default.addObserver(self, selector: #selector(onDidReceiveData(_:)), name: .didReceiveData, object: nil)
 
@@ -142,14 +148,23 @@ class OnBoardingVC: UIViewController {
     
     @objc func letsGO()
     {
-        performSegue(withIdentifier: "toLetsStartVC", sender: nil)
+        
+        let alert = UIAlertController(title: "Lütfen bekleyin", message: "Cüzdanınız oluşturuluyor..", preferredStyle: .alert)
+        self.present(alert, animated: true, completion: nil)
+
+        BC.create(){ (seed) in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                alert.dismiss(animated: true, completion: nil)
+                self.performSegue(withIdentifier: "toLetsStartVC", sender: nil)
+            }
+        }
+        
     }
     
     @objc func impoertAccount()
     {
-        performSegue(withIdentifier: "toLetsStartVC", sender: nil)
 
-        //performSegue(withIdentifier: "toImportAccountVC", sender: nil)
+        performSegue(withIdentifier: "toImportAccountVC", sender: nil)
     }
 }
 

@@ -67,6 +67,7 @@ struct digilira {
         var token: String?
         var status: Int64?
         var pincode: Int32?
+        var imported: Bool?
     }
     
     struct pin: Encodable {

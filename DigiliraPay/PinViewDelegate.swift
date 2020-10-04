@@ -13,3 +13,8 @@ protocol PinViewDelegate: class {
     func updatePinCode(code:Int32)
     func pinSuccess(res:Bool)
 }
+
+
+protocol seedViewDelegate: class {
+    func closeSeedView()
+}

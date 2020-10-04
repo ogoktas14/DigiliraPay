@@ -121,10 +121,10 @@ class VerifyAccountView: UIView
                               JSON: try? digiliraPay.jsonEncoder.encode(user),
                               METHOD: digilira.requestMethod.put,
                               AUTH: true
-        ) { (json) in
+        ) { (json, statusCode) in
             
             DispatchQueue.main.async {
-                self.digiliraPay.login() { (json) in
+                self.digiliraPay.login() { (json, status) in
                     DispatchQueue.main.async {
                         print(json)
                         self.kullanici = json

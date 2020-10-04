@@ -14,6 +14,7 @@ class OnBoardingView: UIView {
     @IBOutlet weak var onBoardingTitleSecond: UILabel!
     @IBOutlet weak var onBoardingDesc: UILabel!
     
+    
     func setView(image: UIImage, titleFirst: String, titleSecond: String, desc: String)
     {
         onBoardingImage.image = image

@@ -46,9 +46,12 @@ class LetsStartWordsView: UIView {
     @IBOutlet weak var subTitleLabel: UILabel!
     @IBOutlet weak var descLabel: UILabel!
     
+    @IBOutlet weak var okButtonView: UIButton!
+    
     var viewArray: [UIView] = []
     var labelArray: [UILabel] = []
     
+    weak var delegate: seedViewDelegate?
 
     override func awakeFromNib()
     {
@@ -56,9 +59,13 @@ class LetsStartWordsView: UIView {
         labelArray = [label1, label2, label3, label4, label5, label6, label7, label8, label9, label10, label11, label12, label13, label14, label15]
         setViewLayout()
         
-        
-        
     }
+    
+    @IBAction func goHomeButton(_ sender: Any)
+    {
+        delegate?.closeSeedView()
+    }
+    
     private func setViewLayout()
     {
         viewArray.forEach { (view) in
@@ -72,9 +79,12 @@ class LetsStartWordsView: UIView {
             
         }
         
+        okButtonView.isHidden = true
+        
         let dictionary = Locksmith.loadDataForUserAccount(userAccount: "sensitive")
         let seed = dictionary?["seed"] as! String
         let fullNameArr : [String] = seed.components(separatedBy: " ")
+        
         for i in 0..<15 {
             self.labelArray[i].text = fullNameArr[i]
         }

@@ -54,7 +54,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         IQKeyboardManager.shared.overrideKeyboardAppearance = true
         IQKeyboardManager.shared.keyboardAppearance = .light
         IQKeyboardManager.shared.shouldResignOnTouchOutside = true
-        
+                
         
         return true
     }

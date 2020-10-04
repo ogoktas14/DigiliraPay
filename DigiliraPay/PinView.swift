@@ -234,14 +234,16 @@ class PinView: UIView {
                 isUpdateMode = false
                 isEntryMode = false
                 delegate?.pinSuccess(res:true)
+                delegate?.closePinView()
+                return
             }
             if isEntryMode {
-
                 delegate?.closePinView()
             } else {
                 if !isUpdateMode {
                     delegate?.closePinView()
                     delegate?.updatePinCode(code: Int32(lastCode)!)
+                    return
                 }
             }
             
@@ -253,53 +255,34 @@ class PinView: UIView {
                 isVerify = false
                 lastCode.removeAll()
                 isUpdateMode=false
-                
-                
             }
             
         }
         else
         {
-            
             if wrongEntry > 4 {
                     wrongEntry = 0
                     if (!isTouchIDCanceled) {
-                     
-                    let context = LAContext()
-                    var error: NSError?
-
-                    if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-                        let reason = "Pin bilgisinin sıfırlanabilmesi için biyometrik onayınız gerekmektedir."
-
-                        context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) {
-                            [weak self] success, authenticationError in
-
-                            DispatchQueue.main.async { [self] in
-                                if success {
-
-                                    self?.goVerify()
-                                    self?.isEntryMode = false
-                                    self?.firstCode.removeAll()
-                                    self?.titleLabel.text = "Yeni Pin Belirleyin"
-                                    self?.isVerify = false
-                                    self?.lastCode.removeAll()
-                                    self?.isUpdateMode=false
-                                    
-                                } else {
-                                    // error
-                                }
-                            }
+                        
+                        digiliraPay.onTouchID = { res, err in
+                            if res == true {
+                                self.goVerify()
+                                self.isEntryMode = false
+                                self.firstCode.removeAll()
+                                self.titleLabel.text = "Yeni Pin Belirleyin"
+                                self.isVerify = false
+                                self.lastCode.removeAll()
+                                self.isUpdateMode=false
+                            } 
                         }
+                        
+                        digiliraPay.touchID(reason: "Transferin gerçekleşebilmesi için biometrik onayınız gerekmektedir!")
+                      
                     } else {
-                        // no biometry
-                    }
-                    
-                    }else {
 
                         delegate?.pinSuccess(res:false)
                         delegate?.closePinView()
                     }
-
             }
             
             wrongEntry += 1
@@ -314,7 +297,6 @@ class PinView: UIView {
             lastCode.removeAll()
              
             }
-            
         }
     }
     

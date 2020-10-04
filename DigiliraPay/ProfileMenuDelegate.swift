@@ -15,6 +15,7 @@ protocol ProfileMenuDelegate: class
     func showTermsofUse()
     func showLegalText()
     func showPinView()
+    func showSeedView()
 }
 
 protocol ProfileSettingsViewDelegate: class 

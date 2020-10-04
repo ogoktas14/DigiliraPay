@@ -32,6 +32,7 @@ class Verify_StartView: UIView {
     {
         let dictionary = Locksmith.loadDataForUserAccount(userAccount: "sensitive")
         let seed = dictionary?["seed"] as! String
+        
         let fullNameArr : [String] = seed.components(separatedBy: " ")
         keywordArray = fullNameArr
         shuffled = fullNameArr.shuffled()

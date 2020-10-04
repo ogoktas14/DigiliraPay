@@ -22,32 +22,23 @@ class LetsStartVC: UIViewController {
     
     let digiliraPay = digiliraPayApi()
 
+    let BC = Blockchain()
     var kullanici: digilira.user?
 
     
     private func initial() {
         
-        let dictionary = Locksmith.loadDataForUserAccount(userAccount: "sensitive")
-        
-        if dictionary != nil {
-        digiliraPay.login() { (json) in
+        digiliraPay.login() { (json, status) in
             DispatchQueue.main.async {
                 print(json)
                 self.kullanici = json
-
-                let BC = Blockchain()
-                BC.checkSmart(address: json["wallet"] as! String)
+                self.BC.checkSmart(address: json["wallet"] as! String)
 
             }
          }
-        
-        }
   
     }
     
-    
-    
-        
     override func viewDidLoad() {
         super.viewDidLoad()
 

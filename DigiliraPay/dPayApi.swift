@@ -27,7 +27,7 @@ class digiliraPayApi {
 
       func request(rURL: String, JSON: Data? = nil,
                      PARAMS: String = "", METHOD: String, AUTH: Bool = false,
-                     returnCompletion: @escaping ([String:Any]) -> () ) {
+                     returnCompletion: @escaping ([String:Any], Int?) -> ()) {
           
           var request = URLRequest(url: URL(string: rURL)!)
           
@@ -49,6 +49,9 @@ class digiliraPayApi {
           }
           
           let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+ 
+            let httpResponse = response as? HTTPURLResponse
+            print(httpResponse)
               guard let dataResponse = data,
                   error == nil else {
                       print(error?.localizedDescription ?? "Response Error")
@@ -57,10 +60,11 @@ class digiliraPayApi {
                   
                   let jsonResponse = try JSONSerialization.jsonObject(with: dataResponse) as! Dictionary<String, AnyObject>
                   
-                  returnCompletion(jsonResponse)
+                returnCompletion(jsonResponse, httpResponse?.statusCode)
     
               } catch let parsingError {
                   print("Error", parsingError)
+                returnCompletion([:], httpResponse?.statusCode)    
               }
           }
           task.resume()
@@ -80,7 +84,6 @@ class digiliraPayApi {
             if isSecure == false {
                 DispatchQueue.main.async {
                     self.onTouchID!(false, "Fallback authentication mechanism selected.")
-                //self.onError!("Fallback authentication mechanism selected.")
                 }
                 return
             }
@@ -166,7 +169,7 @@ class digiliraPayApi {
                 JSON: JSON,
                 METHOD: digilira.requestMethod.post,
                 AUTH: true
-        ) { (json) in
+        ) { (json, statusCode) in
             DispatchQueue.global(qos: .background).async  {
                     print(json)
                 }
@@ -203,44 +206,66 @@ class digiliraPayApi {
     }
     
     
-    func login(returnCompletion: @escaping (digilira.user) -> () ) {
+    func login(returnCompletion: @escaping (digilira.user, Int?) -> () ) {
 
         let loginCredits = credentials(PARAMS: "sensitive")
              
             request(rURL: digilira.api.url + digilira.api.auth,
                                   JSON: try? self.jsonEncoder.encode(loginCredits),
                                   METHOD: digilira.requestMethod.post
-            ) { (json) in
+            ) { (json, statusCode) in
                 
                 DispatchQueue.main.async {
-                    
-                    var pin =  Int32((json["pincode"] as? String)!)
-
-                    let kullanici = digilira.user.init(username: json["username"] as? String,
-                                                       firstName: json["firstName"] as? String,
-                                                       lastName: json["lastName"] as? String,
-                                                       tcno: json["tcno"] as? String,
-                                                       tel: json["tel"] as? String,
-                                                       mail: json["mail"] as? String,
-                                                       btcAddress: json["btcAddress"] as? String,
-                                                       ethAddress: json["ethAddress"] as? String,
-                                                       ltcAddress: json["ltcAddress"] as? String,
-                                                       wallet: json["wallet"] as? String,
-                                                       token: json["token"] as? String,
-                                                       status: json["status"] as? Int64,
-                                                       pincode: pin)
                      
-                    try? Locksmith.deleteDataForUserAccount(userAccount: "auth")
+                    switch (statusCode) {
                     
-                    try? Locksmith.saveData(data: [
-                        "token": json["token"] as Any,
-                        "name": json["firstName"] as Any,
-                        "surname": json["lastName"] as Any,
-                        "status": json["status"] as Any,
-                        "pincode": json["pincode"] as Any
-                    ], forUserAccount: "auth")
-            
-                    returnCompletion(kullanici)
+                    case 503:
+                        let kullanici = digilira.user.init() 
+                        returnCompletion(kullanici, statusCode)
+                        break;
+                    
+                    case 400, 404:
+                        let kullanici = digilira.user.init()
+                        try? Locksmith.deleteDataForUserAccount(userAccount: "sensitive")
+                        returnCompletion(kullanici, statusCode)
+                        break;
+                        
+                    case 200:
+                        let pin =  Int32((json["pincode"] as? String)!)
+
+                        let kullanici = digilira.user.init(username: json["username"] as? String,
+                                                           firstName: json["firstName"] as? String,
+                                                           lastName: json["lastName"] as? String,
+                                                           tcno: json["tcno"] as? String,
+                                                           tel: json["tel"] as? String,
+                                                           mail: json["mail"] as? String,
+                                                           btcAddress: json["btcAddress"] as? String,
+                                                           ethAddress: json["ethAddress"] as? String,
+                                                           ltcAddress: json["ltcAddress"] as? String,
+                                                           wallet: json["wallet"] as? String,
+                                                           token: json["token"] as? String,
+                                                           status: json["status"] as? Int64,
+                                                           pincode: pin)
+                         
+                        try? Locksmith.deleteDataForUserAccount(userAccount: "auth")
+                        
+                        try? Locksmith.saveData(data: [
+                            "token": json["token"] as Any,
+                            "name": json["firstName"] as Any,
+                            "surname": json["lastName"] as Any,
+                            "status": json["status"] as Any,
+                            "pincode": json["pincode"] as Any
+                        ], forUserAccount: "auth")
+                
+                        returnCompletion(kullanici, statusCode)
+                        break;
+                        
+                    default:
+                        break;
+                    
+                    }
+  
+                    
 
                 }
             }

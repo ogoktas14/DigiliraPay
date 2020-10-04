@@ -34,6 +34,7 @@ class ProfileMenuView: UIView {
     @IBOutlet weak var termsofUseView: UIView!
     @IBOutlet weak var legalTextView: UIView!
     @IBOutlet weak var pinView: UIView!
+    @IBOutlet weak var seedView: UIView!
     
     var currentLanguage: Languages = .TR
     var changeLanguageforEN = UITapGestureRecognizer()
@@ -54,6 +55,9 @@ class ProfileMenuView: UIView {
         
         let showPinViewGesture = UITapGestureRecognizer(target: self, action: #selector(openPinView))
         pinView.addGestureRecognizer(showPinViewGesture)
+        
+        let showSeedViewGesture = UITapGestureRecognizer(target: self, action: #selector(openSeedView))
+        seedView.addGestureRecognizer(showSeedViewGesture)
         
         
         biometricSecurityToggle.onTintColor = UIColor(red:0.73, green:0.73, blue:0.73, alpha:1.0)
@@ -97,6 +101,10 @@ class ProfileMenuView: UIView {
     @objc func openPinView()
     {
         delegate?.showPinView()
+    }
+    @objc func openSeedView()
+    {
+        delegate?.showSeedView()
     }
     
     @IBAction func biometricSecuritySwitch(_ sender: Any)
