@@ -79,6 +79,7 @@ class ImportAccountVC: UIViewController {
                         switch (status) {
                         
                         case 200:
+                            UserDefaults.standard.set(false, forKey: "isSecure")
                             let alert = UIAlertController(title: "Cüzdanınız Başarıyla Aktarıldı!", message: "Ödeme yapabilmek ve kripto varlıklarınızı transfer edebilmek için KYC sürecini yeniden tamamlamanız gerekmektedir.", preferredStyle: .alert)
                             
                             alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in

@@ -251,11 +251,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NQv-rh-oeG">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="180.5"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="115.5"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="appLogoBlack" translatesAutoresizingMaskIntoConstraints="NO" id="o7h-JJ-hEz">
-                                        <rect key="frame" x="111" y="47" width="150" height="129"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="appLogoBlack" translatesAutoresizingMaskIntoConstraints="NO" id="o7h-JJ-hEz">
+                                        <rect key="frame" x="112" y="45" width="150" height="76"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="150" id="njQ-Hz-aQc"/>
+                                        </constraints>
                                     </imageView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="headerBG" translatesAutoresizingMaskIntoConstraints="NO" id="CiE-pg-yMo">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="79"/>
@@ -264,13 +266,13 @@
                                         </constraints>
                                     </imageView>
                                     <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TEST" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uLB-Va-OGK">
-                                        <rect key="frame" x="139" y="115.5" width="97" height="46.5"/>
-                                        <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="38"/>
+                                        <rect key="frame" x="166" y="80" width="43.5" height="21"/>
+                                        <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bakiye" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VHR-Nh-8mP">
-                                        <rect key="frame" x="145" y="66" width="85" height="29.5"/>
+                                        <rect key="frame" x="145" y="45" width="85" height="30"/>
                                         <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="24"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -279,17 +281,19 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstItem="uLB-Va-OGK" firstAttribute="centerX" secondItem="CiE-pg-yMo" secondAttribute="centerX" id="1TG-OG-AgH"/>
-                                    <constraint firstAttribute="width" secondItem="NQv-rh-oeG" secondAttribute="height" multiplier="207:136" constant="100" id="7sn-NE-0X5"/>
+                                    <constraint firstAttribute="width" secondItem="NQv-rh-oeG" secondAttribute="height" multiplier="16:9" constant="170" id="7sn-NE-0X5"/>
                                     <constraint firstItem="CiE-pg-yMo" firstAttribute="top" secondItem="NQv-rh-oeG" secondAttribute="top" id="8uV-uj-4Zn"/>
-                                    <constraint firstItem="VHR-Nh-8mP" firstAttribute="top" secondItem="NQv-rh-oeG" secondAttribute="top" constant="66" id="VYi-D5-QRx"/>
+                                    <constraint firstItem="VHR-Nh-8mP" firstAttribute="centerY" secondItem="NQv-rh-oeG" secondAttribute="top" constant="60" id="VYi-D5-QRx"/>
                                     <constraint firstAttribute="trailing" secondItem="CiE-pg-yMo" secondAttribute="trailing" id="WjM-VT-5AA"/>
-                                    <constraint firstItem="uLB-Va-OGK" firstAttribute="top" secondItem="VHR-Nh-8mP" secondAttribute="bottom" constant="20" id="s6B-nD-xHn"/>
+                                    <constraint firstItem="o7h-JJ-hEz" firstAttribute="centerX" secondItem="NQv-rh-oeG" secondAttribute="centerX" id="jMs-sf-dXt"/>
+                                    <constraint firstItem="o7h-JJ-hEz" firstAttribute="bottom" secondItem="NQv-rh-oeG" secondAttribute="bottom" constant="-10" id="lK5-c2-FPQ"/>
+                                    <constraint firstItem="uLB-Va-OGK" firstAttribute="top" secondItem="VHR-Nh-8mP" secondAttribute="bottom" constant="5" id="s6B-nD-xHn"/>
                                     <constraint firstItem="CiE-pg-yMo" firstAttribute="leading" secondItem="NQv-rh-oeG" secondAttribute="leading" id="uHY-ah-u5V"/>
                                     <constraint firstItem="VHR-Nh-8mP" firstAttribute="centerX" secondItem="NQv-rh-oeG" secondAttribute="centerX" id="zBH-V5-pqA"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TRs-wb-PaP">
-                                <rect key="frame" x="0.0" y="180.5" width="375" height="486.5"/>
+                                <rect key="frame" x="0.0" y="115.5" width="375" height="551.5"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6DM-zh-s3d">
@@ -297,20 +301,20 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="MENUBUTTON" translatesAutoresizingMaskIntoConstraints="NO" id="9hJ-wv-eOS">
-                                <rect key="frame" x="16" y="71" width="30" height="20"/>
+                                <rect key="frame" x="16" y="50" width="30" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="30" id="UNt-GK-MaO"/>
                                 </constraints>
                             </imageView>
                             <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="backImage" translatesAutoresizingMaskIntoConstraints="NO" id="xob-X5-xnL">
-                                <rect key="frame" x="16" y="71" width="30" height="20"/>
+                                <rect key="frame" x="16" y="50" width="30" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="fEX-Ic-5kX"/>
                                     <constraint firstAttribute="width" constant="30" id="hp8-eQ-tML"/>
                                 </constraints>
                             </imageView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="account" translatesAutoresizingMaskIntoConstraints="NO" id="uih-H6-eKS">
-                                <rect key="frame" x="331" y="71" width="36" height="20"/>
+                                <rect key="frame" x="331" y="50" width="36" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="36" id="l5B-Rb-jVa"/>
                                 </constraints>
@@ -503,9 +507,9 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" verticalCompressionResistancePriority="751" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1li-IX-pan">
-                                <rect key="frame" x="10" y="439" width="355" height="91.5"/>
+                                <rect key="frame" x="10" y="439" width="355" height="85.5"/>
                                 <string key="text">Anahtar kelimelerinle hesabın her zaman güvende. Uygulamanı sildiysen veya yeni bir cihaza aktarman gerekiyorsa yukarıya 15 adet anahtar kelimeni yazarak hesabını içeri aktarabilirsin.</string>
-                                <fontDescription key="fontDescription" name="Montserrat-Medium" family="Montserrat" pointSize="15"/>
+                                <fontDescription key="fontDescription" name="Montserrat-Medium" family="Montserrat" pointSize="14"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="appLogoBlack" translatesAutoresizingMaskIntoConstraints="NO" id="LEb-oL-3k2">

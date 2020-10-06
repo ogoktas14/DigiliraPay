@@ -340,7 +340,7 @@ class MainScreen: UIViewController {
         loadMenu()
         
         headerView.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
-        headerView.layer.cornerRadius = 30
+        headerView.layer.cornerRadius = 5
         headerView.layer.shadowColor = UIColor.black.cgColor
         headerView.layer.shadowOpacity = 0.4
         headerView.layer.shadowOffset = .zero
@@ -683,9 +683,9 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
             }
             walletOperationView = UIView().loadNib(name: "WalletOperationButtonSView") as! WalletOperationButtonSView
             walletOperationView.frame = CGRect(x: 0,
-                                               y: homeAmountLabel.frame.maxY + 20,
+                                               y: homeAmountLabel.frame.maxY + 10,
                                                width: view.frame.width,
-                                               height: 0)
+                                               height: 60)
             walletOperationView.delegate = self
             walletOperationView.alpha = 0
             
@@ -695,8 +695,8 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
             let headerHeight = headerView.frame.size.height
             
             
-            UIView.animate(withDuration: 0.3, animations: {
-                self.headerView.frame.size.height = headerHeight + (headerHeight / 2.2)
+            UIView.animate(withDuration: 0.3, animations: { [self] in
+                self.headerView.frame.size.height =  walletOperationView.frame.maxY + 20
                 self.walletOperationView.alpha = 1
                 self.contentScrollView.contentOffset.x = self.contentScrollView.frame.width
             }) { (_) in
@@ -718,6 +718,9 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
     
     func goQRScreen()
     {
+        if isFirstLaunch {
+            return
+        }
         if (!isAlive) {
             socket1.connect()
         }
