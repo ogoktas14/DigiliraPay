@@ -51,8 +51,7 @@ class digiliraPayApi {
           let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
  
             let httpResponse = response as? HTTPURLResponse
-            print(httpResponse)
-              guard let dataResponse = data,
+            guard let dataResponse = data,
                   error == nil else {
                       print(error?.localizedDescription ?? "Response Error")
                       return }
@@ -113,7 +112,7 @@ class digiliraPayApi {
 
     
     
-       func postData(PARAMS: String, returnCompletion: @escaping ([String:Any]) -> () ) {
+       func postData(PARAMS: String, returnCompletion: @escaping ([String:Any], Int) -> () ) {
            
         var request = URLRequest(url: URL(string: digilira.api.url + digilira.api.payment + PARAMS)!)
            
@@ -124,12 +123,15 @@ class digiliraPayApi {
            request.setValue(tokenString, forHTTPHeaderField: "Authorization")
            
            let session = URLSession.shared
+
            let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
+            let httpResponse = response as? HTTPURLResponse
+
                do {
                    let json = try JSONSerialization.jsonObject(with: data!) as! Dictionary<String, AnyObject>
                    DispatchQueue.main.async { // Correct
                        print(json)
-                    returnCompletion(json)
+                    returnCompletion(json, httpResponse!.statusCode)
                    }
                } catch {
                    print(error)

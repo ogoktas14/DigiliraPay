@@ -30,6 +30,8 @@ struct digilira {
     struct messages {
         static let profileUpdateHeader = "Profilinizi Güncelleyin"
         static let profileUpdateMessage = "Ödeme yapmadan önce profilinizi tamamlamanız gerekmektedir."
+        static let qrErrorHeader = "QR Kod Hatası"
+        static let qrErrorMessage = "Ödeme bilgileri bulunamadı"
     }
     
     struct smartAccount {

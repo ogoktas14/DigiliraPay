@@ -25,19 +25,7 @@ class sendWithQR: UIView {
     let digiliraPay = digiliraPayApi()
 
  
-    private let supportedCodeTypes = [AVMetadataObject.ObjectType.upce,
-                                      AVMetadataObject.ObjectType.code39,
-                                      AVMetadataObject.ObjectType.code39Mod43,
-                                      AVMetadataObject.ObjectType.code93,
-                                      AVMetadataObject.ObjectType.code128,
-                                      AVMetadataObject.ObjectType.ean8,
-                                      AVMetadataObject.ObjectType.ean13,
-                                      AVMetadataObject.ObjectType.aztec,
-                                      AVMetadataObject.ObjectType.pdf417,
-                                      AVMetadataObject.ObjectType.itf14,
-                                      AVMetadataObject.ObjectType.dataMatrix,
-                                      AVMetadataObject.ObjectType.interleaved2of5,
-                                      AVMetadataObject.ObjectType.qr]
+    private let supportedCodeTypes = [AVMetadataObject.ObjectType.qr]
     
     
     weak var delegate: SendWithQrDelegate?
@@ -102,7 +90,13 @@ class sendWithQR: UIView {
                // Initialize the video preview layer and add it as a sublayer to the viewPreview view's layer.
                videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
                videoPreviewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
-               videoPreviewLayer?.frame = qrAreaView.frame
+                videoPreviewLayer?.frame = CGRect(x: 10,
+                                                  y: UIScreen.main.bounds.size.height / 2 - 100,
+                                                  width: UIScreen.main.bounds.size.width - 20,
+                                                  height: 300)
+        
+        videoPreviewLayer?.cornerRadius = 20
+        //print(qrAreaView.frame.size)
                
                self.layer.addSublayer(videoPreviewLayer!)
                
@@ -134,10 +128,12 @@ class sendWithQR: UIView {
     func getOrder (QR: String) {
  
         digiliraPay.postData(PARAMS: QR
-        ) { (json) in
+        ) { (json, statusCode) in
             
             DispatchQueue.main.async {
                 
+                if (statusCode != 200) {return}
+                                
                 let order = digilira.order.init(_id: (json["id"] as? String)!,
                                                 merchant: (json["merchant"] as? String)!,
                                                 user: json["merchant"] as? String,
@@ -210,9 +206,20 @@ extension sendWithQR: AVCaptureMetadataOutputObjectsDelegate {
                 //launchApp(decodedURL: metadataObj.stringValue!)
                 delegate?.dismissSendWithQr()
                 captureSession.stopRunning()
-                getOrder(QR:array[3])
+                
+                let caption = array[0]
+                let branch = array.count
 
                 
+                if caption != "digilirapay" {
+                    delegate?.qrError(error: "notDP")
+                }
+                
+                if branch > 2 {
+                    if caption == "digilirapay" {
+                        getOrder(QR:array[3])
+                    }
+                }
 
             }
         }

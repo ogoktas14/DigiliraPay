@@ -229,9 +229,11 @@ class MainScreen: UIViewController {
     func getOrder(address: String) {
         
         digiliraPay.postData(PARAMS: address
-        ) { (json) in
+        ) { (json, statusCode) in
             
             DispatchQueue.main.async {
+                
+                print(statusCode)
                 
                 let order = digilira.order.init(_id: (json["id"] as? String)!,
                                                 merchant: (json["merchant"] as? String)!,
@@ -767,8 +769,7 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
     func send(params: SendTrx)
     {
         
-        var y = headerInfoLabel.frame.maxY
-        var buffer = 200
+        var y = logoView.frame.maxY
         if !isShowSendCoinView
         {
             if params.attachment == "" { //bos send view
@@ -776,12 +777,10 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
                 headerInfoLabel.isHidden = false
                 //headerInfoLabel.text = "BAKİYEM"
                 //headerInfoLabel.textColor = UIColor(red:0.72, green:0.72, blue:0.72, alpha:1.0)
-                
-                y = homeAmountLabel.frame.maxY
             }else { // qr send view
                 headerInfoLabel.isHidden = true
                 homeAmountLabel.isHidden = true
-                buffer = 200
+
             }
             
             goHomeScreen()
@@ -796,17 +795,18 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
             sendMoneyView.frame = CGRect(x: 0,
                                          y: y,
                                          width: view.frame.width,
-                                         height: 50)
-            
+                                         height: view.frame.height)
+
             sendMoneyView.amountTextField.text = (Double(params.amount) / Double(100000000)).description
             sendMoneyView.receiptTextField.text = params.merchant
             sendMoneyView.amountTextField.isEnabled = false
             sendMoneyView.receiptTextField.isEnabled = false
                         
-            sendMoneyView.totalQuantity.text = ""
-            sendMoneyView.commissionAmount.text = ""
+            sendMoneyView.totalQuantity.text =  "Toplam Bakiye:"
+            sendMoneyView.commissionAmount.text = "İşlem komisyonu:"
             sendMoneyView.amountEquivalent.text = params.fiat.description + " ₺"
             
+
             sendMoneyView.delegate = self
             walletOperationView.translatesAutoresizingMaskIntoConstraints = true
             walletOperationView.alpha = 0
@@ -814,8 +814,9 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
             headerView.addSubview(sendMoneyView)
             
             let headerHeight = headerView.frame.size.height
+            headerHeightBuffer = headerHeight
             UIView.animate(withDuration: 0.3) {
-                self.headerView.frame.size.height = headerHeight + CGFloat(buffer)
+                self.headerView.frame.size.height = headerHeight + 240
                 self.sendMoneyView.alpha = 1
             }
         }
@@ -959,15 +960,16 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
 
             let headerHeight = headerView.frame.size.height
             sendMoneyView.removeFromSuperview()
+            let buffer = sendMoneyView.sendView.frame.maxY
             UIView.animate(withDuration: 0.4, animations: {
-                self.headerView.frame.size.height = headerHeight - 200
+                self.headerView.frame.size.height = self.headerHeightBuffer!
             }) { (_) in
                 
                 self.walletOperationView.translatesAutoresizingMaskIntoConstraints = true
                 self.walletOperationView.frame = CGRect(x: 0,
                                                         y: self.homeAmountLabel.frame.maxY + 15,
                                                         width: self.view.frame.width,
-                                                        height: 100)
+                                                        height: self.view.frame.height)
                 self.walletOperationView.alpha = 1
                 
             }
@@ -1297,6 +1299,22 @@ extension MainScreen: LegalDelegate // kullanım sözleşmesi gibi view'ların g
 
 extension MainScreen: SendWithQrDelegate
 {
+    func qrError(error: String) {
+        switch error {
+        case "notDP":
+            let alert = UIAlertController(title: digilira.messages.qrErrorHeader, message: digilira.messages.qrErrorMessage, preferredStyle: .alert)
+            
+            alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
+                self.dismissSendWithQr()
+            }))
+             
+            
+            self.present(alert, animated: true)
+        default:
+            break
+        }
+    }
+    
     func dismissSendWithQr()
     {
         isShowQRButton = false

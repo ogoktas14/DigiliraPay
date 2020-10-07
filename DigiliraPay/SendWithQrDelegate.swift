@@ -12,4 +12,7 @@ protocol SendWithQrDelegate: class
 {
     func dismissSendWithQr()
     func sendQR(ORDER: digilira.order)
+    func qrError(error: String)
+
 }
+ 

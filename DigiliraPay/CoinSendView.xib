@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -18,7 +19,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="CoinSendView" customModule="DigiliraPay" customModuleProvider="target">
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="CoinSendView" customModule="DigiliraPAY" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="414" height="256"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
@@ -47,10 +48,10 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dRl-S4-9eT">
-                    <rect key="frame" x="20" y="192.5" width="374" height="63.5"/>
+                    <rect key="frame" x="20" y="182.5" width="374" height="63.5"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Gönder" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hej-Ja-iAq">
-                            <rect key="frame" x="157.5" y="22.5" width="59" height="19"/>
+                            <rect key="frame" x="157.5" y="22" width="59" height="19"/>
                             <fontDescription key="fontDescription" name="Montserrat-ExtraBold" family="Montserrat" pointSize="15"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -77,8 +78,8 @@
                         <constraint firstAttribute="height" constant="1" id="xjN-SH-A9Y"/>
                     </constraints>
                 </view>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="255" text="Toplam: 1.228652 BTC" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cqV-uO-gG6">
-                    <rect key="frame" x="20" y="157.5" width="133.5" height="15"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="255" text="Toplam" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cqV-uO-gG6">
+                    <rect key="frame" x="20" y="157.5" width="47" height="15"/>
                     <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="12"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
@@ -98,13 +99,14 @@
                 </textField>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OBY-KI-fW2">
                     <rect key="frame" x="364" y="29.5" width="30" height="30"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="30" id="5e3-jE-Ff9"/>
                         <constraint firstAttribute="width" secondItem="OBY-KI-fW2" secondAttribute="height" multiplier="1:1" id="b1O-q3-u99"/>
                     </constraints>
                 </view>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="HYE-ee-l1K" firstAttribute="leading" secondItem="d1w-Ae-sUu" secondAttribute="trailing" constant="20" id="0rr-jq-wVg"/>
@@ -123,7 +125,7 @@
                 <constraint firstItem="Wla-Bm-m9R" firstAttribute="leading" secondItem="jRs-CT-S6c" secondAttribute="leading" id="Olx-rt-kqn"/>
                 <constraint firstAttribute="trailing" secondItem="uCf-Kc-s74" secondAttribute="trailing" constant="20" id="V4K-XJ-UC4"/>
                 <constraint firstItem="uCf-Kc-s74" firstAttribute="top" secondItem="OBY-KI-fW2" secondAttribute="bottom" constant="8" id="Vts-re-gjM"/>
-                <constraint firstItem="dRl-S4-9eT" firstAttribute="bottom" secondItem="vUN-kp-3ea" secondAttribute="bottom" id="W9x-sT-qwL"/>
+                <constraint firstItem="dRl-S4-9eT" firstAttribute="top" secondItem="cqV-uO-gG6" secondAttribute="bottom" constant="10" id="W9x-sT-qwL"/>
                 <constraint firstItem="Isl-jS-NbZ" firstAttribute="leading" secondItem="jRs-CT-S6c" secondAttribute="leading" id="XWQ-9N-uST"/>
                 <constraint firstItem="gpL-La-GWx" firstAttribute="top" secondItem="HYE-ee-l1K" secondAttribute="bottom" constant="10" id="aQL-UQ-hcX"/>
                 <constraint firstItem="jRs-CT-S6c" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="11" id="cm5-Wt-rNg"/>
@@ -140,7 +142,6 @@
                 <constraint firstAttribute="trailing" secondItem="gpL-La-GWx" secondAttribute="trailing" constant="20" id="yds-um-04x"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>
                 <outlet property="amountEquivalent" destination="HYE-ee-l1K" id="wpt-44-v6y"/>
                 <outlet property="amountLabel" destination="Isl-jS-NbZ" id="r2S-sf-iVc"/>
@@ -155,4 +156,9 @@
             <point key="canvasLocation" x="137.68115942028987" y="141.29464285714286"/>
         </view>
     </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
 </document>
