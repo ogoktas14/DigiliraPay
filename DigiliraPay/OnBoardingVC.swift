@@ -8,9 +8,28 @@
 
 import UIKit
 
-class OnBoardingVC: UIViewController {
+class OnBoardingVC: UIViewController, PinViewDelegate {
+    
+    func closePinView() {
+        
+        self.goMainVC()
+        self.BC.checkSmart(address: self.kullanici!.wallet!)
+    }
+    
+    func updatePinCode(code: Int32) {
+        
+    }
+    
+    func pinSuccess(res: Bool) {
+        
+        self.goMainVC()
+        self.BC.checkSmart(address: self.kullanici!.wallet!)
+        
+    }
+    
 
     @IBOutlet weak var scrollAreaView: UIView!
+    @IBOutlet weak var pinView: UIView!
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var letsGoView: UIView!
     @IBOutlet weak var importAccountView: UILabel!
@@ -20,6 +39,8 @@ class OnBoardingVC: UIViewController {
     var onBoardingScrollView = UIScrollView()
     let digiliraPay = digiliraPayApi()
     let BC = Blockchain()
+    
+    var onPinSuccess: ((_ result: Bool)->())?
     
     var kullanici: digilira.user?
 
@@ -64,11 +85,39 @@ class OnBoardingVC: UIViewController {
                         
                     case 200:
                         self.kullanici = json
-                        self.goMainVC()
-                        self.BC.checkSmart(address: self.kullanici!.wallet!)
+                        
+                        //openPinView
+                        if self.kullanici?.pincode == -1
+                        {
+                            self.goMainVC()
+                            self.BC.checkSmart(address: self.kullanici!.wallet!)
+                            return
+                        }
+                        
+                        let pinView = UIView().loadNib(name: "PinView") as! PinView
+                        pinView.kullanici = json
+                        pinView.isEntryMode = true
+                        pinView.setCode()
+                        
+                        pinView.delegate = self
+
+                        pinView.frame = CGRect(x: 0,
+                                               y: 0,
+                                               width: self.view.frame.width,
+                                               height: self.view.frame.height)
+                        self.view.addSubview(pinView)
+                        
                         break
                         
                     default:
+
+                        let alert = UIAlertController(title: "Hata", message: String(status!), preferredStyle: .alert)
+                        
+                        alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
+                            self.letsGoView.isHidden = false
+                            self.importAccountView.isHidden = false
+                        }))
+                        self.present(alert, animated: true)
                         break
                     }
                     

@@ -61,6 +61,7 @@ class MainScreen: UIViewController {
     var isShowQRButton = false
     var isShowLoadCoinView = false
     var isSuccessView = false
+    var isSeedScreen = false
     
     var isKeyboard = false
     
@@ -134,6 +135,7 @@ class MainScreen: UIViewController {
         coinTableView.refreshControl = refreshControl
         
 //        when requested asset balances
+        
         BC.onAssetBalance = { result in
             self.Balances = (result)
             self.setTableView()
@@ -199,7 +201,7 @@ class MainScreen: UIViewController {
         
         
 
-        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.attributedTitle = NSAttributedString(string: "Güncellemek için çekiniz..")
         refreshControl.addTarget(self, action: #selector(refreshWeatherData(_:)), for: UIControl.Event.valueChanged)
         
         NotificationCenter.default.addObserver( self, selector: #selector(keyboardWillShow(notification:)), name:  UIResponder.keyboardWillShowNotification, object: nil )
@@ -452,9 +454,11 @@ class MainScreen: UIViewController {
         contentScrollView.contentSize.width = contentScrollView.frame.width * CGFloat(contentScrollView.subviews.count)
         
         if isFirstLaunch {
-            
+//            
             if pinkodaktivasyon! {
-                openPinView()
+                if kullanici?.pincode == -1 {
+                    openPinView()
+                }
             }
             isFirstLaunch = false
         }
@@ -718,11 +722,36 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         }
     }
     
+    private func seedScreen() {
+        isSeedScreen = true
+        for view in self.sendWithQRView.subviews
+            { view.removeFromSuperview() }
+        self.sendWithQRView.translatesAutoresizingMaskIntoConstraints = true
+
+            
+            let letsStartView4: LetsStartWordsView = UIView().loadNib(name: "LetsStartWordView") as! LetsStartWordsView
+            
+            letsStartView4.delegate = self
+            
+            letsStartView4.setTitles(title: "Anahtar kelimelerini", subTitle: "asla kaybetme!", desc: "Eğer uygulaman silinirse veya cüzdanını başka bir cihaza aktarman gerekirse bu kelimelere ihtiyaç duyacaksın.")
+            letsStartView4.frame = CGRect(x: 0,
+                                           y: 100,
+                                           width: self.view.frame.width,
+                                           height: self.view.frame.height)
+            
+            letsStartView4.backgroundColor = UIColor.white
+            letsStartView4.okButtonView.isHidden = false
+            
+        self.sendWithQRView.addSubview(letsStartView4)
+        self.sendWithQRView.isHidden = false
+            UIView.animate(withDuration: 0.4) {
+                self.sendWithQRView.frame.origin.y = 0
+                self.sendWithQRView.alpha = 1
+            }
+    }
+    
     func goQRScreen()
     {
-        if isFirstLaunch {
-            return
-        }
         if (!isAlive) {
             socket1.connect()
         }
@@ -984,34 +1013,34 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
 {
     func showSeedView() {
         
-        
-        
-        closeProfileView()
-        for view in sendWithQRView.subviews
-        { view.removeFromSuperview() }
-        sendWithQRView.translatesAutoresizingMaskIntoConstraints = true
-
-        
-        let letsStartView4: LetsStartWordsView = UIView().loadNib(name: "LetsStartWordView") as! LetsStartWordsView
-        
-        letsStartView4.delegate = self
-        
-        letsStartView4.setTitles(title: "Anahtar kelimelerini", subTitle: "asla kaybetme!", desc: "Eğer uygulaman silinirse veya cüzdanını başka bir cihaza aktarman gerekirse bu kelimelere ihtiyaç duyacaksın.")
-        letsStartView4.frame = CGRect(x: 0,
-                                       y: 100,
-                                       width: view.frame.width,
-                                       height: view.frame.height)
-        
-        letsStartView4.backgroundColor = UIColor.white
-        letsStartView4.okButtonView.isHidden = false
-        
-        sendWithQRView.addSubview(letsStartView4)
-        sendWithQRView.isHidden = false
-        UIView.animate(withDuration: 0.4) {
-            self.sendWithQRView.frame.origin.y = 0
-            self.sendWithQRView.alpha = 1
+        self.onPinSuccess = { [self] res in
+            switch res {
+            case true:
+                self.seedScreen()
+                self.closeProfileView()
+                break
+            case false:
+                self.closeProfileView()
+                break
+            }
+            
         }
         
+        digiliraPay.onTouchID = { res, err in
+            if res == true {
+                self.seedScreen()
+                self.closeProfileView()
+
+            } else {
+                self.isTouchIDCanceled = true
+                self.openPinView()
+                self.closeProfileView()
+            }
+        }
+        
+        digiliraPay.touchID(reason: "Transferin gerçekleşebilmesi için biometrik onayınız gerekmektedir!")
+
+    
     }
     
     func verifyProfile()
@@ -1463,6 +1492,12 @@ extension MainScreen: PinViewDelegate
     }
     
     func closePinView() {
+        
+        if isSeedScreen {
+            isSeedScreen = false
+            return
+        }
+        
         UIView.animate(withDuration: 0.3) {
             self.sendWithQRView.frame.origin.y = self.self.view.frame.height
             self.sendWithQRView.alpha = 0
