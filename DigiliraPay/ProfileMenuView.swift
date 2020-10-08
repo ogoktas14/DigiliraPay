@@ -40,6 +40,10 @@ class ProfileMenuView: UIView {
     var changeLanguageforEN = UITapGestureRecognizer()
     var changeLanguageforTR = UITapGestureRecognizer()
     
+    var frameValue = CGRect()
+
+    var ViewOriginMaxXValue: CGPoint = CGPoint(x: 0, y: 0)
+    
     weak var delegate: ProfileMenuDelegate?
     
     override func awakeFromNib()
@@ -85,6 +89,10 @@ class ProfileMenuView: UIView {
             biometricSecurityToggle.isOn = isSecure
             biometricColor()
         }
+    }
+    
+    func setView() {
+        
     }
     @objc func verifyProfile()
     {

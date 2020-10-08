@@ -50,6 +50,8 @@ class MainScreen: UIViewController {
     var loadMoneyView = QRView()
     var successView = TransactionPopup()
     var seedView = LetsStartWordsView()
+    var paymentCat = PaymentCat()
+    var profileMenuView = ProfileMenuView()
     
     var tapProfileMenuGesture = UITapGestureRecognizer()
     var tapCloseProfileMenuGesture = UITapGestureRecognizer()
@@ -62,6 +64,7 @@ class MainScreen: UIViewController {
     var isShowLoadCoinView = false
     var isSuccessView = false
     var isSeedScreen = false
+    var isPayments = false
     
     var isKeyboard = false
     
@@ -140,6 +143,8 @@ class MainScreen: UIViewController {
             self.Balances = (result)
             self.setTableView()
             self.setWalletView()
+            self.setPaymentView()
+            self.setSettingsView()
             self.coinTableView.reloadData()
         }
         
@@ -356,7 +361,7 @@ class MainScreen: UIViewController {
         profileSettingsView.translatesAutoresizingMaskIntoConstraints = true
         
         
-        menuXib.setSelector(view: menuXib.homeView)
+        menuXib.setSelector(view: menuXib.homeIcon)
         
         
     }
@@ -396,6 +401,7 @@ class MainScreen: UIViewController {
         contentScrollView.contentSize.width = contentScrollView.frame.width * CGFloat(contentScrollView.subviews.count)
         
     }
+    
     func setWalletView() // Wallet ekranı detayları aşağıda
     {
         walletView = UIView().loadNib(name: "WalletView") as! WalletView
@@ -434,6 +440,43 @@ class MainScreen: UIViewController {
         
     }
     
+    
+    func setSettingsView() {
+        profileMenuView = UIView().loadNib(name: "ProfileMenuview") as! ProfileMenuView
+        profileMenuView.frame = CGRect(x: contentView.frame.width * 3,
+                                  y: -70,
+                                  width: contentView.frame.width,
+                                  height: contentView.frame.height)
+        
+        profileMenuView.layer.zPosition = 1
+        profileMenuView.delegate = self
+
+        profileMenuView.frameValue = walletView.frame
+        profileMenuView.setView()
+        profileMenuView.ViewOriginMaxXValue.y = menuView.frame.height
+        contentScrollView.addSubview(profileMenuView)
+        
+        contentScrollView.contentSize.width = contentScrollView.frame.width * CGFloat(contentScrollView.subviews.count)
+    }
+    
+    func setPaymentView() // payments ekranı
+    {
+        paymentCat = UIView().loadNib(name: "PaymentCategories") as! PaymentCat
+        paymentCat.frame = CGRect(x: contentView.frame.width * 2,
+                                  y: 0,
+                                  width: contentView.frame.width,
+                                  height: contentView.frame.height)
+        
+        paymentCat.layer.zPosition = 1
+        
+        paymentCat.frameValue = walletView.frame
+        paymentCat.setView()
+        paymentCat.ViewOriginMaxXValue.y = menuView.frame.height
+        contentScrollView.addSubview(paymentCat)
+        
+        contentScrollView.contentSize.width = contentScrollView.frame.width * CGFloat(contentScrollView.subviews.count)
+    }
+    
     @objc func openProfileView() // yan profil menüsünün açılması işlemi
     {
         if !isShowProfileMenu
@@ -448,9 +491,9 @@ class MainScreen: UIViewController {
             headerView.isUserInteractionEnabled = false
             tapProfileMenuGesture.isEnabled = false
             tapCloseProfileMenuGesture.isEnabled = true
-            
         }
     }
+    
     @objc func closeProfileView() // yan profil menüsünün kapanması işlemi
     {
         if isShowProfileMenu
@@ -583,6 +626,82 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
 
 extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısmı
 {
+    func goPayments() {
+        
+        isShowSettings = false
+        isPayments = true
+        
+        dismissLoadView()
+        dismissProfileMenu()
+        
+        if isShowSendCoinView {
+            closeSendView()
+        }
+        
+        if isShowWallet
+        {
+            headerInfoLabel.isHidden = true
+            closeCoinSendView()
+            isShowWallet = false
+            walletOperationView.removeFromSuperview()
+            
+            UIView.animate(withDuration: 0.3) {
+                self.headerView.frame.size.height = self.headerHeightBuffer!
+                
+                self.contentScrollView.contentOffset.x = 0
+            }
+        }
+        
+        headerInfoLabel.isHidden = true
+        homeAmountLabel.isHidden = true
+        logoView.isHidden = false
+        menuXib.isHidden = false
+        
+        UIView.animate(withDuration: 0.3, animations: { [self] in
+            self.contentScrollView.contentOffset.x = self.view.frame.width * 2
+        }) { (_) in
+            self.walletOperationsViewOrigin = self.walletOperationView.frame.origin
+        }
+        
+    }
+    
+    func goSettings() {
+        isShowSettings = false
+        isPayments = true
+        
+        dismissLoadView()
+        dismissProfileMenu()
+        
+        if isShowSendCoinView {
+            closeSendView()
+        }
+        
+        if isShowWallet
+        {
+            headerInfoLabel.isHidden = true
+            closeCoinSendView()
+            isShowWallet = false
+            walletOperationView.removeFromSuperview()
+            
+            UIView.animate(withDuration: 0.3) {
+                self.headerView.frame.size.height = self.headerHeightBuffer!
+                
+                self.contentScrollView.contentOffset.x = 0
+            }
+        }
+        
+        headerInfoLabel.isHidden = true
+        homeAmountLabel.isHidden = true
+        logoView.isHidden = false
+        menuXib.isHidden = false
+        
+        UIView.animate(withDuration: 0.3, animations: { [self] in
+            self.contentScrollView.contentOffset.x = self.view.frame.width * 3
+        }) { (_) in
+            self.walletOperationsViewOrigin = self.walletOperationView.frame.origin
+        }
+    }
+    
     func goHomeScreen()
     {
         
@@ -591,7 +710,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         dismissLoadView()
         dismissProfileMenu()
         
-        if isShowSendCoinView { //eger gonder ekrani aciksa kapat
+        if isShowSendCoinView {
             closeSendView()
         }
         
@@ -613,13 +732,19 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
             bottomView.isHidden = false
         }
         
-        
+        if isPayments {
+            
+            UIView.animate(withDuration: 0.3, animations: { [self] in
+                self.contentScrollView.contentOffset.x = 0
+            }) { (_) in
+                self.walletOperationsViewOrigin = self.walletOperationView.frame.origin
+            }
+        }
+
         headerInfoLabel.isHidden = true
         homeAmountLabel.isHidden = true
         logoView.isHidden = false
         menuXib.isHidden = false
-        
-        
     }
     
     func goWalletScreen(coin: Int)
@@ -1102,6 +1227,29 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         }
     }
     
+    func goExtraPayment()
+    {
+        paymentCat.frame.origin.y = view.frame.height
+        let paymentCatXib = UIView().loadNib(name: "PaymentCategories") as! PaymentCat
+        paymentCatXib.delegate = self
+        paymentCatXib.frame = CGRect(x: 0,
+                                          y: 0,
+                                          width: paymentCat.frame.width,
+                                          height: paymentCat.frame.height)
+        
+        for subView in paymentCat.subviews
+        { subView.removeFromSuperview() }
+        paymentCat.addSubview(paymentCatXib)
+        closeProfileView()
+        UIView.animate(withDuration: 0.4, animations: {
+            self.paymentCat.frame.origin.y = 0
+        }) { (_) in
+            
+        }
+    }
+    
+    
+    
     
     func showSuccess(mode: Int, transaction: [String : Any])
     {
@@ -1195,6 +1343,16 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         openPinView()
     }
 }
+
+extension MainScreen: PaymentCatViewsDelegate {
+    func dismiss() {
+        print("ok")
+    }
+    
+
+    
+}
+
 
 extension MainScreen: seedViewDelegate {
     func closeSeedView() {

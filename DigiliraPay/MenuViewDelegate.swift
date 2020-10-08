@@ -14,4 +14,6 @@ protocol MenuViewDelegate: class
     func goWalletScreen(coin:Int)
     func goSettingsScreen()
     func goQRScreen()
+    func goPayments()
+    func goSettings()
 }

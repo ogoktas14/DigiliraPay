@@ -24,3 +24,8 @@ protocol OperationButtonsDelegate: class
     func send(params: SendTrx)
     func load()
 }
+
+
+protocol PaymentCatViewsDelegate: class {
+    func dismiss()
+}

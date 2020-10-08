@@ -121,6 +121,8 @@
 		88F4A1BB2312AD63007172A6 /* MainScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F4A1BA2312AD63007172A6 /* MainScreen.swift */; };
 		88F4A1BF2312AF7B007172A6 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F4A1BE2312AF7B007172A6 /* MenuView.swift */; };
 		88F4A1C42312CA56007172A6 /* MockImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 88F4A1C32312CA56007172A6 /* MockImages.xcassets */; };
+		93B7A11B252F0D8000C89E66 /* PaymentCategories.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93B7A11A252F0D8000C89E66 /* PaymentCategories.xib */; };
+		93B7A11E252F0F0A00C89E66 /* PaymentCategories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93B7A11D252F0F0A00C89E66 /* PaymentCategories.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -247,6 +249,8 @@
 		88F4A1BA2312AD63007172A6 /* MainScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreen.swift; sourceTree = "<group>"; };
 		88F4A1BE2312AF7B007172A6 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		88F4A1C32312CA56007172A6 /* MockImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = MockImages.xcassets; sourceTree = "<group>"; };
+		93B7A11A252F0D8000C89E66 /* PaymentCategories.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentCategories.xib; sourceTree = "<group>"; };
+		93B7A11D252F0F0A00C89E66 /* PaymentCategories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCategories.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -401,6 +405,7 @@
 				88114F612321602800AB3B5A /* ProfileUpgradeView.xib */,
 				88114F6523216A8E00AB3B5A /* sendWithQR.xib */,
 				888F26AE233E89B800AB7E4C /* PinView.xib */,
+				93B7A11A252F0D8000C89E66 /* PaymentCategories.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -433,6 +438,7 @@
 				88114F632321604100AB3B5A /* ProfilUpgradeView.swift */,
 				88114F6723216A9500AB3B5A /* sendWithQR.swift */,
 				888F26B0233E8DF500AB7E4C /* PinView.swift */,
+				93B7A11D252F0F0A00C89E66 /* PaymentCategories.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -561,6 +567,7 @@
 				880541FB2319702B004EE85F /* CoinTableViewCell.xib in Resources */,
 				88CA93642319792A008F894B /* WalletView.xib in Resources */,
 				882AAB5922FCAAEE004CDAA6 /* Montserrat-ExtraBold.otf in Resources */,
+				93B7A11B252F0D8000C89E66 /* PaymentCategories.xib in Resources */,
 				882AAB5F22FCAAEE004CDAA6 /* Montserrat-Black.otf in Resources */,
 				882AAB4122FCAAEE004CDAA6 /* SIL Open Font License.txt in Resources */,
 				882AAB5D22FCAAEE004CDAA6 /* MontserratAlternates-Regular.otf in Resources */,
@@ -719,6 +726,7 @@
 				882AAB0722FC96DD004CDAA6 /* OnBoardingVC.swift in Sources */,
 				88CA938F231BD0AE008F894B /* ProfileSettingsView.swift in Sources */,
 				88CA938B231B9E1C008F894B /* SendCoinDelegate.swift in Sources */,
+				93B7A11E252F0F0A00C89E66 /* PaymentCategories.swift in Sources */,
 				88F4A1BF2312AF7B007172A6 /* MenuView.swift in Sources */,
 				88309EBE231FD08500F96C05 /* LoadCoinDelegate.swift in Sources */,
 				88114F642321604100AB3B5A /* ProfilUpgradeView.swift in Sources */,

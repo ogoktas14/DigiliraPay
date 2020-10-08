@@ -266,13 +266,13 @@
                                         </constraints>
                                     </imageView>
                                     <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TEST" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uLB-Va-OGK">
-                                        <rect key="frame" x="166" y="86" width="43.5" height="21"/>
+                                        <rect key="frame" x="166" y="86" width="43" height="21"/>
                                         <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bakiye" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VHR-Nh-8mP">
-                                        <rect key="frame" x="145" y="51.5" width="85.5" height="29.5"/>
+                                        <rect key="frame" x="145" y="51.5" width="85" height="29.5"/>
                                         <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="24"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -349,11 +349,11 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TvZ-Gz-4ha">
-                                <rect key="frame" x="0.0" y="578" width="375" height="89"/>
+                                <rect key="frame" x="0.0" y="607.5" width="375" height="59.5"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="lessThanOrEqual" constant="119" id="Id2-9z-t90"/>
-                                    <constraint firstAttribute="width" secondItem="TvZ-Gz-4ha" secondAttribute="height" multiplier="23:6" constant="32.875" id="suu-We-hwR"/>
+                                    <constraint firstAttribute="width" secondItem="TvZ-Gz-4ha" secondAttribute="height" multiplier="23:4" constant="32.875" id="suu-We-hwR"/>
                                 </constraints>
                             </view>
                             <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="COd-Ba-SB8">
@@ -400,7 +400,7 @@
                             <constraint firstItem="NQv-rh-oeG" firstAttribute="leading" secondItem="3eS-qu-lmb" secondAttribute="leading" id="pSM-j0-ESl"/>
                             <constraint firstAttribute="trailing" secondItem="axH-mU-zpT" secondAttribute="trailing" id="qAQ-Fg-LHC"/>
                             <constraint firstItem="3eS-qu-lmb" firstAttribute="trailing" secondItem="onW-aF-mid" secondAttribute="trailing" id="sVl-o6-JsA"/>
-                            <constraint firstAttribute="bottom" secondItem="TvZ-Gz-4ha" secondAttribute="bottom" id="uUy-lf-1Cm"/>
+                            <constraint firstItem="TvZ-Gz-4ha" firstAttribute="bottom" secondItem="3eS-qu-lmb" secondAttribute="bottom" id="uUy-lf-1Cm"/>
                             <constraint firstItem="3eS-qu-lmb" firstAttribute="leading" secondItem="9hJ-wv-eOS" secondAttribute="leading" constant="-16" id="v6Q-4q-DEE"/>
                             <constraint firstItem="xob-X5-xnL" firstAttribute="leading" secondItem="9hJ-wv-eOS" secondAttribute="leading" id="vG8-L0-f0V"/>
                             <constraint firstItem="6DM-zh-s3d" firstAttribute="top" secondItem="dz3-oT-DnH" secondAttribute="top" id="vNq-QA-556"/>
