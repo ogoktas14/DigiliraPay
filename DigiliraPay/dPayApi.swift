@@ -24,6 +24,8 @@ class digiliraPayApi {
     let jsonEncoder = JSONEncoder()
     var onTouchID: ((_ result: Bool, _ status: String)->())?
     var onError: ((_ result: String)->())?
+    var onResponse: ((_ result: [String:Any], _ statusCode: Int?)->())?
+    var onUpdate: ((_ result: Bool)->())?
 
       func request(rURL: String, JSON: Data? = nil,
                      PARAMS: String = "", METHOD: String, AUTH: Bool = false,
@@ -107,43 +109,122 @@ class digiliraPayApi {
          
     }
     
-    
-    
+        
+    var onGetOrder: ((_ result: digilira.order)->())?
 
-    
-    
-       func postData(PARAMS: String, returnCompletion: @escaping ([String:Any], Int) -> () ) {
-           
-        var request = URLRequest(url: URL(string: digilira.api.url + digilira.api.payment + PARAMS)!)
-           
+    func getOrder(PARAMS: String) {
+     var request = URLRequest(url: URL(string: digilira.api.url + digilira.api.payment + PARAMS)!)
+        
         request.httpMethod = "GET"
-          let tokenString = "Bearer " + auth().token!
+       let tokenString = "Bearer " + auth().token!
 
-           request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-           request.setValue(tokenString, forHTTPHeaderField: "Authorization")
-           
-           let session = URLSession.shared
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue(tokenString, forHTTPHeaderField: "Authorization")
+        
+        let session = URLSession.shared
 
-           let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-            let httpResponse = response as? HTTPURLResponse
+        let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
+        //let httpResponse = response as? HTTPURLResponse
 
-               do {
-                   let json = try JSONSerialization.jsonObject(with: data!) as! Dictionary<String, AnyObject>
-                   DispatchQueue.main.async { // Correct
-                       print(json)
-                    returnCompletion(json, httpResponse!.statusCode)
-                   }
-               } catch {
-                   print(error)
-               }
-           })
-           
-           task.resume()
-           
-       }
+            do {
+                let json = try JSONSerialization.jsonObject(with: data!) as! Dictionary<String, AnyObject>
+                DispatchQueue.main.async { // Correct
+                    
+                    
+                    let order = digilira.order.init(_id: (json["id"] as? String)!,
+                                                    merchant: (json["merchant"] as? String)!,
+                                                    user: json["merchant"] as? String,
+                                                    language: json["language"] as? String,
+                                                    order_ref: json["order_ref"] as? String,
+                                                    createdDate: json["createdDate"] as? String,
+                                                    order_date: json["order_date"] as? String,
+                                                    order_shipping: json["order_shipping"] as? Double,
+                                                    conversationId: json["conversationId"] as? String,
+                                                    rate: (json["rate"] as? Int64)!,
+                                                    totalPrice: json["totalPrice"] as? Double,
+                                                    paidPrice: json["paidPrice"] as? Double,
+                                                    refundPrice: json["refundPrice"] as? Double,
+                                                    currency: json["currency"] as? String,
+                                                    currencyFiat: json["currencyFiat"] as? Double,
+                                                    userId: json["userId"] as? String,
+                                                    paymentChannel: json["paymentChannel"] as? String,
+                                                    ip: json["ip"] as? String,
+                                                    registrationDate: json["registrationDate"] as? String,
+                                                    wallet: (json["wallet"] as? String)!,
+                                                    asset: json["asset"] as? String,
+                                                    successUrl: json["successUrl"] as? String,
+                                                    failureUrl: json["failureUrl"] as? String,
+                                                    callbackSuccess: json["callbackSuccess"] as? String,
+                                                    callbackFailure: json["callbackFailure"] as? String,
+                                                    mobile: json["mobile"] as? Int64,
+                                                    status: json["status"] as? Int64)
+                    
+                    
+                    self.onGetOrder?(order)
+                }
+            } catch {
+                print(error)
+            }
+        })
+        
+        task.resume()
+        
+    }
     
+    func updateUser(user: Data?) {
+        
+        self.onResponse = { res, sts in
+            if (sts == 200) {
+                self.onUpdate!(true)
+            }else {
+                self.onUpdate!(false)
+            }
+        }
+        request2(rURL: digilira.api.url + digilira.api.userUpdate, JSON: user, METHOD: digilira.requestMethod.put, AUTH: true)
+    }
+    
+    func request2(rURL: String, JSON: Data? = nil, PARAMS: String = "", METHOD: String, AUTH: Bool = false) {
+        
+        var request = URLRequest(url: URL(string: rURL)!)
+        
+        request.httpMethod = METHOD
+         
+      if JSON != nil {
+          request.httpBody = JSON
+          request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+      }
+         
+        if PARAMS != "" {
+            request.url?.appendPathComponent(PARAMS, isDirectory: true)
+        }
 
-     
+        if AUTH  {
+          let tokenString = "Bearer " + auth().token!
+            request.setValue(tokenString, forHTTPHeaderField: "Authorization")
+        }
+        
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+
+          let httpResponse = response as? HTTPURLResponse
+          guard let dataResponse = data,
+                error == nil else {
+                    print(error?.localizedDescription ?? "Response Error")
+                    return }
+            do{
+                
+                let jsonResponse = try JSONSerialization.jsonObject(with: dataResponse) as! Dictionary<String, AnyObject>
+                self.onResponse!(jsonResponse, httpResponse?.statusCode)
+
+  
+            } catch let parsingError {
+                print("Error", parsingError)
+                self.onResponse!([:], httpResponse?.statusCode)
+            }
+        }
+        task.resume()
+        
+        
+    }
     
     func getToken() -> String {
         let token = UserDefaults.standard.string(forKey: "token")
@@ -177,6 +258,16 @@ class digiliraPayApi {
                 }
             }
         
+    }
+    
+    func convertImageToBase64String (img: UIImage) -> String {
+        return img.jpegData(compressionQuality: 1)?.base64EncodedString() ?? ""
+    }
+    
+    func convertBase64StringToImage (imageBase64String:String) -> UIImage {
+        let imageData = Data.init(base64Encoded: imageBase64String, options: .init(rawValue: 0))
+        let image = UIImage(data: imageData!)
+        return image!
     }
     
     
@@ -293,15 +384,5 @@ class OpenUrlManager {
     class func getOpenUrlParams() -> (String)? {
         return parseUrlParams(openUrl: openUrl)
     }
-    
-    class func createUrl(address: String, assetId: String?, amount: String?) -> URL? {
-        var queryItems = [URLQueryItem]()
-        if let assetId = assetId, !assetId.isEmpty { queryItems += [URLQueryItem(name: "asset", value: assetId)] }
-        if let amount = amount, !amount.isEmpty { queryItems += [URLQueryItem(name: "amount", value: amount)] }
-        return URLComponents(string: "waves://\(address)").flatMap{ c in
-            var q = c
-            q.queryItems = queryItems
-            return q.url
-        }
-    }
+
 }

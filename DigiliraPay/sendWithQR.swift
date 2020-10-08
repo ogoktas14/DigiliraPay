@@ -125,52 +125,6 @@ class sendWithQR: UIView {
         
     }
     
-    func getOrder (QR: String) {
- 
-        digiliraPay.postData(PARAMS: QR
-        ) { (json, statusCode) in
-            
-            DispatchQueue.main.async {
-                
-                if (statusCode != 200) {return}
-                                
-                let order = digilira.order.init(_id: (json["id"] as? String)!,
-                                                merchant: (json["merchant"] as? String)!,
-                                                user: json["merchant"] as? String,
-                                                language: json["language"] as? String,
-                                                order_ref: json["order_ref"] as? String,
-                                                createdDate: json["createdDate"] as? String,
-                                                order_date: json["order_date"] as? String,
-                                                order_shipping: json["order_shipping"] as? Double,
-                                                conversationId: json["conversationId"] as? String,
-                                                rate: (json["rate"] as? Int64)!,
-                                                totalPrice: json["totalPrice"] as? Double,
-                                                paidPrice: json["paidPrice"] as? Double,
-                                                refundPrice: json["refundPrice"] as? Double,
-                                                currency: json["currency"] as? String,
-                                                currencyFiat: json["currencyFiat"] as? Double,
-                                                userId: json["userId"] as? String,
-                                                paymentChannel: json["paymentChannel"] as? String,
-                                                ip: json["ip"] as? String,
-                                                registrationDate: json["registrationDate"] as? String,
-                                                wallet: (json["wallet"] as? String)!,
-                                                asset: json["asset"] as? String,
-                                                successUrl: json["successUrl"] as? String,
-                                                failureUrl: json["failureUrl"] as? String,
-                                                callbackSuccess: json["callbackSuccess"] as? String,
-                                                callbackFailure: json["callbackFailure"] as? String,
-                                                mobile: json["mobile"] as? Int64,
-                                                status: json["status"] as? Int64)
-
-                
-                self.delegate?.sendQR(ORDER: order)
-
-                
-            }
-        }
-    
-    }
-    
     @IBAction func exitButton(_ sender: Any)
     {
         captureSession.stopRunning()
@@ -217,7 +171,12 @@ extension sendWithQR: AVCaptureMetadataOutputObjectsDelegate {
                 
                 if branch > 2 {
                     if caption == "digilirapay" {
-                        getOrder(QR:array[3])
+                        digiliraPay.onGetOrder = { res in
+                            self.delegate?.sendQR(ORDER: res)
+
+                        }
+                        digiliraPay.getOrder(PARAMS: array[3])
+                    
                     }
                 }
 

@@ -70,6 +70,11 @@ struct digilira {
         var status: Int64?
         var pincode: Int32?
         var imported: Bool?
+        var id1: String?
+    }
+    
+    struct idImage: Encodable {
+        var id1: String?
     }
     
     struct pin: Encodable {

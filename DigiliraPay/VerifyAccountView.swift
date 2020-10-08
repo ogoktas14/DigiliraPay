@@ -32,6 +32,7 @@ class VerifyAccountView: UIView
     @IBOutlet weak var mailText: UITextField!
  
     let digiliraPay = digiliraPayApi()
+    var onUpdate: ((_ result: [String:Any])->())?
 
     var kullanici: digilira.user?
 
@@ -104,8 +105,18 @@ class VerifyAccountView: UIView
         goHomeView.addGestureRecognizer(goHomeGesture)
     }
     
-    @objc func sendAndContiune()
-    {
+    func KYC() {
+        digiliraPay.onUpdate = { res in
+            self.digiliraPay.login() { (json, status) in
+                DispatchQueue.main.async {
+                    print(json)
+                    self.kullanici = json
+                }
+             }
+        }
+        
+        let b64 = digiliraPay.convertImageToBase64String(img: UIImage(named: "test.jpg")!)
+
         delegate?.dismissKeyboard()
  
         let user = digilira.user.init(
@@ -114,26 +125,18 @@ class VerifyAccountView: UIView
             tcno: tcText.text,
             tel: telText.text,
             mail: mailText.text,
-            status: 1
+            status: 1,
+            id1: b64
         )
-            
-        digiliraPay.request(  rURL: digilira.api.url + digilira.api.userUpdate,
-                              JSON: try? digiliraPay.jsonEncoder.encode(user),
-                              METHOD: digilira.requestMethod.put,
-                              AUTH: true
-        ) { (json, statusCode) in
-            
-            DispatchQueue.main.async {
-                self.digiliraPay.login() { (json, status) in
-                    DispatchQueue.main.async {
-                        print(json)
-                        self.kullanici = json
-                    }
-                 }
-            }
-         }
         
+        let encoder = JSONEncoder()
+        let data = try? encoder.encode(user)
         
+        digiliraPay.updateUser(user: data)
+    }
+    
+    @objc func sendAndContiune()
+    {
 
         enterInfoView.translatesAutoresizingMaskIntoConstraints = true
         sendIDPhotoView.translatesAutoresizingMaskIntoConstraints = true
@@ -151,6 +154,8 @@ class VerifyAccountView: UIView
     
     @objc func openCamera()
     {
+        KYC()
+        
         finishedView.translatesAutoresizingMaskIntoConstraints = true
         finishedView.frame.origin.y = self.frame.height
         

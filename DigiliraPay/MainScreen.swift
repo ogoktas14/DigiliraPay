@@ -230,47 +230,11 @@ class MainScreen: UIViewController {
     
     func getOrder(address: String) {
         
-        digiliraPay.postData(PARAMS: address
-        ) { (json, statusCode) in
-            
-            DispatchQueue.main.async {
-                
-                print(statusCode)
-                
-                let order = digilira.order.init(_id: (json["id"] as? String)!,
-                                                merchant: (json["merchant"] as? String)!,
-                                                user: json["merchant"] as? String,
-                                                language: json["language"] as? String,
-                                                order_ref: json["order_ref"] as? String,
-                                                createdDate: json["createdDate"] as? String,
-                                                order_date: json["order_date"] as? String,
-                                                order_shipping: json["order_shipping"] as? Double,
-                                                conversationId: json["conversationId"] as? String,
-                                                rate: (json["rate"] as? Int64)!,
-                                                totalPrice: json["totalPrice"] as? Double,
-                                                paidPrice: json["paidPrice"] as? Double,
-                                                refundPrice: json["refundPrice"] as? Double,
-                                                currency: json["currency"] as? String,
-                                                currencyFiat: json["currencyFiat"] as? Double,
-                                                userId: json["userId"] as? String,
-                                                paymentChannel: json["paymentChannel"] as? String,
-                                                ip: json["ip"] as? String,
-                                                registrationDate: json["registrationDate"] as? String,
-                                                wallet: (json["wallet"] as? String)!,
-                                                asset: json["asset"] as? String,
-                                                successUrl: json["successUrl"] as? String,
-                                                failureUrl: json["failureUrl"] as? String,
-                                                callbackSuccess: json["callbackSuccess"] as? String,
-                                                callbackFailure: json["callbackFailure"] as? String,
-                                                mobile: json["mobile"] as? Int64,
-                                                status: json["status"] as? Int64)
-                
-                
-                self.sendQR(ORDER: order)
-                
-                
-            }
+        digiliraPay.onGetOrder = { res in
+            self.sendQR(ORDER: res)
+
         }
+        digiliraPay.getOrder(PARAMS: address)
         
     }
     
