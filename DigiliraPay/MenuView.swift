@@ -45,12 +45,10 @@ class MenuView: UIView {
     }
     func setView()
     {
-        setSelector(view: homeIcon)
     }
 
     @objc func goHome()
     {
-        setSelector(view: homeIcon)
         delegate?.goHomeScreen()
         
         homeIcon.image = UIImage(named: "homeSelected")
@@ -60,7 +58,6 @@ class MenuView: UIView {
     
     @objc func goWallet()
     {
-        setSelector(view: walletIcon)
         delegate?.goWalletScreen(coin: 0)
         
         
@@ -71,7 +68,6 @@ class MenuView: UIView {
     
     @objc func goPayments()
     {
-        setSelector(view: paymentsIcon)
         delegate?.goPayments()
         
         
@@ -82,7 +78,6 @@ class MenuView: UIView {
     
     @objc func goSettings()
     {
-        setSelector(view: othersIcon)
         delegate?.goSettings()
         
         
@@ -95,11 +90,5 @@ class MenuView: UIView {
         delegate?.goQRScreen()
     }
     
-    func setSelector(view: UIView)
-    {
-        UIView.animate(withDuration: 0.3) {
-            
-            self.selectorView.frame.origin.x = view.frame.minX + self.selectorView.frame.width / 2
-        }
-    }
+
 }

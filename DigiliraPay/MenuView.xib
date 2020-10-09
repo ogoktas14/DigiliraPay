@@ -5,7 +5,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -22,38 +21,28 @@
                             <rect key="frame" x="0.0" y="25" width="91" height="22"/>
                         </imageView>
                         <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="walletNotSelected" translatesAutoresizingMaskIntoConstraints="NO" id="VpY-mq-3QL">
-                            <rect key="frame" x="81" y="25" width="90" height="22"/>
+                            <rect key="frame" x="81" y="25" width="90.5" height="22"/>
                         </imageView>
                         <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="qrIcon" translatesAutoresizingMaskIntoConstraints="NO" id="PiC-jw-mIb">
-                            <rect key="frame" x="162" y="7" width="91" height="59"/>
+                            <rect key="frame" x="161.5" y="6.5" width="91" height="59"/>
                         </imageView>
                         <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="account" translatesAutoresizingMaskIntoConstraints="NO" id="8Za-vs-IvC">
-                            <rect key="frame" x="242" y="26" width="91" height="20"/>
+                            <rect key="frame" x="242.5" y="26" width="90.5" height="20"/>
                         </imageView>
                         <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="settingsNotSelected" translatesAutoresizingMaskIntoConstraints="NO" id="UmK-ei-xMX">
-                            <rect key="frame" x="323" y="26" width="91" height="21"/>
+                            <rect key="frame" x="323" y="25.5" width="91" height="21"/>
                         </imageView>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </stackView>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MZB-18-qdw">
-                    <rect key="frame" x="192" y="61" width="30" height="2"/>
-                    <color key="backgroundColor" systemColor="systemRedColor"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="2" id="3lA-sl-iO1"/>
-                        <constraint firstAttribute="width" constant="30" id="x12-Ng-Iut"/>
-                    </constraints>
-                </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="gvN-Pe-4Ju" secondAttribute="bottom" id="1Kx-LL-Nvj"/>
-                <constraint firstItem="MZB-18-qdw" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="FDi-VC-J3U"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="gvN-Pe-4Ju" secondAttribute="trailing" id="OMu-eg-Qhg"/>
                 <constraint firstItem="gvN-Pe-4Ju" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="Su0-pE-4dz"/>
                 <constraint firstItem="gvN-Pe-4Ju" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="VIZ-Fa-fxr"/>
-                <constraint firstItem="MZB-18-qdw" firstAttribute="top" secondItem="gvN-Pe-4Ju" secondAttribute="centerY" constant="25" id="yc1-a0-vdl"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
@@ -62,7 +51,6 @@
                 <outlet property="othersIcon" destination="UmK-ei-xMX" id="bER-RY-l8x"/>
                 <outlet property="paymentsIcon" destination="8Za-vs-IvC" id="nKh-xB-w9a"/>
                 <outlet property="qrIcon" destination="PiC-jw-mIb" id="pzt-BZ-oLQ"/>
-                <outlet property="selectorView" destination="MZB-18-qdw" id="27R-lK-Pww"/>
                 <outlet property="stackView" destination="gvN-Pe-4Ju" id="Tbj-O5-Zww"/>
                 <outlet property="walletIcon" destination="VpY-mq-3QL" id="hAc-1h-RTL"/>
             </connections>
@@ -75,8 +63,5 @@
         <image name="qrIcon" width="58" height="59"/>
         <image name="settingsNotSelected" width="21" height="21"/>
         <image name="walletNotSelected" width="25" height="22"/>
-        <systemColor name="systemRedColor">
-            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
     </resources>
 </document>

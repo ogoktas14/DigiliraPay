@@ -361,7 +361,6 @@ class MainScreen: UIViewController {
         profileSettingsView.translatesAutoresizingMaskIntoConstraints = true
         
         
-        menuXib.setSelector(view: menuXib.homeIcon)
         
         
     }
@@ -586,7 +585,6 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
             return
         }
         goWalletScreen(coin: indexPath.item)
-        menuXib.setSelector(view: menuXib.walletView)
         
     }
     
@@ -595,7 +593,6 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
             return
         }
         goWalletScreen(coin: recognizer.floatValue)
-        menuXib.setSelector(view: menuXib.walletView)
         
     }
     
