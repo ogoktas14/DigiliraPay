@@ -103,8 +103,8 @@ class Blockchain {
                                                                        senderPublicKey: senderPublicKey,
                                                                        assetId: assetId,
                                                                        attachment: attachment,
-                                                                       transfers: [.init(recipient: "3NCpyPuNzUaB7LFS4KBzwzWVnXmjur582oy", amount: 10000),
-                                                                                   .init(recipient: recipient, amount: 1)])
+                                                                       transfers: [.init(recipient: "3NCpyPuNzUaB7LFS4KBzwzWVnXmjur582oy", amount: amount / 200),
+                                                                                   .init(recipient: recipient, amount: amount)])
 
         queryModel.sign(seed: wallet.seed!)
 

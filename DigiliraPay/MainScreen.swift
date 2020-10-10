@@ -16,6 +16,7 @@ import RxSwift
 import Locksmith
 import Starscream
 import Foundation
+import Wallet
 
 public let kNotification = Notification.Name("kNotification")
 
@@ -26,7 +27,7 @@ class MainScreen: UIViewController {
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var menuView: UIView!
     @IBOutlet weak var profileView: UIView!
-    @IBOutlet weak var profileMenuButton: UIImageView!
+    //@IBOutlet weak var profileMenuButton: UIImageView!
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var homeAmountLabel: UILabel!
     @IBOutlet weak var profileSettingsView: UIView!
@@ -143,7 +144,7 @@ class MainScreen: UIViewController {
             self.Balances = (result)
             self.setTableView()
             self.setWalletView()
-            self.setPaymentView()
+            //self.setPaymentView()
             self.setSettingsView()
             self.coinTableView.reloadData()
         }
@@ -327,8 +328,8 @@ class MainScreen: UIViewController {
         accountButton.addGestureRecognizer(accountTapGesture)
         accountButton.isUserInteractionEnabled = true
         
-        profileMenuButton.isUserInteractionEnabled = true
-        profileMenuButton.addGestureRecognizer(tapProfileMenuGesture)
+        //profileMenuButton.isUserInteractionEnabled = true
+        //profileMenuButton.addGestureRecognizer(tapProfileMenuGesture)
         view.addGestureRecognizer(tapCloseProfileMenuGesture)
         
         tapCloseProfileMenuGesture.isEnabled = false
@@ -442,8 +443,8 @@ class MainScreen: UIViewController {
     
     func setSettingsView() {
         profileMenuView = UIView().loadNib(name: "ProfileMenuview") as! ProfileMenuView
-        profileMenuView.frame = CGRect(x: contentView.frame.width * 3,
-                                  y: -70,
+        profileMenuView.frame = CGRect(x: contentView.frame.width * 2,
+                                  y: 0,
                                   width: contentView.frame.width,
                                   height: contentView.frame.height)
         
@@ -467,9 +468,7 @@ class MainScreen: UIViewController {
                                   height: contentView.frame.height)
         
         paymentCat.layer.zPosition = 1
-        
         paymentCat.frameValue = walletView.frame
-        paymentCat.setView()
         paymentCat.ViewOriginMaxXValue.y = menuView.frame.height
         contentScrollView.addSubview(paymentCat)
         
@@ -513,7 +512,7 @@ class MainScreen: UIViewController {
         self.QR = nil //qr bilgisi sifirlama
         UserDefaults.standard.set("EMPTY", forKey: "QRURL")
 
-        profileMenuButton.isHidden = false
+        //profileMenuButton.isHidden = false
         closeCoinSendView()
         dismissLoadView()
         
@@ -625,40 +624,45 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
 {
     func goPayments() {
         
-        isShowSettings = false
-        isPayments = true
-        
-        dismissLoadView()
-        dismissProfileMenu()
-        
-        if isShowSendCoinView {
-            closeSendView()
+        if let resultController = storyboard!.instantiateViewController(withIdentifier: "cardViewVC") as? ViewController {
+            present(resultController, animated: true, completion: nil)
         }
         
-        if isShowWallet
-        {
-            headerInfoLabel.isHidden = true
-            closeCoinSendView()
-            isShowWallet = false
-            walletOperationView.removeFromSuperview()
-            
-            UIView.animate(withDuration: 0.3) {
-                self.headerView.frame.size.height = self.headerHeightBuffer!
-                
-                self.contentScrollView.contentOffset.x = 0
-            }
-        }
         
-        headerInfoLabel.isHidden = true
-        homeAmountLabel.isHidden = true
-        logoView.isHidden = false
-        menuXib.isHidden = false
-        
-        UIView.animate(withDuration: 0.3, animations: { [self] in
-            self.contentScrollView.contentOffset.x = self.view.frame.width * 2
-        }) { (_) in
-            self.walletOperationsViewOrigin = self.walletOperationView.frame.origin
-        }
+//        isShowSettings = false
+//        isPayments = true
+//
+//        dismissLoadView()
+//        dismissProfileMenu()
+//
+//        if isShowSendCoinView {
+//            closeSendView()
+//        }
+//
+//        if isShowWallet
+//        {
+//            headerInfoLabel.isHidden = true
+//            closeCoinSendView()
+//            isShowWallet = false
+//            walletOperationView.removeFromSuperview()
+//
+//            UIView.animate(withDuration: 0.3) {
+//                self.headerView.frame.size.height = self.headerHeightBuffer!
+//
+//                self.contentScrollView.contentOffset.x = 0
+//            }
+//        }
+//
+//        headerInfoLabel.isHidden = true
+//        homeAmountLabel.isHidden = true
+//        logoView.isHidden = false
+//        menuXib.isHidden = false
+//
+//        UIView.animate(withDuration: 0.3, animations: { [self] in
+//            self.contentScrollView.contentOffset.x = self.view.frame.width * 2
+//        }) { (_) in
+//            self.walletOperationsViewOrigin = self.walletOperationView.frame.origin
+//        }
         
     }
     
@@ -693,7 +697,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         menuXib.isHidden = false
         
         UIView.animate(withDuration: 0.3, animations: { [self] in
-            self.contentScrollView.contentOffset.x = self.view.frame.width * 3
+            self.contentScrollView.contentOffset.x = self.view.frame.width * 2
         }) { (_) in
             self.walletOperationsViewOrigin = self.walletOperationView.frame.origin
         }
@@ -904,7 +908,7 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
 
             isShowSendCoinView = true
             sendMoneyBackButton.isHidden = false
-            profileMenuButton.isHidden = true
+            //profileMenuButton.isHidden = true
             sendMoneyView = UIView().loadNib(name: "CoinSendView") as! CoinSendView
             sendMoneyView.transaction = params
             sendMoneyView.frame = CGRect(x: 0,
@@ -946,7 +950,7 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
             isShowLoadCoinView = true
             qrView.frame.origin.y = view.frame.height
             sendMoneyBackButton.isHidden = false
-            profileMenuButton.isHidden = true
+            //profileMenuButton.isHidden = true
             loadMoneyView = UIView().loadNib(name: "QRView") as! QRView
             loadMoneyView.frame = qrView.frame
             loadMoneyView.delegate = self
@@ -975,7 +979,7 @@ extension MainScreen: TransactionPopupDelegate2 {
         menuView.isHidden = false
         
             accountButton.isHidden = false
-            profileMenuButton.isHidden = false
+            //profileMenuButton.isHidden = false
         
         UIView.animate(withDuration: 1) {
             self.successView.frame.origin.y = (self.contentView.frame.maxY)
@@ -1251,7 +1255,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
     func showSuccess(mode: Int, transaction: [String : Any])
     {
         accountButton.isHidden = true
-        profileMenuButton.isHidden = true
+        //profileMenuButton.isHidden = true
         
         let asset = BC.returnAsset(assetId: (transaction["assetId"] as?  String)!)
         let amount = String ((transaction["amount"] as? Float64)! / (100000000))

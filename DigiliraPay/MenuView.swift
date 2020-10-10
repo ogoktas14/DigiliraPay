@@ -53,6 +53,8 @@ class MenuView: UIView {
         
         homeIcon.image = UIImage(named: "homeSelected")
         walletIcon.image = UIImage(named: "walletNotSelected")
+        paymentsIcon.image = UIImage(named: "kartDeselect")
+        othersIcon.image = UIImage(named: "settingsNotSelected")
     }
     
     
@@ -63,6 +65,8 @@ class MenuView: UIView {
         
         homeIcon.image = UIImage(named: "homeNotSelected")
         walletIcon.image = UIImage(named: "walletSelected")
+        paymentsIcon.image = UIImage(named: "kartDeselect")
+        othersIcon.image = UIImage(named: "settingsNotSelected")
     }
     
     
@@ -71,8 +75,10 @@ class MenuView: UIView {
         delegate?.goPayments()
         
         
-        homeIcon.image = UIImage(named: "homeNotSelected")
-        walletIcon.image = UIImage(named: "walletSelected")
+//        homeIcon.image = UIImage(named: "homeNotSelected")
+//        walletIcon.image = UIImage(named: "walletNotSelected")
+//        paymentsIcon.image = UIImage(named: "kart")
+//        othersIcon.image = UIImage(named: "settingsNotSelected")
     }
     
     
@@ -82,7 +88,9 @@ class MenuView: UIView {
         
         
         homeIcon.image = UIImage(named: "homeNotSelected")
-        walletIcon.image = UIImage(named: "walletSelected")
+        walletIcon.image = UIImage(named: "walletNotSelected")
+        paymentsIcon.image = UIImage(named: "kartDeselect")
+        othersIcon.image = UIImage(named: "settingsSelected")
     }
     
     @objc func goQR()

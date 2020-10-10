@@ -7,19 +7,12 @@
 //
 
 import UIKit
+import Wallet
 
-class PaymentCat: UIView, UITableViewDelegate, UITableViewDataSource {
+class PaymentCat: UIView {
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("1")
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell().loadXib(name: "transactionHistoryCell") as! transactionHistoryCell
-        return cell
-    }
-    
+    @IBOutlet weak var walletPane: WalletView1!
+
 
     var contentScrollView = UIScrollView()
 
@@ -33,6 +26,22 @@ class PaymentCat: UIView, UITableViewDelegate, UITableViewDataSource {
     override func awakeFromNib() {
         super.awakeFromNib()
         setScrollView()
+        
+        walletPane.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
+        
+        var coloredCardViews = [ColoredCardView]()
+        for index in 1...5 {
+            let cardView = ColoredCardView.nibForClass()
+            cardView.index = index
+            coloredCardViews.append(cardView)
+        }
+        
+        walletPane.reload(cardViews: coloredCardViews)
+        
+        walletPane.didUpdatePresentedCardViewBlock = { [weak self] (_) in
+            
+        }
+        
     }
     
     
@@ -56,17 +65,6 @@ class PaymentCat: UIView, UITableViewDelegate, UITableViewDataSource {
     }
     
     
-    func setView()
-    {
-        tableView.translatesAutoresizingMaskIntoConstraints = true
-        tableView.frame = CGRect(x: 0,
-                                 y: 0,
-                                 width: frameValue.width,
-                                 height: frameValue.height)
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 300, right: 0)
-        tableView.delegate = self
-        tableView.dataSource = self
-        
-    }
+
     
 }

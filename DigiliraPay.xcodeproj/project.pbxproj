@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -121,6 +121,10 @@
 		88F4A1BB2312AD63007172A6 /* MainScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F4A1BA2312AD63007172A6 /* MainScreen.swift */; };
 		88F4A1BF2312AF7B007172A6 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F4A1BE2312AF7B007172A6 /* MenuView.swift */; };
 		88F4A1C42312CA56007172A6 /* MockImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 88F4A1C32312CA56007172A6 /* MockImages.xcassets */; };
+		936F25B125323B0300C5FA85 /* ColoredCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 936F25B025323B0300C5FA85 /* ColoredCardView.xib */; };
+		936F25B425323B2E00C5FA85 /* ColoredCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F25B325323B2E00C5FA85 /* ColoredCardView.swift */; };
+		936F25B725323B3900C5FA85 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F25B625323B3900C5FA85 /* UIViewExtension.swift */; };
+		936F25CC2532480B00C5FA85 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F25CB2532480B00C5FA85 /* CardView.swift */; };
 		93B7A11B252F0D8000C89E66 /* PaymentCategories.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93B7A11A252F0D8000C89E66 /* PaymentCategories.xib */; };
 		93B7A11E252F0F0A00C89E66 /* PaymentCategories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93B7A11D252F0F0A00C89E66 /* PaymentCategories.swift */; };
 /* End PBXBuildFile section */
@@ -249,6 +253,10 @@
 		88F4A1BA2312AD63007172A6 /* MainScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreen.swift; sourceTree = "<group>"; };
 		88F4A1BE2312AF7B007172A6 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		88F4A1C32312CA56007172A6 /* MockImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = MockImages.xcassets; sourceTree = "<group>"; };
+		936F25B025323B0300C5FA85 /* ColoredCardView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ColoredCardView.xib; sourceTree = "<group>"; };
+		936F25B325323B2E00C5FA85 /* ColoredCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColoredCardView.swift; sourceTree = "<group>"; };
+		936F25B625323B3900C5FA85 /* UIViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
+		936F25CB2532480B00C5FA85 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		93B7A11A252F0D8000C89E66 /* PaymentCategories.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentCategories.xib; sourceTree = "<group>"; };
 		93B7A11D252F0F0A00C89E66 /* PaymentCategories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCategories.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -406,6 +414,7 @@
 				88114F6523216A8E00AB3B5A /* sendWithQR.xib */,
 				888F26AE233E89B800AB7E4C /* PinView.xib */,
 				93B7A11A252F0D8000C89E66 /* PaymentCategories.xib */,
+				936F25B025323B0300C5FA85 /* ColoredCardView.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -439,6 +448,8 @@
 				88114F6723216A9500AB3B5A /* sendWithQR.swift */,
 				888F26B0233E8DF500AB7E4C /* PinView.swift */,
 				93B7A11D252F0F0A00C89E66 /* PaymentCategories.swift */,
+				936F25B325323B2E00C5FA85 /* ColoredCardView.swift */,
+				936F25CB2532480B00C5FA85 /* CardView.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -454,6 +465,7 @@
 		88CA93622319741E008F894B /* Delegates */ = {
 			isa = PBXGroup;
 			children = (
+				936F25B625323B3900C5FA85 /* UIViewExtension.swift */,
 				88CA93602319741A008F894B /* MenuViewDelegate.swift */,
 				88CA9382231A5F46008F894B /* TransactionDetailCloseDelegate.swift */,
 				88CA9388231B9866008F894B /* OperationButtonsDelegate.swift */,
@@ -597,6 +609,7 @@
 				882AAB5022FCAAEE004CDAA6 /* Montserrat-Medium.otf in Resources */,
 				88F3F957230FD92600D81F2B /* LetsStartWordView.xib in Resources */,
 				88CA938D231BD0A3008F894B /* ProfileSettingsView.xib in Resources */,
+				936F25B125323B0300C5FA85 /* ColoredCardView.xib in Resources */,
 				889F2A2123158BAB00ACD656 /* MenuView.xib in Resources */,
 				882AAB4D22FCAAEE004CDAA6 /* MontserratAlternates-ExtraLightItalic.otf in Resources */,
 				882AAB6022FCAAEE004CDAA6 /* MontserratAlternates-ExtraBoldItalic.otf in Resources */,
@@ -639,44 +652,11 @@
 			files = (
 			);
 			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-DigiliraPay/Pods-DigiliraPay-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/Curve25519/Curve25519.framework",
-				"${BUILT_PRODUCTS_DIR}/Gloss/Gloss.framework",
-				"${BUILT_PRODUCTS_DIR}/IQKeyboardManagerSwift/IQKeyboardManagerSwift.framework",
-				"${BUILT_PRODUCTS_DIR}/Locksmith/Locksmith.framework",
-				"${BUILT_PRODUCTS_DIR}/Moya/Moya.framework",
-				"${BUILT_PRODUCTS_DIR}/QRCodeReader.swift/QRCodeReader.framework",
-				"${BUILT_PRODUCTS_DIR}/QRCoder/QRCoder.framework",
-				"${BUILT_PRODUCTS_DIR}/Result/Result.framework",
-				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
-				"${BUILT_PRODUCTS_DIR}/Socket.IO-Client-Swift/SocketIO.framework",
-				"${BUILT_PRODUCTS_DIR}/Starscream/Starscream.framework",
-				"${BUILT_PRODUCTS_DIR}/WavesSDK/WavesSDK.framework",
-				"${BUILT_PRODUCTS_DIR}/WavesSDKCrypto/WavesSDKCrypto.framework",
-				"${BUILT_PRODUCTS_DIR}/WavesSDKExtensions/WavesSDKExtensions.framework",
+				"${PODS_ROOT}/Target Support Files/Pods-DigiliraPay/Pods-DigiliraPay-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Curve25519.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Gloss.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IQKeyboardManagerSwift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Locksmith.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Moya.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/QRCodeReader.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/QRCoder.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SocketIO.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Starscream.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WavesSDK.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WavesSDKCrypto.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WavesSDKExtensions.framework",
+				"${PODS_ROOT}/Target Support Files/Pods-DigiliraPay/Pods-DigiliraPay-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -723,6 +703,7 @@
 				88114F6823216A9500AB3B5A /* sendWithQR.swift in Sources */,
 				885C1662233371C00018D5EF /* LetsStartWordsView.swift in Sources */,
 				88CA936A231979CD008F894B /* WalletOperationButtonSView.swift in Sources */,
+				936F25B425323B2E00C5FA85 /* ColoredCardView.swift in Sources */,
 				882AAB0722FC96DD004CDAA6 /* OnBoardingVC.swift in Sources */,
 				88CA938F231BD0AE008F894B /* ProfileSettingsView.swift in Sources */,
 				88CA938B231B9E1C008F894B /* SendCoinDelegate.swift in Sources */,
@@ -753,9 +734,11 @@
 				882AAB0322FC96DD004CDAA6 /* AppDelegate.swift in Sources */,
 				888F26B1233E8DF500AB7E4C /* PinView.swift in Sources */,
 				8891704523058673005AAA02 /* LetsStartVC.swift in Sources */,
+				936F25B725323B3900C5FA85 /* UIViewExtension.swift in Sources */,
 				88309EB4231E73DC00F96C05 /* TransactionPopup.swift in Sources */,
 				88A6BA4B232039D7002640D6 /* LegalDelegate.swift in Sources */,
 				88CA9372231A475F008F894B /* TransactionDetailView.swift in Sources */,
+				936F25CC2532480B00C5FA85 /* CardView.swift in Sources */,
 				88CA937B231A48A0008F894B /* TransactionHistoryDetailCellDeatils.swift in Sources */,
 				882AAB0522FC96DD004CDAA6 /* SceneDelegate.swift in Sources */,
 				880541F62319692D004EE85F /* TableViewCellExtension.swift in Sources */,
