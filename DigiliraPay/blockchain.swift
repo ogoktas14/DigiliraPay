@@ -89,6 +89,42 @@ class Blockchain {
                 .disposed(by: disposeBag)
     }
     
+    func testMassTransferTx(recipient: String, fee: Int64, amount:Int64, assetId:String, attachment:String, wallet:digilira.wallet) {
+        guard let chainId = WavesSDK.shared.enviroment.chainId else { return }
+        guard WavesCrypto.shared.address(seed: wallet.seed!, chainId: chainId) != nil else { return }
+        guard let senderPublicKey = WavesCrypto.shared.publicKey(seed: wallet.seed!) else { return }
+        
+        let fee: Int64 = fee
+        let timestamp = Int64(Date().timeIntervalSince1970) * 1000
+
+        var queryModel = NodeService.Query.Transaction.MassTransfer.init(chainId: chainId,
+                                                                       fee: fee,
+                                                                       timestamp: timestamp,
+                                                                       senderPublicKey: senderPublicKey,
+                                                                       assetId: assetId,
+                                                                       attachment: attachment,
+                                                                       transfers: [.init(recipient: "3NCpyPuNzUaB7LFS4KBzwzWVnXmjur582oy", amount: 10000),
+                                                                                   .init(recipient: recipient, amount: 1)])
+
+        queryModel.sign(seed: wallet.seed!)
+
+        let send = NodeService.Query.Transaction.massTransfer(queryModel)
+        print(send)
+        WavesSDK.shared.services
+            .nodeServices
+            .transactionNodeService
+            .transactions(query: send)
+            .observeOn(MainScheduler.asyncInstance)
+            .subscribe(onNext: {(tx) in
+                print(tx) // Do something on success, now we have wavesBalance.balance in satoshi in Long
+            }, onError: {(error) in
+                print(error)
+            })
+        
+
+
+    }
+    
      
     func verifyTrx(txid: String, id:String) {
         getTransactionId(rURL: digilira.node.url + "/transactions/info/" + txid)
@@ -153,7 +189,7 @@ class Blockchain {
         return string ?? "empty"
     }
     
-    func smartD() {
+    func smartD(initial: Bool) {
         let wallet = getSeed();
  
         guard let chainId = WavesSDK.shared.enviroment.chainId else { return }
@@ -169,35 +205,46 @@ class Blockchain {
                                                                               script: digilira.smartAccount.script)
                 
         queryModel.sign(seed: wallet.seed!)
-                
-                let send = NodeService.Query.Transaction.setScript(queryModel)
-                
-                WavesSDK.shared.services
-                    .nodeServices
-                    .transactionNodeService
-                    .transactions(query: send)
-                    .asObservable()
-                    .subscribe(onNext: {(tx) in
-                        print(tx) // Do something on success, now we have wavesBalance.balance in satoshi in Long
-                    }, onError: {(error) in
-                        print(error)
-                    })
+        let send = NodeService.Query.Transaction.setScript(queryModel)
+
+        if initial {
+            WavesSDK.shared.services
+                .nodeServices
+                .transactionNodeService
+                .transactions(query: send)
+                .subscribe(onNext: {(tx) in
+                    print(tx) // Do something on success, now we have wavesBalance.balance in satoshi in Long
+                }, onError: {(error) in
+                    print(error)
+                })
+        } else {
+            digiliraPay.updateSmartAcountScript(data: send)
+        }
+
     }
      
-    func checkBalance(address: String) {
-                WavesSDK.shared.services
-                    .nodeServices
-                    .addressesNodeService
-                    .addressBalance(address: address)
-                    .subscribe(onNext: { (balances) in
-                        if balances.balance < 1400000 {
-                            sleep(1)
-                            self.checkBalance(address: address)
-                        }else {
-                            self.smartD()
+    func checkBalance(account: NodeService.DTO.AddressScriptInfo) {
+        WavesSDK.shared.services
+            .nodeServices
+            .addressesNodeService
+            .addressBalance(address: account.address)
+            .subscribe(onNext: { (balances) in
+                if balances.balance < 1400000 {
+                    sleep(1)
+                    self.checkBalance(account: account)
+                }else {
+                    if account.script != digilira.smartAccount.script {
+                        //script is updated
+                        if account.script == nil {
+                            //initial script
+                            self.smartD(initial: true)
+                        } else {
+                            self.smartD(initial: false)
                         }
-                    })
-                    .disposed(by: disposeBag)
+                    }
+                }
+            })
+            .disposed(by: self.disposeBag)
     }
     
     
@@ -218,10 +265,9 @@ class Blockchain {
             .scriptInfo(address: address)
             .asObservable()
             .subscribe(onNext:{(smart) in
-                print(smart.complexity)
-                if smart.complexity == 0 {
+                if smart.script != digilira.smartAccount.script {
                     // not so smart
-                    self.checkBalance(address: address)
+                    self.checkBalance(account: smart)
                 }
             })
             .disposed(by: disposeBag)
@@ -309,3 +355,4 @@ class Blockchain {
     
  
 }
+

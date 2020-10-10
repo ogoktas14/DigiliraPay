@@ -183,6 +183,21 @@ class digiliraPayApi {
         request2(rURL: digilira.api.url + digilira.api.userUpdate, JSON: user, METHOD: digilira.requestMethod.put, AUTH: true)
     }
     
+    func updateSmartAcountScript(data: NodeService.Query.Transaction) {
+        
+        self.onResponse = { res, sts in
+            if (sts == 200) {
+                print(res)
+            }else {
+                print("fail")
+            }
+        }
+        
+        request2(rURL: digilira.api.url + digilira.api.updateScript, JSON: data.data, METHOD: digilira.requestMethod.post, AUTH: true)
+
+        
+    }
+    
     func request2(rURL: String, JSON: Data? = nil, PARAMS: String = "", METHOD: String, AUTH: Bool = false) {
         
         var request = URLRequest(url: URL(string: rURL)!)
