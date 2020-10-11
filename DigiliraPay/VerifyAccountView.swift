@@ -8,7 +8,7 @@
 
 import UIKit
 
-class VerifyAccountView: UIView
+class VerifyAccountView: UIView, UITextFieldDelegate
 {
     @IBOutlet weak var infoTitle: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
@@ -45,21 +45,43 @@ class VerifyAccountView: UIView
            tcText.text = kullanici?.tcno
            telText.text = kullanici?.tel
            mailText.text = kullanici?.mail
+            break
         case 1:
-            
            nameText.text = kullanici?.firstName
            surnameText.text = kullanici?.lastName
            tcText.text = kullanici?.tcno
            telText.text = kullanici?.tel
            mailText.text = kullanici?.mail
             
-        nameText.isEnabled = false
-        surnameText.isEnabled = false
-        tcText.isEnabled = false
+            nameText.isEnabled = false
+            surnameText.isEnabled = false
+            tcText.isEnabled = false
+            break
         default:
-            print(kullanici?.status)
+            break
         }
         
+
+        
+    }
+    
+    func validateEmail(enteredEmail:String) -> Bool {
+
+        let emailFormat = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let emailPredicate = NSPredicate(format:"SELF MATCHES %@", emailFormat)
+        return emailPredicate.evaluate(with: enteredEmail)
+
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let textFieldText = textField.text,
+            let rangeOfTextToReplace = Range(range, in: textFieldText) else {
+                return false
+        }
+        let substringToReplace = textFieldText[rangeOfTextToReplace]
+        let count = textFieldText.count - substringToReplace.count + string.count
+        if textField == tcText {return count <= 11}
+        return count <= 25
     }
     
     override func awakeFromNib()
@@ -103,6 +125,48 @@ class VerifyAccountView: UIView
         
         goHomeView.isUserInteractionEnabled = true
         goHomeView.addGestureRecognizer(goHomeGesture)
+        
+        nameText.delegate = self
+        surnameText.delegate = self
+        tcText.delegate = self
+        tcText.smartInsertDeleteType = UITextSmartInsertDeleteType.no
+        telText.delegate = self
+        
+        mailText.delegate = self
+        
+
+        
+    }
+    
+    func validate(value: String) -> Bool {
+            let tcrgx = "^\\d{11}$"
+            let tcTest = NSPredicate(format: "SELF MATCHES %@", tcrgx)
+            let result = tcTest.evaluate(with: value)
+            return result
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        textField.textColor = .white
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        switch textField {
+        case nameText:
+            surnameText.becomeFirstResponder()
+        case surnameText:
+            tcText.becomeFirstResponder()
+        case tcText:
+            telText.becomeFirstResponder()
+        case telText:
+            mailText.becomeFirstResponder()
+        case mailText:
+            delegate?.dismissKeyboard()
+        default:
+            delegate?.dismissKeyboard()
+        }
+ 
+        return true
     }
     
     func KYC() {
@@ -137,7 +201,31 @@ class VerifyAccountView: UIView
     
     @objc func sendAndContiune()
     {
+        let emailVal = validateEmail(enteredEmail: mailText.text!)
+        let tcVal = validate(value: tcText.text!)
+        
+        var error = false
+        
+        if (emailVal == false) {
+            mailText.textColor = .red
+            error = true
+        }
+        
+        if (tcVal == false) {
+            tcText.textColor = .red
+            error = true
+        }
+         
+        if error {
+            let window = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
 
+            let alert = UIAlertController(title: "Bilgilerinizi kontrol edin",message:"Hatalı girilen alanlar bulunmaktadır.",
+                                          preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "OK",style:UIAlertAction.Style.default,handler: nil))
+            window?.rootViewController?.presentedViewController?.present(alert, animated: true, completion: nil)
+            return
+        }
+        
         enterInfoView.translatesAutoresizingMaskIntoConstraints = true
         sendIDPhotoView.translatesAutoresizingMaskIntoConstraints = true
         

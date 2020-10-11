@@ -79,6 +79,7 @@ class LegalView: UIView {
     @objc func setOK() {
         UserDefaults.standard.set(v, forKey: self.m!)
         confirmView.isHidden = true
+        try? Locksmith.deleteDataForUserAccount(userAccount: "sensitive")
     }
     
     @IBAction func goBackButton(_ sender: Any)
