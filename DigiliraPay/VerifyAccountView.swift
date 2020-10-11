@@ -60,10 +60,15 @@ class VerifyAccountView: UIView, UITextFieldDelegate
         default:
             break
         }
-        
 
-        
     }
+    
+    
+    @IBAction func btnExit(_ sender: Any) {
+        goHome()
+    }
+    
+    
     
     func validateEmail(enteredEmail:String) -> Bool {
 

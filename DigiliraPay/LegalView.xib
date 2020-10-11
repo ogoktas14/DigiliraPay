@@ -103,6 +103,13 @@
                     <viewLayoutGuide key="contentLayoutGuide" id="AZa-37-qJy"/>
                     <viewLayoutGuide key="frameLayoutGuide" id="x5I-dY-AjU"/>
                 </scrollView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="STa-K1-jy2">
+                    <rect key="frame" x="20" y="153" width="79" height="30"/>
+                    <state key="normal" title="RESET APP"/>
+                    <connections>
+                        <action selector="resetApp:" destination="iN0-l3-epB" eventType="touchUpInside" id="iGV-Lw-RcL"/>
+                    </connections>
+                </button>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -110,8 +117,10 @@
                 <constraint firstItem="Ek8-k0-yLj" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="180" id="1UI-c9-geM"/>
                 <constraint firstItem="wTT-Bo-o7U" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="7PU-H6-wCj"/>
                 <constraint firstItem="Ek8-k0-yLj" firstAttribute="top" secondItem="cNg-WG-Fue" secondAttribute="bottom" constant="27" id="E2P-w5-s1a"/>
+                <constraint firstItem="STa-K1-jy2" firstAttribute="top" secondItem="cNg-WG-Fue" secondAttribute="bottom" id="L2k-aa-svi"/>
                 <constraint firstItem="wTT-Bo-o7U" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="OGN-TL-rzT"/>
                 <constraint firstItem="Ae1-Tf-WNf" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" constant="-40" id="WEI-Zu-f11"/>
+                <constraint firstItem="STa-K1-jy2" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="WQZ-ej-vd6"/>
                 <constraint firstItem="cNg-WG-Fue" firstAttribute="leading" secondItem="Coh-h4-tke" secondAttribute="leading" id="ZO5-3G-JvA"/>
                 <constraint firstItem="Ek8-k0-yLj" firstAttribute="leading" secondItem="cNg-WG-Fue" secondAttribute="leading" id="ivE-7P-nZG"/>
                 <constraint firstItem="Coh-h4-tke" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="iw6-FA-h3k"/>

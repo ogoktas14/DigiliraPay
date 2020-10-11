@@ -34,6 +34,7 @@ class MainScreen: UIViewController {
     @IBOutlet weak var qrView: UIView!
     @IBOutlet weak var accountButton: UIImageView!
     @IBOutlet weak var headerInfoLabel: UILabel!
+    @IBOutlet weak var headerTotal: UILabel!
     @IBOutlet weak var sendMoneyBackButton: UIImageView!
     @IBOutlet weak var sendWithQRView: UIView!
     @IBOutlet weak var bottomView: UIView!
@@ -159,6 +160,8 @@ class MainScreen: UIViewController {
             self.setPaymentView()
             self.setSettingsView()
             self.coinTableView.reloadData()
+            self.headerTotal.fadeTransition(0.4)
+            self.headerTotal.text  = "₺ 110.313"
         }
         
         
@@ -245,6 +248,18 @@ class MainScreen: UIViewController {
         
     }
     
+    
+    func shake() {
+        let animation = CABasicAnimation(keyPath: "position")
+        animation.duration = 0.07
+        animation.repeatCount = 4
+        animation.autoreverses = true
+        animation.fromValue = NSValue(cgPoint: CGPoint(x: contentView.center.x - 10, y: contentView.center.y))
+        animation.toValue = NSValue(cgPoint: CGPoint(x: contentView.center.x + 10, y: contentView.center.y))
+
+        contentView.layer.add(animation, forKey: "position")
+    }
+    
     @objc func respondToSwipeGesture(gesture: UIGestureRecognizer) {
 
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {
@@ -253,7 +268,7 @@ class MainScreen: UIViewController {
             switch swipeGesture.direction {
             case .right:
                 if (isHomeScreen) {
-                    goSettings()
+                    shake()
                     return
                 }
                 if (isPayments) {
@@ -282,7 +297,7 @@ class MainScreen: UIViewController {
                     return
                 }
                 if (isShowSettings) {
-                    goHomeScreen()
+                    shake()
                     return
                 }
             default:
@@ -681,6 +696,18 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
     }
 }
 
+
+extension UIView {
+    func fadeTransition(_ duration:CFTimeInterval) {
+        let animation = CATransition()
+        animation.timingFunction = CAMediaTimingFunction(name:
+            CAMediaTimingFunctionName.easeInEaseOut)
+        animation.type = CATransitionType.fade
+        animation.duration = duration
+        layer.add(animation, forKey: CATransitionType.fade.rawValue)
+    }
+}
+
 extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısmı
 {
     func goPayments() {
@@ -693,7 +720,8 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         isShowSettings = false
         isPayments = true
         isHomeScreen = false
-
+        headerTotal.isHidden = true
+        
         dismissLoadView()
         dismissProfileMenu()
 
@@ -735,6 +763,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         
         dismissLoadView()
         dismissProfileMenu()
+        headerTotal.isHidden = true
         
         if isShowSendCoinView {
             closeSendView()
@@ -808,8 +837,11 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         }
 
         headerInfoLabel.isHidden = true
+        headerInfoLabel.textColor = .black
+        headerTotal.isHidden = false
         homeAmountLabel.isHidden = true
-        logoView.isHidden = false
+        
+        logoView.isHidden = true
         menuXib.isHidden = false
     }
     
@@ -834,6 +866,8 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
             headerInfoLabel.isHidden = false
             homeAmountLabel.isHidden = false
             logoView.isHidden = true
+            headerTotal.isHidden = true
+
             
             headerInfoLabel.textColor = UIColor(red:0.94, green:0.56, blue:0.10, alpha:1.0)
             if Filtered.count != 0 {
@@ -1046,7 +1080,7 @@ extension MainScreen: TransactionPopupDelegate2 {
         
         menuView.isHidden = false
         
-            accountButton.isHidden = false
+            //accountButton.isHidden = false
             //profileMenuButton.isHidden = false
         
         UIView.animate(withDuration: 1) {
@@ -1138,7 +1172,6 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
                 
             }else {
                 
-                logoView.isHidden = false
                 headerInfoLabel.isHidden = true
                 homeAmountLabel.isHidden = true
             }
@@ -1322,7 +1355,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
     
     func showSuccess(mode: Int, transaction: [String : Any])
     {
-        accountButton.isHidden = true
+        //accountButton.isHidden = true
         //profileMenuButton.isHidden = true
         
         let asset = BC.returnAsset(assetId: (transaction["assetId"] as?  String)!)

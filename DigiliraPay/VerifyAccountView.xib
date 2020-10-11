@@ -399,6 +399,17 @@ kripto para gönderebilir ancak bu aşamada alışverişlerinizde kripto paralar
                         <constraint firstAttribute="trailing" secondItem="T6Y-az-2Ae" secondAttribute="trailing" constant="10" id="uZV-VI-WJy"/>
                     </constraints>
                 </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JQu-9T-9pP">
+                    <rect key="frame" x="300" y="20" width="25" height="25"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="25" id="C6L-E8-LmR"/>
+                        <constraint firstAttribute="width" constant="25" id="ci6-KR-aOj"/>
+                    </constraints>
+                    <state key="normal" image="exit"/>
+                    <connections>
+                        <action selector="btnExit:" destination="iN0-l3-epB" eventType="touchUpInside" id="Ku9-vZ-S20"/>
+                    </connections>
+                </button>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -412,6 +423,8 @@ kripto para gönderebilir ancak bu aşamada alışverişlerinizde kripto paralar
                 <constraint firstItem="ZG5-Ii-d8C" firstAttribute="height" secondItem="Zj3-7D-wIQ" secondAttribute="height" id="WQ6-bv-0iy"/>
                 <constraint firstItem="ewN-PX-A75" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="YHC-6a-gez"/>
                 <constraint firstAttribute="bottom" secondItem="rt4-fw-Csr" secondAttribute="bottom" constant="-37" id="dJv-L2-RUM"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="JQu-9T-9pP" secondAttribute="trailing" constant="50" id="haf-uk-ptv"/>
+                <constraint firstItem="JQu-9T-9pP" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="20" id="jEf-JI-goe"/>
                 <constraint firstItem="Zj3-7D-wIQ" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="kTl-5Q-hHO"/>
                 <constraint firstItem="Zj3-7D-wIQ" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="mhr-R1-S5r"/>
                 <constraint firstAttribute="bottom" secondItem="ewN-PX-A75" secondAttribute="bottom" id="oDA-Hn-wqX"/>
@@ -442,6 +455,7 @@ kripto para gönderebilir ancak bu aşamada alışverişlerinizde kripto paralar
     <resources>
         <image name="QRViewBG" width="414" height="896"/>
         <image name="TransactionPopupSucces" width="264" height="263"/>
+        <image name="exit" width="44" height="44"/>
         <image name="verifyProfilePhoto" width="592" height="568"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

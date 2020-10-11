@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -22,7 +23,7 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="477"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w2w-Re-fUn">
+                <view contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="w2w-Re-fUn">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="43"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
@@ -30,49 +31,50 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qP8-fO-IYw">
-                    <rect key="frame" x="0.0" y="56" width="414" height="45"/>
+                    <rect key="frame" x="0.0" y="56" width="414" height="45.333333333333343"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lCD-19-Za5">
-                    <rect key="frame" x="0.0" y="112" width="414" height="45.5"/>
+                <view contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="lCD-19-Za5">
+                    <rect key="frame" x="0.0" y="112.33333333333331" width="414" height="45"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wV4-37-Rbk">
-                    <rect key="frame" x="0.0" y="168.5" width="414" height="45"/>
+                <view contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="wV4-37-Rbk">
+                    <rect key="frame" x="0.0" y="168.33333333333334" width="414" height="45"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="m6B-BN-Slr">
-                    <rect key="frame" x="0.0" y="280.5" width="414" height="45"/>
+                <view contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="m6B-BN-Slr">
+                    <rect key="frame" x="0.0" y="280.33333333333331" width="414" height="45.333333333333314"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lütfen sırası ile" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GYN-vf-iPt">
-                    <rect key="frame" x="101" y="345.5" width="212" height="32"/>
+                    <rect key="frame" x="101" y="345.66666666666669" width="212" height="32"/>
                     <fontDescription key="fontDescription" name="Montserrat-ExtraBold" family="Montserrat" pointSize="26"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="anahtar kelimeleri seç" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="esa-FC-xDE">
-                    <rect key="frame" x="75.5" y="381.5" width="263" height="29"/>
+                    <rect key="frame" x="75.666666666666686" y="381.66666666666669" width="263" height="29"/>
                     <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="23"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uZO-e8-tcD">
-                    <rect key="frame" x="145.5" y="440" width="123" height="31"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uZO-e8-tcD">
+                    <rect key="frame" x="145.66666666666666" y="440" width="122.99999999999997" height="31"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="15"/>
                     <state key="normal" title="Bu aşamayı atla">
-                        <color key="titleColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="titleColor" systemColor="systemBlueColor"/>
                     </state>
                     <connections>
                         <action selector="skipButton:" destination="iN0-l3-epB" eventType="touchUpInside" id="9nZ-yu-X70"/>
                     </connections>
                 </button>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9XB-Zn-fMg">
-                    <rect key="frame" x="0.0" y="224.5" width="414" height="45"/>
+                    <rect key="frame" x="0.0" y="224.33333333333334" width="414" height="45.000000000000028"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="9XB-Zn-fMg" firstAttribute="trailing" secondItem="wV4-37-Rbk" secondAttribute="trailing" id="4eu-kV-rIk"/>
@@ -107,7 +109,6 @@
                 <constraint firstItem="qP8-fO-IYw" firstAttribute="top" secondItem="w2w-Re-fUn" secondAttribute="bottom" constant="13" id="yAK-au-tIi"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>
                 <outlet property="scrollLine1" destination="w2w-Re-fUn" id="3XT-Jo-Up3"/>
                 <outlet property="scrollLine2" destination="qP8-fO-IYw" id="xHm-pJ-3Yn"/>
@@ -119,4 +120,9 @@
             <point key="canvasLocation" x="134.78260869565219" y="293.63839285714283"/>
         </view>
     </objects>
+    <resources>
+        <systemColor name="systemBlueColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
 </document>

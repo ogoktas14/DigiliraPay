@@ -34,6 +34,16 @@ class LegalView: UIView {
 
     }
     
+    @IBAction func resetApp(_ sender: Any) {
+        try? Locksmith.deleteDataForUserAccount(userAccount: "sensitive")
+
+        let defaults = UserDefaults.standard
+        let dictionary = defaults.dictionaryRepresentation()
+        dictionary.keys.forEach { key in
+            defaults.removeObject(forKey: key)
+        }
+        exit(1)
+    }
     @objc func respondToSwipeGesture(gesture: UIGestureRecognizer) {
 
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {
@@ -79,7 +89,6 @@ class LegalView: UIView {
     @objc func setOK() {
         UserDefaults.standard.set(v, forKey: self.m!)
         confirmView.isHidden = true
-        try? Locksmith.deleteDataForUserAccount(userAccount: "sensitive")
     }
     
     @IBAction func goBackButton(_ sender: Any)
