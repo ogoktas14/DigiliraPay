@@ -4,6 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -13,32 +14,31 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Shadow" translatesAutoresizingMaskIntoConstraints="NO" id="nBp-qR-HbH">
-                    <rect key="frame" x="8" y="-5" width="359" height="20"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="20" id="zTo-8q-qjH"/>
-                    </constraints>
-                </imageView>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Shadow" translatesAutoresizingMaskIntoConstraints="NO" id="0O6-Zo-qgT">
-                    <rect key="frame" x="8" y="221.5" width="369" height="20"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="20" id="5tp-Zu-PGm"/>
-                    </constraints>
-                </imageView>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OGR-lR-C5v">
                     <rect key="frame" x="10" y="0.0" width="355" height="236.5"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="# 1" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0ks-p9-g31">
-                            <rect key="frame" x="8" y="8" width="173" height="21"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="system" weight="light" pointSize="17"/>
-                            <nil key="textColor"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4001 **** **** 4246" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s5j-p2-PxI">
+                            <rect key="frame" x="10" y="123.5" width="315" height="33"/>
+                            <fontDescription key="fontDescription" name="KohinoorGujarati-Bold" family="Kohinoor Gujarati" pointSize="22"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CAN MALAY" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kgB-fs-lRE">
+                            <rect key="frame" x="30" y="172.5" width="315" height="24"/>
+                            <fontDescription key="fontDescription" name="KohinoorTelugu-Regular" family="Kohinoor Telugu" pointSize="17"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" systemColor="systemTealColor"/>
                     <constraints>
+                        <constraint firstAttribute="bottom" secondItem="kgB-fs-lRE" secondAttribute="bottom" constant="40" id="8AV-ns-5wt"/>
+                        <constraint firstAttribute="trailing" secondItem="s5j-p2-PxI" secondAttribute="trailing" constant="30" id="EAV-Qr-eFh"/>
+                        <constraint firstItem="kgB-fs-lRE" firstAttribute="leading" secondItem="OGR-lR-C5v" secondAttribute="leading" constant="30" id="VOl-rJ-WWi"/>
                         <constraint firstAttribute="width" secondItem="OGR-lR-C5v" secondAttribute="height" multiplier="84:56" id="cQQ-Dl-T29"/>
+                        <constraint firstItem="s5j-p2-PxI" firstAttribute="leading" secondItem="OGR-lR-C5v" secondAttribute="leading" constant="10" id="jbh-Wz-Nm5"/>
+                        <constraint firstAttribute="bottom" secondItem="s5j-p2-PxI" secondAttribute="bottom" constant="80" id="o8I-rb-iwg"/>
+                        <constraint firstAttribute="trailing" secondItem="kgB-fs-lRE" secondAttribute="trailing" constant="10" id="sib-2C-RA6"/>
                     </constraints>
                 </view>
             </subviews>
@@ -46,23 +46,20 @@
             <constraints>
                 <constraint firstItem="OGR-lR-C5v" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="6Au-be-gZ8"/>
                 <constraint firstItem="OGR-lR-C5v" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="AnK-n2-6a2"/>
-                <constraint firstItem="nBp-qR-HbH" firstAttribute="trailing" secondItem="OGR-lR-C5v" secondAttribute="trailing" constant="2" id="HWI-5Z-tUp"/>
                 <constraint firstItem="OGR-lR-C5v" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" constant="-20" id="TEo-HT-6Tw"/>
-                <constraint firstItem="nBp-qR-HbH" firstAttribute="leading" secondItem="OGR-lR-C5v" secondAttribute="leading" constant="-2" id="YfS-a6-yot"/>
-                <constraint firstItem="0O6-Zo-qgT" firstAttribute="bottom" secondItem="OGR-lR-C5v" secondAttribute="bottom" constant="5" id="dyb-5Z-TyC"/>
-                <constraint firstAttribute="trailing" secondItem="0O6-Zo-qgT" secondAttribute="trailing" constant="-2" id="fJY-lv-HYd"/>
-                <constraint firstItem="nBp-qR-HbH" firstAttribute="top" secondItem="OGR-lR-C5v" secondAttribute="top" constant="-5" id="qCQ-Wu-GFd"/>
-                <constraint firstItem="0O6-Zo-qgT" firstAttribute="leading" secondItem="OGR-lR-C5v" secondAttribute="leading" constant="-2" id="xAF-8i-ptM"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <connections>
+                <outlet property="cardNumber" destination="s5j-p2-PxI" id="yzV-5Y-KRg"/>
                 <outlet property="contentView" destination="OGR-lR-C5v" id="fSz-Gj-R5Z"/>
-                <outlet property="indexLabel" destination="0ks-p9-g31" id="MY2-PU-84M"/>
+                <outlet property="nameSurname" destination="kgB-fs-lRE" id="YcG-ny-2oW"/>
             </connections>
             <point key="canvasLocation" x="-45" y="-38"/>
         </view>
     </objects>
     <resources>
-        <image name="Shadow" width="27.5" height="18"/>
+        <systemColor name="systemTealColor">
+            <color red="0.35294117647058826" green="0.78431372549019607" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
     </resources>
 </document>

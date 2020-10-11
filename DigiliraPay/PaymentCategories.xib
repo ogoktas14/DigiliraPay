@@ -29,7 +29,6 @@
             </constraints>
             <connections>
                 <outlet property="contentView" destination="TEb-ab-y2u" id="7Hl-Xn-EQD"/>
-                <outlet property="walletPane" destination="TEb-ab-y2u" id="cGG-ng-56v"/>
             </connections>
             <point key="canvasLocation" x="87" y="115"/>
         </view>

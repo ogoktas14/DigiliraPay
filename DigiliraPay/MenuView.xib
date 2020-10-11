@@ -17,23 +17,30 @@
                 <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="center" spacing="-10" translatesAutoresizingMaskIntoConstraints="NO" id="gvN-Pe-4Ju">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="72"/>
                     <subviews>
-                        <imageView autoresizesSubviews="NO" clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="homeSelected" translatesAutoresizingMaskIntoConstraints="NO" id="ldJ-br-6Wy">
-                            <rect key="frame" x="0.0" y="25" width="91" height="22"/>
+                        <imageView clipsSubviews="YES" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="homeSelected" translatesAutoresizingMaskIntoConstraints="NO" id="ldJ-br-6Wy">
+                            <rect key="frame" x="0.0" y="0.0" width="91" height="72"/>
                         </imageView>
-                        <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="walletNotSelected" translatesAutoresizingMaskIntoConstraints="NO" id="VpY-mq-3QL">
-                            <rect key="frame" x="81" y="25" width="90.5" height="22"/>
+                        <imageView clipsSubviews="YES" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="walletNotSelected" translatesAutoresizingMaskIntoConstraints="NO" id="VpY-mq-3QL">
+                            <rect key="frame" x="81" y="0.0" width="90.5" height="72"/>
                         </imageView>
-                        <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="qrIcon" translatesAutoresizingMaskIntoConstraints="NO" id="PiC-jw-mIb">
-                            <rect key="frame" x="161.5" y="14.5" width="91" height="43"/>
+                        <imageView clipsSubviews="YES" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="qrIcon" translatesAutoresizingMaskIntoConstraints="NO" id="PiC-jw-mIb">
+                            <rect key="frame" x="161.5" y="0.0" width="91" height="72"/>
                         </imageView>
-                        <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="kart" translatesAutoresizingMaskIntoConstraints="NO" id="8Za-vs-IvC">
-                            <rect key="frame" x="242.5" y="25" width="90.5" height="22"/>
+                        <imageView clipsSubviews="YES" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="kart" translatesAutoresizingMaskIntoConstraints="NO" id="8Za-vs-IvC">
+                            <rect key="frame" x="242.5" y="0.0" width="90.5" height="72"/>
                         </imageView>
-                        <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="settingsNotSelected" translatesAutoresizingMaskIntoConstraints="NO" id="UmK-ei-xMX">
-                            <rect key="frame" x="323" y="25.5" width="91" height="21"/>
+                        <imageView clipsSubviews="YES" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="settingsNotSelected" translatesAutoresizingMaskIntoConstraints="NO" id="UmK-ei-xMX">
+                            <rect key="frame" x="323" y="0.0" width="91" height="72"/>
                         </imageView>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="8Za-vs-IvC" firstAttribute="top" secondItem="gvN-Pe-4Ju" secondAttribute="top" id="1bh-xs-lJH"/>
+                        <constraint firstItem="PiC-jw-mIb" firstAttribute="top" secondItem="gvN-Pe-4Ju" secondAttribute="top" id="ibQ-Mu-fdm"/>
+                        <constraint firstItem="VpY-mq-3QL" firstAttribute="top" secondItem="gvN-Pe-4Ju" secondAttribute="top" id="k9E-UI-djb"/>
+                        <constraint firstItem="UmK-ei-xMX" firstAttribute="top" secondItem="gvN-Pe-4Ju" secondAttribute="top" id="qxm-8b-p0n"/>
+                        <constraint firstItem="ldJ-br-6Wy" firstAttribute="top" secondItem="gvN-Pe-4Ju" secondAttribute="top" id="uYv-OP-Sii"/>
+                    </constraints>
                 </stackView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>

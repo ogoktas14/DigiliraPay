@@ -26,6 +26,7 @@ class digiliraPayApi {
     var onError: ((_ result: String)->())?
     var onResponse: ((_ result: [String:Any], _ statusCode: Int?)->())?
     var onUpdate: ((_ result: Bool)->())?
+    var onTicker: ((_ result: String)->())?
 
       func request(rURL: String, JSON: Data? = nil,
                      PARAMS: String = "", METHOD: String, AUTH: Bool = false,
@@ -198,6 +199,22 @@ class digiliraPayApi {
         
     }
     
+    func getSymbolTicker(symbol:String) {
+        self.onResponse = { res, sts in
+            if (sts == 200) {
+                self.onTicker!(res["price"] as! String)
+                print(res)
+            }else {
+                print("fail")
+            }
+        }
+        
+        request2(rURL: "https://api.binance.com/api/v3/ticker/price?symbol=" + symbol, METHOD: digilira.requestMethod.get)
+        
+    }
+    
+    
+    
     func request2(rURL: String, JSON: Data? = nil, PARAMS: String = "", METHOD: String, AUTH: Bool = false) {
         
         var request = URLRequest(url: URL(string: rURL)!)
@@ -244,6 +261,10 @@ class digiliraPayApi {
     func getToken() -> String {
         let token = UserDefaults.standard.string(forKey: "token")
         return token!
+    }
+    
+    func getName() -> String {
+        return auth().name! + " " + auth().surname!
     }
     
     func isLoggedIn() -> Bool {

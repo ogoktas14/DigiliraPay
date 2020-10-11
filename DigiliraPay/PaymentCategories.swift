@@ -9,60 +9,40 @@
 import UIKit
 import Wallet
 
-class PaymentCat: UIView {
+class PaymentCat: WalletView1 {
     
-    @IBOutlet weak var walletPane: WalletView1!
-
-
-    var contentScrollView = UIScrollView()
 
     @IBOutlet weak var contentView: UIView!
     weak var delegate: PaymentCatViewsDelegate?
     var tableView = UITableView()
     var frameValue = CGRect()
+    
+    var cardCount = 1
 
     var ViewOriginMaxXValue: CGPoint = CGPoint(x: 0, y: 0)
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        setScrollView()
-        
-        walletPane.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
+    }
+    
+    func setView() {
+        self.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
         
         var coloredCardViews = [ColoredCardView]()
-        for index in 1...5 {
+        for index in 1...cardCount {
             let cardView = ColoredCardView.nibForClass()
             cardView.index = index
             coloredCardViews.append(cardView)
         }
         
-        walletPane.reload(cardViews: coloredCardViews)
+        self.reload(cardViews: coloredCardViews)
         
-        walletPane.didUpdatePresentedCardViewBlock = { [weak self] (_) in
+        self.didUpdatePresentedCardViewBlock = { [weak self] (_) in
             
         }
-        
     }
     
-    
-    func setScrollView() // Ana sayfadaki içeriklerin gösterildiği scrollView
-    {
-        contentScrollView.frame = CGRect(x: 0,
-                                         y: 0,
-                                         width: contentView.frame.width,
-                                         height: contentView.frame.height)        
-        
-        contentScrollView.isScrollEnabled = false
-        contentScrollView.isPagingEnabled = true
-        contentScrollView.showsVerticalScrollIndicator = false
-        contentScrollView.showsHorizontalScrollIndicator = false
-        if (contentView.subviews.count > 0) {
-            contentView.willRemoveSubview(contentView.subviews[0])
-        }
-        contentView.addSubview(contentScrollView)
-        
-        
-    }
+ 
     
     
 

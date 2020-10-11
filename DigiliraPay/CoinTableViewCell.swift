@@ -21,7 +21,7 @@ class CoinTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        BGView.layer.cornerRadius = 20
+        BGView.layer.cornerRadius = 0
 
         let shadow0 = UIView(frame: CGRect(x: 0, y: 0, width: 384, height: 75))
         shadow0.layer.cornerRadius = 21
@@ -49,6 +49,11 @@ class CoinTableViewCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         //super.setSelected(selected, animated: animated)
         // Configure the view for the selected state
+        self.backgroundColor = .blue
+    }
+    
+    func updateCell (val:String) {
+        self.coinCode.text = val
     }
     
 }

@@ -75,10 +75,10 @@ class MenuView: UIView {
         delegate?.goPayments()
         
         
-//        homeIcon.image = UIImage(named: "homeNotSelected")
-//        walletIcon.image = UIImage(named: "walletNotSelected")
-//        paymentsIcon.image = UIImage(named: "kart")
-//        othersIcon.image = UIImage(named: "settingsNotSelected")
+        homeIcon.image = UIImage(named: "homeNotSelected")
+        walletIcon.image = UIImage(named: "walletNotSelected")
+        paymentsIcon.image = UIImage(named: "kart")
+        othersIcon.image = UIImage(named: "settingsNotSelected")
     }
     
     

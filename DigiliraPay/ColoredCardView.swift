@@ -7,11 +7,16 @@ class ColoredCardView: CardView {
 
     @IBOutlet weak var contentView: UIView!
     
-
+    @IBOutlet weak var cardNumber: UILabel!
+    @IBOutlet weak var nameSurname: UILabel!
+    
     @IBOutlet weak var indexLabel: UILabel!
+    
+    let digiliraPay = digiliraPayApi()
     var index: Int = 0 {
         didSet {
-            indexLabel.text = "# \(index)"
+            cardNumber.text = "# \(index)"
+            nameSurname.text = digiliraPay.getName()
         }
     }
     
@@ -31,12 +36,16 @@ class ColoredCardView: CardView {
     
     override var presented: Bool { didSet { presentedDidUpdate() } }
     
+    func randomColor() -> UIColor{
+        let red = CGFloat(drand48())
+        let green = CGFloat(drand48())
+        let blue = CGFloat(drand48())
+        return UIColor(red: red, green: green, blue: blue, alpha: 1.0)
+    }
+    
     func presentedDidUpdate() {
-        
-        let col1 = UIColor(red: 0.13, green: 0.58, blue: 0.69, alpha: 1.00)
-        let col2 = UIColor(red: 0.43, green: 0.84, blue: 0.93, alpha: 1.00)
-        contentView.backgroundColor = presented ? col1: col2
-        setGradientBackground(colorTop: col1, colorBottom: col2)
+                
+        setGradientBackground(colorTop: randomColor(), colorBottom: randomColor())
         contentView.addTransitionFade()
         
     }
