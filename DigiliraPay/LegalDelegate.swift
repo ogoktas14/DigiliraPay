@@ -10,7 +10,7 @@ import Foundation
 
 protocol LegalDelegate: class
 {
-    func showLegal()
+    func showLegal(mode: digilira.terms)
     func dismissLegalView()
 }
 

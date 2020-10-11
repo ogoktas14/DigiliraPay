@@ -66,6 +66,7 @@ class MainScreen: UIViewController {
     var isSuccessView = false
     var isSeedScreen = false
     var isPayments = false
+    var isHomeScreen = false
     
     var isKeyboard = false
     
@@ -137,6 +138,17 @@ class MainScreen: UIViewController {
         super.viewDidLoad()
         socketConn()
         coinTableView.refreshControl = refreshControl
+        
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
+        swipeRight.direction = .right
+        
+        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
+        swipeLeft.direction = .left
+        
+        
+        self.contentView.addGestureRecognizer(swipeRight)
+        self.contentView.addGestureRecognizer(swipeLeft)
+         
         
 //        when requested asset balances
         
@@ -233,6 +245,51 @@ class MainScreen: UIViewController {
         
     }
     
+    @objc func respondToSwipeGesture(gesture: UIGestureRecognizer) {
+
+        if let swipeGesture = gesture as? UISwipeGestureRecognizer {
+            
+
+            switch swipeGesture.direction {
+            case .right:
+                if (isHomeScreen) {
+                    goSettings()
+                    return
+                }
+                if (isPayments) {
+                    goWalletScreen(coin: 0)
+                    return
+                }
+                if (isShowWallet) {
+                    goHomeScreen()
+                    return
+                }
+                if (isShowSettings) {
+                    goPayments()
+                    return
+                }
+            case .left:
+                if (isShowWallet) {
+                    goPayments()
+                    return
+                }
+                if (isPayments) {
+                    goSettings()
+                    return
+                }
+                if (isHomeScreen) {
+                    goWalletScreen(coin: 0)
+                    return
+                }
+                if (isShowSettings) {
+                    goHomeScreen()
+                    return
+                }
+            default:
+                break
+            }
+        }
+    }
     
     func getOrder(address: String) {
         
@@ -399,6 +456,7 @@ class MainScreen: UIViewController {
         coinTableView.dataSource = self
         contentScrollView.addSubview(coinTableView)
         contentScrollView.contentSize.width = contentScrollView.frame.width * CGFloat(contentScrollView.subviews.count)
+        isHomeScreen = true
         
     }
     
@@ -634,6 +692,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         
         isShowSettings = false
         isPayments = true
+        isHomeScreen = false
 
         dismissLoadView()
         dismissProfileMenu()
@@ -670,8 +729,9 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
     }
     
     func goSettings() {
-        isShowSettings = false
-        isPayments = true
+        isShowSettings = true
+        isPayments = false
+        isHomeScreen = false
         
         dismissLoadView()
         dismissProfileMenu()
@@ -709,7 +769,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
     func goHomeScreen()
     {
         
-        isShowSettings = false
+        isHomeScreen = true
         
         dismissLoadView()
         dismissProfileMenu()
@@ -736,8 +796,10 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
             bottomView.isHidden = false
         }
         
-        if isPayments {
-            
+        if isPayments || isShowSettings {
+            isPayments = false
+            isShowSettings = false
+
             UIView.animate(withDuration: 0.3, animations: { [self] in
                 self.contentScrollView.contentOffset.x = 0
             }) { (_) in
@@ -755,6 +817,9 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
     {
         
         isShowSettings = false
+        isPayments = false
+        isHomeScreen = false
+        
         dismissLoadView()
         dismissProfileMenu()
         
@@ -1335,12 +1400,12 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
     
     func showTermsofUse()
     {
-        showLegal()
+        showLegal(mode: digilira.terms.init(title: digilira.termsOfUse.title, text: digilira.termsOfUse.text))
     }
     
     func showLegalText()
     {
-        showLegal()
+        showLegal(mode: digilira.terms.init(title: digilira.legalView.title, text: digilira.legalView.text))
     }
     func showPinView() {
         isNewPin = true
@@ -1374,7 +1439,6 @@ extension MainScreen: ProfileSettingsViewDelegate
 {
     func dismissProfileMenu() // profil ayarlarının kapatılması
     {
-        isShowSettings = false
         UIView.animate(withDuration: 0.4, animations: {
             self.profileSettingsView.frame.origin.y = self.view.frame.height
         }) { (_) in
@@ -1421,7 +1485,7 @@ extension MainScreen: VerifyAccountDelegate
 
 extension MainScreen: LegalDelegate // kullanım sözleşmesi gibi view'ların gösterilmesi
 {
-    func showLegal()
+    func showLegal(mode: digilira.terms)
     {
         profileSettingsView.frame.origin.y = view.frame.height
         let legalXib = UIView().loadNib(name: "LegalView") as! LegalView
@@ -1431,6 +1495,10 @@ extension MainScreen: LegalDelegate // kullanım sözleşmesi gibi view'ların g
                                 width: profileSettingsView.frame.width,
                                 height: profileSettingsView.frame.height)
         
+        
+        legalXib.titleLabel.text = mode.title
+        legalXib.contentLabel.text = mode.text
+        legalXib.setView()
         for subView in profileSettingsView.subviews
         { subView.removeFromSuperview() }
         
@@ -1449,6 +1517,9 @@ extension MainScreen: LegalDelegate // kullanım sözleşmesi gibi view'ların g
         UIView.animate(withDuration: 0.4, animations: {
             self.profileSettingsView.frame.origin.y = self.view.frame.height
         })
+        
+        for subView in profileSettingsView.subviews
+        { subView.removeFromSuperview() }
     }
 }
 
