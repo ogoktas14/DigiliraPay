@@ -45,7 +45,7 @@ class OnBoardingVC: UIViewController, PinViewDelegate {
     var kullanici: digilira.user?
 
     var trxs:[digilira.transfer] = []
-    var QR: String?
+    var QR: [String?] = []
 
     
     private func initial2() {
@@ -141,7 +141,11 @@ class OnBoardingVC: UIViewController, PinViewDelegate {
         initial2()
         
         super.viewDidLoad()
-        
+        if #available(iOS 13.0, *) {
+            overrideUserInterfaceStyle = .light
+        } else {
+            // Fallback on earlier versions
+        }
         let tapLetsGoViewGesture = UITapGestureRecognizer(target: self, action: #selector(letsGO))
         letsGoView.addGestureRecognizer(tapLetsGoViewGesture)
         letsGoView.isUserInteractionEnabled = true
@@ -162,7 +166,7 @@ class OnBoardingVC: UIViewController, PinViewDelegate {
     @objc func onDidReceiveData(_ sender: Notification) {
        // Do what you need, including updating IBOutlets
         let A = UserDefaults.standard.object(forKey: "QRURL")
-        QR = A as! String
+        QR = (A as? [String?])!
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle

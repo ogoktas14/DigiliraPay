@@ -87,6 +87,12 @@ struct digilira {
         var attachment: String?
     }
     
+    struct externalTransaction {
+        var address: String?
+        var amount: Int64?
+        var message: String?
+    }
+    
     struct user: Encodable {
         var username: String?
         var password: String?

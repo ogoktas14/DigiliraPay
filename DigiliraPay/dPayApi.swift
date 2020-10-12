@@ -406,18 +406,18 @@ class digiliraPayApi {
 class OpenUrlManager {
     static var openUrl: URL?
     
-    class func parseUrlParams(openUrl: URL?) -> (String)? {
+    class func parseUrlParams(openUrl: URL?) -> ([String])? {
         if let url = openUrl
-            , let urlScheme = url.scheme, urlScheme == "digilirapay"
+            , let urlScheme = url.scheme, urlScheme == "digilirapay" || urlScheme == "bitcoin"
             , let address = url.host {
 
-            return (address)
+            return ([address, urlScheme])
         } else {
             return nil
         }
     }
     
-    class func getOpenUrlParams() -> (String)? {
+    class func getOpenUrlParams() -> ([String])? {
         return parseUrlParams(openUrl: openUrl)
     }
 

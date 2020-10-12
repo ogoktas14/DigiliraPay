@@ -32,16 +32,15 @@ class sendWithQR: UIView {
     
     
     override func didMoveToSuperview() {
-        openCamera()
     }
     
     override func awakeFromNib()
     {
-        
+        openCamera()
+
         
        
     }
-    
     
     func openCamera() {
         
@@ -158,27 +157,47 @@ extension sendWithQR: AVCaptureMetadataOutputObjectsDelegate {
                 let array = qrverisi!.components(separatedBy: CharacterSet.init(charactersIn: "://"))
 
                 //launchApp(decodedURL: metadataObj.stringValue!)
-                delegate?.dismissSendWithQr()
-                captureSession.stopRunning()
+
                 
                 let caption = array[0]
                 let branch = array.count
-
                 
-                if caption != "digilirapay" {
+                if let inputs = captureSession.inputs as? [AVCaptureDeviceInput] {
+                    for input in inputs {
+                        captureSession.removeInput(input)
+                    }
+                }
+
+                if let outputs = captureSession.outputs as? [AVCaptureMetadataOutput] {
+                    for output in outputs {
+                        captureSession.removeOutput(output)
+                    }
+                }
+                
+                delegate?.dismissSendWithQr()
+                captureSession.stopRunning()
+                
+                switch caption {
+                case "digilirapay":
+                    if branch > 2 {
+                        if caption == "digilirapay" {
+                            digiliraPay.onGetOrder = { res in
+                                self.delegate?.sendQR(ORDER: res)
+
+                            }
+                            digiliraPay.getOrder(PARAMS: array[3])
+                        
+                        }
+                    }
+                    break
+                case "bitcoin":
+                    self.delegate?.sendBTCETH(external: digilira.externalTransaction(address: array[3], amount: 0, message: ""))
+                    break
+                default:
                     delegate?.qrError(error: "notDP")
                 }
                 
-                if branch > 2 {
-                    if caption == "digilirapay" {
-                        digiliraPay.onGetOrder = { res in
-                            self.delegate?.sendQR(ORDER: res)
 
-                        }
-                        digiliraPay.getOrder(PARAMS: array[3])
-                    
-                    }
-                }
 
             }
         }

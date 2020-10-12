@@ -39,6 +39,12 @@ class CoinSendView: UIView {
         sendView.addGestureRecognizer(sendGesture)
         sendView.isUserInteractionEnabled = true
         
+        let getQRView = UITapGestureRecognizer(target: self, action: #selector(getQR))
+        qrView.addGestureRecognizer(getQRView)
+        qrView.isUserInteractionEnabled = true
+        
+        
+        
         sendView.clipsToBounds = true
         sendView.layer.cornerRadius = 10
         
@@ -46,6 +52,10 @@ class CoinSendView: UIView {
             receiptTextField.textColor = .white
             amountTextField.textColor = .white
         }
+    }
+    
+    @objc func getQR() {
+        delegate?.getQR()
     }
 
     @objc func send()

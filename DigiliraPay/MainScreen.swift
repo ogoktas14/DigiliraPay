@@ -71,6 +71,13 @@ class MainScreen: UIViewController {
     
     var isKeyboard = false
     
+    var ethAddress: String?
+    var btcAddress: String?
+    var ltcAddress: String?
+    var wavesAddress: String?
+    
+    var selectedCoin : String?
+    
     private let refreshControl = UIRefreshControl()
     
     var isAlive = false
@@ -90,7 +97,7 @@ class MainScreen: UIViewController {
 
     
     var headerHeightBuffer: CGFloat?
-    var QR:String?
+    var QR:[String?] = []
     
     var Assets = [
         "FjTB2DdymTfpYbCCdcFwoRbHQnEhQD11CUm6nAF7P1UD": "Bitcoin",
@@ -139,7 +146,11 @@ class MainScreen: UIViewController {
         super.viewDidLoad()
         socketConn()
         coinTableView.refreshControl = refreshControl
-        
+        if #available(iOS 13.0, *) {
+            overrideUserInterfaceStyle = .light
+        } else {
+            // Fallback on earlier versions
+        }
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
         swipeRight.direction = .right
         
@@ -153,7 +164,7 @@ class MainScreen: UIViewController {
         
 //        when requested asset balances
         
-        BC.onAssetBalance = { result in
+        BC.onAssetBalance = { [self] result in
             self.Balances = (result)
             self.setTableView()
             self.setWalletView()
@@ -162,6 +173,18 @@ class MainScreen: UIViewController {
             self.coinTableView.reloadData()
             self.headerTotal.fadeTransition(0.4)
             self.headerTotal.text  = "₺ 110.313"
+            
+            if  self.isKeyPresentInUserDefaults(key: "QRURL") {
+                self.QR == UserDefaults.standard.object(forKey: "QRURL") as! [String?]
+                UserDefaults.standard.set(nil, forKey: "QRURL")
+                self.getOrder(address: self.QR)
+
+            }
+
+
+            
+            
+            
         }
         
         
@@ -248,6 +271,9 @@ class MainScreen: UIViewController {
         
     }
     
+    func isKeyPresentInUserDefaults(key: String) -> Bool {
+        return UserDefaults.standard.object(forKey: key) != nil
+    }
     
     func shake() {
         let animation = CABasicAnimation(keyPath: "position")
@@ -306,21 +332,29 @@ class MainScreen: UIViewController {
         }
     }
     
-    func getOrder(address: String) {
+    func getOrder(address: [String?]) {
         
-        digiliraPay.onGetOrder = { res in
-            self.sendQR(ORDER: res)
+        
+        switch address[1] {
+        case "bitcoin":
+            var external = digilira.externalTransaction(address: address[0], amount: 0, message: address[1])
+            sendBTCETH(external: external)
+        default:
+            digiliraPay.onGetOrder = { res in
+                self.sendQR(ORDER: res)
 
+            }
+            digiliraPay.getOrder(PARAMS: address[0]!)
         }
-        digiliraPay.getOrder(PARAMS: address)
+
         
     }
     
     @objc func onDidReceiveData(_ sender: Notification) {
         // Do what you need, including updating IBOutlets
-        self.QR = UserDefaults.standard.object(forKey: "QRURL") as! String?
+        self.QR = UserDefaults.standard.object(forKey: "QRURL") as! [String?]
         self.dismissVErifyAccountView(user: kullanici!)
-        getOrder(address: self.QR!)
+        getOrder(address: self.QR)
         
         
     }
@@ -346,7 +380,7 @@ class MainScreen: UIViewController {
     @objc func keyboardWillShow(notification: NSNotification) {
         if !isKeyboard {
             isKeyboard = true
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            if ((notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue) != nil {
             self.view.frame.origin.y -= 150
         }
         }
@@ -506,9 +540,9 @@ class MainScreen: UIViewController {
             isFirstLaunch = false
         }
         
-        if QR != nil {
-            getOrder(address: QR!)
-            QR = nil
+        if QR != [] {
+            getOrder(address: QR)
+            QR = []
         }
         
     }
@@ -585,8 +619,8 @@ class MainScreen: UIViewController {
     
     @objc func closeSendView()
     {
-        self.QR = nil //qr bilgisi sifirlama
-        UserDefaults.standard.set("EMPTY", forKey: "QRURL")
+        self.QR = [] //qr bilgisi sifirlama
+        UserDefaults.standard.set(nil, forKey: "QRURL")
 
         //profileMenuButton.isHidden = false
         closeCoinSendView()
@@ -868,6 +902,18 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
             logoView.isHidden = true
             headerTotal.isHidden = true
 
+            let localAseet = Assets[(Filtered[coin]?.issueTransaction.assetId)!]
+            
+            switch localAseet {
+            case "Bitcoin":
+                selectedCoin = kullanici?.btcAddress
+                break;
+            case "Ethereum":
+                selectedCoin = kullanici?.ethAddress
+                break;
+            default:
+                selectedCoin = ""
+            }
             
             headerInfoLabel.textColor = UIColor(red:0.94, green:0.56, blue:0.10, alpha:1.0)
             if Filtered.count != 0 {
@@ -1056,12 +1102,12 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
             loadMoneyView = UIView().loadNib(name: "QRView") as! QRView
             loadMoneyView.frame = qrView.frame
             loadMoneyView.delegate = self
-            
+            loadMoneyView.address = selectedCoin
+
             for subView in qrView.subviews
             { subView.removeFromSuperview() }
             
             qrView.addSubview(loadMoneyView)
-            
             qrView.isHidden = false
             qrView.translatesAutoresizingMaskIntoConstraints = true
             
@@ -1098,6 +1144,10 @@ extension MainScreen: TransactionPopupDelegate2 {
 
 extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
 {
+    func getQR() {
+        goQRScreen()
+    }
+    
     func sendCoin(params:SendTrx) // gelen parametrelerle birlikte gönder butonuna basıldı.
     {
         let ifPin = kullanici?.pincode
@@ -1159,7 +1209,7 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
     
     func closeCoinSendView()
     {
-        self.QR = nil //qr bilgisi sifirlama
+        self.QR = [] //qr bilgisi sifirlama
         if isShowSendCoinView
         {
             isShowSendCoinView = false
@@ -1498,9 +1548,9 @@ extension MainScreen: VerifyAccountDelegate
     func dismissVErifyAccountView(user: digilira.user) // profil doğrulama sayfasının kapatılması
     {
         
-            if QR != "EMPTY" && QR != nil {
-                UserDefaults.standard.set("EMPTY", forKey: "QRURL")
-                getOrder(address: self.QR!)
+            if QR != [] {
+                UserDefaults.standard.set(nil, forKey: "QRURL")
+                getOrder(address: self.QR)
             }
             
         
@@ -1595,6 +1645,18 @@ extension MainScreen: SendWithQrDelegate
         self.present(alert, animated: true)
         
         
+    }
+    
+    func sendBTCETH (external: digilira.externalTransaction) {
+        let data = SendTrx.init(merchant: external.address!,
+                                recipient: external.address!,
+                                assetId: external.address!,
+                                amount: external.amount!,
+                                fee: 900000,
+                                fiat: 0,
+                                attachment: external.message!
+        )
+        send(params: data)
     }
     
     func sendQR(ORDER: digilira.order) {
@@ -1734,12 +1796,7 @@ extension MainScreen: PinViewDelegate
         }
         
         
-        QR = UserDefaults.standard.object(forKey: "QRURL") as! String?
 
-        if QR != "EMPTY" && QR != nil {
-            UserDefaults.standard.set("EMPTY", forKey: "QRURL")
-            getOrder(address: self.QR!)
-        }
 
 
     }

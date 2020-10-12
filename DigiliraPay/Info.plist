@@ -23,6 +23,9 @@
 			<string></string>
 			<key>CFBundleURLSchemes</key>
 			<array>
+				<string>bitcoin</string>
+				<string>waves</string>
+				<string>ethereum</string>
 				<string>digilirapay</string>
 			</array>
 		</dict>
@@ -34,7 +37,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Ödeme yapabilmek veya kripto varlıklarınızı transfer edebilmek için kamera erişimine izin vermeniz gerekmektedir.</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>İşlemlerinizi güvenli bir şekilde yürütebilmeniz için Face ID'yi aktif etmeniz gerekmektedir.</string>
+	<string>İşlemlerinizi güvenli bir şekilde yürütebilmeniz için Face ID&apos;yi aktif etmeniz gerekmektedir.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Galeriden kimlik doğrulama bilgilerinizi seçebilmek için fotoğraflara erişim izni vermeniz gerekmektedir.</string>
 	<key>UIApplicationSceneManifest</key>

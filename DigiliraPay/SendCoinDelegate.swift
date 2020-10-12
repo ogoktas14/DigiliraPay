@@ -11,4 +11,5 @@ import Foundation
 protocol SendCoinDelegate: class
 {
     func sendCoin(params:SendTrx)
+    func getQR()
 }

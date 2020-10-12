@@ -19,6 +19,9 @@ class QRView: UIView {
     @IBOutlet weak var infoLabel: UILabel!
     
     weak var delegate: LoadCoinDelegate?
+    let pasteboard = UIPasteboard.general
+    public var address: String?
+    
     override func awakeFromNib()
     {
         speratorView.backgroundColor = UIColor(red:0.61, green:0.77, blue:0.99, alpha:1.0)
@@ -27,11 +30,33 @@ class QRView: UIView {
         shareButtonView.clipsToBounds = true
         shareButtonView.layer.cornerRadius = 6
         
-        
+    }
+    
+    override func didMoveToSuperview() {
+        adressLabel.text = address
+        let image = generateQRCode(from: "digilirapay://" + address!)
+        pasteboard.string = address
+
+        qrImage.image = image
     }
 
     @IBAction func shareButton(_ sender: Any)
     {
         delegate?.dismissLoadView()
+    }
+    
+    func generateQRCode(from string: String) -> UIImage? {
+        let data = string.data(using: String.Encoding.ascii)
+
+        if let filter = CIFilter(name: "CIQRCodeGenerator") {
+            filter.setValue(data, forKey: "inputMessage")
+            let transform = CGAffineTransform(scaleX: 10, y: 10)
+
+            if let output = filter.outputImage?.transformed(by: transform) {
+                return UIImage(ciImage: output)
+            }
+        }
+
+        return nil
     }
 }

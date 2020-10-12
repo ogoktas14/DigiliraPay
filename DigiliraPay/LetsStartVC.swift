@@ -43,7 +43,11 @@ class LetsStartVC: UIViewController {
         super.viewDidLoad()
 
         initial()
-
+        if #available(iOS 13.0, *) {
+            overrideUserInterfaceStyle = .light
+        } else {
+            // Fallback on earlier versions
+        }
         
         nextButtonView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         nextButtonView.layer.cornerRadius = nextButtonView.frame.height / 2
