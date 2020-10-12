@@ -12,10 +12,11 @@ import Foundation
     var merchant:String
        var recipient: String
        var assetId: String
-       var amount: Int64
-       var fee: Int64
+    var amount: Int64
+    var fee: Int64
     var fiat: Double
-       var attachment:String
+    var attachment:String
+    var network:String
    }
 
 

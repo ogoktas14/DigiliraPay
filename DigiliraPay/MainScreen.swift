@@ -77,7 +77,8 @@ class MainScreen: UIViewController {
     var wavesAddress: String?
     
     var selectedCoin : String?
-    
+    var network : String?
+
     private let refreshControl = UIRefreshControl()
     
     var isAlive = false
@@ -174,9 +175,10 @@ class MainScreen: UIViewController {
             self.headerTotal.fadeTransition(0.4)
             self.headerTotal.text  = "₺ 110.313"
             
-            if  self.isKeyPresentInUserDefaults(key: "QRURL") {
-                self.QR == UserDefaults.standard.object(forKey: "QRURL") as! [String?]
-                UserDefaults.standard.set(nil, forKey: "QRURL")
+            if  self.isKeyPresentInUserDefaults(key: "QRARRAY") {
+                                
+                self.QR == UserDefaults.standard.object(forKey: "QRARRAY") as! [String?]
+                UserDefaults.standard.set(nil, forKey: "QRARRAY")
                 self.getOrder(address: self.QR)
 
             }
@@ -290,6 +292,7 @@ class MainScreen: UIViewController {
 
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {
             
+            if (isSuccessView) {return}
 
             switch swipeGesture.direction {
             case .right:
@@ -337,7 +340,7 @@ class MainScreen: UIViewController {
         
         switch address[1] {
         case "bitcoin":
-            var external = digilira.externalTransaction(address: address[0], amount: 0, message: address[1])
+            let external = digilira.externalTransaction(network: address[1], address: address[0], amount: 0, message: address[1])
             sendBTCETH(external: external)
         default:
             digiliraPay.onGetOrder = { res in
@@ -352,7 +355,20 @@ class MainScreen: UIViewController {
     
     @objc func onDidReceiveData(_ sender: Notification) {
         // Do what you need, including updating IBOutlets
-        self.QR = UserDefaults.standard.object(forKey: "QRURL") as! [String?]
+        self.QR = UserDefaults.standard.object(forKey: "QRARRAY") as! [String?]
+        
+        UIView.animate(withDuration: 1) {
+            self.successView.frame.origin.y = (self.contentView.frame.maxY)
+            self.successView.alpha = 0
+            self.isSuccessView = false
+            self.bottomView.isHidden = false
+            self.menuView.isHidden = false
+            
+            for subView in self.qrView.subviews
+            { subView.removeFromSuperview() }
+            
+        }
+
         self.dismissVErifyAccountView(user: kullanici!)
         getOrder(address: self.QR)
         
@@ -620,7 +636,7 @@ class MainScreen: UIViewController {
     @objc func closeSendView()
     {
         self.QR = [] //qr bilgisi sifirlama
-        UserDefaults.standard.set(nil, forKey: "QRURL")
+        UserDefaults.standard.set(nil, forKey: "QRARRAY")
 
         //profileMenuButton.isHidden = false
         closeCoinSendView()
@@ -907,9 +923,15 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
             switch localAseet {
             case "Bitcoin":
                 selectedCoin = kullanici?.btcAddress
+                network = "bitcoin"
                 break;
             case "Ethereum":
                 selectedCoin = kullanici?.ethAddress
+                network = "ethereum"
+                break;
+            case "Waves":
+                selectedCoin = kullanici?.ethAddress
+                network = "waves"
                 break;
             default:
                 selectedCoin = ""
@@ -1053,6 +1075,7 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
             goHomeScreen()
             
             logoView.isHidden = true
+            
 
             isShowSendCoinView = true
             sendMoneyBackButton.isHidden = false
@@ -1063,6 +1086,11 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
                                          y: y,
                                          width: view.frame.width,
                                          height: view.frame.height)
+            
+            if (params.network == "digilirapay") {
+                sendMoneyView.qrView.isHidden = true
+            }
+
 
             sendMoneyView.amountTextField.text = (Double(params.amount) / Double(100000000)).description
             sendMoneyView.receiptTextField.text = params.merchant
@@ -1086,6 +1114,17 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
                 self.headerView.frame.size.height = headerHeight + 240
                 self.sendMoneyView.alpha = 1
             }
+        } else {
+            sendMoneyView.transaction = params
+
+            sendMoneyView.amountTextField.text = (Double(params.amount) / Double(100000000)).description
+            sendMoneyView.receiptTextField.text = params.merchant
+            sendMoneyView.amountTextField.isEnabled = false
+            sendMoneyView.receiptTextField.isEnabled = false
+                        
+            sendMoneyView.totalQuantity.text =  "Toplam Bakiye:"
+            sendMoneyView.commissionAmount.text = "İşlem komisyonu:"
+            sendMoneyView.amountEquivalent.text = params.fiat.description + " ₺"
         }
         
         
@@ -1097,11 +1136,12 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
         {
             isShowLoadCoinView = true
             qrView.frame.origin.y = view.frame.height
-            sendMoneyBackButton.isHidden = false
             //profileMenuButton.isHidden = true
             loadMoneyView = UIView().loadNib(name: "QRView") as! QRView
             loadMoneyView.frame = qrView.frame
             loadMoneyView.delegate = self
+            
+            loadMoneyView.network = network
             loadMoneyView.address = selectedCoin
 
             for subView in qrView.subviews
@@ -1113,8 +1153,11 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
             
             UIView.animate(withDuration: 0.3)
             {
+                self.qrView.alpha = 1
                 self.qrView.frame.origin.y = 0
                 self.loadMoneyView.frame.origin.y = 0
+                self.sendMoneyBackButton.isHidden = false
+
             }
         }
         
@@ -1134,7 +1177,10 @@ extension MainScreen: TransactionPopupDelegate2 {
             self.successView.alpha = 0
             self.isSuccessView = false
             self.bottomView.isHidden = false
-
+            
+            for subView in self.qrView.subviews
+            { subView.removeFromSuperview() }
+            
         }
         
     }
@@ -1540,6 +1586,8 @@ extension MainScreen: LoadCoinDelegate
         UIView.animate(withDuration: 0.3) {
             self.qrView.frame.origin.y = self.view.frame.height
         }
+        for subView in self.qrView.subviews
+        { subView.removeFromSuperview() }
     }
 }
 
@@ -1549,7 +1597,7 @@ extension MainScreen: VerifyAccountDelegate
     {
         
             if QR != [] {
-                UserDefaults.standard.set(nil, forKey: "QRURL")
+                UserDefaults.standard.set(nil, forKey: "QRARRAY")
                 getOrder(address: self.QR)
             }
             
@@ -1654,7 +1702,8 @@ extension MainScreen: SendWithQrDelegate
                                 amount: external.amount!,
                                 fee: 900000,
                                 fiat: 0,
-                                attachment: external.message!
+                                attachment: external.message!,
+                                network: external.network!
         )
         send(params: data)
     }
@@ -1686,7 +1735,8 @@ extension MainScreen: SendWithQrDelegate
                                 amount: ORDER.rate,
                                 fee: 900000,
                                 fiat: ORDER.totalPrice!,
-                                attachment: ORDER._id
+                                attachment: ORDER._id,
+                                network: "digilirapay"
         )
         send(params: data)
     }

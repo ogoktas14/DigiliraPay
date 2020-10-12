@@ -62,7 +62,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         let URL = OpenUrlManager.parseUrlParams(openUrl: url)!
-        UserDefaults.standard.set(URL, forKey: "QRURL")        
+        UserDefaults.standard.set(URL, forKey: "QRARRAY")        
         NotificationCenter.default.post(name: .didReceiveData, object: nil)
 
         return true

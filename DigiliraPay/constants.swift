@@ -88,6 +88,7 @@ struct digilira {
     }
     
     struct externalTransaction {
+        var network: String?
         var address: String?
         var amount: Int64?
         var message: String?

@@ -21,7 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         for urlContext in connectionOptions.urlContexts {
           let url = urlContext.url
             let URL = OpenUrlManager.parseUrlParams(openUrl: url)!
-            UserDefaults.standard.set(URL, forKey: "QRURL")
+            UserDefaults.standard.set(URL, forKey: "QRARRAY")
             NotificationCenter.default.post(name: .didReceiveData, object: nil)
 
           // handle url and options as needed
@@ -62,7 +62,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         if let url = URLContexts.first?.url{
             let URL = OpenUrlManager.parseUrlParams(openUrl: url)!
-            UserDefaults.standard.set(URL, forKey: "QRURL")
+            UserDefaults.standard.set(URL, forKey: "QRARRAY")
             NotificationCenter.default.post(name: .didReceiveData, object: nil)
         }
         

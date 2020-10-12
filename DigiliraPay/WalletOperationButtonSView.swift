@@ -48,7 +48,8 @@ class WalletOperationButtonSView: UIView {
             amount: 0,
             fee: 900000,
             fiat: 0,
-            attachment: "")
+            attachment: "",
+            network: "")
         delegate?.send(params: empty)
     }
     @objc func loadButton()

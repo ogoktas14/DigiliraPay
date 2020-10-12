@@ -21,7 +21,8 @@ class QRView: UIView {
     weak var delegate: LoadCoinDelegate?
     let pasteboard = UIPasteboard.general
     public var address: String?
-    
+    public var network: String?
+
     override func awakeFromNib()
     {
         speratorView.backgroundColor = UIColor(red:0.61, green:0.77, blue:0.99, alpha:1.0)
@@ -33,8 +34,9 @@ class QRView: UIView {
     }
     
     override func didMoveToSuperview() {
+        
         adressLabel.text = address
-        let image = generateQRCode(from: "digilirapay://" + address!)
+        let image = generateQRCode(from: network! + ":" + address!)
         pasteboard.string = address
 
         qrImage.image = image

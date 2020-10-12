@@ -165,7 +165,7 @@ class OnBoardingVC: UIViewController, PinViewDelegate {
     
     @objc func onDidReceiveData(_ sender: Notification) {
        // Do what you need, including updating IBOutlets
-        let A = UserDefaults.standard.object(forKey: "QRURL")
+        let A = UserDefaults.standard.object(forKey: "QRARRAY")
         QR = (A as? [String?])!
     }
     
