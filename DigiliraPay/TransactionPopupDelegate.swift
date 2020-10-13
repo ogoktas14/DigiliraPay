@@ -18,3 +18,10 @@ protocol TRXTRXDel: class
 {
     func closeDetail()
 }
+
+
+protocol DepositeMoneyDelegate: class
+{
+    func closeDeposite()
+    func confirmInternalWallet(amount: Float, fiat: Float, network: String, address: String, source: String)
+}

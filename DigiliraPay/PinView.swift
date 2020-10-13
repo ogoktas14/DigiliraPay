@@ -24,8 +24,6 @@ class PinView: UIView {
     @IBOutlet weak var pinArea3Label: UILabel!
     @IBOutlet weak var pinArea4Label: UILabel!
     
-    @IBOutlet weak var successfulView: UIView!
-    @IBOutlet weak var goHomeButtonView: UIView!
     @IBOutlet weak var goBackButtonView: UIView!
     
     let digiliraPay = digiliraPayApi()
@@ -74,11 +72,7 @@ class PinView: UIView {
         gradient.colors = [UIColor.black.cgColor, UIColor(red:0.30, green:0.30, blue:0.30, alpha:1.0).cgColor]
         gradient.startPoint = CGPoint(x: 0.0, y: 0.0)
         gradient.endPoint = CGPoint(x: 1.0, y: 0.0)
-        gradient.frame = goHomeButtonView.bounds
-        goHomeButtonView.layer.addSublayer(gradient)
         
-        goHomeButtonView.clipsToBounds = true
-        goHomeButtonView.layer.cornerRadius = 6
     }
     
     func setView()
@@ -108,6 +102,9 @@ class PinView: UIView {
     
     func enterPin( _ number: Int)
     {
+        if (entered[3]) {
+            return
+        }
         if isVerify { firstCode = firstCode + String(number)}
         else { lastCode = lastCode + String(number)}
         if !entered[0]

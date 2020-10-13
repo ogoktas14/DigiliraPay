@@ -407,15 +407,34 @@ class OpenUrlManager {
     static var openUrl: URL?
     
     class func parseUrlParams(openUrl: URL?) -> ([String])? {
-        if let url = openUrl
-            , let urlScheme = url.scheme, urlScheme == "digilirapay" || urlScheme == "bitcoin"
-            , let address = url.host {
-
-            return ([address, urlScheme])
-        } else {
-            return nil
+        let array = openUrl!.absoluteString.components(separatedBy: CharacterSet.init(charactersIn: ":"))
+        let caption = array[0]
+     
+        switch caption {
+        case "digilirapay":
+            let digiliraURL = openUrl!.absoluteString.components(separatedBy: CharacterSet.init(charactersIn: "://"))
+            if digiliraURL.count > 2 {
+                if caption == "digilirapay" {
+                    return [digiliraURL[3], caption]
+                }
+            }
+            break
+        case "bitcoin", "ethereum", "waves":
+            return [array[1],caption]
+            break
+        default:
+            return []
         }
+        
+        return ["", "digilirapay"]
+        
+        
+        
     }
+        
+        
+        
+    
     
     class func getOpenUrlParams() -> ([String])? {
         return parseUrlParams(openUrl: openUrl)
