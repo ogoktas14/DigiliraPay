@@ -317,6 +317,20 @@ class digiliraPayApi {
         return loginCredentials
     }
     
+    func ticker () -> digilira.ticker {
+        let ethUSDPrice: Float? = 376.77
+        let btcUSDPrice: Float? = 11352
+        let wavesUSDPrice: Float? = 2.49
+        let usdTLPrice: Float? = 7.8
+        
+        let res = digilira.ticker.init(ethUSDPrice: ethUSDPrice,
+                                       btcUSDPrice: btcUSDPrice,
+                                       wavesUSDPrice: wavesUSDPrice,
+                                       usdTLPrice: usdTLPrice
+        )
+        return res
+    }
+    
 
 
 

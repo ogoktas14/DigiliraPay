@@ -94,6 +94,13 @@ struct digilira {
         var message: String?
     }
     
+    struct ticker {
+        var ethUSDPrice: Float?
+        var btcUSDPrice: Float?
+        var wavesUSDPrice: Float?
+        var usdTLPrice: Float? 
+    }
+    
     struct user: Encodable {
         var username: String?
         var password: String?

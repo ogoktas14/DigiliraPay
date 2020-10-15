@@ -11,4 +11,5 @@ import Foundation
 protocol LoadCoinDelegate: class
 {
     func dismissLoadView()
+    func enterAmount()
 }

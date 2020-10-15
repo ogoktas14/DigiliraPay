@@ -78,6 +78,7 @@ class MainScreen: UIViewController {
     var ltcAddress: String?
     var wavesAddress: String?
     
+    var coinSymbol: String?
     var selectedCoin : String?
     var network : String?
 
@@ -410,7 +411,7 @@ class MainScreen: UIViewController {
         if !isKeyboard {
             isKeyboard = true
             if ((notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue) != nil {
-            self.view.frame.origin.y -= 150
+            //self.view.frame.origin.y -= 150
         }
         }
     }
@@ -937,14 +938,17 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
             case "Bitcoin":
                 selectedCoin = kullanici?.btcAddress
                 network = "bitcoin"
+                coinSymbol = "BTC"
                 break;
             case "Ethereum":
                 selectedCoin = kullanici?.ethAddress
                 network = "ethereum"
+                coinSymbol = "ETH"
                 break;
             case "Waves":
                 selectedCoin = kullanici?.ethAddress
                 network = "waves"
+                coinSymbol = "WAVES"
                 break;
             default:
                 selectedCoin = ""
@@ -1158,6 +1162,7 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
         loadMoneyView.frame = qrView.frame
         loadMoneyView.delegate = self
         
+        loadMoneyView.tokenName = coinSymbol
         loadMoneyView.network = network
         loadMoneyView.address = selectedCoin
 
@@ -1717,6 +1722,10 @@ extension MainScreen: LoadCoinDelegate
         }
         for subView in self.qrView.subviews
         { subView.removeFromSuperview() }
+    }
+    
+    func enterAmount() {
+//        self.showDepositeMoneyView(mode: 0, source: "bitcoin")
     }
 }
 
