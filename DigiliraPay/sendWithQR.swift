@@ -130,7 +130,7 @@ class sendWithQR: UIView {
     @IBAction func exitButton(_ sender: Any)
     {
         captureSession.stopRunning()
-        delegate?.dismissSendWithQr()
+        delegate?.dismissSendWithQr(url: "")
     }
 }
 
@@ -155,14 +155,7 @@ extension sendWithQR: AVCaptureMetadataOutputObjectsDelegate {
             qrCodeFrameView?.frame = barCodeObject!.bounds
             
             if metadataObj.stringValue != nil {
-                
-                qrverisi = metadataObj.stringValue!
-                let array = qrverisi!.components(separatedBy: CharacterSet.init(charactersIn: ":"))
-
-                //launchApp(decodedURL: metadataObj.stringValue!)
-
-                
-                let caption = array[0]
+         
                 
                 if let inputs = captureSession.inputs as? [AVCaptureDeviceInput] {
                     for input in inputs {
@@ -175,31 +168,11 @@ extension sendWithQR: AVCaptureMetadataOutputObjectsDelegate {
                         captureSession.removeOutput(output)
                     }
                 }
-                
-                delegate?.dismissSendWithQr()
-                captureSession.stopRunning()
-                
-                switch caption {
-                case "digilirapay":
-                    let digiliraURL = qrverisi!.components(separatedBy: CharacterSet.init(charactersIn: "://"))
-                    if digiliraURL.count > 2 {
-                        if caption == "digilirapay" {
-                            digiliraPay.onGetOrder = { res in
-                                self.delegate?.sendQR(ORDER: res)
-                            }
-                            digiliraPay.getOrder(PARAMS: digiliraURL[3])
-                        }
-                    }
-                    break
-                case "bitcoin", "ethereum", "waves":
-                    let data = array[1].components(separatedBy: "?amount=")
-                    let amount = Int64(Float.init(data[1])! * 100000000)
+                qrverisi = metadataObj.stringValue!
 
-                    self.delegate?.sendBTCETH(external: digilira.externalTransaction(network: caption, address: data[0], amount: amount))
-                    break
-                default:
-                    delegate?.qrError(error: "notDP")
-                }
+                delegate?.dismissSendWithQr(url: qrverisi!)
+                captureSession.stopRunning()
+
                 
             }
         }

@@ -10,10 +10,7 @@ import Foundation
 
 protocol SendWithQrDelegate: class
 {
-    func dismissSendWithQr()
-    func sendQR(ORDER: digilira.order)
-    func sendBTCETH(external:digilira.externalTransaction)
-    func qrError(error: String)
+    func dismissSendWithQr(url: String)
 
 }
  

@@ -1752,42 +1752,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         
         
     }
-    
-    func dissolveQR (qrverisi: String) {
         
-        let array = qrverisi.components(separatedBy: CharacterSet.init(charactersIn: ":"))
-
-        //launchApp(decodedURL: metadataObj.stringValue!)
-
-        
-        let caption = array[0]
-
-        switch caption {
-        case "digilirapay":
-            let digiliraURL = qrverisi.components(separatedBy: CharacterSet.init(charactersIn: "://"))
-            if digiliraURL.count > 2 {
-                if caption == "digilirapay" {
-                    digiliraPay.onGetOrder = { res in
-                        self.sendQR(ORDER: res)
-                    }
-                    digiliraPay.getOrder(PARAMS: digiliraURL[3])
-                }
-            }
-            break
-        case "bitcoin", "ethereum", "waves":
-            let data = array[1].components(separatedBy: "?amount=")
-            let amount = Int64(Float.init(data[1])! * 100000000)
-
-            self.sendBTCETH(external: digilira.externalTransaction(network: caption, address: data[0], amount: amount))
-            break
-        default:
-            break
-        }
-        
-        
-        
-    }
-    
     
     func showTermsofUse()
     {
@@ -1838,6 +1803,99 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         isNewPin = true
         openPinView()
     }
+    
+    
+    func qrError(error: String) {
+        switch error {
+        case "notDP":
+            let alert = UIAlertController(title: digilira.messages.qrErrorHeader, message: digilira.messages.qrErrorMessage, preferredStyle: .alert)
+            
+            alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
+                self.isShowQRButton = false
+                UIView.animate(withDuration: 0.3) {
+                    self.sendWithQRView.frame.origin.y = self.self.view.frame.height
+                    self.sendWithQRView.alpha = 0
+                }
+            }))
+             
+            
+            self.present(alert, animated: true)
+        default:
+            break
+        }
+    }
+    
+    func sendBTCETH (external: digilira.externalTransaction) {
+        let exchange = digiliraPay.exchange(amount: external.amount!, network: external.network!)
+        
+        digiliraPay.onMember = { res, data in
+            DispatchQueue.main.async {
+            switch res {
+            case true:
+                let destination = digilira.transactionDestination.interwallets
+                let trx = SendTrx.init(merchant: data?.owner!,
+                                        recipient: (data?.wallet)!,
+                                        assetId: external.network!,
+                                        amount: external.amount!,
+                                        fee: 900000,
+                                        fiat: exchange,
+                                        attachment: external.message,
+                                        network: external.network!,
+                                        destination: destination,
+                                        massWallet: data?.wallet
+                )
+
+                self.send(params: trx)
+
+            default:
+                return
+            }
+            }
+            
+
+            
+        }
+        
+        let normalizedAddress = external.address?.components(separatedBy: "?")
+        let croppedAddress = normalizedAddress?.first
+        
+        digiliraPay.isOurMember(network: external.network!, address: croppedAddress!)
+        
+
+    }
+    
+    func sendQR(ORDER: digilira.order) {
+        
+        sendMessage(SocketMessage.init(id: ORDER._id, status: "PROCESSING"))
+        
+        
+        let auth = digiliraPay.auth()
+        
+        if (auth.status == 0) {
+            alertError ()
+            return
+        }
+        
+        let odeme = digilira.odemeStatus.init(
+            id: ORDER._id,
+            status: "1",
+            name: auth.name,
+            surname: auth.surname
+        )
+        
+        self.digiliraPay.setOdemeAliniyor(JSON: try? self.digiliraPay.jsonEncoder.encode(odeme))
+        
+        let data = SendTrx.init(merchant: ORDER.merchant,
+                                recipient: ORDER.wallet,
+                                assetId: ORDER.asset!,
+                                amount: ORDER.rate,
+                                fee: 900000,
+                                fiat: ORDER.totalPrice!,
+                                attachment: ORDER._id,
+                                network: digilira.transactionDestination.domestic
+        )
+        send(params: data)
+    }
 }
 
 
@@ -1858,7 +1916,14 @@ extension MainScreen: UIImagePickerControllerDelegate {
         
         if let features = detectQRCode(image), !features.isEmpty{
             for case let row as CIQRCodeFeature in features{
-                self.dissolveQR(qrverisi: row.messageString ?? ":")
+                
+                if (row.messageString != "") {
+                    OpenUrlManager.onURL = { [self] res in
+                        getOrder(address: res)
+                    }
+                    OpenUrlManager.parseUrlParams(openUrl: URL(string: row.messageString!))
+                }
+                 
                 self.imagePicker.dismiss(animated: true, completion: {
                     
                 })
@@ -1991,24 +2056,18 @@ extension MainScreen: LegalDelegate // kullanım sözleşmesi gibi view'ların g
 
 extension MainScreen: SendWithQrDelegate
 {
-    func qrError(error: String) {
-        switch error {
-        case "notDP":
-            let alert = UIAlertController(title: digilira.messages.qrErrorHeader, message: digilira.messages.qrErrorMessage, preferredStyle: .alert)
-            
-            alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
-                self.dismissSendWithQr()
-            }))
-             
-            
-            self.present(alert, animated: true)
-        default:
-            break
-        }
-    }
+
     
-    func dismissSendWithQr()
+    func dismissSendWithQr(url: String)
     {
+        if (url != "") {
+            OpenUrlManager.onURL = { [self] res in
+                getOrder(address: res)
+            }
+            OpenUrlManager.parseUrlParams(openUrl: URL(string: url))
+        }
+
+
         isShowQRButton = false
         UIView.animate(withDuration: 0.3) {
             self.sendWithQRView.frame.origin.y = self.self.view.frame.height
@@ -2030,77 +2089,7 @@ extension MainScreen: SendWithQrDelegate
         
     }
     
-    func sendBTCETH (external: digilira.externalTransaction) {
-        let exchange = digiliraPay.exchange(amount: external.amount!, network: external.network!)
-        
-        digiliraPay.onMember = { res, data in
-            DispatchQueue.main.async {
-            switch res {
-            case true:
-                let destination = digilira.transactionDestination.interwallets
-                let trx = SendTrx.init(merchant: data?.owner!,
-                                        recipient: (data?.wallet)!,
-                                        assetId: external.network!,
-                                        amount: external.amount!,
-                                        fee: 900000,
-                                        fiat: exchange,
-                                        attachment: external.message,
-                                        network: external.network!,
-                                        destination: destination,
-                                        massWallet: data?.wallet
-                )
-
-                self.send(params: trx)
-
-            default:
-                return
-            }
-            }
-            
-
-            
-        }
-        
-        let normalizedAddress = external.address?.components(separatedBy: "?")
-        let croppedAddress = normalizedAddress?.first
-        
-        digiliraPay.isOurMember(network: external.network!, address: croppedAddress!)
-        
-
-    }
-    
-    func sendQR(ORDER: digilira.order) {
-        
-        sendMessage(SocketMessage.init(id: ORDER._id, status: "PROCESSING"))
-        
-        
-        let auth = digiliraPay.auth()
-        
-        if (auth.status == 0) {
-            alertError ()
-            return
-        }
-        
-        let odeme = digilira.odemeStatus.init(
-            id: ORDER._id,
-            status: "1",
-            name: auth.name,
-            surname: auth.surname
-        )
-        
-        self.digiliraPay.setOdemeAliniyor(JSON: try? self.digiliraPay.jsonEncoder.encode(odeme))
-        
-        let data = SendTrx.init(merchant: ORDER.merchant,
-                                recipient: ORDER.wallet,
-                                assetId: ORDER.asset!,
-                                amount: ORDER.rate,
-                                fee: 900000,
-                                fiat: ORDER.totalPrice!,
-                                attachment: ORDER._id,
-                                network: digilira.transactionDestination.domestic
-        )
-        send(params: data)
-    }
+   
     
     
 }
