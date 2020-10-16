@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Photos
 
 class QRView: UIView {
 
@@ -25,11 +26,11 @@ class QRView: UIView {
     public var network: String?
     public var tokenName: String?
 
-    private var amount: Float?
-    private var price: Float?
+    private var amount: Double?
+    private var price: Double?
     
-    private var coinPrice: Float?
-    private var usdPrice: Float?
+    private var coinPrice: Double?
+    private var usdPrice: Double?
 
     let digiliraPay = digiliraPayApi()
     var ticker: digilira.ticker?
@@ -75,7 +76,6 @@ class QRView: UIView {
     }
     
     @objc func textFieldDidChange(_ textField: UITextField) {
-        let image = generateQRCode(from: network! + ":" + address! + "?amount=" + textField.text!)
         guard Float.init(textField.text!) != nil else {
             textField.text = ""
             switchCurrency.setTitle("₺", forSegmentAt: 0)
@@ -103,23 +103,28 @@ class QRView: UIView {
         }
         
         if switchCurrency.selectedSegmentIndex == 0 { //₺
-            amount = Float.init(textField.text!)!
+            amount = Double.init(textField.text!)!
             price =  amount! / (usdPrice! * coinPrice!)
+            let image = generateQRCode(from: network! + ":" + address! + "?amount=" + String(price!))
+            qrImage.image = image
+
             
             switchCurrency.setTitle(String(amount!) + " ₺", forSegmentAt: 0)
             switchCurrency.setTitle(String(price!) + " " + tokenName!, forSegmentAt: 1)
         }
         
         if switchCurrency.selectedSegmentIndex == 1 { //token
-            price = Float.init(textField.text!)!
+            price = Double.init(textField.text!)!
             amount = (usdPrice! * coinPrice!) * price!
             switchCurrency.setTitle(String(amount!) + " ₺", forSegmentAt: 0)
             switchCurrency.setTitle(String(price!) + " " + tokenName!, forSegmentAt: 1)
+            let image = generateQRCode(from: network! + ":" + address! + "?amount=" + String(price!))
+            qrImage.image = image
+
+
         }
         
         
-        
-        qrImage.image = image
     }
     
     @IBAction func indexChanged(sender: UISegmentedControl) {
@@ -154,15 +159,33 @@ class QRView: UIView {
 
     @IBAction func shareButton(_ sender: Any)
     {
+        PHPhotoLibrary.requestAuthorization { status in
+          if status == .authorized {
+            //do things
+          }
+        }
+        
         // image to share
         let window = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
 
-        let activityViewController = UIActivityViewController(activityItems: [generateQRCode(from: network! + ":" + address!)] , applicationActivities: nil)
-        activityViewController.popoverPresentationController?.sourceView = self
+        let shareItems:Array = [ qrImage.image]
+        let activityViewController = UIActivityViewController(activityItems:shareItems as [Any] , applicationActivities: nil)
+        if #available(iOS 13.0, *) {
+            activityViewController.isModalInPresentation = true
+        } else {
+            // Fallback on earlier versions
+        }
+        activityViewController.popoverPresentationController?.sourceView = self.qrImage
         
         window?.rootViewController?.presentedViewController?.present(activityViewController, animated: true, completion: nil)
 
     }
+    
+    @objc func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+        print("ok")
+    }
+    
+
     
     func generateQRCode(from string: String) -> UIImage? {
         let data = string.data(using: String.Encoding.ascii)
@@ -179,6 +202,7 @@ class QRView: UIView {
         return nil
     }
 }
+
 
 extension UITextField {
     func addDoneCancelToolbar(onDone: (target: Any, action: Selector)? = nil, onCancel: (target: Any, action: Selector)? = nil) {

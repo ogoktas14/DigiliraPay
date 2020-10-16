@@ -8,15 +8,19 @@
 
 import Foundation
 
-   struct SendTrx {
-    var merchant:String
-       var recipient: String
-       var assetId: String
-    var amount: Int64
-    var fee: Int64
-    var fiat: Double
-    var attachment:String
-    var network:String
+    struct SendTrx {
+        var merchant:String?
+        var recipient: String?
+        var assetId: String?
+        var amount: Int64?
+        var fee: Int64?
+        var fiat: Double?
+        var attachment:String?
+        var network: String?
+        var destination: String = digilira.transactionDestination.domestic
+        var externalAddress: String?
+        var massWallet: String?
+        var massNameSurname: String?
    }
 
 

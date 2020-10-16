@@ -32,6 +32,7 @@ class Blockchain {
         return toByteArray(Int16(b.count)) + b
     }
     
+    var onMassTransaction: ((_ result: NodeService.DTO.Transaction)->())?
     var onAssetBalance: ((_ result: NodeService.DTO.AddressAssetsBalance)->())?
     var onTransferTransaction: ((_ result: NodeService.DTO.Transaction)->())?
     var onVerified: ((_ result: [String : AnyObject])->())?
@@ -89,7 +90,7 @@ class Blockchain {
                 .disposed(by: disposeBag)
     }
     
-    func testMassTransferTx(recipient: String, fee: Int64, amount:Int64, assetId:String, attachment:String, wallet:digilira.wallet) {
+    func massTransferTx(recipient: String, fee: Int64, amount:Int64, assetId:String, attachment:String, wallet:digilira.wallet) {
         guard let chainId = WavesSDK.shared.enviroment.chainId else { return }
         guard WavesCrypto.shared.address(seed: wallet.seed!, chainId: chainId) != nil else { return }
         guard let senderPublicKey = WavesCrypto.shared.publicKey(seed: wallet.seed!) else { return }
@@ -116,6 +117,7 @@ class Blockchain {
             .transactions(query: send)
             .observeOn(MainScheduler.asyncInstance)
             .subscribe(onNext: {(tx) in
+                self.onMassTransaction?(tx)
                 print(tx) // Do something on success, now we have wavesBalance.balance in satoshi in Long
             }, onError: {(error) in
                 print(error)
@@ -126,7 +128,7 @@ class Blockchain {
     }
     
      
-    func verifyTrx(txid: String, id:String) {
+    func verifyTrx(txid: String) {
         getTransactionId(rURL: digilira.node.url + "/transactions/info/" + txid)
     }
     
@@ -182,6 +184,22 @@ class Blockchain {
         
     }
     
+    func returnNetworkAsset (network: String) -> String {
+        
+        switch network {
+        case "bitcoin":
+            return digilira.networkTokens.bitcoin
+        case "ethereum":
+            return digilira.networkTokens.ethereum
+        case "waves":
+            return digilira.networkTokens.waves
+        case "charity":
+            return digilira.networkTokens.charity
+        default:
+            return "null"
+        }
+        
+    }
     
     func base58 (data:String) -> String{
         let attachment =  WavesCrypto.shared.base58decode(input: data)

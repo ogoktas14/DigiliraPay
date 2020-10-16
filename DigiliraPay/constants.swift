@@ -24,6 +24,7 @@ struct digilira {
         static let userUpdate =  "/users/update/me"
         static let auth =  "/users/authenticate"
         static let updateScript =  "/users/signscript/update"
+        static let isOurMember = "/transfer/recipient"
     }
     struct node {
         static let url = "https://nodes-testnet.wavesnodes.com"
@@ -33,6 +34,14 @@ struct digilira {
         static let profileUpdateMessage = "Ödeme yapmadan önce profilinizi tamamlamanız gerekmektedir."
         static let qrErrorHeader = "QR Kod Hatası"
         static let qrErrorMessage = "Ödeme bilgileri bulunamadı"
+    }
+    
+    struct networkTokens {
+        static let bitcoin = "FjTB2DdymTfpYbCCdcFwoRbHQnEhQD11CUm6nAF7P1UD"
+        static let ethereum = "LVf3qaCtb9tieS1bHD8gg5XjWvqpBm5TaDxeSVcqPwn"
+        static let waves = "HGoEZAsEQpbA3DJyV9J3X1JCTTBuwUB6PE19g1kUYXsH"
+        static let charity = "2CrDXATWpvrriHHr1cVpQM65CaP3m7MJ425xz3tn9zMr"
+        
     }
     
     
@@ -62,6 +71,43 @@ struct digilira {
         var text: String
     }
     
+    struct QR: Codable {
+       var network: String?
+       var address: String?
+       var amount: Int64?
+    }
+    
+    
+    @propertyWrapper
+        struct UserDefault<T: Codable> {
+            let key: String
+            let defaultValue: T
+
+            init(_ key: String, defaultValue: T) {
+                self.key = key
+                self.defaultValue = defaultValue
+            }
+
+            var wrappedValue: T {
+                get {
+
+                    if let data = UserDefaults.standard.object(forKey: key) as? Data,
+                        let user = try? JSONDecoder().decode(T.self, from: data) {
+                        return user
+
+                    }
+
+                    return  defaultValue
+                }
+                set {
+                    if let encoded = try? JSONEncoder().encode(newValue) {
+                        UserDefaults.standard.set(encoded, forKey: key)
+                    }
+                }
+            }
+        }
+    
+    
     struct setScript: Encodable {
         var id: String?
         var senderPublicKey: String?
@@ -87,18 +133,26 @@ struct digilira {
         var attachment: String?
     }
     
-    struct externalTransaction {
+    struct externalTransaction: Encodable {
         var network: String?
         var address: String?
         var amount: Int64?
-        var message: String?
+        var message: String = "externalTransaction"
+        var owner: String?
+        var wallet: String? 
+    }
+    
+    struct transactionDestination {
+        static let domestic = "domestic"
+        static let foreign = "foreign"
+        static let interwallets = "interwallets"
     }
     
     struct ticker {
-        var ethUSDPrice: Float?
-        var btcUSDPrice: Float?
-        var wavesUSDPrice: Float?
-        var usdTLPrice: Float? 
+        var ethUSDPrice: Double?
+        var btcUSDPrice: Double?
+        var wavesUSDPrice: Double?
+        var usdTLPrice: Double? 
     }
     
     struct user: Encodable {

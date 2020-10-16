@@ -20,9 +20,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         for urlContext in connectionOptions.urlContexts {
           let url = urlContext.url
-            let URL = OpenUrlManager.parseUrlParams(openUrl: url)!
-            UserDefaults.standard.set(URL, forKey: "QRARRAY")
-            NotificationCenter.default.post(name: .didReceiveData, object: nil)
+            
+            OpenUrlManager.onURL = { res in
+                let encoder = JSONEncoder()
+                if let encoded = try? encoder.encode(res) {
+                    let defaults = UserDefaults.standard
+                    defaults.set(encoded, forKey: "QRARRAY2")
+                }
+                NotificationCenter.default.post(name: .didReceiveData, object: nil)
+                
+            }
+            OpenUrlManager.parseUrlParams(openUrl: url)
 
           // handle url and options as needed
         }
@@ -61,9 +69,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene,openURLContexts URLContexts: Set<UIOpenURLContext>){
         
         if let url = URLContexts.first?.url{
-            let URL = OpenUrlManager.parseUrlParams(openUrl: url)!
-            UserDefaults.standard.set(URL, forKey: "QRARRAY")
-            NotificationCenter.default.post(name: .didReceiveData, object: nil)
+            
+            OpenUrlManager.onURL = { res in
+                let encoder = JSONEncoder()
+                if let encoded = try? encoder.encode(res) {
+                    let defaults = UserDefaults.standard
+                    defaults.set(encoded, forKey: "QRARRAY2")
+                }
+                NotificationCenter.default.post(name: .didReceiveData, object: nil)
+                
+            }
+            OpenUrlManager.parseUrlParams(openUrl: url)
         }
         
     }

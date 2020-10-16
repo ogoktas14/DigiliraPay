@@ -27,6 +27,7 @@ class digiliraPayApi {
     var onResponse: ((_ result: [String:Any], _ statusCode: Int?)->())?
     var onUpdate: ((_ result: Bool)->())?
     var onTicker: ((_ result: String)->())?
+    var onMember: ((_ result: Bool, _ data: digilira.externalTransaction?)->())?
 
       func request(rURL: String, JSON: Data? = nil,
                      PARAMS: String = "", METHOD: String, AUTH: Bool = false,
@@ -318,10 +319,10 @@ class digiliraPayApi {
     }
     
     func ticker () -> digilira.ticker {
-        let ethUSDPrice: Float? = 376.77
-        let btcUSDPrice: Float? = 11352
-        let wavesUSDPrice: Float? = 2.49
-        let usdTLPrice: Float? = 7.8
+        let ethUSDPrice: Double? = 376.77
+        let btcUSDPrice: Double? = 11352
+        let wavesUSDPrice: Double? = 2.49
+        let usdTLPrice: Double? = 7.8
         
         let res = digilira.ticker.init(ethUSDPrice: ethUSDPrice,
                                        btcUSDPrice: btcUSDPrice,
@@ -331,7 +332,58 @@ class digiliraPayApi {
         return res
     }
     
-
+    func exchange(amount: Int64, network: String) -> Double {
+        let symbol = ticker()
+        let amountFloat = Double.init(Double.init(amount) / 100000000)
+        
+        switch network {
+        case "bitcoin":
+            return amountFloat  * symbol.btcUSDPrice! * symbol.usdTLPrice!
+        case "ethereum":
+            return amountFloat * symbol.ethUSDPrice! * symbol.usdTLPrice!
+        case "waves":
+            return amountFloat * symbol.wavesUSDPrice! * symbol.usdTLPrice!
+        default:
+            return 0.0
+        }
+        
+    }
+    
+    
+    func isOurMember(network: String, address:String) {
+        let user = digilira.externalTransaction.init(
+            network: network,
+            address: address
+        )
+        
+        let encoder = JSONEncoder()
+        let data = try? encoder.encode(user)
+        
+        self.onResponse = { res, sts in
+            if (sts == 200) {
+                let response = digilira.externalTransaction.init(network: network,
+                                                                 address: address,
+                                                                 owner: res["owner"] as? String,
+                                                                 wallet: (res["wallet"] as! String)
+                )
+                
+                self.onMember!(true, response)
+            }else {
+                
+                let response = digilira.externalTransaction.init(network: network,
+                                                                     address: address,
+                                                                     owner: "",
+                                                                     wallet: ""
+                    )
+                self.onMember!(false, response)
+            }
+        }
+        request2(rURL: digilira.api.url + digilira.api.isOurMember, JSON: data, METHOD: digilira.requestMethod.post, AUTH: true)
+        
+        
+    }
+    
+ 
 
 
     func auth() -> digilira.auth {
@@ -418,40 +470,146 @@ class digiliraPayApi {
 }
 
 class OpenUrlManager {
-    static var openUrl: URL?
+
+    class func detectQRCode(_ image: UIImage?) -> [CIFeature]? {
+        if let image = image, let ciImage = CIImage.init(image: image){
+            var options: [String: Any]
+            let context = CIContext()
+            options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
+            let qrDetector = CIDetector(ofType: CIDetectorTypeQRCode, context: context, options: options)
+            if ciImage.properties.keys.contains((kCGImagePropertyOrientation as String)){
+                options = [CIDetectorImageOrientation: ciImage.properties[(kCGImagePropertyOrientation as String)] ?? 1]
+            } else {
+                options = [CIDetectorImageOrientation: 1]
+            }
+            let features = qrDetector?.features(in: ciImage, options: options)
+            return features
+
+        }
+        return nil
+    }
     
-    class func parseUrlParams(openUrl: URL?) -> ([String])? {
+    static var openUrl: URL?
+    static var onURL: ((_ result: digilira.QR)->())?
+
+    class func parseUrlParams(openUrl: URL?) {
         let array = openUrl!.absoluteString.components(separatedBy: CharacterSet.init(charactersIn: ":"))
         let caption = array[0]
      
         switch caption {
+        case "file":
+            
+            if FileManager.default.fileExists(atPath: openUrl!.path) {
+                let url = NSURL(string: openUrl!.absoluteString)
+                        let data = NSData(contentsOf: url! as URL)
+                
+                        if let features = detectQRCode(UIImage(data: data! as Data)), !features.isEmpty{
+                            for case let row as CIQRCodeFeature in features{
+                                parseUrlParams(openUrl: URL(string: row.messageString!))
+                            }
+                        }
+                
+                    }
+        break;
         case "digilirapay":
             let digiliraURL = openUrl!.absoluteString.components(separatedBy: CharacterSet.init(charactersIn: "://"))
             if digiliraURL.count > 2 {
                 if caption == "digilirapay" {
-                    return [digiliraURL[3], caption]
+                    self.onURL!(digilira.QR.init(network: caption, address: digiliraURL[3]))
                 }
             }
             break
         case "bitcoin", "ethereum", "waves":
-            return [array[1],caption]
+            let data = array[1].components(separatedBy: "?amount=")
+            let amount = Int64(Float.init(data[1])! * 100000000)
+            
+            self.onURL!(digilira.QR.init(network: caption, address: data[0], amount: amount))
             break
         default:
-            return []
+            //return []
+        break
         }
         
-        return ["", "digilirapay"]
-        
-        
-        
+        //return ["",""]
     }
-        
-        
-        
     
-    
-    class func getOpenUrlParams() -> ([String])? {
-        return parseUrlParams(openUrl: openUrl)
+    class ImagePickerManager: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+
+        var picker = UIImagePickerController();
+        var alert = UIAlertController(title: "Choose Image", message: nil, preferredStyle: .actionSheet)
+        var viewController: UIViewController?
+        var pickImageCallback : ((UIImage) -> ())?;
+
+        override init(){
+            super.init()
+        }
+
+        func pickImage(_ viewController: UIViewController, _ callback: @escaping ((UIImage) -> ())) {
+            pickImageCallback = callback;
+            self.viewController = viewController;
+
+            let cameraAction = UIAlertAction(title: "Camera", style: .default){
+                UIAlertAction in
+                self.openCamera()
+            }
+            let galleryAction = UIAlertAction(title: "Gallery", style: .default){
+                UIAlertAction in
+                self.openGallery()
+            }
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel){
+                UIAlertAction in
+            }
+
+            // Add the actions
+            picker.delegate = self
+            alert.addAction(cameraAction)
+            alert.addAction(galleryAction)
+            alert.addAction(cancelAction)
+            alert.popoverPresentationController?.sourceView = self.viewController!.view
+            viewController.present(alert, animated: true, completion: nil)
+        }
+        func openCamera(){
+            alert.dismiss(animated: true, completion: nil)
+            if(UIImagePickerController .isSourceTypeAvailable(.camera)){
+                picker.sourceType = .camera
+                self.viewController!.present(picker, animated: true, completion: nil)
+            } else {
+                let alertWarning = UIAlertView(title:"Warning", message: "You don't have camera", delegate:nil, cancelButtonTitle:"OK", otherButtonTitles:"")
+                alertWarning.show()
+            }
+        }
+        func openGallery(){
+            alert.dismiss(animated: true, completion: nil)
+            picker.sourceType = .photoLibrary
+            self.viewController!.present(picker, animated: true, completion: nil)
+        }
+
+
+        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            picker.dismiss(animated: true, completion: nil)
+        }
+        //for swift below 4.2
+        //func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        //    picker.dismiss(animated: true, completion: nil)
+        //    let image = info[UIImagePickerControllerOriginalImage] as! UIImage
+        //    pickImageCallback?(image)
+        //}
+
+        // For Swift 4.2+
+        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+            picker.dismiss(animated: true, completion: nil)
+            guard let image = info[.originalImage] as? UIImage else {
+                fatalError("Expected a dictionary containing an image, but was provided the following: \(info)")
+            }
+            pickImageCallback?(image)
+        }
+
+
+
+        @objc func imagePickerController(_ picker: UIImagePickerController, pickedImage: UIImage?) {
+        }
+
     }
+
 
 }

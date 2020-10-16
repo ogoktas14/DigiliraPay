@@ -55,6 +55,8 @@ class MainScreen: UIViewController {
     var paymentCat = PaymentCat()
     var profileMenuView = ProfileMenuView()
     var depositeMoneyView = DepositeMoneyView()
+    let imagePicker = UIImagePickerController()
+
     
     var tapProfileMenuGesture = UITapGestureRecognizer()
     var tapCloseProfileMenuGesture = UITapGestureRecognizer()
@@ -101,7 +103,7 @@ class MainScreen: UIViewController {
 
     
     var headerHeightBuffer: CGFloat?
-    var QR:[String?] = []
+    var QR:digilira.QR = digilira.QR.init()
     
     var Assets = [
         "FjTB2DdymTfpYbCCdcFwoRbHQnEhQD11CUm6nAF7P1UD": "Bitcoin",
@@ -178,18 +180,40 @@ class MainScreen: UIViewController {
             self.headerTotal.fadeTransition(0.4)
             self.headerTotal.text  = "₺ 110.313"
             
-            if  self.isKeyPresentInUserDefaults(key: "QRARRAY") {
+            if  self.isKeyPresentInUserDefaults(key: "QRARRAY2") {
                                 
-                self.QR = UserDefaults.standard.object(forKey: "QRARRAY") as! [String?]
-                UserDefaults.standard.set(nil, forKey: "QRARRAY")
-                self.getOrder(address: self.QR)
-
+                let defaults = UserDefaults.standard
+                if let savedQR = defaults.object(forKey: "QRARRAY2") as? Data {
+                    let decoder = JSONDecoder()
+                    let loadedQR = try? decoder.decode(digilira.QR.self, from: savedQR)
+                    QR = loadedQR!
+                    UserDefaults.standard.set(nil, forKey: "QRARRAY2")
+                    self.getOrder(address: QR)
+                }
             }
 
 
             
             
             
+        }
+        
+        BC.onMassTransaction = { res in
+            print(res)
+            let txid = res.dictionary["id"] as? String
+            
+            DispatchQueue.main.async {
+                self.showSuccess(mode: 1, transaction: res.dictionary)
+            }
+            self.bottomView.isHidden = true
+            self.closeCoinSendView()
+            self.goHomeScreen()
+            
+            self.BC.verifyTrx(txid: txid!)
+            
+            self.bottomView.isHidden = true
+            self.closeCoinSendView()
+            self.goHomeScreen()
         }
         
         
@@ -207,7 +231,7 @@ class MainScreen: UIViewController {
             self.closeCoinSendView()
             self.goHomeScreen()
             
-            self.BC.verifyTrx(txid: txid!, id: attachment)
+            self.BC.verifyTrx(txid: txid!)
             
         }
         
@@ -218,11 +242,17 @@ class MainScreen: UIViewController {
             }
             
             let id = res["id"] as? String
-            let attachment = String(decoding: (WavesCrypto.shared.base58decode( input: res["attachment"] as! String)!), as: UTF8.self)
+            switch res["type"] as? Int {
+            case 11:
+                return
+            default:
+                let attachment = String(decoding: (WavesCrypto.shared.base58decode( input: res["attachment"] as! String)!), as: UTF8.self)
+                
+                let odeme = digilira.odemeStatus.init(id: attachment, txid: id!, status: "2")
+                self.sendMessage(SocketMessage.init(id: attachment, status: "SUCCESSFUL", txid: id!))
+                self.digiliraPay.setOdemeAliniyor(JSON: try? self.digiliraPay.jsonEncoder.encode(odeme))
+            }
             
-            let odeme = digilira.odemeStatus.init(id: attachment, txid: id!, status: "2")
-            self.sendMessage(SocketMessage.init(id: attachment, status: "SUCCESSFUL", txid: id!))
-            self.digiliraPay.setOdemeAliniyor(JSON: try? self.digiliraPay.jsonEncoder.encode(odeme))
         }
         
         BC.onError = { res in
@@ -345,19 +375,21 @@ class MainScreen: UIViewController {
         }
     }
     
-    func getOrder(address: [String?]) {
+    func getOrder(address: digilira.QR) {
+                
+        if address.address == nil {return}
+        switch address.network {
         
-        
-        switch address[1] {
-        case "bitcoin":
-            let external = digilira.externalTransaction(network: address[1], address: address[0], amount: 0, message: address[1])
+        case "bitcoin", "ethereum", "waves":
+            let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!)
             sendBTCETH(external: external)
+            break
         default:
             digiliraPay.onGetOrder = { res in
                 self.sendQR(ORDER: res)
 
             }
-            digiliraPay.getOrder(PARAMS: address[0]!)
+            digiliraPay.getOrder(PARAMS: address.address!)
         }
 
         
@@ -369,7 +401,16 @@ class MainScreen: UIViewController {
         if (isDepositeMoneyView) {
             closeDeposite()
         }
-        self.QR = UserDefaults.standard.object(forKey: "QRARRAY") as! [String?]
+        let defaults = UserDefaults.standard
+        if let savedQR = defaults.object(forKey: "QRARRAY2") as? Data {
+            let decoder = JSONDecoder()
+            let loadedQR = try? decoder.decode(digilira.QR.self, from: savedQR)
+            QR = loadedQR!
+            if (self.QR.address != nil) {
+                getOrder(address: self.QR)
+                self.QR = digilira.QR.init()
+            }
+        }
         
         UIView.animate(withDuration: 1) {
             self.successView.frame.origin.y = (self.contentView.frame.maxY)
@@ -384,8 +425,8 @@ class MainScreen: UIViewController {
         }
 
         self.dismissVErifyAccountView(user: kullanici!)
-        getOrder(address: self.QR)
         
+
         
     }
     
@@ -570,11 +611,6 @@ class MainScreen: UIViewController {
             isFirstLaunch = false
         }
         
-        if QR != [] {
-            getOrder(address: QR)
-            QR = []
-        }
-        
     }
     
     
@@ -649,8 +685,9 @@ class MainScreen: UIViewController {
     
     @objc func closeSendView()
     {
-        self.QR = [] //qr bilgisi sifirlama
-        UserDefaults.standard.set(nil, forKey: "QRARRAY")
+        self.QR = digilira.QR.init()
+        UserDefaults.standard.set(nil, forKey: "QRARRAY2")
+        
 
         //profileMenuButton.isHidden = false
         closeCoinSendView()
@@ -931,34 +968,35 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
             homeAmountLabel.isHidden = false
             logoView.isHidden = true
             headerTotal.isHidden = true
-
-            let localAseet = Assets[(Filtered[coin]?.issueTransaction.assetId)!]
-            
-            switch localAseet {
-            case "Bitcoin":
-                selectedCoin = kullanici?.btcAddress
-                network = "bitcoin"
-                coinSymbol = "BTC"
-                break;
-            case "Ethereum":
-                selectedCoin = kullanici?.ethAddress
-                network = "ethereum"
-                coinSymbol = "ETH"
-                break;
-            case "Waves":
-                selectedCoin = kullanici?.ethAddress
-                network = "waves"
-                coinSymbol = "WAVES"
-                break;
-            default:
-                selectedCoin = ""
-            }
             
             headerInfoLabel.textColor = UIColor(red:0.94, green:0.56, blue:0.10, alpha:1.0)
             if Filtered.count != 0 {
                 headerInfoLabel.text = Assets[(Filtered[coin]?.issueTransaction.assetId)!]
                 let double = Double(Filtered[coin]!.balance) / Double(100000000)
                 homeAmountLabel.text = (double).description
+                
+                let localAseet = Assets[(Filtered[coin]?.issueTransaction.assetId)!]
+                
+                switch localAseet {
+                case "Bitcoin":
+                    selectedCoin = kullanici?.btcAddress
+                    network = "bitcoin"
+                    coinSymbol = "BTC"
+                    break;
+                case "Ethereum":
+                    selectedCoin = kullanici?.ethAddress
+                    network = "ethereum"
+                    coinSymbol = "ETH"
+                    break;
+                case "Waves":
+                    selectedCoin = kullanici?.wallet
+                    network = "waves"
+                    coinSymbol = "WAVES"
+                    break;
+                default:
+                    selectedCoin = ""
+                }
+                
             } else {
                 headerInfoLabel.text = "Bakiye"
                 homeAmountLabel.text = "0.0"
@@ -1078,7 +1116,15 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
             shake()
             return
         }
+        
+        
+        let transactionRecipient: String = params.merchant!
+        
+
+        
+        
         let y = logoView.frame.maxY
+        
         if !isShowSendCoinView
         {
             if params.attachment == "" { //bos send view
@@ -1112,14 +1158,14 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
             }
 
 
-            sendMoneyView.amountTextField.text = (Double(params.amount) / Double(100000000)).description
-            sendMoneyView.receiptTextField.text = params.merchant
+            sendMoneyView.amountTextField.text = (Double(params.amount!) / Double(100000000)).description
+            sendMoneyView.receiptTextField.text = transactionRecipient
             sendMoneyView.amountTextField.isEnabled = false
             sendMoneyView.receiptTextField.isEnabled = false
                         
             sendMoneyView.totalQuantity.text =  "Toplam Bakiye:"
             sendMoneyView.commissionAmount.text = "İşlem komisyonu:"
-            sendMoneyView.amountEquivalent.text = params.fiat.description + " ₺"
+            sendMoneyView.amountEquivalent.text = params.fiat!.description + " ₺"
             
 
             sendMoneyView.delegate = self
@@ -1137,14 +1183,14 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
         } else {
             sendMoneyView.transaction = params
 
-            sendMoneyView.amountTextField.text = (Double(params.amount) / Double(100000000)).description
+            sendMoneyView.amountTextField.text = (Double(params.amount!) / Double(100000000)).description
             sendMoneyView.receiptTextField.text = params.merchant
             sendMoneyView.amountTextField.isEnabled = false
             sendMoneyView.receiptTextField.isEnabled = false
                         
             sendMoneyView.totalQuantity.text =  "Toplam Bakiye:"
             sendMoneyView.commissionAmount.text = "İşlem komisyonu:"
-            sendMoneyView.amountEquivalent.text = params.fiat.description + " ₺"
+            sendMoneyView.amountEquivalent.text = params.fiat!.description + " ₺"
         }
         
         
@@ -1325,7 +1371,26 @@ extension MainScreen: DepositeMoneyDelegate {
 extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
 {
     func getQR() {
-        goQRScreen()
+        
+        
+        let alert = UIAlertController(title: "QR Kod Seçin", message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Kamera", style: .default, handler: { _ in
+            self.goQRScreen()
+        }))
+
+        alert.addAction(UIAlertAction(title: "Galeri", style: .default, handler: { _ in
+            self.openGallery()
+        }))
+
+        alert.addAction(UIAlertAction.init(title: "İptal", style: .cancel, handler: nil))
+
+        self.present(alert, animated: true, completion: nil)
+        
+        
+        
+        
+        
+       
     }
     
     func sendCoin(params:SendTrx) // gelen parametrelerle birlikte gönder butonuna basıldı.
@@ -1340,7 +1405,22 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
             BC.onSensitive = { [self] wallet, err in
                 switch err {
                 case "ok":
-                    BC.sendTransaction2(recipient: params.recipient, fee: 900000, amount: params.amount, assetId: params.assetId, attachment: params.attachment, wallet:wallet)
+                    
+                    switch params.destination {
+                    case digilira.transactionDestination.domestic:
+                        BC.sendTransaction2(recipient: params.recipient!, fee: 900000, amount: params.amount!, assetId: params.assetId!, attachment: params.attachment!, wallet:wallet)
+                        break
+                    case digilira.transactionDestination.foreign:
+                        print(params)
+                        break
+                    case digilira.transactionDestination.interwallets:
+                        BC.massTransferTx(recipient: params.recipient!, fee: 1100000, amount: params.amount!, assetId: BC.returnNetworkAsset(network:params.network!), attachment: "", wallet: wallet)
+                        print(params)
+                        break
+                    default:
+                        return
+                    }
+                    
                     break
                 case "Canceled by user.":
                     let alert = UIAlertController(title: "Hatalı Pin Kodu", message: "İşleminiz iptal edilmiştir.", preferredStyle: UIAlertController.Style.alert)
@@ -1389,7 +1469,7 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
     
     func closeCoinSendView()
     {
-        self.QR = [] //qr bilgisi sifirlama
+        //self.QR = [] //qr bilgisi sifirlama
         if isShowSendCoinView
         {
             isShowSendCoinView = false
@@ -1587,14 +1667,27 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
     {
         //accountButton.isHidden = true
         //profileMenuButton.isHidden = true
-        
         let asset = BC.returnAsset(assetId: (transaction["assetId"] as?  String)!)
-        let amount = String ((transaction["amount"] as? Float64)! / (100000000))
+        var amount: String
+        var title: String
+        
+        switch transaction["type"] as? Int {
+        case 11:
+            amount = String ((transaction["totalAmount"] as? Float64)! / (100000000))
+            title = "TRANSFERİNİZ GERÇEKLEŞTİ"
+
+        default:
+            amount = String ((transaction["amount"] as? Float64)! / (100000000))
+            title = "ÖDEME BAŞARILI"
+
+        }
+        
+      
         print(transaction)
         
         if isSuccessView {
             
-            successView.titleLabel.text = "ÖDEME BAŞARILI"
+            successView.titleLabel.text = title
             successView.remainingAmount.text = amount + " " + asset
             successView.remainingAmountInfoLabel.text = "Gönderildi!"
             successView.infoLabel.text = ""
@@ -1660,10 +1753,81 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         
     }
     
+    func dissolveQR (qrverisi: String) {
+        
+        let array = qrverisi.components(separatedBy: CharacterSet.init(charactersIn: ":"))
+
+        //launchApp(decodedURL: metadataObj.stringValue!)
+
+        
+        let caption = array[0]
+
+        switch caption {
+        case "digilirapay":
+            let digiliraURL = qrverisi.components(separatedBy: CharacterSet.init(charactersIn: "://"))
+            if digiliraURL.count > 2 {
+                if caption == "digilirapay" {
+                    digiliraPay.onGetOrder = { res in
+                        self.sendQR(ORDER: res)
+                    }
+                    digiliraPay.getOrder(PARAMS: digiliraURL[3])
+                }
+            }
+            break
+        case "bitcoin", "ethereum", "waves":
+            let data = array[1].components(separatedBy: "?amount=")
+            let amount = Int64(Float.init(data[1])! * 100000000)
+
+            self.sendBTCETH(external: digilira.externalTransaction(network: caption, address: data[0], amount: amount))
+            break
+        default:
+            break
+        }
+        
+        
+        
+    }
+    
     
     func showTermsofUse()
     {
         showLegal(mode: digilira.terms.init(title: digilira.termsOfUse.title, text: digilira.termsOfUse.text))
+    }
+    
+    func openGallery()
+   {
+       if UIImagePickerController.isSourceTypeAvailable(UIImagePickerController.SourceType.photoLibrary){
+           imagePicker.delegate = self
+           imagePicker.allowsEditing = true
+           imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary
+           self.present(imagePicker, animated: true, completion: nil)
+        
+
+       }
+       else
+       {
+           let alert  = UIAlertController(title: "Warning", message: "You don't have permission to access gallery.", preferredStyle: .alert)
+           alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+           self.present(alert, animated: true, completion: nil)
+       }
+   }
+    
+    func detectQRCode(_ image: UIImage?) -> [CIFeature]? {
+        if let image = image, let ciImage = CIImage.init(image: image){
+            var options: [String: Any]
+            let context = CIContext()
+            options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
+            let qrDetector = CIDetector(ofType: CIDetectorTypeQRCode, context: context, options: options)
+            if ciImage.properties.keys.contains((kCGImagePropertyOrientation as String)){
+                options = [CIDetectorImageOrientation: ciImage.properties[(kCGImagePropertyOrientation as String)] ?? 1]
+            } else {
+                options = [CIDetectorImageOrientation: 1]
+            }
+            let features = qrDetector?.features(in: ciImage, options: options)
+            return features
+
+        }
+        return nil
     }
     
     func showLegalText()
@@ -1674,6 +1838,37 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         isNewPin = true
         openPinView()
     }
+}
+
+
+
+extension MainScreen: UIImagePickerControllerDelegate {
+
+    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        self.imagePicker.dismiss(animated: true, completion: {
+            
+        })
+    }
+
+    public func imagePickerController(_ picker: UIImagePickerController,
+                                      didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+        guard let image = info[.editedImage] as? UIImage else {
+            return 
+        }
+        
+        if let features = detectQRCode(image), !features.isEmpty{
+            for case let row as CIQRCodeFeature in features{
+                self.dissolveQR(qrverisi: row.messageString ?? ":")
+                self.imagePicker.dismiss(animated: true, completion: {
+                    
+                })
+            }
+        }
+    }
+}
+
+extension MainScreen: UINavigationControllerDelegate {
+
 }
 
 extension MainScreen: PaymentCatViewsDelegate {
@@ -1734,9 +1929,11 @@ extension MainScreen: VerifyAccountDelegate
     func dismissVErifyAccountView(user: digilira.user) // profil doğrulama sayfasının kapatılması
     {
         
-            if QR != [] {
-                UserDefaults.standard.set(nil, forKey: "QRARRAY")
+        if QR.address != nil {
+                UserDefaults.standard.set(nil, forKey: "QRARRAY2")
                 getOrder(address: self.QR)
+                self.QR = digilira.QR.init()
+            
             }
             
         
@@ -1834,16 +2031,42 @@ extension MainScreen: SendWithQrDelegate
     }
     
     func sendBTCETH (external: digilira.externalTransaction) {
-        let data = SendTrx.init(merchant: external.address!,
-                                recipient: external.address!,
-                                assetId: external.address!,
-                                amount: external.amount!,
-                                fee: 900000,
-                                fiat: 0,
-                                attachment: external.message!,
-                                network: external.network!
-        )
-        send(params: data)
+        let exchange = digiliraPay.exchange(amount: external.amount!, network: external.network!)
+        
+        digiliraPay.onMember = { res, data in
+            DispatchQueue.main.async {
+            switch res {
+            case true:
+                let destination = digilira.transactionDestination.interwallets
+                let trx = SendTrx.init(merchant: data?.owner!,
+                                        recipient: (data?.wallet)!,
+                                        assetId: external.network!,
+                                        amount: external.amount!,
+                                        fee: 900000,
+                                        fiat: exchange,
+                                        attachment: external.message,
+                                        network: external.network!,
+                                        destination: destination,
+                                        massWallet: data?.wallet
+                )
+
+                self.send(params: trx)
+
+            default:
+                return
+            }
+            }
+            
+
+            
+        }
+        
+        let normalizedAddress = external.address?.components(separatedBy: "?")
+        let croppedAddress = normalizedAddress?.first
+        
+        digiliraPay.isOurMember(network: external.network!, address: croppedAddress!)
+        
+
     }
     
     func sendQR(ORDER: digilira.order) {
@@ -1874,7 +2097,7 @@ extension MainScreen: SendWithQrDelegate
                                 fee: 900000,
                                 fiat: ORDER.totalPrice!,
                                 attachment: ORDER._id,
-                                network: "digilirapay"
+                                network: digilira.transactionDestination.domestic
         )
         send(params: data)
     }

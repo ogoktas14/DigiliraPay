@@ -45,7 +45,7 @@ class OnBoardingVC: UIViewController, PinViewDelegate {
     var kullanici: digilira.user?
 
     var trxs:[digilira.transfer] = []
-    var QR: [String?] = []
+    var QR:digilira.QR = digilira.QR.init()
 
     
     private func initial2() {
@@ -164,9 +164,13 @@ class OnBoardingVC: UIViewController, PinViewDelegate {
     }
     
     @objc func onDidReceiveData(_ sender: Notification) {
-       // Do what you need, including updating IBOutlets
-        let A = UserDefaults.standard.object(forKey: "QRARRAY")
-        QR = (A as? [String?])!
+//       // Do what you need, including updating IBOutlets
+//        let defaults = UserDefaults.standard
+//        if let savedQR = defaults.object(forKey: "QRARRAY2") as? Data {
+//            let decoder = JSONDecoder()
+//            let loadedQR = try? decoder.decode(digilira.QR.self, from: savedQR)
+//            QR = loadedQR!
+//        }
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle

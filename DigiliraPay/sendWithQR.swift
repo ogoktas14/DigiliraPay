@@ -119,6 +119,9 @@ class sendWithQR: UIView {
         
     }
     
+    @IBAction func btnGallery(_ sender: Any) {
+    
+    }
     @objc func openGallery()
     {
         
@@ -183,22 +186,21 @@ extension sendWithQR: AVCaptureMetadataOutputObjectsDelegate {
                         if caption == "digilirapay" {
                             digiliraPay.onGetOrder = { res in
                                 self.delegate?.sendQR(ORDER: res)
-
                             }
                             digiliraPay.getOrder(PARAMS: digiliraURL[3])
-                        
                         }
                     }
                     break
                 case "bitcoin", "ethereum", "waves":
-                    self.delegate?.sendBTCETH(external: digilira.externalTransaction(network: caption, address: array[1], amount: 0, message: ""))
+                    let data = array[1].components(separatedBy: "?amount=")
+                    let amount = Int64(Float.init(data[1])! * 100000000)
+
+                    self.delegate?.sendBTCETH(external: digilira.externalTransaction(network: caption, address: data[0], amount: amount))
                     break
                 default:
                     delegate?.qrError(error: "notDP")
                 }
                 
-
-
             }
         }
     }
