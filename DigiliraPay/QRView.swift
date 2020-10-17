@@ -32,6 +32,8 @@ class QRView: UIView {
     private var coinPrice: Double?
     private var usdPrice: Double?
     
+    public var adSoyad: String?
+    
     private var decimal: Bool = false
 
     let digiliraPay = digiliraPayApi()
@@ -113,6 +115,10 @@ class QRView: UIView {
         if let idx = str!.firstIndex(of: needle) {
             let pos = str!.distance(from: str!.startIndex, to: idx)
             maxLength = 9 + pos
+            if pos > 8 {
+                maxLength = 0
+            }
+            
         }
         else {
             print("Not found")
@@ -212,7 +218,17 @@ class QRView: UIView {
 
     @IBAction func shareButton(_ sender: Any)
     {
-        delegate?.shareQR(image: qrImage.image!)
+        shareButtonView.isHidden = true
+        adressInfoLabel.text = adSoyad!
+        if textAmount.text == "" {
+            textAmount.isHidden = true
+            switchCurrency.isHidden = true
+        }
+        delegate?.shareQR(image: takeScreenshot())
+        adressInfoLabel.text = "ADRES"
+        textAmount.isHidden = false
+        switchCurrency.isHidden = false
+        shareButtonView.isHidden = false
     }
  
 
@@ -235,6 +251,28 @@ class QRView: UIView {
         }
 
         return nil
+    }
+}
+
+extension UIView {
+
+    func takeScreenshot() -> UIImage {
+
+        // Begin context
+        UIGraphicsBeginImageContextWithOptions(self.bounds.size, false, UIScreen.main.scale)
+
+        // Draw view in that context
+        drawHierarchy(in: self.bounds, afterScreenUpdates: true)
+
+        // And finally, get image
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+
+        if (image != nil)
+        {
+            return image!
+        }
+        return UIImage()
     }
 }
 

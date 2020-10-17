@@ -20,6 +20,7 @@ class ShareQRVC: UIViewController {
     public var address: String?
     public var network: String?
     public var tokenName: String?
+    public var adSoyad: String?
 
     private var amount: Double?
     private var price: Double?
@@ -52,7 +53,8 @@ class ShareQRVC: UIViewController {
         loadMoneyView.tokenName = tokenName
         loadMoneyView.network = network
         loadMoneyView.address = address
-        
+        loadMoneyView.adSoyad = adSoyad
+
         mainView.addSubview(loadMoneyView)
         mainView.isHidden = false
         mainView.translatesAutoresizingMaskIntoConstraints = true

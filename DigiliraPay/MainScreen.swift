@@ -1266,6 +1266,7 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
                     viewController.tokenName = coinSymbol
                     viewController.network = network
                     viewController.address = selectedCoin
+                    viewController.adSoyad = (kullanici?.firstName)! + " " + (kullanici?.lastName)!
                 }
             }
         }
