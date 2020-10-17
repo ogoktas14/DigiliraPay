@@ -409,6 +409,7 @@ class MainScreen: UIViewController {
             if (self.QR.address != nil) {
                 getOrder(address: self.QR)
                 self.QR = digilira.QR.init()
+                UserDefaults.standard.set(nil, forKey: "QRARRAY2")
             }
         }
         
@@ -715,6 +716,7 @@ class MainScreen: UIViewController {
         menuView.addSubview(menuXib)
         menuView.backgroundColor = .clear
     }
+    
     @IBAction func menuViewPanGesture(_ sender: UIPanGestureRecognizer) // yan profil menüsünün kaydırarak kapaılması işlemi
     {
         guard let menuview = sender.view else { return }
@@ -738,7 +740,68 @@ class MainScreen: UIViewController {
         }
     }
     
+    
+    func chooseQRSource () {
+        let alert = UIAlertController(title: "QR Kod Seçin", message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Kamera", style: .default, handler: { _ in
+            self.openCamera()
+        }))
+
+        alert.addAction(UIAlertAction(title: "Galeri", style: .default, handler: { _ in
+            self.openGallery()
+        }))
+
+        alert.addAction(UIAlertAction.init(title: "İptal", style: .cancel, handler: nil))
+
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    
+    func openCamera () {
+        if (!isAlive) {
+            socket1.connect()
+        }
+        
+        isShowSettings = false
+        dismissProfileMenu()
+        dismissLoadView()
+        
+        if isShowSendCoinView {
+            closeSendView()
+        }
+        
+        if !isShowQRButton
+        {
+            isShowQRButton = true
+            sendWithQRView.translatesAutoresizingMaskIntoConstraints = true
+            sendWithQRView.frame.origin.y = self.view.frame.height
+            let sendWithQRXib = UIView().loadNib(name: "sendWithQR") as! sendWithQR
+            sendWithQRXib.delegate = self
+            sendWithQRXib.frame = CGRect(x: 0,
+                                         y: 0,
+                                         width: sendWithQRView.frame.width,
+                                         height: sendWithQRView.frame.height)
+            
+            for subView in sendWithQRView.subviews
+            { subView.removeFromSuperview() }
+            
+            sendWithQRView.addSubview(sendWithQRXib)
+            UIView.animate(withDuration: 0.3) {
+                self.sendWithQRView.frame.origin.y = 0
+                self.sendWithQRView.alpha = 1
+            }
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
 
 extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ayarları, coinlerin listelenmesinde bu fonksiyonlar kullanılır.
 {
@@ -1067,40 +1130,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
     
     func goQRScreen()
     {
-        if (!isAlive) {
-            socket1.connect()
-        }
-        
-        isShowSettings = false
-        dismissProfileMenu()
-        dismissLoadView()
-        
-        if isShowSendCoinView {
-            closeSendView()
-        }
-        
-        if !isShowQRButton
-        {
-            isShowQRButton = true
-            sendWithQRView.translatesAutoresizingMaskIntoConstraints = true
-            sendWithQRView.frame.origin.y = self.view.frame.height
-            let sendWithQRXib = UIView().loadNib(name: "sendWithQR") as! sendWithQR
-            sendWithQRXib.delegate = self
-            sendWithQRXib.frame = CGRect(x: 0,
-                                         y: 0,
-                                         width: sendWithQRView.frame.width,
-                                         height: sendWithQRView.frame.height)
-            
-            for subView in sendWithQRView.subviews
-            { subView.removeFromSuperview() }
-            
-            sendWithQRView.addSubview(sendWithQRXib)
-            UIView.animate(withDuration: 0.3) {
-                self.sendWithQRView.frame.origin.y = 0
-                self.sendWithQRView.alpha = 1
-            }
-        }
-        
+        chooseQRSource()
     }
     
     
@@ -1230,6 +1260,16 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
         
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+            if segue.identifier == "showLoadMoney" {
+                if let viewController = segue.destination as? ShareQRVC {
+                    viewController.tokenName = coinSymbol
+                    viewController.network = network
+                    viewController.address = selectedCoin
+                }
+            }
+        }
+    
     
     func showDepositeMoneyView (mode: Int, source: String) {
         
@@ -1274,7 +1314,10 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
             return
         }
         
-        showMyQr()
+        performSegue(withIdentifier: "showLoadMoney", sender: nil)
+
+        
+        //showMyQr()
 
 //        showDepositeMoneyView(mode: 1, source:"PEP Para")
 
@@ -1371,26 +1414,7 @@ extension MainScreen: DepositeMoneyDelegate {
 extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
 {
     func getQR() {
-        
-        
-        let alert = UIAlertController(title: "QR Kod Seçin", message: nil, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "Kamera", style: .default, handler: { _ in
-            self.goQRScreen()
-        }))
-
-        alert.addAction(UIAlertAction(title: "Galeri", style: .default, handler: { _ in
-            self.openGallery()
-        }))
-
-        alert.addAction(UIAlertAction.init(title: "İptal", style: .cancel, handler: nil))
-
-        self.present(alert, animated: true, completion: nil)
-        
-        
-        
-        
-        
-       
+        chooseQRSource()
     }
     
     func sendCoin(params:SendTrx) // gelen parametrelerle birlikte gönder butonuna basıldı.
@@ -1984,8 +2008,7 @@ extension MainScreen: LoadCoinDelegate
         { subView.removeFromSuperview() }
     }
     
-    func enterAmount() {
-//        self.showDepositeMoneyView(mode: 0, source: "bitcoin")
+    func shareQR(image: UIImage?) {
     }
 }
 

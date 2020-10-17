@@ -10,7 +10,7 @@
 			<key>CFBundleIdentifier</key>
 			<string></string>
 			<key>CFBundleTypeName</key>
-			<string>qrfiles</string>
+			<string>image</string>
 			<key>LSHandlerRank</key>
 			<string>Default</string>
 			<key>LSItemContentTypes</key>
@@ -20,12 +20,22 @@
 		</dict>
 		<dict>
 			<key>CFBundleTypeName</key>
-			<string>text</string>
+			<string>png</string>
 			<key>LSHandlerRank</key>
 			<string>Default</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>public.text</string>
+				<string>public.png</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>jpeg</string>
+			<key>LSHandlerRank</key>
+			<string>Default</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.jpeg</string>
 			</array>
 		</dict>
 	</array>
@@ -44,6 +54,10 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLIconFile</key>
+			<string></string>
 			<key>CFBundleURLName</key>
 			<string></string>
 			<key>CFBundleURLSchemes</key>
@@ -62,7 +76,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Ödeme yapabilmek veya kripto varlıklarınızı transfer edebilmek için kamera erişimine izin vermeniz gerekmektedir.</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>İşlemlerinizi güvenli bir şekilde yürütebilmeniz için Face ID'yi aktif etmeniz gerekmektedir.</string>
+	<string>İşlemlerinizi güvenli bir şekilde yürütebilmeniz için Face ID&apos;yi aktif etmeniz gerekmektedir.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Galeriye QR Kodun kaydedilebilmesi için izniniz gerekmektedir.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -105,5 +119,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UISupportsDocumentBrowser</key>
+	<true/>
 </dict>
 </plist>

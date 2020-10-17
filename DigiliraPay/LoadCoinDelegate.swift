@@ -7,9 +7,10 @@
 //
 
 import Foundation
+import UIKit
 
 protocol LoadCoinDelegate: class
 {
     func dismissLoadView()
-    func enterAmount()
+    func shareQR(image: UIImage?)
 }

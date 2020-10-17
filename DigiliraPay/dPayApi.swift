@@ -521,7 +521,11 @@ class OpenUrlManager {
             break
         case "bitcoin", "ethereum", "waves":
             let data = array[1].components(separatedBy: "?amount=")
-            let amount = Int64(Float.init(data[1])! * 100000000)
+            var amount: Int64? = 0
+            if (data.count > 1) {
+                amount = Int64(Float.init(data[1])! * 100000000)
+            }
+
             
             self.onURL!(digilira.QR.init(network: caption, address: data[0], amount: amount))
             break

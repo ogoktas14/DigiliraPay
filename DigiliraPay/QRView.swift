@@ -31,6 +31,8 @@ class QRView: UIView {
     
     private var coinPrice: Double?
     private var usdPrice: Double?
+    
+    private var decimal: Bool = false
 
     let digiliraPay = digiliraPayApi()
     var ticker: digilira.ticker?
@@ -54,28 +56,79 @@ class QRView: UIView {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(copyToClipboard))
         copyAddress.isUserInteractionEnabled = true
         copyAddress.addGestureRecognizer(tap)
+        
+
 
 
         
     }
     
+    @objc func respondToSwipeGesture(gesture: UIGestureRecognizer) {
+
+        if let swipeGesture = gesture as? UISwipeGestureRecognizer {
+
+            switch swipeGesture.direction {
+            case .right:
+                delegate?.dismissLoadView()
+            default:
+                break
+            }
+        }
+    }
+    
     override func didMoveToWindow() {
         switchCurrency.setTitle(tokenName, forSegmentAt: 1)
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
+        swipeRight.direction = .right
+        self.addGestureRecognizer(swipeRight)
     }
     
     @objc func copyToClipboard() {
-        let window = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
+        adressInfoLabel.fadeTransition(0.4)
+        adressInfoLabel.text = "ADRES KOPYALANDI"
+        
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            self.adressInfoLabel.text = "ADRES"
 
-        let alert = UIAlertController(title: "Adres Kopyalandı",message: tokenName! + " adresiniz kopyalandı...",
-                                      preferredStyle: UIAlertController.Style.alert)
-        window?.rootViewController?.presentedViewController?.present(alert, animated: true, completion: nil)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            alert.dismiss(animated: true, completion: nil)
         }
         pasteboard.string = address
     }
     
     @objc func textFieldDidChange(_ textField: UITextField) {
+        
+        let str = textField.text
+        let replaced = str!.replacingOccurrences(of: ",", with: ".")
+        textField.text! = replaced
+        
+        var maxLength: Int = 8
+        
+        if replaced.contains(".") {
+            decimal = true
+        } else {
+            decimal = false
+        }
+         
+        let needle: Character = "."
+        if let idx = str!.firstIndex(of: needle) {
+            let pos = str!.distance(from: str!.startIndex, to: idx)
+            maxLength = 9 + pos
+        }
+        else {
+            print("Not found")
+        }
+        
+        
+        if  textField.text!.count > maxLength {
+            if textField.text!.last != "." {
+                textField.text!.removeLast()
+            }
+
+            return
+            
+        }
+
+        
         guard Float.init(textField.text!) != nil else {
             textField.text = ""
             switchCurrency.setTitle("₺", forSegmentAt: 0)
@@ -109,15 +162,15 @@ class QRView: UIView {
             qrImage.image = image
 
             
-            switchCurrency.setTitle(String(amount!) + " ₺", forSegmentAt: 0)
-            switchCurrency.setTitle(String(price!) + " " + tokenName!, forSegmentAt: 1)
+            switchCurrency.setTitle(String(format: "%.2f", amount!) + " ₺", forSegmentAt: 0)
+            switchCurrency.setTitle(String(format: "%.8f", price!) + " " + tokenName!, forSegmentAt: 1)
         }
         
         if switchCurrency.selectedSegmentIndex == 1 { //token
             price = Double.init(textField.text!)!
             amount = (usdPrice! * coinPrice!) * price!
-            switchCurrency.setTitle(String(amount!) + " ₺", forSegmentAt: 0)
-            switchCurrency.setTitle(String(price!) + " " + tokenName!, forSegmentAt: 1)
+            switchCurrency.setTitle(String(format: "%.2f", amount!) + " ₺", forSegmentAt: 0)
+            switchCurrency.setTitle(String(format: "%.8f", price!) + " " + tokenName!, forSegmentAt: 1)
             let image = generateQRCode(from: network! + ":" + address! + "?amount=" + String(price!))
             qrImage.image = image
 
@@ -136,13 +189,13 @@ class QRView: UIView {
             if isAmount == "" {
                 textAmount.placeholder = "₺ Miktarı Giriniz.."
             } else {
-                textAmount.text = String(amount!)
+                textAmount.text = String(format: "%.2f", amount!)
             }
         case 1:
             if isAmount == "" {
                 textAmount.placeholder = tokenName! + " Miktarı Giriniz.."
             }else {
-                textAmount.text = String(price!)
+                textAmount.text = String(format: "%.8f", price!)
             }
         default:
             break;
@@ -159,28 +212,10 @@ class QRView: UIView {
 
     @IBAction func shareButton(_ sender: Any)
     {
-        PHPhotoLibrary.requestAuthorization { status in
-          if status == .authorized {
-            //do things
-          }
-        }
-        
-        // image to share
-        let window = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
-
-        let shareItems:Array = [ qrImage.image]
-        let activityViewController = UIActivityViewController(activityItems:shareItems as [Any] , applicationActivities: nil)
-        if #available(iOS 13.0, *) {
-            activityViewController.isModalInPresentation = true
-        } else {
-            // Fallback on earlier versions
-        }
-        activityViewController.popoverPresentationController?.sourceView = self.qrImage
-        
-        window?.rootViewController?.presentedViewController?.present(activityViewController, animated: true, completion: nil)
-
+        delegate?.shareQR(image: qrImage.image!)
     }
-    
+ 
+
     @objc func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
         print("ok")
     }
@@ -221,4 +256,46 @@ extension UITextField {
     // Default actions:
     @objc func doneButtonTapped() { self.resignFirstResponder() }
     @objc func cancelButtonTapped() { self.resignFirstResponder() }
+}
+
+extension Data {
+
+    /// Data into file
+    ///
+    /// - Parameters:
+    ///   - fileName: the Name of the file you want to write
+    /// - Returns: Returns the URL where the new file is located in NSURL
+    func dataToFile(fileName: String) -> NSURL? {
+
+        // Make a constant from the data
+        let data = self
+
+        // Make the file path (with the filename) where the file will be loacated after it is created
+        let filePath = getDocumentsDirectory().appendingPathComponent(fileName)
+
+        do {
+            // Write the file from data into the filepath (if there will be an error, the code jumps to the catch block below)
+            try data.write(to: URL(fileURLWithPath: filePath))
+
+            // Returns the URL where the new file is located in NSURL
+            return NSURL(fileURLWithPath: filePath)
+
+        } catch {
+            // Prints the localized description of the error from the do block
+            print("Error writing the file: \(error.localizedDescription)")
+        }
+
+        // Returns nil if there was an error in the do-catch -block
+        return nil
+
+    }
+    
+    
+    func getDocumentsDirectory() -> NSString {
+        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+        let documentsDirectory = paths[0]
+        return documentsDirectory as NSString
+    }
+    
+
 }
