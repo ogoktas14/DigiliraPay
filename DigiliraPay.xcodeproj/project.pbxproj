@@ -122,6 +122,8 @@
 		88F4A1BF2312AF7B007172A6 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F4A1BE2312AF7B007172A6 /* MenuView.swift */; };
 		88F4A1C42312CA56007172A6 /* MockImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 88F4A1C32312CA56007172A6 /* MockImages.xcassets */; };
 		93534031253B093B00FFEA4D /* shareQRVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93534030253B093B00FFEA4D /* shareQRVC.swift */; };
+		93534036253C4F2C00FFEA4D /* newSendView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93534035253C4F2C00FFEA4D /* newSendView.xib */; };
+		93534039253C528600FFEA4D /* newSendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93534038253C528600FFEA4D /* newSendView.swift */; };
 		936F25B125323B0300C5FA85 /* ColoredCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 936F25B025323B0300C5FA85 /* ColoredCardView.xib */; };
 		936F25B425323B2E00C5FA85 /* ColoredCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F25B325323B2E00C5FA85 /* ColoredCardView.swift */; };
 		936F25B725323B3900C5FA85 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F25B625323B3900C5FA85 /* UIViewExtension.swift */; };
@@ -256,6 +258,8 @@
 		88F4A1BE2312AF7B007172A6 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		88F4A1C32312CA56007172A6 /* MockImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = MockImages.xcassets; sourceTree = "<group>"; };
 		93534030253B093B00FFEA4D /* shareQRVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = shareQRVC.swift; sourceTree = "<group>"; };
+		93534035253C4F2C00FFEA4D /* newSendView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = newSendView.xib; sourceTree = "<group>"; };
+		93534038253C528600FFEA4D /* newSendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newSendView.swift; sourceTree = "<group>"; };
 		936F25B025323B0300C5FA85 /* ColoredCardView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ColoredCardView.xib; sourceTree = "<group>"; };
 		936F25B325323B2E00C5FA85 /* ColoredCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColoredCardView.swift; sourceTree = "<group>"; };
 		936F25B625323B3900C5FA85 /* UIViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
@@ -420,6 +424,7 @@
 				93B7A11A252F0D8000C89E66 /* PaymentCategories.xib */,
 				936F25B025323B0300C5FA85 /* ColoredCardView.xib */,
 				9381D2B025357B38007DEE7E /* DepositeMoneyView.xib */,
+				93534035253C4F2C00FFEA4D /* newSendView.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -456,6 +461,7 @@
 				93B7A11D252F0F0A00C89E66 /* PaymentCategories.swift */,
 				936F25B325323B2E00C5FA85 /* ColoredCardView.swift */,
 				9381D2B325358B99007DEE7E /* DepositeMoneyView.swift */,
+				93534038253C528600FFEA4D /* newSendView.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -603,6 +609,7 @@
 				882AAB5E22FCAAEE004CDAA6 /* MontserratAlternates-ThinItalic.otf in Resources */,
 				88F4A1C42312CA56007172A6 /* MockImages.xcassets in Resources */,
 				882AAB4722FCAAEE004CDAA6 /* Montserrat-ThinItalic.otf in Resources */,
+				93534036253C4F2C00FFEA4D /* newSendView.xib in Resources */,
 				88309EC0231FD36000F96C05 /* VerifyAccountView.xib in Resources */,
 				882AAB4422FCAAEE004CDAA6 /* MontserratAlternates-Medium.otf in Resources */,
 				88114F6623216A8E00AB3B5A /* sendWithQR.xib in Resources */,
@@ -744,6 +751,7 @@
 				888F26B1233E8DF500AB7E4C /* PinView.swift in Sources */,
 				8891704523058673005AAA02 /* LetsStartVC.swift in Sources */,
 				936F25B725323B3900C5FA85 /* UIViewExtension.swift in Sources */,
+				93534039253C528600FFEA4D /* newSendView.swift in Sources */,
 				88309EB4231E73DC00F96C05 /* TransactionPopup.swift in Sources */,
 				88A6BA4B232039D7002640D6 /* LegalDelegate.swift in Sources */,
 				88CA9372231A475F008F894B /* TransactionDetailView.swift in Sources */,

@@ -14,3 +14,10 @@ protocol LoadCoinDelegate: class
     func dismissLoadView()
     func shareQR(image: UIImage?)
 }
+
+
+protocol NewCoinSendDelegate: class {
+    func readAddressQR()
+    func dismissNewSend()
+    func sendCoinNew(params:SendTrx)
+}

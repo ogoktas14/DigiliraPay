@@ -193,13 +193,13 @@ class QRView: UIView {
         {
         case 0:
             if isAmount == "" {
-                textAmount.placeholder = "₺ Miktarı Giriniz.."
+                textAmount.placeholder = "Miktar (₺)"
             } else {
                 textAmount.text = String(format: "%.2f", amount!)
             }
         case 1:
             if isAmount == "" {
-                textAmount.placeholder = tokenName! + " Miktarı Giriniz.."
+                textAmount.placeholder = " Miktar (" + tokenName! + ")"
             }else {
                 textAmount.text = String(format: "%.8f", price!)
             }
@@ -284,7 +284,7 @@ extension UITextField {
         let toolbar: UIToolbar = UIToolbar()
         toolbar.barStyle = .default
         toolbar.items = [
-            UIBarButtonItem(title: "Done", style: .done, target: onDone.target, action: onDone.action)
+            UIBarButtonItem(title: "Tamam", style: .done, target: onDone.target, action: onDone.action)
         ]
         toolbar.sizeToFit()
 

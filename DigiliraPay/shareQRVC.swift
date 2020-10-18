@@ -16,6 +16,8 @@ class ShareQRVC: UIViewController {
     
     @IBOutlet weak var mainView: UIView!
     var loadMoneyView = QRView()
+    var sendMoneyView = newSendView()
+    
     let pasteboard = UIPasteboard.general
     public var address: String?
     public var network: String?
@@ -56,6 +58,27 @@ class ShareQRVC: UIViewController {
         loadMoneyView.adSoyad = adSoyad
 
         mainView.addSubview(loadMoneyView)
+        mainView.isHidden = false
+        mainView.translatesAutoresizingMaskIntoConstraints = true
+        
+    }
+    
+    func goNewSendView() {
+         
+        sendMoneyView = UIView().loadNib(name: "newSendView") as! newSendView
+
+        sendMoneyView.frame = CGRect(x: 0,
+                                     y: 0,
+                                     width: view.frame.width,
+                                     height: view.frame.height)
+ 
+//
+//        loadMoneyView.tokenName = tokenName
+//        loadMoneyView.network = network
+//        loadMoneyView.address = address
+//        loadMoneyView.adSoyad = adSoyad
+
+        mainView.addSubview(sendMoneyView)
         mainView.isHidden = false
         mainView.translatesAutoresizingMaskIntoConstraints = true
         
@@ -118,3 +141,4 @@ extension ShareQRVC: LoadCoinDelegate
         popup(image: image!)
     }
 }
+ 

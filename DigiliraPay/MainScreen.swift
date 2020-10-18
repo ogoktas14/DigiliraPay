@@ -56,7 +56,7 @@ class MainScreen: UIViewController {
     var profileMenuView = ProfileMenuView()
     var depositeMoneyView = DepositeMoneyView()
     let imagePicker = UIImagePickerController()
-
+    var newSendMoneyView = newSendView()
     
     var tapProfileMenuGesture = UITapGestureRecognizer()
     var tapCloseProfileMenuGesture = UITapGestureRecognizer()
@@ -1146,9 +1146,55 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
             shake()
             return
         }
-        
-        
         let transactionRecipient: String = params.merchant!
+
+        
+        newSendMoneyView = UIView().loadNib(name: "newSendView") as! newSendView
+        sendWithQRView.frame.origin.y = self.view.frame.height
+        newSendMoneyView.frame = CGRect(x: 0,
+                                     y: 0,
+                                     width: view.frame.width,
+                                     height: view.frame.height)
+        newSendMoneyView.delegate = self
+
+        newSendMoneyView.recipientText.text = transactionRecipient
+        newSendMoneyView.textAmount.text = (Double(params.amount!) / Double(100000000)).description
+        newSendMoneyView.coinSwitch.setTitle(params.fiat!.description + " ₺", forSegmentAt: 0)
+        newSendMoneyView.coinSwitch.setTitle((Double(params.amount!) / Double(100000000)).description + " " + params.network!, forSegmentAt: 1)
+        newSendMoneyView.coinTextField.text = params.network?.capitalized
+        newSendMoneyView.transaction = params
+        newSendMoneyView.coinTextField.isEnabled = false
+        newSendMoneyView.recipientText.isEnabled = false
+
+ 
+        for subView in sendWithQRView.subviews
+        { subView.removeFromSuperview() }
+        
+        menuXib.isHidden = true
+        
+        sendWithQRView.addSubview(newSendMoneyView)
+        sendWithQRView.isHidden = false
+        sendWithQRView.translatesAutoresizingMaskIntoConstraints = true
+        closeProfileView()
+        
+        UIView.animate(withDuration: 0.3)
+        {
+            self.sendWithQRView.frame.origin.y = 0
+            self.sendWithQRView.alpha = 1
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        return
+        
+        
         
 
         
@@ -1685,7 +1731,39 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         }
     }
     
-    
+    func goNewSendView() {
+         
+        newSendMoneyView = UIView().loadNib(name: "newSendView") as! newSendView
+        sendWithQRView.frame.origin.y = self.view.frame.height
+        newSendMoneyView.frame = CGRect(x: 0,
+                                     y: 0,
+                                     width: view.frame.width,
+                                     height: view.frame.height)
+        newSendMoneyView.delegate = self
+//
+//        loadMoneyView.tokenName = tokenName
+//        loadMoneyView.network = network
+//        loadMoneyView.address = address
+//        loadMoneyView.adSoyad = adSoyad
+
+ 
+        for subView in sendWithQRView.subviews
+        { subView.removeFromSuperview() }
+        
+        menuXib.isHidden = true
+        
+        sendWithQRView.addSubview(newSendMoneyView)
+        sendWithQRView.isHidden = false
+        sendWithQRView.translatesAutoresizingMaskIntoConstraints = true
+        closeProfileView()
+        
+        UIView.animate(withDuration: 0.3)
+        {
+            self.sendWithQRView.frame.origin.y = 0
+            self.sendWithQRView.alpha = 1
+        }
+        
+    }
     
     
     func showSuccess(mode: Int, transaction: [String : Any])
@@ -2145,6 +2223,105 @@ extension Notification.Name {
     static let completedLengthyDownload = Notification.Name("completedLengthyDownload")
     static let orderClick = Notification.Name("orderClick")
 }
+
+
+extension MainScreen: NewCoinSendDelegate
+{
+    func dismissNewSend()
+    {
+        menuXib.isHidden = false
+  
+        UIView.animate(withDuration: 0.3) {
+            self.sendWithQRView.frame.origin.y = self.view.frame.height
+        }
+        for subView in self.sendWithQRView.subviews
+        { subView.removeFromSuperview() }
+    }
+    
+    func sendCoinNew(params:SendTrx) // gelen parametrelerle birlikte gönder butonuna basıldı.
+    {
+        let ifPin = kullanici?.pincode
+        
+        if ifPin == -1 {
+            openPinView()
+        }else {
+            
+            
+            BC.onSensitive = { [self] wallet, err in
+                switch err {
+                case "ok":
+                    self.dismissNewSend()
+                    switch params.destination {
+                    case digilira.transactionDestination.domestic:
+                        BC.sendTransaction2(recipient: params.recipient!, fee: 900000, amount: params.amount!, assetId: params.assetId!, attachment: params.attachment!, wallet:wallet)
+                        break
+                    case digilira.transactionDestination.foreign:
+                        print(params)
+                        break
+                    case digilira.transactionDestination.interwallets:
+                        BC.massTransferTx(recipient: params.recipient!, fee: 1100000, amount: params.amount!, assetId: BC.returnNetworkAsset(network:params.network!), attachment: "", wallet: wallet)
+                        print(params)
+                        break
+                    default:
+                        return
+                    }
+                    
+                    break
+                case "Canceled by user.":
+                    let alert = UIAlertController(title: "Hatalı Pin Kodu", message: "İşleminiz iptal edilmiştir.", preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
+
+                    self.present(alert, animated: true, completion: nil)
+                    self.dismissNewSend()
+                    return
+                    
+                case "Fallback authentication mechanism selected.":
+                    self.isTouchIDCanceled = true
+                    self.openPinView()
+                break
+                default: break
+                    
+                }
+ 
+            }
+            
+            self.onPinSuccess = { [self] res in
+                switch res {
+                case true:
+                    BC.getSensitive(pin:res)
+                    break
+                case false:
+                    if isShowSendCoinView {
+                        let alert = UIAlertController(title: "Hatalı Pin Kodu", message: "İşleminiz iptal edilmiştir.", preferredStyle: UIAlertController.Style.alert)
+                        alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
+
+                        self.present(alert, animated: true, completion: nil)
+                        self.closeSendView()
+                    }
+                    break
+                }
+                
+            }
+            
+            
+            BC.getSensitive(pin:false)
+            
+        }
+         
+        
+        
+    }
+    
+    func readAddressQR() {
+        goQRScreen()
+    }
+    
+    
+    
+
+    
+}
+
 
 extension MainScreen: PinViewDelegate
 {

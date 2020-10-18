@@ -110,7 +110,7 @@
                         <constraint firstItem="dQb-xW-x9O" firstAttribute="top" secondItem="VDV-Wc-ADo" secondAttribute="top" id="vYw-uv-Gav"/>
                     </constraints>
                 </view>
-                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="₺ Miktar Giriniz.." textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fZr-BG-cL2">
+                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Miktar (₺)" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fZr-BG-cL2">
                     <rect key="frame" x="30" y="130.33333333333334" width="354" height="40"/>
                     <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="22"/>
                     <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="decimalPad" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
