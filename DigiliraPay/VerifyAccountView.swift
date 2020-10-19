@@ -86,7 +86,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate
         let substringToReplace = textFieldText[rangeOfTextToReplace]
         let count = textFieldText.count - substringToReplace.count + string.count
         if textField == tcText {return count <= 11}
-        return count <= 25
+        return count <= 40
     }
     
     override func awakeFromNib()

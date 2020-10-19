@@ -23,7 +23,7 @@ class ShareQRVC: UIViewController {
     public var network: String?
     public var tokenName: String?
     public var adSoyad: String?
-
+    var kullanici: digilira.user?
     private var amount: Double?
     private var price: Double?
     
@@ -34,7 +34,11 @@ class ShareQRVC: UIViewController {
     var ticker: digilira.ticker?
     
     override func viewDidLoad() {
-        
+        if #available(iOS 13.0, *) {
+            overrideUserInterfaceStyle = .light
+        } else {
+            // Fallback on earlier versions
+        }
     }
     
     override func viewWillAppear(_ animated: Bool)
@@ -52,10 +56,7 @@ class ShareQRVC: UIViewController {
                                      height: view.frame.height)
         loadMoneyView.delegate = self
         
-        loadMoneyView.tokenName = tokenName
-        loadMoneyView.network = network
-        loadMoneyView.address = address
-        loadMoneyView.adSoyad = adSoyad
+        loadMoneyView.kullanici = kullanici
 
         mainView.addSubview(loadMoneyView)
         mainView.isHidden = false

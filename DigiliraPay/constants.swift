@@ -41,9 +41,42 @@ struct digilira {
         static let ethereum = "LVf3qaCtb9tieS1bHD8gg5XjWvqpBm5TaDxeSVcqPwn"
         static let waves = "HGoEZAsEQpbA3DJyV9J3X1JCTTBuwUB6PE19g1kUYXsH"
         static let charity = "2CrDXATWpvrriHHr1cVpQM65CaP3m7MJ425xz3tn9zMr"
-        
     }
     
+    struct coin {
+         var token: String
+         var symbol: String
+         var tokenName: String
+         var network: String
+    }
+    
+    static var bitcoin = coin.init(token: "FjTB2DdymTfpYbCCdcFwoRbHQnEhQD11CUm6nAF7P1UD",
+                            symbol: "BTC",
+                            tokenName: "Bitcoin",
+                            network: "bitcoin")
+    
+    static var ethereum = coin.init(token: "LVf3qaCtb9tieS1bHD8gg5XjWvqpBm5TaDxeSVcqPwn",
+                            symbol: "ETH",
+                            tokenName: "Ethereum",
+                            network: "ethereum")
+     
+    static var waves = coin.init(token: "HGoEZAsEQpbA3DJyV9J3X1JCTTBuwUB6PE19g1kUYXsH",
+                            symbol: "WAVES",
+                            tokenName: "Waves",
+                            network: "waves")
+    
+    static var charity = coin.init(token: "2CrDXATWpvrriHHr1cVpQM65CaP3m7MJ425xz3tn9zMr",
+                            symbol: "KZY",
+                            tokenName: "Kızılay",
+                            network: "waves")
+     
+    static let networks = [bitcoin, ethereum, waves, charity]
+
+    struct transactionDestination {
+        static let domestic = "domestic"
+        static let foreign = "foreign"
+        static let interwallets = "interwallets"
+    }
     
     struct smartAccount {
         static let script = "base64:AwQAAAALZGlnaWxpcmFQYXkBAAAAID0HOFHYXYpCB2C8RjDY8m3ndBlb8WihoYLw1tvHVwgrBAAAAAckbWF0Y2gwBQAAAAJ0eAMJAAABAAAAAgUAAAAHJG1hdGNoMAIAAAATVHJhbnNmZXJUcmFuc2FjdGlvbgQAAAABdwUAAAAHJG1hdGNoMAMJAQAAAAlpc0RlZmluZWQAAAABCAUAAAABdwAAAAdhc3NldElkBgMJAAAAAAAAAggFAAAAAXcAAAAJcmVjaXBpZW50CQEAAAAUYWRkcmVzc0Zyb21QdWJsaWNLZXkAAAABBQAAAAtkaWdpbGlyYVBheQYJAAACAAAAAQIAAAAxVW5mb3J0dW5hdGVseSB5b3UgY2FuIG9ubHkgc2VuZCB3YXZlcyB0byBpc3N1ZXIuLgMDCQAAAQAAAAIFAAAAByRtYXRjaDACAAAABU9yZGVyBgMJAAABAAAAAgUAAAAHJG1hdGNoMAIAAAAQTGVhc2VUcmFuc2FjdGlvbgYJAAABAAAAAgUAAAAHJG1hdGNoMAIAAAAPQnVyblRyYW5zYWN0aW9uBAAAAAF4BQAAAAckbWF0Y2gwBwMDCQAAAQAAAAIFAAAAByRtYXRjaDACAAAAD0RhdGFUcmFuc2FjdGlvbgYDCQAAAQAAAAIFAAAAByRtYXRjaDACAAAAE0V4Y2hhbmdlVHJhbnNhY3Rpb24GCQAAAQAAAAIFAAAAByRtYXRjaDACAAAAFFNldFNjcmlwdFRyYW5zYWN0aW9uBAAAAAF0BQAAAAckbWF0Y2gwCQAB9AAAAAMIBQAAAAF0AAAACWJvZHlCeXRlcwkAAZEAAAACCAUAAAABdAAAAAZwcm9vZnMAAAAAAAAAAAEFAAAAC2RpZ2lsaXJhUGF5BjJoWnQ="
@@ -76,38 +109,7 @@ struct digilira {
        var address: String?
        var amount: Int64?
     }
-    
-    
-    @propertyWrapper
-        struct UserDefault<T: Codable> {
-            let key: String
-            let defaultValue: T
-
-            init(_ key: String, defaultValue: T) {
-                self.key = key
-                self.defaultValue = defaultValue
-            }
-
-            var wrappedValue: T {
-                get {
-
-                    if let data = UserDefaults.standard.object(forKey: key) as? Data,
-                        let user = try? JSONDecoder().decode(T.self, from: data) {
-                        return user
-
-                    }
-
-                    return  defaultValue
-                }
-                set {
-                    if let encoded = try? JSONEncoder().encode(newValue) {
-                        UserDefaults.standard.set(encoded, forKey: key)
-                    }
-                }
-            }
-        }
-    
-    
+   
     struct setScript: Encodable {
         var id: String?
         var senderPublicKey: String?
@@ -141,13 +143,7 @@ struct digilira {
         var owner: String?
         var wallet: String? 
     }
-    
-    struct transactionDestination {
-        static let domestic = "domestic"
-        static let foreign = "foreign"
-        static let interwallets = "interwallets"
-    }
-    
+     
     struct ticker {
         var ethUSDPrice: Double?
         var btcUSDPrice: Double?

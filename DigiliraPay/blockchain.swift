@@ -55,7 +55,7 @@ class Blockchain {
     func sendTransaction2(recipient: String, fee: Int64, amount:Int64, assetId:String, attachment:String, wallet:digilira.wallet) {
             guard let chainId = WavesSDK.shared.enviroment.chainId else { return }
             guard WavesCrypto.shared.address(seed: wallet.seed!, chainId: chainId) != nil else { return }
-            guard let senderPublicKey = WavesCrypto.shared.publicKey(seed: wallet.seed!) else { return }
+        guard let senderPublicKey = WavesCrypto.shared.publicKey(seed: wallet.seed!) else { return }
 
             let feeAssetId = ""
             let buf: [UInt8] = Array(attachment.utf8)
