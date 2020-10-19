@@ -1153,20 +1153,8 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
         let transactionRecipient: String = params.merchant!
         
         if isNewSendScreen {
-            newSendMoneyView.recipientText.text = transactionRecipient
-            newSendMoneyView.coinSwitch.setTitle(params.fiat!.description + " ₺", forSegmentAt: 0)
-            newSendMoneyView.coinSwitch.setTitle((Double(params.amount!) / Double(100000000)).description + " " + params.network!, forSegmentAt: 1)
-            newSendMoneyView.coinTextField.text = params.network?.capitalized
             newSendMoneyView.transaction = params
-            if params.amount != 0 {
-                newSendMoneyView.textAmount.text = (Double(params.amount!) / Double(100000000)).description
-            } else {
-                newSendMoneyView.textAmount.text = ""
-            }
-            if params.destination == "interwallets" {
-                newSendMoneyView.coinTextField.isEnabled = false
-                newSendMoneyView.recipientText.isEnabled = false
-            }
+            newSendMoneyView.setQR(params: params)
             return
         }
         
@@ -1315,12 +1303,11 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
         
         isShowLoadCoinView = true
         qrView.frame.origin.y = view.frame.height
-        //profileMenuButton.isHidden = true
+
         loadMoneyView = UIView().loadNib(name: "QRView") as! QRView
         loadMoneyView.frame = qrView.frame
         loadMoneyView.delegate = self
         
- 
         loadMoneyView.address = selectedCoin
 
         for subView in qrView.subviews
@@ -1773,13 +1760,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
                                      width: view.frame.width,
                                      height: view.frame.height)
         newSendMoneyView.delegate = self
-//
-//        loadMoneyView.tokenName = tokenName
-//        loadMoneyView.network = network
-//        loadMoneyView.address = address
-//        loadMoneyView.adSoyad = adSoyad
 
- 
         for subView in sendWithQRView.subviews
         { subView.removeFromSuperview() }
         

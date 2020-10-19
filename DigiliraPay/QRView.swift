@@ -265,7 +265,6 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     @IBAction func indexChanged(sender: UISegmentedControl) {
-        
         setPlaceHolderText()
     }
     
@@ -281,7 +280,7 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
             }
         case 1:
             if isAmount == "" {
-                textAmount.placeholder = " Miktar (" + selectedCoinX.symbol + ")"
+                textAmount.placeholder = "Miktar (" + selectedCoinX.symbol + ")"
             }else {
                 textAmount.text = String(format: "%.8f", price!)
             }

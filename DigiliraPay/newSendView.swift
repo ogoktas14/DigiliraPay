@@ -30,8 +30,8 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     @IBOutlet weak var btnSend: UIButton!
     
     var transaction: SendTrx?
-    private var amount: Double?
-    private var price: Double?
+    private var amount: Double = 0.0
+    private var price: Double = 0.0
     private var coinPrice: Double?
     private var usdPrice: Double?
     var ticker: digilira.ticker?
@@ -44,12 +44,12 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     let digiliraPay = digiliraPayApi()
 
     @IBAction func sendMoneyButton(_ sender: Any) {
-        let isAmount = Double(textAmount.text!)
+        let isAmount = amount
         if isAmount == 0.0 { return }
         if coinTextField.text == "" {return}
         if recipientText.text == "" {return}
         
-        transaction?.amount = Int64(isAmount! * 100000000)
+        transaction?.amount = Int64(isAmount * 100000000)
         delegate?.sendCoinNew(params: transaction!)
     }
   
@@ -91,18 +91,48 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
             coinSwitch.setTitle("₺", forSegmentAt: 0)
             coinSwitch.setTitle(selectedCoinX.symbol, forSegmentAt: 1)
             return
-            
         }
 
         if textField.text == "" {
             coinSwitch.setTitle("₺", forSegmentAt: 0)
             coinSwitch.setTitle(selectedCoinX.symbol, forSegmentAt: 1)
             return}
-         
+        setCoinPrice()
         calcPrice(text: textField.text!)
  
     }
-    
+    func setQR (params: SendTrx) {
+        
+        switch params.network! {
+        case "bitcoin":
+            selectedCoinX = digilira.bitcoin
+        case "ethereum":
+            selectedCoinX = digilira.ethereum
+        case "waves":
+            selectedCoinX = digilira.waves
+        case "charity":
+            selectedCoinX = digilira.charity
+        default:
+            return
+        }
+        
+        amount = (Double(params.amount!) / Double(100000000))
+        price = Double(params.fiat!)
+        
+        recipientText.text = params.merchant
+        coinSwitch.setTitle(price.description + " ₺", forSegmentAt: 0)
+        coinSwitch.setTitle(amount.description + " " + selectedCoinX.symbol, forSegmentAt: 1)
+        coinTextField.text = selectedCoinX.tokenName
+        if params.amount != 0 {
+            textAmount.text = amount.description
+        } else {
+            textAmount.text = ""
+        }
+        if params.destination == "interwallets" {
+            coinTextField.isEnabled = false
+            recipientText.isEnabled = false
+        }
+    }
     func calcPrice(text: String) {
         if text == "" {
             coinSwitch.setTitle("₺", forSegmentAt: 0)
@@ -111,19 +141,20 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         }
         if coinSwitch.selectedSegmentIndex == 0 { //₺
             amount = Double.init(text)!
-            price =  amount! / (coinPrice!)
+            price =  amount / (coinPrice!)
  
-            coinSwitch.setTitle(String(format: "%.2f", amount!) + " ₺", forSegmentAt: 0)
-            coinSwitch.setTitle(String(format: "%.8f", price!) + " " + selectedCoinX.symbol, forSegmentAt: 1)
-            commissionLabel.text = "Transfer ücreti: " + String(format: "%.2f", (amount! * 0.005)) + " ₺"
+            coinSwitch.setTitle(String(format: "%.2f", amount) + " ₺", forSegmentAt: 0)
+            coinSwitch.setTitle(String(format: "%.8f", price) + " " + selectedCoinX.symbol, forSegmentAt: 1)
+            commissionLabel.text = "Transfer ücreti: " + String(format: "%.2f", (amount * 0.005)) + " ₺"
         }
         
         if coinSwitch.selectedSegmentIndex == 1 { //token
             price = Double.init(text)!
-            amount = (coinPrice!) * price!
-            coinSwitch.setTitle(String(format: "%.2f", amount!) + " ₺", forSegmentAt: 0)
-            coinSwitch.setTitle(String(format: "%.8f", price!) + " " + selectedCoinX.symbol, forSegmentAt: 1)
-            commissionLabel.text = "Transfer ücreti: " + String(format: "%.8f", (price! * 0.005))  + " " + selectedCoinX.symbol
+            amount = (coinPrice!) * price
+            
+            coinSwitch.setTitle(String(format: "%.2f", amount) + " ₺", forSegmentAt: 0)
+            coinSwitch.setTitle(String(format: "%.8f", price) + " " + selectedCoinX.symbol, forSegmentAt: 1)
+            commissionLabel.text = "Transfer ücreti: " + String(format: "%.8f", (price * 0.005))  + " " + selectedCoinX.symbol
         }
     }
     
@@ -210,6 +241,33 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         delegate?.readAddressQR()
     }
     
+    @IBAction func indexChanged(sender: UISegmentedControl) {
+//        setPlaceHolderText()
+    }
+    
+    func setPlaceHolderText() {
+        let isAmount = amount
+        switch coinSwitch.selectedSegmentIndex
+        {
+        case 0:
+            if isAmount == 0.0 {
+                textAmount.placeholder = "Miktar (₺)"
+            } else {
+                textAmount.text = String(format: "%.2f", price)
+            }
+        case 1:
+            if isAmount == 0.0 {
+                textAmount.placeholder = "Miktar (" + selectedCoinX.symbol + ")"
+            }else {
+                textAmount.text = String(format: "%.8f", amount)
+            }
+        default:
+            break;
+        }
+        
+        
+    }
+    
     func createPickerView() {
         let pickerView = UIPickerView()
         pickerView.delegate = self
@@ -229,10 +287,4 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
           self.endEditing(true)
     }
  
-}
- 
- 
-
-extension UIView {
-    
 }

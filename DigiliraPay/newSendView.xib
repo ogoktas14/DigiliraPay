@@ -69,6 +69,9 @@
                                 <segment title="₺"/>
                                 <segment title="BTC"/>
                             </segments>
+                            <connections>
+                                <action selector="indexChangedWithSender:" destination="iN0-l3-epB" eventType="valueChanged" id="Vsw-EA-YRb"/>
+                            </connections>
                         </segmentedControl>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Toplam Bakiyeniz:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jmH-fq-1Pl">
                             <rect key="frame" x="0.0" y="240" width="374" height="28"/>
