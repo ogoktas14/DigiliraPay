@@ -332,7 +332,7 @@ class digiliraPayApi {
         return res
     }
     
-    func exchange(amount: Int64, network: String) -> Double {
+    func exchange(amount: Int64, network: String, assetId:String) -> Double {
         let symbol = ticker()
         let amountFloat = Double.init(Double.init(amount) / 100000000)
         
@@ -342,7 +342,17 @@ class digiliraPayApi {
         case "ethereum":
             return amountFloat * symbol.ethUSDPrice! * symbol.usdTLPrice!
         case "waves":
-            return amountFloat * symbol.wavesUSDPrice! * symbol.usdTLPrice!
+            switch assetId {
+            case digilira.waves.token:
+                return amountFloat * symbol.wavesUSDPrice! * symbol.usdTLPrice!
+                
+            case digilira.charity.token:
+                return amountFloat * 1
+            
+            default:
+                return 0.0
+            }
+            
         default:
             return 0.0
         }
@@ -350,10 +360,14 @@ class digiliraPayApi {
     }
     
     
-    func isOurMember(network: String, address:String) {
+    func isOurMember(external: digilira.externalTransaction) {
+        
+        let normalizedAddress = external.address?.components(separatedBy: "?")
+        let croppedAddress = normalizedAddress?.first
+        
         let user = digilira.externalTransaction.init(
-            network: network,
-            address: address
+            network: external.network,
+            address: external.address
         )
         
         let encoder = JSONEncoder()
@@ -361,17 +375,19 @@ class digiliraPayApi {
         
         self.onResponse = { res, sts in
             if (sts == 200) {
-                let response = digilira.externalTransaction.init(network: network,
-                                                                 address: address,
+                let response = digilira.externalTransaction.init(network: external.network,
+                                                                 address: external.address,
+                                                                 amount: external.amount,
                                                                  owner: res["owner"] as? String,
-                                                                 wallet: (res["wallet"] as! String)
+                                                                 wallet: (res["wallet"] as! String),
+                                                                 assetId: external.assetId
                 )
                 
                 self.onMember!(true, response)
             }else {
                 
-                let response = digilira.externalTransaction.init(network: network,
-                                                                     address: address,
+                let response = digilira.externalTransaction.init(network: external.network,
+                                                                 address: croppedAddress,
                                                                      owner: "",
                                                                      wallet: ""
                     )
@@ -495,7 +511,8 @@ class OpenUrlManager {
     class func parseUrlParams(openUrl: URL?) {
         let array = openUrl!.absoluteString.components(separatedBy: CharacterSet.init(charactersIn: ":"))
         let caption = array[0]
-     
+        var amount: Int64? = 0
+        var assetId: String = ""
         switch caption {
         case "file":
             
@@ -519,15 +536,26 @@ class OpenUrlManager {
                 }
             }
             break
-        case "bitcoin", "ethereum", "waves":
+        case "bitcoin", "ethereum":
             let data = array[1].components(separatedBy: "?amount=")
-            var amount: Int64? = 0
+
             if (data.count > 1) {
                 amount = Int64(Float.init(data[1])! * 100000000)
             }
-
-            
             self.onURL!(digilira.QR.init(network: caption, address: data[0], amount: amount))
+            break
+            
+        case "waves":
+            let data = array[1].components(separatedBy: "?amount=")
+            let amountAssetId = data[1].components(separatedBy: "&assetId=")
+            
+            var amount: Int64? = 0
+            if (amountAssetId.count > 1) {
+                amount = Int64(Float.init(amountAssetId[0])! * 100000000)
+                assetId = amountAssetId[1]
+            }
+            self.onURL!(digilira.QR.init(network: caption, address: data[0], amount: amount, assetId: assetId))
+            
             break
         default:
             //return []

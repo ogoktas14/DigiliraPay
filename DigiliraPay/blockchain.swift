@@ -188,13 +188,13 @@ class Blockchain {
         
         switch network {
         case "bitcoin":
-            return digilira.networkTokens.bitcoin
+            return digilira.bitcoin.token
         case "ethereum":
-            return digilira.networkTokens.ethereum
+            return digilira.ethereum.token
         case "waves":
-            return digilira.networkTokens.waves
+            return digilira.ethereum.token
         case "charity":
-            return digilira.networkTokens.charity
+            return digilira.ethereum.token
         default:
             return "null"
         }

@@ -27,6 +27,7 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
 
     private var amount: Double?
     private var price: Double?
+    private var assetId: String = ""
     private var selectedCoin: String?
     private var coinPrice: Double?
     private var usdPrice: Double?
@@ -144,9 +145,11 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
             case "Waves":
                 coinPrice = (ticker?.wavesUSDPrice)! * (ticker?.usdTLPrice)!
                 address = kullanici?.wallet
+                assetId = digilira.waves.token
                 break
             case "Kızılay":
                 address = kullanici?.wallet
+                assetId = digilira.charity.token
                 coinPrice = 1
             break
             default:
@@ -161,7 +164,7 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
             break
         }
         
-        let image = generateQRCode(from: selectedCoinX.network + ":" + address!)
+        let image = generateQRCode(from: selectedCoinX.network, network: selectedCoinX.network, address: address!, amount: textAmount.text!, assetId: assetId)
         qrImage.image = image
         textAmount.text = ""
         setPlaceHolderText()
@@ -199,7 +202,7 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
             switchCurrency.setTitle(String(format: "%.8f", price!) + " " + selectedCoinX.symbol, forSegmentAt: 1)
         }
         
-        let image = generateQRCode(from: selectedCoinX.network + ":" + address! + "?amount=" + String(price!))
+        let image = generateQRCode(from: selectedCoinX.network, network: selectedCoinX.network, address: address!, amount: String(price!), assetId: assetId)
         qrImage.image = image
     }
        
@@ -292,7 +295,7 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         
         //adressLabel.text = address
         if selectedCoinX.network == "" {return}
-        let image = generateQRCode(from: selectedCoinX.network + ":" + address!)
+        let image = generateQRCode(from: selectedCoinX.network, network: selectedCoinX.network, address: address!, amount: textAmount.text!, assetId: assetId)
         qrImage.image = image
     }
 
@@ -341,9 +344,16 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
           self.endEditing(true)
     }
     
-    func generateQRCode(from string: String) -> UIImage? {
-        let data = string.data(using: String.Encoding.ascii)
+    func generateQRCode(from string: String, network: String, address: String, amount: String, assetId: String) -> UIImage? {
+        let doubleStop = ":".data(using: String.Encoding.ascii)
+        let amountPrefix = "?amount=".data(using: String.Encoding.ascii)
+        let assetIdPrefix = "&assetId=".data(using: String.Encoding.ascii)
+        var data = string.data(using: String.Encoding.ascii)! + doubleStop! + address.data(using: String.Encoding.ascii)! + amountPrefix! + amount.data(using: String.Encoding.ascii)!
 
+        if network == "waves" {
+            let assetIdData = assetId.data(using: String.Encoding.ascii)
+            data = data + assetIdPrefix! + assetIdData!
+        }
         if let filter = CIFilter(name: "CIQRCodeGenerator") {
             filter.setValue(data, forKey: "inputMessage")
             let transform = CGAffineTransform(scaleX: 10, y: 10)

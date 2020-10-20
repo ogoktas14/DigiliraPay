@@ -99,12 +99,112 @@ class WalletView: UIView {
                             }
                         }
                     }
+        
+                    if (trx["type"] as? Int64 == 11) {
+                        if (trx["assetId"] as? String != nil) {
+                            if (trx["attachment"] as? String != "") {
+                                attachment = self.BC.base58(data: (trx["attachment"] as? String)!)
+                            }
+                            
+                            let asset = self.BC.returnAsset(assetId: trx["assetId"] as! String)
+                            if asset != "null" {
+                                self.trxs.append (digilira.transfer.init(type: trx["type"] as? Int64,
+                                                                         id: trx["id"] as? String,
+                                                                         sender: trx["sender"] as? String,
+                                                                         senderPublicKey: trx["senderPublicKey"] as? String,
+                                                                         fee: trx["fee"] as! Int64,
+                                                                         timestamp: strDate,
+                                                                         version: trx["version"] as? Int,
+                                                                         height: trx["height"] as? Int64,
+                                                                         recipient: "not",
+                                                                         amount: (trx["totalAmount"] as! Int64),
+                                                                         assetId: asset,
+                                                                         attachment: attachment
+                                    
+                                ))
+                            }
+                        }
+                    }
                 }
                 self.setTableView()
             }
         }
     }
     
+    func readHistory2 (asset: String) {
+
+        self.trxs.removeAll()
+        BC.checkTransactions(address: self.kullanici!.wallet!){ (data) in
+            DispatchQueue.main.async {
+                data?.forEach { trx in
+                    let dateWaves = (978307200 + (trx["timestamp"] as! Int)) * 1000
+                    
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.locale = NSLocale.current
+                    dateFormatter.dateFormat = "dd-MM-yyyy HH:mm" //Specify your format that you want
+                    let strDate = dateFormatter.string(from: Date(milliseconds: Int64(dateWaves)) )
+                    var attachment: String?
+
+                    if (trx["type"] as? Int64 == 4) {
+                        
+                        if (trx["assetId"] as? String != nil) {
+                            if trx["assetId"] as? String != asset {return}
+                            if (trx["attachment"] as? String != "") {
+
+                                attachment = self.BC.base58(data: (trx["attachment"] as? String)!)
+                            }
+                            
+                            let asset = self.BC.returnAsset(assetId: trx["assetId"] as! String)
+                            if asset != "null" {
+                                self.trxs.append (digilira.transfer.init(type: trx["type"] as? Int64,
+                                                                         id: trx["id"] as? String,
+                                                                         sender: trx["sender"] as? String,
+                                                                         senderPublicKey: trx["senderPublicKey"] as? String,
+                                                                         fee: trx["fee"] as! Int64,
+                                                                         timestamp: strDate,
+                                                                         version: trx["version"] as? Int,
+                                                                         height: trx["height"] as? Int64,
+                                                                         recipient: trx["recipient"] as? String,
+                                                                         amount: (trx["amount"] as! Int64),
+                                                                         assetId: asset,
+                                                                         attachment: attachment
+                                    
+                                ))
+                            }
+                        }
+                    }
+        
+                    if (trx["type"] as? Int64 == 11) {
+                        if (trx["assetId"] as? String != nil) {
+                            if trx["assetId"] as? String != asset {return}
+                            if (trx["attachment"] as? String != "") {
+                                attachment = self.BC.base58(data: (trx["attachment"] as? String)!)
+                            }
+                            
+                            let asset = self.BC.returnAsset(assetId: trx["assetId"] as! String)
+                            if asset != "null" {
+                                self.trxs.append (digilira.transfer.init(type: trx["type"] as? Int64,
+                                                                         id: trx["id"] as? String,
+                                                                         sender: trx["sender"] as? String,
+                                                                         senderPublicKey: trx["senderPublicKey"] as? String,
+                                                                         fee: trx["fee"] as! Int64,
+                                                                         timestamp: strDate,
+                                                                         version: trx["version"] as? Int,
+                                                                         height: trx["height"] as? Int64,
+                                                                         recipient: "not",
+                                                                         amount: (trx["totalAmount"] as! Int64),
+                                                                         assetId: asset,
+                                                                         attachment: attachment
+                                    
+                                ))
+                            }
+                        }
+                    }
+                }
+                self.setTableView()
+            }
+        }
+    }
     
     
     

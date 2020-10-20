@@ -382,7 +382,7 @@ class MainScreen: UIViewController {
         switch address.network {
         
         case "bitcoin", "ethereum", "waves":
-            let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!)
+            let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!, assetId: address.assetId!)
             sendBTCETH(external: external)
             break
         default:
@@ -1032,6 +1032,8 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         if isShowSendCoinView {
             closeSendView()
         }
+        
+        
         if isHomeScreen {
             UIView.animate(withDuration: 0.3) {
                 self.headerView.frame.size.height = self.headerHeightBuffer!
@@ -1514,11 +1516,11 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
                     
                     break
                 case "Canceled by user.":
-                    let alert = UIAlertController(title: "Hatalı Pin Kodu", message: "İşleminiz iptal edilmiştir.", preferredStyle: UIAlertController.Style.alert)
+                    let alert = UIAlertController(title: "İptal", message: "İşleminiz iptal edilmiştir.", preferredStyle: UIAlertController.Style.alert)
                     alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
 
                     self.present(alert, animated: true, completion: nil)
-                    self.closeSendView()
+                    //self.closeSendView()
                     return
                     
                 case "Fallback authentication mechanism selected.":
@@ -1538,11 +1540,11 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
                     break
                 case false:
                     if isShowSendCoinView {
-                        let alert = UIAlertController(title: "Hatalı Pin Kodu", message: "İşleminiz iptal edilmiştir.", preferredStyle: UIAlertController.Style.alert)
+                        let alert = UIAlertController(title: "İptal", message: "İşleminiz iptal edilmiştir.", preferredStyle: UIAlertController.Style.alert)
                         alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
 
                         self.present(alert, animated: true, completion: nil)
-                        self.closeSendView()
+                        //self.closeSendView()
                     }
                     break
                 }
@@ -1946,7 +1948,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
     }
     
     func sendBTCETH (external: digilira.externalTransaction) {
-        let exchange = digiliraPay.exchange(amount: external.amount!, network: external.network!)
+        let exchange = digiliraPay.exchange(amount: external.amount!, network: external.network!, assetId: external.assetId!)
         
         digiliraPay.onMember = { res, data in
             DispatchQueue.main.async {
@@ -1955,12 +1957,12 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
                 let destination = digilira.transactionDestination.interwallets
                 let trx = SendTrx.init(merchant: data?.owner!,
                                         recipient: (data?.wallet)!,
-                                        assetId: external.network!,
-                                        amount: external.amount!,
+                                        assetId: data?.assetId!,
+                                        amount: data?.amount!,
                                         fee: 900000,
                                         fiat: exchange,
-                                        attachment: external.message,
-                                        network: external.network!,
+                                        attachment: data?.message,
+                                        network: data?.network!,
                                         destination: destination,
                                         massWallet: data?.wallet
                 )
@@ -1976,10 +1978,9 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
             
         }
         
-        let normalizedAddress = external.address?.components(separatedBy: "?")
-        let croppedAddress = normalizedAddress?.first
+
         
-        digiliraPay.isOurMember(network: external.network!, address: croppedAddress!)
+        digiliraPay.isOurMember(external: external)
         
 
     }
@@ -2287,11 +2288,11 @@ extension MainScreen: NewCoinSendDelegate
                     
                     break
                 case "Canceled by user.":
-                    let alert = UIAlertController(title: "Hatalı Pin Kodu", message: "İşleminiz iptal edilmiştir.", preferredStyle: UIAlertController.Style.alert)
+                    let alert = UIAlertController(title: "İptal", message: "İşleminiz iptal edilmiştir.", preferredStyle: UIAlertController.Style.alert)
                     alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
 
                     self.present(alert, animated: true, completion: nil)
-                    self.dismissNewSend()
+                    //self.dismissNewSend()
                     return
                     
                 case "Fallback authentication mechanism selected.":
@@ -2315,7 +2316,7 @@ extension MainScreen: NewCoinSendDelegate
                         alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
 
                         self.present(alert, animated: true, completion: nil)
-                        self.closeSendView()
+                        //self.closeSendView()
                     }
                     break
                 }
@@ -2408,6 +2409,12 @@ extension MainScreen: PinViewDelegate
         if isSeedScreen {
             isSeedScreen = false
             return
+        }
+        
+        if isNewSendScreen {
+            isNewSendScreen = false
+            walletOperationView.isUserInteractionEnabled = true
+            goNewSendView()
         }
         
         UIView.animate(withDuration: 0.3) {

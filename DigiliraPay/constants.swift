@@ -36,13 +36,6 @@ struct digilira {
         static let qrErrorMessage = "Ödeme bilgileri bulunamadı"
     }
     
-    struct networkTokens {
-        static let bitcoin = "FjTB2DdymTfpYbCCdcFwoRbHQnEhQD11CUm6nAF7P1UD"
-        static let ethereum = "LVf3qaCtb9tieS1bHD8gg5XjWvqpBm5TaDxeSVcqPwn"
-        static let waves = "HGoEZAsEQpbA3DJyV9J3X1JCTTBuwUB6PE19g1kUYXsH"
-        static let charity = "2CrDXATWpvrriHHr1cVpQM65CaP3m7MJ425xz3tn9zMr"
-    }
-    
     struct coin {
          var token: String
          var symbol: String
@@ -108,6 +101,7 @@ struct digilira {
        var network: String?
        var address: String?
        var amount: Int64?
+       var assetId: String?
     }
    
     struct setScript: Encodable {
@@ -141,7 +135,8 @@ struct digilira {
         var amount: Int64?
         var message: String = "externalTransaction"
         var owner: String?
-        var wallet: String? 
+        var wallet: String?
+        var assetId: String?
     }
      
     struct ticker {

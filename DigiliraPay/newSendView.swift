@@ -109,9 +109,37 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         case "ethereum":
             selectedCoinX = digilira.ethereum
         case "waves":
-            selectedCoinX = digilira.waves
-        case "charity":
-            selectedCoinX = digilira.charity
+            switch params.assetId {
+            case digilira.bitcoin.token:
+                selectedCoinX = digilira.bitcoin
+                break
+            case digilira.ethereum.token:
+                selectedCoinX = digilira.ethereum
+                break
+            case digilira.waves.token:
+                selectedCoinX = digilira.waves
+                break
+            case digilira.charity.token:
+                selectedCoinX = digilira.charity
+                break
+            default:
+                return
+                    setCoinPrice()
+        }
+        case "domestic":
+            switch params.assetId {
+            case digilira.bitcoin.token:
+                selectedCoinX = digilira.bitcoin
+                break
+            case digilira.ethereum.token:
+                selectedCoinX = digilira.ethereum
+                break
+            case digilira.waves.token:
+                selectedCoinX = digilira.waves
+                break
+            default:
+                return
+        }
         default:
             return
         }
@@ -123,16 +151,34 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         coinSwitch.setTitle(price.description + " ₺", forSegmentAt: 0)
         coinSwitch.setTitle(amount.description + " " + selectedCoinX.symbol, forSegmentAt: 1)
         coinTextField.text = selectedCoinX.tokenName
-        if params.amount != 0 {
-            textAmount.text = amount.description
-        } else {
-            textAmount.text = ""
-        }
-        if params.destination == "interwallets" {
+        
+        setPlaceHolderText()
+ 
+        if params.destination == digilira.transactionDestination.interwallets {
             coinTextField.isEnabled = false
             recipientText.isEnabled = false
         }
+        if params.destination == digilira.transactionDestination.domestic {
+            coinTextField.isEnabled = false
+            recipientText.isEnabled = false
+            textAmount.isEnabled = false
+        }
     }
+    
+    func setTextAmount() {
+        if coinSwitch.selectedSegmentIndex == 0 { //₺
+             
+            textAmount.text = price.description
+ 
+        }
+        
+        if coinSwitch.selectedSegmentIndex == 1 { //token
+            
+            textAmount.text = amount.description
+  
+        }
+    }
+    
     func calcPrice(text: String) {
         if text == "" {
             coinSwitch.setTitle("₺", forSegmentAt: 0)
@@ -140,21 +186,21 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
             return
         }
         if coinSwitch.selectedSegmentIndex == 0 { //₺
-            amount = Double.init(text)!
-            price =  amount / (coinPrice!)
+            price = Double.init(text)!
+            amount =  price / (coinPrice!)
  
-            coinSwitch.setTitle(String(format: "%.2f", amount) + " ₺", forSegmentAt: 0)
-            coinSwitch.setTitle(String(format: "%.8f", price) + " " + selectedCoinX.symbol, forSegmentAt: 1)
-            commissionLabel.text = "Transfer ücreti: " + String(format: "%.2f", (amount * 0.005)) + " ₺"
+            coinSwitch.setTitle(String(format: "%.2f", price) + " ₺", forSegmentAt: 0)
+            coinSwitch.setTitle(String(format: "%.8f", amount) + " " + selectedCoinX.symbol, forSegmentAt: 1)
+            commissionLabel.text = "Transfer ücreti: " + String(format: "%.2f", (price * 0.005)) + " ₺"
         }
         
         if coinSwitch.selectedSegmentIndex == 1 { //token
-            price = Double.init(text)!
-            amount = (coinPrice!) * price
+            amount = Double.init(text)!
+            price = (coinPrice!) * amount
             
-            coinSwitch.setTitle(String(format: "%.2f", amount) + " ₺", forSegmentAt: 0)
-            coinSwitch.setTitle(String(format: "%.8f", price) + " " + selectedCoinX.symbol, forSegmentAt: 1)
-            commissionLabel.text = "Transfer ücreti: " + String(format: "%.8f", (price * 0.005))  + " " + selectedCoinX.symbol
+            coinSwitch.setTitle(String(format: "%.2f", price) + " ₺", forSegmentAt: 0)
+            coinSwitch.setTitle(String(format: "%.8f", amount) + " " + selectedCoinX.symbol, forSegmentAt: 1)
+            commissionLabel.text = "Transfer ücreti: " + String(format: "%.8f", (amount * 0.005))  + " " + selectedCoinX.symbol
         }
     }
     
@@ -183,6 +229,8 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
 
     override func awakeFromNib()
     {
+        coinSwitch.selectedSegmentIndex = 1
+
         pickerData = digilira.networks
         
         createPickerView()
@@ -197,6 +245,7 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         fetchQR.isUserInteractionEnabled = true
         fetchQR.addGestureRecognizer(tap)
         ticker = digiliraPay.ticker()
+        
     }
     
     func setCoinPrice () {
@@ -234,7 +283,8 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     override func didMoveToSuperview() {
-        setCoinPrice()
+        setQR(params: transaction!)
+        //setCoinPrice()
     }
     
     @objc func getQR () {
@@ -242,21 +292,22 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     @IBAction func indexChanged(sender: UISegmentedControl) {
-//        setPlaceHolderText()
+        setPlaceHolderText()
     }
     
     func setPlaceHolderText() {
-        let isAmount = amount
+        
         switch coinSwitch.selectedSegmentIndex
         {
         case 0:
-            if isAmount == 0.0 {
+ 
+            if price == 0.0 {
                 textAmount.placeholder = "Miktar (₺)"
             } else {
                 textAmount.text = String(format: "%.2f", price)
             }
         case 1:
-            if isAmount == 0.0 {
+            if amount == 0.0 {
                 textAmount.placeholder = "Miktar (" + selectedCoinX.symbol + ")"
             }else {
                 textAmount.text = String(format: "%.8f", amount)
@@ -264,7 +315,8 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         default:
             break;
         }
-        
+        coinSwitch.setTitle(String(format: "%.2f", price) + " ₺", forSegmentAt: 0)
+        coinSwitch.setTitle(String(format: "%.8f", amount) + " " + selectedCoinX.symbol, forSegmentAt: 1)
         
     }
     
