@@ -19,6 +19,7 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     let thePicker = UIPickerView()
 
     @IBOutlet weak var coinView: UIView!
+    @IBOutlet weak var siparis: UIView!
     @IBOutlet weak var coinLbl: UILabel!
     @IBOutlet weak var coinTextField: UITextField!
     @IBOutlet weak var textAmount: UITextField!
@@ -103,12 +104,21 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     }
     func setQR (params: SendTrx) {
         
+        if params.products != nil {
+
+            for (index, item) in params.products!.enumerated() {
+                setCustomCell(view1: siparis, rowIndex: index, info: item.order_pname!, price: item.order_price!)
+            }
+        }
+        
+        
+        
         switch params.network! {
         case "bitcoin":
             selectedCoinX = digilira.bitcoin
         case "ethereum":
             selectedCoinX = digilira.ethereum
-        case "waves":
+        case "waves", "domestic":
             switch params.assetId {
             case digilira.bitcoin.token:
                 selectedCoinX = digilira.bitcoin
@@ -125,20 +135,6 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
             default:
                 return
                     setCoinPrice()
-        }
-        case "domestic":
-            switch params.assetId {
-            case digilira.bitcoin.token:
-                selectedCoinX = digilira.bitcoin
-                break
-            case digilira.ethereum.token:
-                selectedCoinX = digilira.ethereum
-                break
-            case digilira.waves.token:
-                selectedCoinX = digilira.waves
-                break
-            default:
-                return
         }
         default:
             return
@@ -178,6 +174,38 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
   
         }
     }
+    
+    func setCustomCell(view1: UIView, rowIndex: Int, info: String, price: Double) {
+        let height1 = CGFloat(30)
+        
+        let width = self.coinView.frame.width
+        let label = UILabel(frame: CGRect(x: view1.frame.origin.x, y: (height1 * 2 + 10) * CGFloat(rowIndex) , width: width, height: height1))
+        let priceLbl = UILabel(frame: CGRect(x: view1.frame.origin.x, y: label.frame.maxY, width: width, height: height1))
+        let solidLine = UIView(frame: CGRect(x: view1.frame.origin.x, y: priceLbl.frame.maxY, width: width, height: 2))
+
+        solidLine.backgroundColor = .lightGray
+        
+        label.textAlignment = .left
+        label.text = info
+        
+        priceLbl.textAlignment = .left
+        priceLbl.text = String(price) + " ₺"
+
+
+        label.backgroundColor = .white
+        //To set the font Dynamic
+        label.font = UIFont(name: "Avenir", size: 20.0)
+        priceLbl.font = UIFont(name: "Avenir", size: 26.0)
+        
+        view1.addSubview(label)
+        view1.addSubview(priceLbl)
+        view1.addSubview(solidLine)
+        
+        view1.frame.size.height = solidLine.frame.maxY
+        view1.frame.size.width = width
+
+    }
+
     
     func calcPrice(text: String) {
         if text == "" {
@@ -245,7 +273,8 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         fetchQR.isUserInteractionEnabled = true
         fetchQR.addGestureRecognizer(tap)
         ticker = digiliraPay.ticker()
-        
+        siparis.translatesAutoresizingMaskIntoConstraints = true;
+
     }
     
     func setCoinPrice () {
@@ -283,6 +312,7 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     override func didMoveToSuperview() {
+        print(transaction?.products)
         setQR(params: transaction!)
         //setCoinPrice()
     }

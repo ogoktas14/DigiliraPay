@@ -197,6 +197,39 @@ struct digilira {
         var seed: String?
     }
     
+    struct product: Encodable {
+        var order_pname: String?
+        var order_pcode: String?
+        var order_price: Double?
+        var order_qty: Int64?
+        var order_status: Int64?
+        
+        init(json: [String: Any]) {
+            self.order_pname = json["order_pname"] as? String ?? ""
+            self.order_pcode = json["order_pcode"] as? String ?? ""
+            self.order_price = json["order_price"] as? Double ?? 0.0
+            self.order_qty = json["order_qty"] as? Int64 ?? 0
+            self.order_status = json["order_status"] as? Int64 ?? 0
+        }
+        
+    }
+    
+    struct refund: Encodable {
+        var order_pname: String?
+        var order_pcode: String?
+        var order_price: Double?
+        var order_qty: Int64?
+        var order_status: Int64?
+         
+        init(json: [String: Any]) {
+            self.order_pname = json["order_pname"] as? String ?? ""
+            self.order_pcode = json["order_pcode"] as? String ?? ""
+            self.order_price = json["order_price"] as? Double ?? 0.0
+            self.order_qty = json["order_qty"] as? Int64 ?? 0
+            self.order_status = json["order_status"] as? Int64 ?? 0
+        }
+    }
+    
     struct order:  Encodable {
         var _id:String
         var merchant: String
@@ -225,6 +258,8 @@ struct digilira {
         var callbackFailure: String?
         var mobile: Int64?
         var status: Int64?
+        var products: [product]?
+        var refund: [refund]?
         
     }
 }

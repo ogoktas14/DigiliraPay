@@ -381,10 +381,18 @@ class MainScreen: UIViewController {
         if address.address == nil {return}
         switch address.network {
         
-        case "bitcoin", "ethereum", "waves":
-            let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!, assetId: address.assetId!)
+        case "bitcoin":
+            let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!, assetId:digilira.bitcoin.token)
             sendBTCETH(external: external)
             break
+        case "waves":
+                let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!, assetId: address.assetId!)
+                sendBTCETH(external: external)
+                break
+        case "ethereum":
+                let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!, assetId:digilira.ethereum.token)
+                sendBTCETH(external: external)
+                break
         default:
             digiliraPay.onGetOrder = { res in
                 self.sendQR(ORDER: res)
@@ -1406,6 +1414,8 @@ extension MainScreen: TransactionPopupDelegate2 {
     func close() {
         
         menuView.isHidden = false
+        isNewSendScreen = false
+        dismissNewSend()
         
             //accountButton.isHidden = false
             //profileMenuButton.isHidden = false
@@ -1507,7 +1517,7 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
                         print(params)
                         break
                     case digilira.transactionDestination.interwallets:
-                        BC.massTransferTx(recipient: params.recipient!, fee: 1100000, amount: params.amount!, assetId: BC.returnNetworkAsset(network:params.network!), attachment: "", wallet: wallet)
+                        BC.massTransferTx(recipient: params.recipient!, fee: 1100000, amount: params.amount!, assetId: params.assetId!, attachment: "", wallet: wallet)
                         print(params)
                         break
                     default:
@@ -2013,7 +2023,8 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
                                 fee: 900000,
                                 fiat: ORDER.totalPrice!,
                                 attachment: ORDER._id,
-                                network: digilira.transactionDestination.domestic
+                                network: digilira.transactionDestination.domestic,
+                                products: ORDER.products
         )
         send(params: data)
     }
@@ -2187,7 +2198,7 @@ extension MainScreen: SendWithQrDelegate
             OpenUrlManager.parseUrlParams(openUrl: URL(string: url))
         }
 
-        
+        isNewSendScreen = false
         isShowQRButton = false
         UIView.animate(withDuration: 0.3) {
             self.sendWithQRView.frame.origin.y = self.self.view.frame.height
@@ -2279,7 +2290,7 @@ extension MainScreen: NewCoinSendDelegate
                         print(params)
                         break
                     case digilira.transactionDestination.interwallets:
-                        BC.massTransferTx(recipient: params.recipient!, fee: 1100000, amount: params.amount!, assetId: BC.returnNetworkAsset(network:params.network!), attachment: "", wallet: wallet)
+                        BC.massTransferTx(recipient: params.recipient!, fee: 1100000, amount: params.amount!, assetId: params.assetId!, attachment: "", wallet: wallet)
                         print(params)
                         break
                     default:

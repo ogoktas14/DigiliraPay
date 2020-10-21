@@ -132,7 +132,25 @@ class digiliraPayApi {
                 let json = try JSONSerialization.jsonObject(with: data!) as! Dictionary<String, AnyObject>
                 DispatchQueue.main.async { // Correct
                     
+                    let products = json["products"] as? Array<[String:Any]>
+                    let refunds = json["refunds"] as? Array<[String:Any]>
                     
+                    var someArray = [digilira.product]()
+                    var someRefunds = [digilira.refund]()
+                    
+                    if products != nil {
+                        for item in products! {
+                            someArray.append(digilira.product(json:item))
+                        }
+                    }
+                    
+                    if refunds != nil {
+                        for item in refunds! {
+                            someRefunds.append(digilira.refund(json:item))
+                        }
+                    }
+                    
+                     
                     let order = digilira.order.init(_id: (json["id"] as? String)!,
                                                     merchant: (json["merchant"] as? String)!,
                                                     user: json["merchant"] as? String,
@@ -159,8 +177,10 @@ class digiliraPayApi {
                                                     callbackSuccess: json["callbackSuccess"] as? String,
                                                     callbackFailure: json["callbackFailure"] as? String,
                                                     mobile: json["mobile"] as? Int64,
-                                                    status: json["status"] as? Int64)
-                    
+                                                    status: json["status"] as? Int64,
+                                                    products: someArray,
+                                                    refund: someRefunds
+                    )
                     
                     self.onGetOrder?(order)
                 }

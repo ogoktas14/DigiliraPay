@@ -21,6 +21,7 @@ import Foundation
         var externalAddress: String?
         var massWallet: String?
         var massNameSurname: String?
+        var products: [digilira.product]?
    }
 
 

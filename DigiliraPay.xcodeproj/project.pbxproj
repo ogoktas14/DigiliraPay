@@ -124,6 +124,7 @@
 		93534031253B093B00FFEA4D /* shareQRVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93534030253B093B00FFEA4D /* shareQRVC.swift */; };
 		93534036253C4F2C00FFEA4D /* newSendView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93534035253C4F2C00FFEA4D /* newSendView.xib */; };
 		93534039253C528600FFEA4D /* newSendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93534038253C528600FFEA4D /* newSendView.swift */; };
+		9353403E253EFC9800FFEA4D /* testView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9353403D253EFC9700FFEA4D /* testView.xib */; };
 		936F25B125323B0300C5FA85 /* ColoredCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 936F25B025323B0300C5FA85 /* ColoredCardView.xib */; };
 		936F25B425323B2E00C5FA85 /* ColoredCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F25B325323B2E00C5FA85 /* ColoredCardView.swift */; };
 		936F25B725323B3900C5FA85 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F25B625323B3900C5FA85 /* UIViewExtension.swift */; };
@@ -260,6 +261,7 @@
 		93534030253B093B00FFEA4D /* shareQRVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = shareQRVC.swift; sourceTree = "<group>"; };
 		93534035253C4F2C00FFEA4D /* newSendView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = newSendView.xib; sourceTree = "<group>"; };
 		93534038253C528600FFEA4D /* newSendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newSendView.swift; sourceTree = "<group>"; };
+		9353403D253EFC9700FFEA4D /* testView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = testView.xib; sourceTree = "<group>"; };
 		936F25B025323B0300C5FA85 /* ColoredCardView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ColoredCardView.xib; sourceTree = "<group>"; };
 		936F25B325323B2E00C5FA85 /* ColoredCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColoredCardView.swift; sourceTree = "<group>"; };
 		936F25B625323B3900C5FA85 /* UIViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
@@ -425,6 +427,7 @@
 				936F25B025323B0300C5FA85 /* ColoredCardView.xib */,
 				9381D2B025357B38007DEE7E /* DepositeMoneyView.xib */,
 				93534035253C4F2C00FFEA4D /* newSendView.xib */,
+				9353403D253EFC9700FFEA4D /* testView.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -620,6 +623,7 @@
 				88CA9368231979C3008F894B /* WalletOperationButtonSView.xib in Resources */,
 				88CA937C231A48A0008F894B /* TransactionHistoryDetailCellDeatils.xib in Resources */,
 				882AAB4022FCAAEE004CDAA6 /* Montserrat-BlackItalic.otf in Resources */,
+				9353403E253EFC9800FFEA4D /* testView.xib in Resources */,
 				882AAB5022FCAAEE004CDAA6 /* Montserrat-Medium.otf in Resources */,
 				88F3F957230FD92600D81F2B /* LetsStartWordView.xib in Resources */,
 				88CA938D231BD0A3008F894B /* ProfileSettingsView.xib in Resources */,
