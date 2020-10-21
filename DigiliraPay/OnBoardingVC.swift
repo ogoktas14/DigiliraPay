@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import UserNotifications
 
 class OnBoardingVC: UIViewController, PinViewDelegate {
     
@@ -139,6 +140,7 @@ class OnBoardingVC: UIViewController, PinViewDelegate {
     override func viewDidLoad() {
         
         initial2()
+        UNUserNotificationCenter.current().delegate = self;
         
         super.viewDidLoad()
         if #available(iOS 13.0, *) {
@@ -311,4 +313,8 @@ extension OnBoardingVC: UIScrollViewDelegate
     }
 }
 
-
+extension OnBoardingVC: UNUserNotificationCenterDelegate {
+func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+print(notification.request.content.body);
+completionHandler([.alert, .sound])
+}}

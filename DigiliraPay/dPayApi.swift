@@ -438,7 +438,7 @@ class digiliraPayApi {
     
     
     func login(returnCompletion: @escaping (digilira.user, Int?) -> () ) {
-
+ 
         let loginCredits = credentials(PARAMS: "sensitive")
              
             request(rURL: digilira.api.url + digilira.api.auth,
@@ -476,7 +476,10 @@ class digiliraPayApi {
                                                            wallet: json["wallet"] as? String,
                                                            token: json["token"] as? String,
                                                            status: json["status"] as? Int64,
-                                                           pincode: pin)
+                                                           pincode: pin,
+                                                           apnToken: json["apnToken"] as? String
+                        )
+                        
                          
                         try? Locksmith.deleteDataForUserAccount(userAccount: "auth")
                         
@@ -488,6 +491,24 @@ class digiliraPayApi {
                             "pincode": json["pincode"] as Any
                         ], forUserAccount: "auth")
                 
+                        let defaults = UserDefaults.standard
+                        if let savedApnToken = defaults.object(forKey: "deviceToken") as? String {
+                            print(savedApnToken)
+                            
+                            let user = digilira.user.init(
+                                apnToken:savedApnToken
+                            )
+                            
+                            let encoder = JSONEncoder()
+                            let data = try? encoder.encode(user)
+                            self.onUpdate = { res in
+                                print(res)
+                            }
+                            self.updateUser(user: data)
+                        }
+                        
+                        
+                        
                         returnCompletion(kullanici, statusCode)
                         break;
                         
@@ -502,6 +523,16 @@ class digiliraPayApi {
             }
          
     }
+    
+}
+
+class deviceToken1 {
+    
+    class func updateMyToken () {
+        
+    }
+    
+    
     
 }
 

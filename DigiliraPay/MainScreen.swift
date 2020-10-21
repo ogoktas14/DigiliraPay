@@ -17,6 +17,7 @@ import Locksmith
 import Starscream
 import Foundation
 import Wallet
+import UserNotifications
 
 public let kNotification = Notification.Name("kNotification")
 

@@ -163,6 +163,7 @@ struct digilira {
         var pincode: Int32?
         var imported: Bool?
         var id1: String?
+        var apnToken: String?
     }
     
     struct idImage: Encodable {

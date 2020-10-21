@@ -66,6 +66,27 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // to restore the scene back to its current state.
     }
     
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+    // 1. Convert device token to string
+    let tokenParts = deviceToken.map { data -> String in
+    return String(format: "%02.2hhx", data)
+    }
+    let token = tokenParts.joined()
+    // 2. Print device token to use for PNs payloads
+    print("Device Token: \(token)")
+    let bundleID = Bundle.main.bundleIdentifier;
+        print("Bundle ID: \(token) \(String(describing: bundleID))");
+    // 3. Save the token to local storeage and post to app server to generate Push Notification. ...
+    }
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+    print("failed to register for remote notifications: \(error.localizedDescription)")
+    }
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]) {
+    print("Received push notification: \(userInfo)")
+    let aps = userInfo["aps"] as! [String: Any]
+    print("\(aps)")
+    }
+    
     func scene(_ scene: UIScene,openURLContexts URLContexts: Set<UIOpenURLContext>){
         
         if let url = URLContexts.first?.url{
