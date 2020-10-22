@@ -16,7 +16,7 @@ import QRCoder
 import LocalAuthentication
 import Starscream
 
- 
+
 class digiliraPayApi {
     
     var token:String?
@@ -28,57 +28,57 @@ class digiliraPayApi {
     var onUpdate: ((_ result: Bool)->())?
     var onTicker: ((_ result: String)->())?
     var onMember: ((_ result: Bool, _ data: digilira.externalTransaction?)->())?
-
-      func request(rURL: String, JSON: Data? = nil,
-                     PARAMS: String = "", METHOD: String, AUTH: Bool = false,
-                     returnCompletion: @escaping ([String:Any], Int?) -> ()) {
-          
-          var request = URLRequest(url: URL(string: rURL)!)
-          
-          request.httpMethod = METHOD
-           
+    
+    func request(rURL: String, JSON: Data? = nil,
+                 PARAMS: String = "", METHOD: String, AUTH: Bool = false,
+                 returnCompletion: @escaping ([String:Any], Int?) -> ()) {
+        
+        var request = URLRequest(url: URL(string: rURL)!)
+        
+        request.httpMethod = METHOD
+        
         if JSON != nil {
             request.httpBody = JSON
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         }
-           
-          
-          if PARAMS != "" {
-              request.url?.appendPathComponent(PARAMS, isDirectory: true)
-          }
-
-          if AUTH  {
+        
+        
+        if PARAMS != "" {
+            request.url?.appendPathComponent(PARAMS, isDirectory: true)
+        }
+        
+        if AUTH  {
             let tokenString = "Bearer " + auth().token!
-              request.setValue(tokenString, forHTTPHeaderField: "Authorization")
-          }
-          
-          let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
- 
+            request.setValue(tokenString, forHTTPHeaderField: "Authorization")
+        }
+        
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            
             let httpResponse = response as? HTTPURLResponse
             guard let dataResponse = data,
                   error == nil else {
-                      print(error?.localizedDescription ?? "Response Error")
-                      return }
-              do{
-                  
-                  let jsonResponse = try JSONSerialization.jsonObject(with: dataResponse) as! Dictionary<String, AnyObject>
-                  
+                print(error?.localizedDescription ?? "Response Error")
+                return }
+            do{
+                
+                let jsonResponse = try JSONSerialization.jsonObject(with: dataResponse) as! Dictionary<String, AnyObject>
+                
                 returnCompletion(jsonResponse, httpResponse?.statusCode)
-    
-              } catch let parsingError {
-                  print("Error", parsingError)
+                
+            } catch let parsingError {
+                print("Error", parsingError)
                 returnCompletion([:], httpResponse?.statusCode)    
-              }
-          }
-          task.resume()
-          
-          
-      }
+            }
+        }
+        task.resume()
+        
+        
+    }
     
     
     
     func touchID(reason: String) {
-
+        
         let context = LAContext()
         var error: NSError?
         
@@ -91,11 +91,11 @@ class digiliraPayApi {
                 return
             }
         }
-          
+        
         if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
             context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) {
                 [weak self] success, authenticationError in
-
+                
                 DispatchQueue.main.async {
                     
                     if success {
@@ -108,26 +108,26 @@ class digiliraPayApi {
         } else {
             self.onTouchID!(false, "Fallback authentication mechanism selected.")
         }
-         
+        
     }
     
-        
+    
     var onGetOrder: ((_ result: digilira.order)->())?
-
+    
     func getOrder(PARAMS: String) {
-     var request = URLRequest(url: URL(string: digilira.api.url + digilira.api.payment + PARAMS)!)
+        var request = URLRequest(url: URL(string: digilira.api.url + digilira.api.payment + PARAMS)!)
         
         request.httpMethod = "GET"
-       let tokenString = "Bearer " + auth().token!
-
+        let tokenString = "Bearer " + auth().token!
+        
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue(tokenString, forHTTPHeaderField: "Authorization")
         
         let session = URLSession.shared
-
+        
         let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-        //let httpResponse = response as? HTTPURLResponse
-
+            //let httpResponse = response as? HTTPURLResponse
+            
             do {
                 let json = try JSONSerialization.jsonObject(with: data!) as! Dictionary<String, AnyObject>
                 DispatchQueue.main.async { // Correct
@@ -150,7 +150,7 @@ class digiliraPayApi {
                         }
                     }
                     
-                     
+                    
                     let order = digilira.order.init(_id: (json["id"] as? String)!,
                                                     merchant: (json["merchant"] as? String)!,
                                                     user: json["merchant"] as? String,
@@ -216,7 +216,7 @@ class digiliraPayApi {
         }
         
         request2(rURL: digilira.api.url + digilira.api.updateScript, JSON: data.data, METHOD: digilira.requestMethod.post, AUTH: true)
-
+        
         
     }
     
@@ -241,34 +241,34 @@ class digiliraPayApi {
         var request = URLRequest(url: URL(string: rURL)!)
         
         request.httpMethod = METHOD
-         
-      if JSON != nil {
-          request.httpBody = JSON
-          request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-      }
-         
+        
+        if JSON != nil {
+            request.httpBody = JSON
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        }
+        
         if PARAMS != "" {
             request.url?.appendPathComponent(PARAMS, isDirectory: true)
         }
-
+        
         if AUTH  {
-          let tokenString = "Bearer " + auth().token!
+            let tokenString = "Bearer " + auth().token!
             request.setValue(tokenString, forHTTPHeaderField: "Authorization")
         }
         
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-
-          let httpResponse = response as? HTTPURLResponse
-          guard let dataResponse = data,
-                error == nil else {
-                    print(error?.localizedDescription ?? "Response Error")
-                    return }
+            
+            let httpResponse = response as? HTTPURLResponse
+            guard let dataResponse = data,
+                  error == nil else {
+                print(error?.localizedDescription ?? "Response Error")
+                return }
             do{
                 
                 let jsonResponse = try JSONSerialization.jsonObject(with: dataResponse) as! Dictionary<String, AnyObject>
                 self.onResponse!(jsonResponse, httpResponse?.statusCode)
-
-  
+                
+                
             } catch let parsingError {
                 print("Error", parsingError)
                 self.onResponse!([:], httpResponse?.statusCode)
@@ -291,7 +291,7 @@ class digiliraPayApi {
     func isLoggedIn() -> Bool {
         return false
     }
-     
+    
     
     
     func setOdemeAliniyor(JSON : Data?) {
@@ -299,8 +299,8 @@ class digiliraPayApi {
             // try to read out a string array
             if let status = json["status"] as? String {
                 if (status == "2") {
-                        //guard let url = URL(string: "https://api.digilirapay.com/v7/?h=" + (json["id"] as! String)) else { return }
-                        //UIApplication.shared.open(url)
+                    //guard let url = URL(string: "https://api.digilirapay.com/v7/?h=" + (json["id"] as! String)) else { return }
+                    //UIApplication.shared.open(url)
                 }
             }
         }
@@ -311,9 +311,9 @@ class digiliraPayApi {
                 AUTH: true
         ) { (json, statusCode) in
             DispatchQueue.global(qos: .background).async  {
-                    print(json)
-                }
+                print(json)
             }
+        }
         
     }
     
@@ -368,7 +368,7 @@ class digiliraPayApi {
                 
             case digilira.charity.token:
                 return amountFloat * 1
-            
+                
             default:
                 return 0.0
             }
@@ -408,9 +408,9 @@ class digiliraPayApi {
                 
                 let response = digilira.externalTransaction.init(network: external.network,
                                                                  address: croppedAddress,
-                                                                     owner: "",
-                                                                     wallet: ""
-                    )
+                                                                 owner: "",
+                                                                 wallet: ""
+                )
                 self.onMember!(false, response)
             }
         }
@@ -419,18 +419,18 @@ class digiliraPayApi {
         
     }
     
- 
-
-
+    
+    
+    
     func auth() -> digilira.auth {
-
+        
         let dictionary = Locksmith.loadDataForUserAccount(userAccount: "auth")
         
         let authCredentials = digilira.auth.init(name: dictionary?["name"] as? String,
-                                                  surname: dictionary?["surname"] as? String,
-                                                  token: dictionary?["token"] as? String,
-                                                  status: dictionary?["status"] as? Int64,
-                                                  pincode: dictionary?["pincode"] as? Int32
+                                                 surname: dictionary?["surname"] as? String,
+                                                 token: dictionary?["token"] as? String,
+                                                 status: dictionary?["status"] as? Int64,
+                                                 pincode: dictionary?["pincode"] as? Int32
         )
         return authCredentials
         
@@ -438,63 +438,62 @@ class digiliraPayApi {
     
     
     func login(returnCompletion: @escaping (digilira.user, Int?) -> () ) {
- 
+        
         let loginCredits = credentials(PARAMS: "sensitive")
-             
-            request(rURL: digilira.api.url + digilira.api.auth,
-                                  JSON: try? self.jsonEncoder.encode(loginCredits),
-                                  METHOD: digilira.requestMethod.post
-            ) { (json, statusCode) in
+        
+        request(rURL: digilira.api.url + digilira.api.auth,
+                JSON: try? self.jsonEncoder.encode(loginCredits),
+                METHOD: digilira.requestMethod.post
+        ) { (json, statusCode) in
+            
+            DispatchQueue.main.async {
                 
-                DispatchQueue.main.async {
-                     
-                    switch (statusCode) {
-                    
-                    case 503:
-                        let kullanici = digilira.user.init() 
-                        returnCompletion(kullanici, statusCode)
-                        break;
-                    
-                    case 400, 404:
-                        let kullanici = digilira.user.init()
-                        try? Locksmith.deleteDataForUserAccount(userAccount: "sensitive")
-                        returnCompletion(kullanici, statusCode)
-                        break;
-                        
-                    case 200:
-                        let pin =  Int32((json["pincode"] as? String)!)
-
-                        let kullanici = digilira.user.init(username: json["username"] as? String,
-                                                           firstName: json["firstName"] as? String,
-                                                           lastName: json["lastName"] as? String,
-                                                           tcno: json["tcno"] as? String,
-                                                           tel: json["tel"] as? String,
-                                                           mail: json["mail"] as? String,
-                                                           btcAddress: json["btcAddress"] as? String,
-                                                           ethAddress: json["ethAddress"] as? String,
-                                                           ltcAddress: json["ltcAddress"] as? String,
-                                                           wallet: json["wallet"] as? String,
-                                                           token: json["token"] as? String,
-                                                           status: json["status"] as? Int64,
-                                                           pincode: pin,
-                                                           apnToken: json["apnToken"] as? String
-                        )
-                        
-                         
-                        try? Locksmith.deleteDataForUserAccount(userAccount: "auth")
-                        
-                        try? Locksmith.saveData(data: [
-                            "token": json["token"] as Any,
-                            "name": json["firstName"] as Any,
-                            "surname": json["lastName"] as Any,
-                            "status": json["status"] as Any,
-                            "pincode": json["pincode"] as Any
-                        ], forUserAccount: "auth")
+                switch (statusCode) {
                 
-                        let defaults = UserDefaults.standard
-                        if let savedApnToken = defaults.object(forKey: "deviceToken") as? String {
-                            print(savedApnToken)
-                            
+                case 503:
+                    let kullanici = digilira.user.init()
+                    returnCompletion(kullanici, statusCode)
+                    break;
+                    
+                case 400, 404:
+                    let kullanici = digilira.user.init()
+                    try? Locksmith.deleteDataForUserAccount(userAccount: "sensitive")
+                    returnCompletion(kullanici, statusCode)
+                    break;
+                    
+                case 200:
+                    let pin =  Int32((json["pincode"] as? String)!)
+                    
+                    let kullanici = digilira.user.init(username: json["username"] as? String,
+                                                       firstName: json["firstName"] as? String,
+                                                       lastName: json["lastName"] as? String,
+                                                       tcno: json["tcno"] as? String,
+                                                       tel: json["tel"] as? String,
+                                                       mail: json["mail"] as? String,
+                                                       btcAddress: json["btcAddress"] as? String,
+                                                       ethAddress: json["ethAddress"] as? String,
+                                                       ltcAddress: json["ltcAddress"] as? String,
+                                                       wallet: json["wallet"] as? String,
+                                                       token: json["token"] as? String,
+                                                       status: json["status"] as? Int64,
+                                                       pincode: pin,
+                                                       apnToken: json["apnToken"] as? String
+                    )
+                    
+                    
+                    try? Locksmith.deleteDataForUserAccount(userAccount: "auth")
+                    
+                    try? Locksmith.saveData(data: [
+                        "token": json["token"] as Any,
+                        "name": json["firstName"] as Any,
+                        "surname": json["lastName"] as Any,
+                        "status": json["status"] as Any,
+                        "pincode": json["pincode"] as Any
+                    ], forUserAccount: "auth")
+                    
+                    let defaults = UserDefaults.standard
+                    if let savedApnToken = defaults.object(forKey: "deviceToken") as? String {
+                        if savedApnToken != kullanici.apnToken {
                             let user = digilira.user.init(
                                 apnToken:savedApnToken
                             )
@@ -507,21 +506,23 @@ class digiliraPayApi {
                             self.updateUser(user: data)
                         }
                         
-                        
-                        
-                        returnCompletion(kullanici, statusCode)
-                        break;
-                        
-                    default:
-                        break;
-                    
                     }
-  
                     
-
+                    
+                    
+                    returnCompletion(kullanici, statusCode)
+                    break;
+                    
+                default:
+                    break;
+                    
                 }
+                
+                
+                
             }
-         
+        }
+        
     }
     
 }
@@ -537,7 +538,7 @@ class deviceToken1 {
 }
 
 class OpenUrlManager {
-
+    
     class func detectQRCode(_ image: UIImage?) -> [CIFeature]? {
         if let image = image, let ciImage = CIImage.init(image: image){
             var options: [String: Any]
@@ -551,14 +552,14 @@ class OpenUrlManager {
             }
             let features = qrDetector?.features(in: ciImage, options: options)
             return features
-
+            
         }
         return nil
     }
     
     static var openUrl: URL?
     static var onURL: ((_ result: digilira.QR)->())?
-
+    
     class func parseUrlParams(openUrl: URL?) {
         let array = openUrl!.absoluteString.components(separatedBy: CharacterSet.init(charactersIn: ":"))
         let caption = array[0]
@@ -569,16 +570,16 @@ class OpenUrlManager {
             
             if FileManager.default.fileExists(atPath: openUrl!.path) {
                 let url = NSURL(string: openUrl!.absoluteString)
-                        let data = NSData(contentsOf: url! as URL)
+                let data = NSData(contentsOf: url! as URL)
                 
-                        if let features = detectQRCode(UIImage(data: data! as Data)), !features.isEmpty{
-                            for case let row as CIQRCodeFeature in features{
-                                parseUrlParams(openUrl: URL(string: row.messageString!))
-                            }
-                        }
-                
+                if let features = detectQRCode(UIImage(data: data! as Data)), !features.isEmpty{
+                    for case let row as CIQRCodeFeature in features{
+                        parseUrlParams(openUrl: URL(string: row.messageString!))
                     }
-        break;
+                }
+                
+            }
+            break;
         case "digilirapay":
             let digiliraURL = openUrl!.absoluteString.components(separatedBy: CharacterSet.init(charactersIn: "://"))
             if digiliraURL.count > 2 {
@@ -589,7 +590,7 @@ class OpenUrlManager {
             break
         case "bitcoin", "ethereum":
             let data = array[1].components(separatedBy: "?amount=")
-
+            
             if (data.count > 1) {
                 amount = Int64(Float.init(data[1])! * 100000000)
             }
@@ -610,27 +611,27 @@ class OpenUrlManager {
             break
         default:
             //return []
-        break
+            break
         }
         
         //return ["",""]
     }
     
     class ImagePickerManager: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-
+        
         var picker = UIImagePickerController();
         var alert = UIAlertController(title: "Choose Image", message: nil, preferredStyle: .actionSheet)
         var viewController: UIViewController?
         var pickImageCallback : ((UIImage) -> ())?;
-
+        
         override init(){
             super.init()
         }
-
+        
         func pickImage(_ viewController: UIViewController, _ callback: @escaping ((UIImage) -> ())) {
             pickImageCallback = callback;
             self.viewController = viewController;
-
+            
             let cameraAction = UIAlertAction(title: "Camera", style: .default){
                 UIAlertAction in
                 self.openCamera()
@@ -642,7 +643,7 @@ class OpenUrlManager {
             let cancelAction = UIAlertAction(title: "Cancel", style: .cancel){
                 UIAlertAction in
             }
-
+            
             // Add the actions
             picker.delegate = self
             alert.addAction(cameraAction)
@@ -666,8 +667,8 @@ class OpenUrlManager {
             picker.sourceType = .photoLibrary
             self.viewController!.present(picker, animated: true, completion: nil)
         }
-
-
+        
+        
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
             picker.dismiss(animated: true, completion: nil)
         }
@@ -677,7 +678,7 @@ class OpenUrlManager {
         //    let image = info[UIImagePickerControllerOriginalImage] as! UIImage
         //    pickImageCallback?(image)
         //}
-
+        
         // For Swift 4.2+
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             picker.dismiss(animated: true, completion: nil)
@@ -686,13 +687,13 @@ class OpenUrlManager {
             }
             pickImageCallback?(image)
         }
-
-
-
+        
+        
+        
         @objc func imagePickerController(_ picker: UIImagePickerController, pickedImage: UIImage?) {
         }
-
+        
     }
-
-
+    
+    
 }

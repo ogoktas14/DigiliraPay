@@ -43,13 +43,11 @@ class MenuView: UIView {
         
         
     }
-    func setView()
+    func setView(mode: ())
     {
     }
-
-    @objc func goHome()
-    {
-        delegate?.goHomeScreen()
+    
+    func home() {
         
         homeIcon.image = UIImage(named: "homeSelected")
         walletIcon.image = UIImage(named: "walletNotSelected")
@@ -57,23 +55,15 @@ class MenuView: UIView {
         othersIcon.image = UIImage(named: "settingsNotSelected")
     }
     
-    
-    @objc func goWallet()
-    {
-        delegate?.goWalletScreen(coin: 0)
+    func wallet() {
         
-        
-        homeIcon.image = UIImage(named: "homeNotSelected")
-        walletIcon.image = UIImage(named: "walletSelected")
-        paymentsIcon.image = UIImage(named: "kartDeselect")
-        othersIcon.image = UIImage(named: "settingsNotSelected")
+        self.homeIcon.image = UIImage(named: "homeNotSelected")
+        self.walletIcon.image = UIImage(named: "walletSelected")
+        self.paymentsIcon.image = UIImage(named: "kartDeselect")
+        self.othersIcon.image = UIImage(named: "settingsNotSelected")
     }
     
-    
-    @objc func goPayments()
-    {
-        delegate?.goPayments()
-        
+    func payments () {
         
         homeIcon.image = UIImage(named: "homeNotSelected")
         walletIcon.image = UIImage(named: "walletNotSelected")
@@ -81,16 +71,49 @@ class MenuView: UIView {
         othersIcon.image = UIImage(named: "settingsNotSelected")
     }
     
-    
-    @objc func goSettings()
-    {
-        delegate?.goSettings()
-        
+    func settings() {
         
         homeIcon.image = UIImage(named: "homeNotSelected")
         walletIcon.image = UIImage(named: "walletNotSelected")
         paymentsIcon.image = UIImage(named: "kartDeselect")
         othersIcon.image = UIImage(named: "settingsSelected")
+    }
+    @objc func goHome()
+    {
+        
+        home()
+        
+        
+        
+        
+        delegate?.goHomeScreen()
+        
+    }
+    
+    
+    @objc func goWallet()
+    {
+        wallet()
+        
+        delegate?.goWalletScreen(coin: 0)
+        
+        
+    }
+    
+    
+    @objc func goPayments()
+    {
+        delegate?.goPayments()
+        
+        payments()
+    }
+    
+    
+    @objc func goSettings()
+    {
+        delegate?.goSettings()
+        settings()
+        
     }
     
     @objc func goQR()
@@ -98,5 +121,5 @@ class MenuView: UIView {
         delegate?.goQRScreen()
     }
     
-
+    
 }

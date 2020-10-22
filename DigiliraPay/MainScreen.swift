@@ -85,7 +85,7 @@ class MainScreen: UIViewController {
     var coinSymbol: String?
     var selectedCoin : String?
     var network : String?
-
+    
     private let refreshControl = UIRefreshControl()
     
     var isAlive = false
@@ -102,7 +102,7 @@ class MainScreen: UIViewController {
     var Filtered: [NodeService.DTO.AssetBalance?] = []
     
     var onPinSuccess: ((_ result: Bool)->())?
-
+    
     
     var headerHeightBuffer: CGFloat?
     var QR:digilira.QR = digilira.QR.init()
@@ -168,9 +168,9 @@ class MainScreen: UIViewController {
         
         self.contentView.addGestureRecognizer(swipeRight)
         self.contentView.addGestureRecognizer(swipeLeft)
-         
+        
         headerHeightBuffer =  headerView.frame.size.height //bu mal degisip duruyo
-//        when requested asset balances
+        //        when requested asset balances
         
         BC.onAssetBalance = { [self] result in
             self.Balances = (result)
@@ -183,7 +183,7 @@ class MainScreen: UIViewController {
             self.headerTotal.text  = "₺ 110.313"
             self.goHomeScreen()
             if  self.isKeyPresentInUserDefaults(key: "QRARRAY2") {
-                                
+                
                 let defaults = UserDefaults.standard
                 if let savedQR = defaults.object(forKey: "QRARRAY2") as? Data {
                     let decoder = JSONDecoder()
@@ -193,8 +193,8 @@ class MainScreen: UIViewController {
                     self.getOrder(address: QR)
                 }
             }
-
-
+            
+            
             
             
             
@@ -269,7 +269,7 @@ class MainScreen: UIViewController {
             case "The operation couldn’t be completed. (WavesSDK.NetworkError error 0.)":
                 let alert = UIAlertController(title: "Bir Hata Oluştu..", message: "Maalesef şu an işleminizi gerçekleştiremiyoruz. Lütfen birazdan tekrar deneyin.", preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
-
+                
                 self.present(alert, animated: true, completion: nil)
                 self.closeSendView()
                 break
@@ -278,10 +278,10 @@ class MainScreen: UIViewController {
             }
             
         }
-
         
         
-
+        
+        
         refreshControl.attributedTitle = NSAttributedString(string: "Güncellemek için çekiniz..")
         refreshControl.addTarget(self, action: #selector(refreshWeatherData(_:)), for: UIControl.Event.valueChanged)
         
@@ -294,7 +294,7 @@ class MainScreen: UIViewController {
         
         
         if #available(iOS 13.0, *), traitCollection.userInterfaceStyle == .dark{
-
+            
             IQKeyboardManager.shared.keyboardAppearance = .dark
             mainView.backgroundColor = UIColor.black
         }
@@ -319,12 +319,12 @@ class MainScreen: UIViewController {
         animation.autoreverses = true
         animation.fromValue = NSValue(cgPoint: CGPoint(x: contentView.center.x - 10, y: contentView.center.y))
         animation.toValue = NSValue(cgPoint: CGPoint(x: contentView.center.x + 10, y: contentView.center.y))
-
+        
         contentView.layer.add(animation, forKey: "position")
     }
     
     @objc func respondToSwipeGesture(gesture: UIGestureRecognizer) {
-
+        
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {
             
             if (isSuccessView) {
@@ -335,7 +335,7 @@ class MainScreen: UIViewController {
                 shake()
                 return
             }
-
+            
             switch swipeGesture.direction {
             case .right:
                 if (isHomeScreen) {
@@ -378,7 +378,7 @@ class MainScreen: UIViewController {
     }
     
     func getOrder(address: digilira.QR) {
-                
+        
         if address.address == nil {return}
         switch address.network {
         
@@ -387,27 +387,27 @@ class MainScreen: UIViewController {
             sendBTCETH(external: external)
             break
         case "waves":
-                let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!, assetId: address.assetId!)
-                sendBTCETH(external: external)
-                break
+            let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!, assetId: address.assetId!)
+            sendBTCETH(external: external)
+            break
         case "ethereum":
-                let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!, assetId:digilira.ethereum.token)
-                sendBTCETH(external: external)
-                break
+            let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!, assetId:digilira.ethereum.token)
+            sendBTCETH(external: external)
+            break
         default:
             digiliraPay.onGetOrder = { res in
                 self.sendQR(ORDER: res)
-
+                
             }
             digiliraPay.getOrder(PARAMS: address.address!)
         }
-
+        
         
     }
     
     @objc func onDidReceiveData(_ sender: Notification) {
         // Do what you need, including updating IBOutlets
-    
+        
         if (isDepositeMoneyView) {
             closeDeposite()
         }
@@ -425,11 +425,11 @@ class MainScreen: UIViewController {
         if (isSuccessView) {
             self.close()
         }
- 
-
+        
+        
         self.dismissVErifyAccountView(user: kullanici!)
         
-
+        
         
     }
     
@@ -437,11 +437,11 @@ class MainScreen: UIViewController {
         // Do what you need, including updating IBOutlets
         print("ok")
     }
-     
+    
     @objc func onOrderClicked(_ sender: Notification) {
         // Do what you need, including updating IBOutlets
-//        print(sender.userInfo)
-
+        //        print(sender.userInfo)
+        
         let alert = UIAlertController(title: "Sipariş detayları", message: "Sipariş detayları için kendinize iyi bakın.", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: nil))
         self.present(alert, animated: true)
@@ -455,8 +455,8 @@ class MainScreen: UIViewController {
         if !isKeyboard {
             isKeyboard = true
             if ((notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue) != nil {
-            //self.view.frame.origin.y -= 150
-        }
+                //self.view.frame.origin.y -= 150
+            }
         }
     }
     
@@ -481,14 +481,14 @@ class MainScreen: UIViewController {
         fetch()
         //coinTableView.reloadData()
         refreshControl.endRefreshing()
-
+        
     }
     
     
     func fetch() {
         BC.checkAssetBalance(address: kullanici!.wallet!)
     }
-        
+    
     override func viewWillAppear(_ animated: Bool)
     {
         loadMenu()
@@ -579,7 +579,7 @@ class MainScreen: UIViewController {
         coinTableView.dataSource = self
         contentScrollView.addSubview(coinTableView)
         contentScrollView.contentSize.width = contentScrollView.frame.width * CGFloat(contentScrollView.subviews.count)
-
+        
         
     }
     
@@ -605,7 +605,7 @@ class MainScreen: UIViewController {
         contentScrollView.contentSize.width = contentScrollView.frame.width * CGFloat(contentScrollView.subviews.count)
         
         if isFirstLaunch {
-//            
+            //
             if pinkodaktivasyon! {
                 if kullanici?.pincode == -1 {
                     openPinView()
@@ -620,13 +620,13 @@ class MainScreen: UIViewController {
     func setSettingsView() {
         profileMenuView = UIView().loadNib(name: "ProfileMenuview") as! ProfileMenuView
         profileMenuView.frame = CGRect(x: contentView.frame.width * 3,
-                                  y: 0,
-                                  width: contentView.frame.width,
-                                  height: contentView.frame.height)
+                                       y: 0,
+                                       width: contentView.frame.width,
+                                       height: contentView.frame.height)
         
         profileMenuView.layer.zPosition = 1
         profileMenuView.delegate = self
-
+        
         profileMenuView.frameValue = walletView.frame
         profileMenuView.setView()
         profileMenuView.ViewOriginMaxXValue.y = menuView.frame.height
@@ -649,7 +649,7 @@ class MainScreen: UIViewController {
         paymentCat.frameValue = walletView.frame
         paymentCat.ViewOriginMaxXValue.y = menuView.frame.height
         paymentCat.setView()
-
+        
         contentScrollView.addSubview(paymentCat)
         contentScrollView.contentSize.width = contentScrollView.frame.width * CGFloat(contentScrollView.subviews.count)
     }
@@ -691,12 +691,12 @@ class MainScreen: UIViewController {
         self.QR = digilira.QR.init()
         UserDefaults.standard.set(nil, forKey: "QRARRAY2")
         
-
+        
         //profileMenuButton.isHidden = false
         closeCoinSendView()
         dismissLoadView()
         
- 
+        
     }
     
     @objc func tapAccountButton()
@@ -710,11 +710,9 @@ class MainScreen: UIViewController {
     {
         menuXib = UIView().loadNib(name: "MenuView") as! MenuView
         menuXib.delegate = self
-        menuXib.setView()
         menuXib.frame = menuView.frame
         menuXib.frame.origin.x = 0
         menuXib.frame.origin.y = 0
-        
         menuView.addSubview(menuXib)
         menuView.backgroundColor = .clear
     }
@@ -748,13 +746,13 @@ class MainScreen: UIViewController {
         alert.addAction(UIAlertAction(title: "Kamera", style: .default, handler: { _ in
             self.openCamera()
         }))
-
+        
         alert.addAction(UIAlertAction(title: "Galeri", style: .default, handler: { _ in
             self.openGallery()
         }))
-
+        
         alert.addAction(UIAlertAction.init(title: "İptal", style: .cancel, handler: nil))
-
+        
         self.present(alert, animated: true, completion: nil)
     }
     
@@ -867,7 +865,7 @@ extension UIView {
     func fadeTransition(_ duration:CFTimeInterval) {
         let animation = CATransition()
         animation.timingFunction = CAMediaTimingFunction(name:
-            CAMediaTimingFunctionName.easeInEaseOut)
+                                                            CAMediaTimingFunctionName.easeInEaseOut)
         animation.type = CATransitionType.fade
         animation.duration = duration
         layer.add(animation, forKey: CATransitionType.fade.rawValue)
@@ -877,23 +875,18 @@ extension UIView {
 extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısmı
 {
     func goPayments() {
+        menuXib.payments()
         
-//        if let resultController = storyboard!.instantiateViewController(withIdentifier: "cardViewVC") as? ViewController {
-//            present(resultController, animated: true, completion: nil)
-//        }
-        
-        
-
         headerTotal.isHidden = true
         
         dismissLoadView()
         dismissProfileMenu()
-
+        
         if isShowSendCoinView {
             closeSendView()
         }
         walletOperationView.removeFromSuperview()
-
+        
         if isShowWallet
         {
             headerInfoLabel.isHidden = true
@@ -908,12 +901,12 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
                 self.contentScrollView.contentOffset.x = 0
             }
         }
-
+        
         headerInfoLabel.isHidden = true
         homeAmountLabel.isHidden = true
         logoView.isHidden = false
         menuXib.isHidden = false
-
+        
         UIView.animate(withDuration: 0.3, animations: { [self] in
             self.contentScrollView.contentOffset.x = self.view.frame.width * 2
         }) { (_) in
@@ -925,7 +918,8 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
     }
     
     func goSettings() {
- 
+        menuXib.settings()
+        
         
         dismissLoadView()
         dismissProfileMenu()
@@ -934,7 +928,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         if isShowSendCoinView {
             closeSendView()
         }
-
+        
         if isShowWallet
         {
             headerInfoLabel.isHidden = true
@@ -968,6 +962,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
     
     func goHomeScreen()
     {
+        menuXib.home()
         
         
         dismissLoadView()
@@ -976,15 +971,15 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         if isShowSendCoinView {
             closeSendView()
         }
-
+        
         if isShowWallet
         {
             headerInfoLabel.isHidden = true
             closeCoinSendView()
             isShowWallet = false
-//            walletOperationView.removeFromSuperview()
+            //            walletOperationView.removeFromSuperview()
             
-
+            
         }
         
         if !isHomeScreen {
@@ -995,8 +990,8 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
                                                height: 100)
             walletOperationView.delegate = self
             walletOperationView.alpha = 1
-
-
+            
+            
             
             
             UIView.animate(withDuration: 0.3) {
@@ -1006,7 +1001,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
             }
         }
         
-
+        
         
         if !isSuccessView {
             bottomView.isHidden = false
@@ -1015,9 +1010,9 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         if isPayments || isShowSettings {
             isPayments = false
             isShowSettings = false
-
+            
         }
-
+        
         headerInfoLabel.isHidden = true
         headerInfoLabel.textColor = .black
         headerTotal.isHidden = false
@@ -1033,7 +1028,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
     func goWalletScreen(coin: Int)
     {
         
-
+        menuXib.wallet()
         
         dismissLoadView()
         dismissProfileMenu()
@@ -1051,51 +1046,51 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
             }
         }
         walletOperationView.removeFromSuperview()
-
+        
         if !isShowWallet
         {
             isShowWallet = true
             
-//            headerInfoLabel.isHidden = false
-//            homeAmountLabel.isHidden = false
-              logoView.isHidden = false
-              headerTotal.isHidden = true
-//
-//            headerInfoLabel.textColor = UIColor(red:0.94, green:0.56, blue:0.10, alpha:1.0)
-//            if Filtered.count != 0 {
-//                headerInfoLabel.text = Assets[(Filtered[coin]?.issueTransaction.assetId)!]
-//                let double = Double(Filtered[coin]!.balance) / Double(100000000)
-//                homeAmountLabel.text = (double).description
-//
-//                let localAseet = Assets[(Filtered[coin]?.issueTransaction.assetId)!]
-//
-//                switch localAseet {
-//                case "Bitcoin":
-//                    selectedCoin = kullanici?.btcAddress
-//                    network = "bitcoin"
-//                    coinSymbol = "BTC"
-//                    break;
-//                case "Ethereum":
-//                    selectedCoin = kullanici?.ethAddress
-//                    network = "ethereum"
-//                    coinSymbol = "ETH"
-//                    break;
-//                case "Waves":
-//                    selectedCoin = kullanici?.wallet
-//                    network = "waves"
-//                    coinSymbol = "WAVES"
-//                    break;
-//                default:
-//                    selectedCoin = ""
-//                }
-//
-//            } else {
-//                headerInfoLabel.text = "Bakiye"
-//                homeAmountLabel.text = "0.0"
-//
-//            }
-
-             
+            //            headerInfoLabel.isHidden = false
+            //            homeAmountLabel.isHidden = false
+            logoView.isHidden = false
+            headerTotal.isHidden = true
+            //
+            //            headerInfoLabel.textColor = UIColor(red:0.94, green:0.56, blue:0.10, alpha:1.0)
+            //            if Filtered.count != 0 {
+            //                headerInfoLabel.text = Assets[(Filtered[coin]?.issueTransaction.assetId)!]
+            //                let double = Double(Filtered[coin]!.balance) / Double(100000000)
+            //                homeAmountLabel.text = (double).description
+            //
+            //                let localAseet = Assets[(Filtered[coin]?.issueTransaction.assetId)!]
+            //
+            //                switch localAseet {
+            //                case "Bitcoin":
+            //                    selectedCoin = kullanici?.btcAddress
+            //                    network = "bitcoin"
+            //                    coinSymbol = "BTC"
+            //                    break;
+            //                case "Ethereum":
+            //                    selectedCoin = kullanici?.ethAddress
+            //                    network = "ethereum"
+            //                    coinSymbol = "ETH"
+            //                    break;
+            //                case "Waves":
+            //                    selectedCoin = kullanici?.wallet
+            //                    network = "waves"
+            //                    coinSymbol = "WAVES"
+            //                    break;
+            //                default:
+            //                    selectedCoin = ""
+            //                }
+            //
+            //            } else {
+            //                headerInfoLabel.text = "Bakiye"
+            //                homeAmountLabel.text = "0.0"
+            //
+            //            }
+            
+            
             isShowSettings = false
             isPayments = false
             isHomeScreen = false
@@ -1122,29 +1117,29 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
     private func seedScreen() {
         isSeedScreen = true
         for view in self.sendWithQRView.subviews
-            { view.removeFromSuperview() }
+        { view.removeFromSuperview() }
         self.sendWithQRView.translatesAutoresizingMaskIntoConstraints = true
-
-            
-            let letsStartView4: LetsStartWordsView = UIView().loadNib(name: "LetsStartWordView") as! LetsStartWordsView
-            
-            letsStartView4.delegate = self
-            
-            letsStartView4.setTitles(title: "Anahtar kelimelerini", subTitle: "asla kaybetme!", desc: "Eğer uygulaman silinirse veya cüzdanını başka bir cihaza aktarman gerekirse bu kelimelere ihtiyaç duyacaksın.")
-            letsStartView4.frame = CGRect(x: 0,
-                                           y: 100,
-                                           width: self.view.frame.width,
-                                           height: self.view.frame.height)
-            
-            letsStartView4.backgroundColor = UIColor.white
-            letsStartView4.okButtonView.isHidden = false
-            
+        
+        
+        let letsStartView4: LetsStartWordsView = UIView().loadNib(name: "LetsStartWordView") as! LetsStartWordsView
+        
+        letsStartView4.delegate = self
+        
+        letsStartView4.setTitles(title: "Anahtar kelimelerini", subTitle: "asla kaybetme!", desc: "Eğer uygulaman silinirse veya cüzdanını başka bir cihaza aktarman gerekirse bu kelimelere ihtiyaç duyacaksın.")
+        letsStartView4.frame = CGRect(x: 0,
+                                      y: 100,
+                                      width: self.view.frame.width,
+                                      height: self.view.frame.height)
+        
+        letsStartView4.backgroundColor = UIColor.white
+        letsStartView4.okButtonView.isHidden = false
+        
         self.sendWithQRView.addSubview(letsStartView4)
         self.sendWithQRView.isHidden = false
-            UIView.animate(withDuration: 0.4) {
-                self.sendWithQRView.frame.origin.y = 0
-                self.sendWithQRView.alpha = 1
-            }
+        UIView.animate(withDuration: 0.4) {
+            self.sendWithQRView.frame.origin.y = 0
+            self.sendWithQRView.alpha = 1
+        }
     }
     
     func goQRScreen()
@@ -1176,16 +1171,16 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
             return
         }
         
-
+        
         
         newSendMoneyView = UIView().loadNib(name: "newSendView") as! newSendView
         sendWithQRView.frame.origin.y = self.view.frame.height
         newSendMoneyView.frame = CGRect(x: 0,
-                                     y: 0,
-                                     width: view.frame.width,
-                                     height: view.frame.height)
+                                        y: 0,
+                                        width: view.frame.width,
+                                        height: view.frame.height)
         newSendMoneyView.delegate = self
-
+        
         newSendMoneyView.recipientText.text = transactionRecipient
         if params.amount != 0 {
             newSendMoneyView.textAmount.text = (Double(params.amount!) / Double(100000000)).description
@@ -1200,8 +1195,8 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
             newSendMoneyView.coinTextField.isEnabled = false
             newSendMoneyView.recipientText.isEnabled = false
         }
-
- 
+        
+        
         for subView in sendWithQRView.subviews
         { subView.removeFromSuperview() }
         
@@ -1231,7 +1226,7 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
         
         
         
-
+        
         
         
         let y = logoView.frame.maxY
@@ -1246,14 +1241,14 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
             }else { // qr send view
                 headerInfoLabel.isHidden = true
                 homeAmountLabel.isHidden = true
-
+                
             }
             
             goHomeScreen()
             
             logoView.isHidden = true
             
-
+            
             isShowSendCoinView = true
             sendMoneyBackButton.isHidden = false
             //profileMenuButton.isHidden = true
@@ -1267,18 +1262,18 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
             if (params.network == "digilirapay") {
                 sendMoneyView.qrView.isHidden = true
             }
-
-
+            
+            
             sendMoneyView.amountTextField.text = (Double(params.amount!) / Double(100000000)).description
             sendMoneyView.receiptTextField.text = transactionRecipient
             sendMoneyView.amountTextField.isEnabled = false
             sendMoneyView.receiptTextField.isEnabled = false
-                        
+            
             sendMoneyView.totalQuantity.text =  "Toplam Bakiye:"
             sendMoneyView.commissionAmount.text = "İşlem komisyonu:"
             sendMoneyView.amountEquivalent.text = params.fiat!.description + " ₺"
             
-
+            
             sendMoneyView.delegate = self
             walletOperationView.translatesAutoresizingMaskIntoConstraints = true
             walletOperationView.alpha = 0
@@ -1293,12 +1288,12 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
             }
         } else {
             sendMoneyView.transaction = params
-
+            
             sendMoneyView.amountTextField.text = (Double(params.amount!) / Double(100000000)).description
             sendMoneyView.receiptTextField.text = params.merchant
             sendMoneyView.amountTextField.isEnabled = false
             sendMoneyView.receiptTextField.isEnabled = false
-                        
+            
             sendMoneyView.totalQuantity.text =  "Toplam Bakiye:"
             sendMoneyView.commissionAmount.text = "İşlem komisyonu:"
             sendMoneyView.amountEquivalent.text = params.fiat!.description + " ₺"
@@ -1314,13 +1309,13 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
         
         isShowLoadCoinView = true
         qrView.frame.origin.y = view.frame.height
-
+        
         loadMoneyView = UIView().loadNib(name: "QRView") as! QRView
         loadMoneyView.frame = qrView.frame
         loadMoneyView.delegate = self
         
         loadMoneyView.address = selectedCoin
-
+        
         for subView in qrView.subviews
         { subView.removeFromSuperview() }
         
@@ -1334,29 +1329,29 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
             self.qrView.frame.origin.y = 0
             self.loadMoneyView.frame.origin.y = 0
             self.sendMoneyBackButton.isHidden = false
-
+            
         }
         
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-            if segue.identifier == "showLoadMoney" {
-                if let viewController = segue.destination as? ShareQRVC {
-                    viewController.kullanici = self.kullanici
-                }
+        if segue.identifier == "showLoadMoney" {
+            if let viewController = segue.destination as? ShareQRVC {
+                viewController.kullanici = self.kullanici
             }
         }
+    }
     
     
     func showDepositeMoneyView (mode: Int, source: String) {
         
         isDepositeMoneyView = true
         depositeMoneyView = UIView().loadNib(name: "DepositeMoneyView") as! DepositeMoneyView
-
+        
         depositeMoneyView.frame = CGRect(x: contentScrollView.frame.width  + (contentScrollView.frame.width / 20),
-                                   y: contentScrollView.frame.maxY,
-                                   width: contentScrollView.frame.width - ( contentScrollView.frame.width  / 10),
-                                   height: contentScrollView.frame.width)
+                                         y: contentScrollView.frame.maxY,
+                                         width: contentScrollView.frame.width - ( contentScrollView.frame.width  / 10),
+                                         height: contentScrollView.frame.width)
         
         depositeMoneyView.delegate = self
         
@@ -1392,19 +1387,19 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
         }
         
         performSegue(withIdentifier: "showLoadMoney", sender: nil)
-
+        
         
         //showMyQr()
-
-//        showDepositeMoneyView(mode: 1, source:"PEP Para")
-
+        
+        //        showDepositeMoneyView(mode: 1, source:"PEP Para")
+        
         
     }
     
     
     
     func alertConfirm (title: String, message: String)-> Void {
-
+        
         
     }
 }
@@ -1418,8 +1413,8 @@ extension MainScreen: TransactionPopupDelegate2 {
         isNewSendScreen = false
         dismissNewSend()
         
-            //accountButton.isHidden = false
-            //profileMenuButton.isHidden = false
+        //accountButton.isHidden = false
+        //profileMenuButton.isHidden = false
         
         UIView.animate(withDuration: 1) {
             self.successView.frame.origin.y = (self.contentView.frame.maxY)
@@ -1427,7 +1422,7 @@ extension MainScreen: TransactionPopupDelegate2 {
             self.isSuccessView = false
             self.bottomView.isHidden = false
             self.walletOperationView.isUserInteractionEnabled = true
-
+            
             for subView in self.qrView.subviews
             { subView.removeFromSuperview() }
             
@@ -1457,17 +1452,17 @@ extension MainScreen: DepositeMoneyDelegate {
         let fiatString = String(fiat)
         let amountString = String(amount)
         let message = source + " hesabınızdan ₺" + fiatString + " karşılığında " + amountString + " " + network + " cüzdanınıza tanımlanacaktır. Onaylıyor musunuz?"
-
-    
+        
+        
         self.digiliraPay.onTouchID = { res, err in
             if res == true {
                 
                 
-
+                
             } else {
                 
                 print(err)
-
+                
                 if (err == "Canceled by user.") {return}
                 
                 let alert = UIAlertController(title: "title", message: message, preferredStyle: UIAlertController.Style.alert)
@@ -1478,7 +1473,7 @@ extension MainScreen: DepositeMoneyDelegate {
                 alert.addAction(UIAlertAction(title: "Hayır", style: UIAlertAction.Style.default, handler: {action in
                     //nine
                 }))
-
+                
                 self.present(alert, animated: true, completion: nil)
                 
             }
@@ -1487,7 +1482,7 @@ extension MainScreen: DepositeMoneyDelegate {
         self.digiliraPay.touchID(reason: message)
         
     }
-  
+    
 }
 
 
@@ -1529,7 +1524,7 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
                 case "Canceled by user.":
                     let alert = UIAlertController(title: "İptal", message: "İşleminiz iptal edilmiştir.", preferredStyle: UIAlertController.Style.alert)
                     alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
-
+                    
                     self.present(alert, animated: true, completion: nil)
                     //self.closeSendView()
                     return
@@ -1537,11 +1532,11 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
                 case "Fallback authentication mechanism selected.":
                     self.isTouchIDCanceled = true
                     self.openPinView()
-                break
+                    break
                 default: break
                     
                 }
- 
+                
             }
             
             self.onPinSuccess = { [self] res in
@@ -1553,7 +1548,7 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
                     if isShowSendCoinView {
                         let alert = UIAlertController(title: "İptal", message: "İşleminiz iptal edilmiştir.", preferredStyle: UIAlertController.Style.alert)
                         alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
-
+                        
                         self.present(alert, animated: true, completion: nil)
                         //self.closeSendView()
                     }
@@ -1566,7 +1561,7 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
             BC.getSensitive(pin:false)
             
         }
-         
+        
         
         
     }
@@ -1591,10 +1586,10 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
             }
             
             sendMoneyBackButton.isHidden = true
-
-//            let headerHeight = headerView.frame.size.height
+            
+            //            let headerHeight = headerView.frame.size.height
             sendMoneyView.removeFromSuperview()
-//            let buffer = sendMoneyView.sendView.frame.maxY
+            //            let buffer = sendMoneyView.sendView.frame.maxY
             UIView.animate(withDuration: 0.4, animations: {
                 self.headerView.frame.size.height = self.headerHeightBuffer!
             }) { (_) in
@@ -1635,7 +1630,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
             if res == true {
                 self.seedScreen()
                 self.closeProfileView()
-
+                
             } else {
                 self.isTouchIDCanceled = true
                 self.openPinView()
@@ -1644,15 +1639,15 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         }
         
         digiliraPay.touchID(reason: "Transferin gerçekleşebilmesi için biometrik onayınız gerekmektedir!")
-
-    
+        
+        
     }
     
     func verifyProfile()
     {
         qrView.frame.origin.y = view.frame.height
         bottomView.isHidden = true // alttaki boslugun kadldirilmasi
-
+        
         
         //profil onay sureci
         
@@ -1671,7 +1666,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
             { subView.removeFromSuperview() }
             
             menuXib.isHidden = true
-
+            
             
             qrView.addSubview(verifyProfileXib)
             qrView.isHidden = false
@@ -1749,9 +1744,9 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         let paymentCatXib = UIView().loadNib(name: "PaymentCategories") as! PaymentCat
         paymentCatXib.delegate = self
         paymentCatXib.frame = CGRect(x: 0,
-                                          y: 0,
-                                          width: paymentCat.frame.width,
-                                          height: paymentCat.frame.height)
+                                     y: 0,
+                                     width: paymentCat.frame.width,
+                                     height: paymentCat.frame.height)
         
         for subView in paymentCat.subviews
         { subView.removeFromSuperview() }
@@ -1765,15 +1760,15 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
     }
     
     func goNewSendView() {
-         
+        
         newSendMoneyView = UIView().loadNib(name: "newSendView") as! newSendView
         sendWithQRView.frame.origin.y = self.view.frame.height
         newSendMoneyView.frame = CGRect(x: 0,
-                                     y: 0,
-                                     width: view.frame.width,
-                                     height: view.frame.height)
+                                        y: 0,
+                                        width: view.frame.width,
+                                        height: view.frame.height)
         newSendMoneyView.delegate = self
-
+        
         for subView in sendWithQRView.subviews
         { subView.removeFromSuperview() }
         
@@ -1805,14 +1800,14 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         case 11:
             amount = String ((transaction["totalAmount"] as? Float64)! / (100000000))
             title = "TRANSFERİNİZ GERÇEKLEŞTİ"
-
+            
         default:
             amount = String ((transaction["amount"] as? Float64)! / (100000000))
             title = "ÖDEME BAŞARILI"
-
+            
         }
         
-      
+        
         print(transaction)
         
         if isSuccessView {
@@ -1836,7 +1831,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
             walletOperationView.isUserInteractionEnabled = false
             successView = UIView().loadNib(name: "TransactionPopup") as! TransactionPopup
             successView.remainingAmountInfoLabel.textColor = UIColor.black
-
+            
             successView.frame = CGRect(x: 20,
                                        y: contentScrollView.frame.maxY,
                                        width: contentScrollView.frame.width - 40,
@@ -1880,12 +1875,12 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
                 self.successView.frame.origin.y = self.contentScrollView.frame.maxY - self.successView.frame.height * 2
                 self.successView.alpha = 1
             }
-             
+            
         }
         
         
     }
-        
+    
     
     func showTermsofUse()
     {
@@ -1893,22 +1888,22 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
     }
     
     func openGallery()
-   {
-       if UIImagePickerController.isSourceTypeAvailable(UIImagePickerController.SourceType.photoLibrary){
-           imagePicker.delegate = self
-           imagePicker.allowsEditing = true
-           imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary
-           self.present(imagePicker, animated: true, completion: nil)
-        
-
-       }
-       else
-       {
-           let alert  = UIAlertController(title: "Warning", message: "You don't have permission to access gallery.", preferredStyle: .alert)
-           alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-           self.present(alert, animated: true, completion: nil)
-       }
-   }
+    {
+        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerController.SourceType.photoLibrary){
+            imagePicker.delegate = self
+            imagePicker.allowsEditing = true
+            imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary
+            self.present(imagePicker, animated: true, completion: nil)
+            
+            
+        }
+        else
+        {
+            let alert  = UIAlertController(title: "Warning", message: "You don't have permission to access gallery.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
     
     func detectQRCode(_ image: UIImage?) -> [CIFeature]? {
         if let image = image, let ciImage = CIImage.init(image: image){
@@ -1923,7 +1918,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
             }
             let features = qrDetector?.features(in: ciImage, options: options)
             return features
-
+            
         }
         return nil
     }
@@ -1950,7 +1945,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
                     self.sendWithQRView.alpha = 0
                 }
             }))
-             
+            
             
             self.present(alert, animated: true)
         default:
@@ -1963,37 +1958,37 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         
         digiliraPay.onMember = { res, data in
             DispatchQueue.main.async {
-            switch res {
-            case true:
-                let destination = digilira.transactionDestination.interwallets
-                let trx = SendTrx.init(merchant: data?.owner!,
-                                        recipient: (data?.wallet)!,
-                                        assetId: data?.assetId!,
-                                        amount: data?.amount!,
-                                        fee: 900000,
-                                        fiat: exchange,
-                                        attachment: data?.message,
-                                        network: data?.network!,
-                                        destination: destination,
-                                        massWallet: data?.wallet
-                )
-
-                self.send(params: trx)
-
-            default:
-                return
-            }
+                switch res {
+                case true:
+                    let destination = digilira.transactionDestination.interwallets
+                    let trx = SendTrx.init(merchant: data?.owner!,
+                                           recipient: (data?.wallet)!,
+                                           assetId: data?.assetId!,
+                                           amount: data?.amount!,
+                                           fee: 900000,
+                                           fiat: exchange,
+                                           attachment: data?.message,
+                                           network: data?.network!,
+                                           destination: destination,
+                                           massWallet: data?.wallet
+                    )
+                    
+                    self.send(params: trx)
+                    
+                default:
+                    return
+                }
             }
             
-
+            
             
         }
         
-
+        
         
         digiliraPay.isOurMember(external: external)
         
-
+        
     }
     
     func sendQR(ORDER: digilira.order) {
@@ -2034,13 +2029,13 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
 
 
 extension MainScreen: UIImagePickerControllerDelegate {
-
+    
     public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         self.imagePicker.dismiss(animated: true, completion: {
             
         })
     }
-
+    
     public func imagePickerController(_ picker: UIImagePickerController,
                                       didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         guard let image = info[.editedImage] as? UIImage else {
@@ -2056,7 +2051,7 @@ extension MainScreen: UIImagePickerControllerDelegate {
                     }
                     OpenUrlManager.parseUrlParams(openUrl: URL(string: row.messageString!))
                 }
-                 
+                
                 self.imagePicker.dismiss(animated: true, completion: {
                     
                 })
@@ -2066,7 +2061,7 @@ extension MainScreen: UIImagePickerControllerDelegate {
 }
 
 extension MainScreen: UINavigationControllerDelegate {
-
+    
 }
 
 extension MainScreen: PaymentCatViewsDelegate {
@@ -2074,7 +2069,7 @@ extension MainScreen: PaymentCatViewsDelegate {
         print("ok")
     }
     
-
+    
     
 }
 
@@ -2109,7 +2104,7 @@ extension MainScreen: LoadCoinDelegate
     {
         isShowLoadCoinView = false
         sendMoneyBackButton.isHidden = true
-  
+        
         UIView.animate(withDuration: 0.3) {
             self.qrView.frame.origin.y = self.view.frame.height
         }
@@ -2127,12 +2122,12 @@ extension MainScreen: VerifyAccountDelegate
     {
         
         if QR.address != nil {
-                UserDefaults.standard.set(nil, forKey: "QRARRAY2")
-                getOrder(address: self.QR)
-                self.QR = digilira.QR.init()
+            UserDefaults.standard.set(nil, forKey: "QRARRAY2")
+            getOrder(address: self.QR)
+            self.QR = digilira.QR.init()
             
-            }
-            
+        }
+        
         
         self.kullanici = user
         UIView.animate(withDuration: 0.3) {
@@ -2188,7 +2183,7 @@ extension MainScreen: LegalDelegate // kullanım sözleşmesi gibi view'ların g
 
 extension MainScreen: SendWithQrDelegate
 {
-
+    
     
     func dismissSendWithQr(url: String)
     {
@@ -2198,7 +2193,7 @@ extension MainScreen: SendWithQrDelegate
             }
             OpenUrlManager.parseUrlParams(openUrl: URL(string: url))
         }
-
+        
         isNewSendScreen = false
         isShowQRButton = false
         UIView.animate(withDuration: 0.3) {
@@ -2222,7 +2217,7 @@ extension MainScreen: SendWithQrDelegate
         
     }
     
-   
+    
     
     
 }
@@ -2262,7 +2257,7 @@ extension MainScreen: NewCoinSendDelegate
     {
         isNewSendScreen = false
         menuXib.isHidden = false
-  
+        
         UIView.animate(withDuration: 0.3) {
             self.sendWithQRView.frame.origin.y = self.view.frame.height
         }
@@ -2302,7 +2297,7 @@ extension MainScreen: NewCoinSendDelegate
                 case "Canceled by user.":
                     let alert = UIAlertController(title: "İptal", message: "İşleminiz iptal edilmiştir.", preferredStyle: UIAlertController.Style.alert)
                     alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
-
+                    
                     self.present(alert, animated: true, completion: nil)
                     //self.dismissNewSend()
                     return
@@ -2310,11 +2305,11 @@ extension MainScreen: NewCoinSendDelegate
                 case "Fallback authentication mechanism selected.":
                     self.isTouchIDCanceled = true
                     self.openPinView()
-                break
+                    break
                 default: break
                     
                 }
- 
+                
             }
             
             self.onPinSuccess = { [self] res in
@@ -2326,7 +2321,7 @@ extension MainScreen: NewCoinSendDelegate
                     if isShowSendCoinView {
                         let alert = UIAlertController(title: "Hatalı Pin Kodu", message: "İşleminiz iptal edilmiştir.", preferredStyle: UIAlertController.Style.alert)
                         alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
-
+                        
                         self.present(alert, animated: true, completion: nil)
                         //self.closeSendView()
                     }
@@ -2339,7 +2334,7 @@ extension MainScreen: NewCoinSendDelegate
             BC.getSensitive(pin:false)
             
         }
-         
+        
         
         
     }
@@ -2350,7 +2345,7 @@ extension MainScreen: NewCoinSendDelegate
     
     
     
-
+    
     
 }
 
@@ -2389,16 +2384,16 @@ extension MainScreen: PinViewDelegate
                 pinView.isEntryMode = false
                 pinView.isUpdateMode = true
             }else{
-                    let alert = UIAlertController(title: "Pin Oluşturun", message: "Ödeme yapabilmek ve kripto varlıklarınızı transfer edebilmek için bir pin kodu oluşturmanız gerekmektedir.", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: nil))
-                    self.present(alert, animated: true)
-                    
-                    pinView.isInit = true
+                let alert = UIAlertController(title: "Pin Oluşturun", message: "Ödeme yapabilmek ve kripto varlıklarınızı transfer edebilmek için bir pin kodu oluşturmanız gerekmektedir.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: nil))
+                self.present(alert, animated: true)
+                
+                pinView.isInit = true
             }
-
+            
         }
         pinView.setCode()
-
+        
         pinView.delegate = self
         pinView.frame = CGRect(x: 0,
                                y: 0,
@@ -2435,9 +2430,9 @@ extension MainScreen: PinViewDelegate
         }
         
         
-
-
-
+        
+        
+        
     }
     
     func updatePinCode (code:Int32) {
@@ -2455,16 +2450,16 @@ extension MainScreen: PinViewDelegate
                 
                 let alert = UIAlertController(title: "Pin Kodu Güncellendi", message: "Pin kodunuzu unutmayın, cüzdanınızı başka bir cihaza aktarırken ihtiyacınız olacaktır.", preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
-
+                
                 self.present(alert, animated: true, completion: nil)
-
+                
                 self.digiliraPay.login() { (json, status) in
                     DispatchQueue.main.async {
                         self.kullanici = json
                     }
-                 }
+                }
             }
-         }
+        }
     }
     
     

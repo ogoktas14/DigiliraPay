@@ -34,30 +34,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                                        matcher: []),
                                 enviroment: .init(server: .testNet, timestampServerDiff: 0))
    
-        
-        // Override point for customization after application launch.
-        if let isSecure = UserDefaults.standard.value(forKey: "isSecure") as? Bool
-        {
-            if isSecure
-            {
-                authenticateUser()
-                visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
-                visualEffectView.frame = window?.rootViewController?.view.frame ?? CGRect(x: 0,
-                                                                                          y: 0,
-                                                                                          width: UIScreen.main.bounds.width,
-                                                                                          height: UIScreen.main.bounds.height)
-                window?.rootViewController?.view.addSubview(visualEffectView)
-                
-                let tapGesture = UITapGestureRecognizer(target: self, action: #selector(authenticateUser))
-                visualEffectView.addGestureRecognizer(tapGesture)
-            }
-        }
-        
-        IQKeyboardManager.shared.enable = true
-        IQKeyboardManager.shared.overrideKeyboardAppearance = true
-        IQKeyboardManager.shared.keyboardAppearance = .light
-        IQKeyboardManager.shared.shouldResignOnTouchOutside = true
-                
+                IQKeyboardManager.shared.enable = true
+                IQKeyboardManager.shared.overrideKeyboardAppearance = true
+                IQKeyboardManager.shared.keyboardAppearance = .light
+                IQKeyboardManager.shared.shouldResignOnTouchOutside = true
+
+    
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) {
         (granted, error) in
         guard granted else { return }
@@ -134,33 +116,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the user discards a scene session.
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
-    }
-
-    @objc func authenticateUser()
-    {
-        let context = LAContext()
-        var error: NSError?
-
-        if context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &error) {
-            let reason = "Identify yourself!"
-            context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: reason) {
-                success, authenticationError in
-
-                DispatchQueue.main.async {
-                    if success {
-                        print("OK")
-                        self.visualEffectView.removeFromSuperview()
-                    } else {
-                        print("NO")
-                        exit(EXIT_SUCCESS)
-                    }
-                }
-            }
-        } else {
-            let ac = UIAlertController(title: "Touch ID not available", message: "Your device is not configured for Touch ID.", preferredStyle: .alert)
-            ac.addAction(UIAlertAction(title: "OK", style: .default))
-            window?.rootViewController!.present(ac, animated: true)
-        }
     }
 }
 

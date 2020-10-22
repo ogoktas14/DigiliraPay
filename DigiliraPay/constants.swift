@@ -60,10 +60,11 @@ struct digilira {
     
     static var charity = coin.init(token: "2CrDXATWpvrriHHr1cVpQM65CaP3m7MJ425xz3tn9zMr",
                             symbol: "KZY",
-                            tokenName: "Kızılay",
+                            tokenName: "Kızılay Token",
                             network: "waves")
      
     static let networks = [bitcoin, ethereum, waves, charity]
+    static let networksDescription = ["Bitcoin", "Ethereum", "Waves", "Kızılay Token"]
 
     struct transactionDestination {
         static let domestic = "domestic"

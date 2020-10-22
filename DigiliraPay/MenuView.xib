@@ -29,7 +29,7 @@
                             <rect key="frame" x="161.5" y="0.0" width="91" height="72"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </imageView>
-                        <imageView clipsSubviews="YES" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="kart" translatesAutoresizingMaskIntoConstraints="NO" id="8Za-vs-IvC">
+                        <imageView clipsSubviews="YES" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="kartDeselect" translatesAutoresizingMaskIntoConstraints="NO" id="8Za-vs-IvC">
                             <rect key="frame" x="242.5" y="0.0" width="90.5" height="72"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </imageView>
@@ -71,7 +71,7 @@
     </objects>
     <resources>
         <image name="homeSelected" width="23" height="22"/>
-        <image name="kart" width="25" height="22"/>
+        <image name="kartDeselect" width="25" height="22"/>
         <image name="qrIcon" width="43" height="43"/>
         <image name="settingsNotSelected" width="21" height="21"/>
         <image name="walletNotSelected" width="25" height="22"/>

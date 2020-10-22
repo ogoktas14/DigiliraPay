@@ -67,9 +67,9 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         dismissPickerView()
         
         
-        textAmount.isHidden = true
-        switchCurrency.isHidden = true
-        qrImage.isHidden = true
+        textAmount.isEnabled = false
+        switchCurrency.isEnabled = false
+
         shareButtonView.isHidden = true
         copyIcon.isHidden = true
 
@@ -171,9 +171,9 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         adresTextView.text = address
         switchCurrency.setTitle(selectedCoinX.symbol, forSegmentAt: 1)
         switchCurrency.setTitle("₺", forSegmentAt: 0)
-        textAmount.isHidden = false
-        switchCurrency.isHidden = false
-        qrImage.isHidden = false
+        textAmount.isEnabled = true
+        switchCurrency.isEnabled = true
+        adressInfoLabel.text = selectedCoinX.tokenName + " Yatır"
         shareButtonView.isHidden = false
         copyIcon.isHidden = false
         
