@@ -38,21 +38,14 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3X7-xZ-FQT">
                             <rect key="frame" x="0.0" y="0.0" width="280" height="380"/>
                             <subviews>
-                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Token" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="URY-i1-8rQ">
-                                    <rect key="frame" x="0.0" y="0.0" width="280" height="40"/>
-                                    <color key="backgroundColor" systemColor="systemGray6Color"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="40" id="oqI-Lv-A5Y"/>
-                                    </constraints>
-                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="20"/>
-                                    <textInputTraits key="textInputTraits"/>
-                                </textField>
-                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Alıcı" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="gQ3-xK-RbR">
+                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" placeholder="Alıcı" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="gQ3-xK-RbR">
                                     <rect key="frame" x="0.0" y="60" width="220" height="40"/>
                                     <color key="backgroundColor" systemColor="systemGray6Color"/>
                                     <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="20"/>
                                     <textInputTraits key="textInputTraits"/>
+                                    <connections>
+                                        <action selector="amounTap:" destination="iN0-l3-epB" eventType="editingDidBegin" id="ysz-KU-hfW"/>
+                                    </connections>
                                 </textField>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mockQR" translatesAutoresizingMaskIntoConstraints="NO" id="eNA-hx-NTh">
                                     <rect key="frame" x="230" y="60" width="50" height="40"/>
@@ -60,11 +53,14 @@
                                         <constraint firstAttribute="width" constant="50" id="adB-mh-Rxy"/>
                                     </constraints>
                                 </imageView>
-                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Miktar (₺)" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="61x-O0-EuX">
+                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" placeholder="Miktar" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="61x-O0-EuX">
                                     <rect key="frame" x="0.0" y="120" width="280" height="40"/>
                                     <color key="backgroundColor" systemColor="systemGray6Color"/>
                                     <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="20"/>
                                     <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
+                                    <connections>
+                                        <action selector="amounTap:" destination="iN0-l3-epB" eventType="editingDidBegin" id="quo-Tw-7ec"/>
+                                    </connections>
                                 </textField>
                                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Z4I-uf-6Kp">
                                     <rect key="frame" x="0.0" y="180" width="280" height="41"/>
@@ -99,6 +95,20 @@
                                         <action selector="sendMoneyButton:" destination="iN0-l3-epB" eventType="touchUpInside" id="wvR-rH-1gD"/>
                                     </connections>
                                 </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UeG-oV-4BO">
+                                    <rect key="frame" x="0.0" y="0.0" width="280" height="40"/>
+                                    <color key="backgroundColor" systemColor="systemGray6Color"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="40" id="PbA-bY-0IJ"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="20"/>
+                                    <state key="normal" title="Token">
+                                        <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="YOUR_BUTTON__TAP_ACTION:" destination="iN0-l3-epB" eventType="touchUpInside" id="IMV-7o-lfR"/>
+                                    </connections>
+                                </button>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
@@ -109,28 +119,28 @@
                                 <constraint firstItem="gQ3-xK-RbR" firstAttribute="leading" secondItem="3X7-xZ-FQT" secondAttribute="leading" id="6dS-JV-ajR"/>
                                 <constraint firstAttribute="height" constant="379.99999999999989" id="Cab-sV-BsD"/>
                                 <constraint firstItem="jmH-fq-1Pl" firstAttribute="trailing" secondItem="3X7-xZ-FQT" secondAttribute="trailing" id="EeD-IW-T2m"/>
-                                <constraint firstItem="eNA-hx-NTh" firstAttribute="top" secondItem="URY-i1-8rQ" secondAttribute="bottom" constant="20" id="HSR-Jn-cCG"/>
+                                <constraint firstAttribute="trailing" secondItem="UeG-oV-4BO" secondAttribute="trailing" id="EpB-KA-uef"/>
                                 <constraint firstItem="IsM-y3-vOP" firstAttribute="leading" secondItem="3X7-xZ-FQT" secondAttribute="leading" id="Hqa-Xe-dXb"/>
                                 <constraint firstAttribute="trailing" secondItem="eNA-hx-NTh" secondAttribute="trailing" id="Llx-VU-H0h"/>
-                                <constraint firstItem="URY-i1-8rQ" firstAttribute="leading" secondItem="3X7-xZ-FQT" secondAttribute="leading" id="Nz0-NH-jfj"/>
+                                <constraint firstItem="eNA-hx-NTh" firstAttribute="top" secondItem="gQ3-xK-RbR" secondAttribute="top" id="N19-S9-Ffu"/>
                                 <constraint firstItem="0fR-UE-ZSc" firstAttribute="height" secondItem="Z4I-uf-6Kp" secondAttribute="height" id="SoA-J0-Gnv"/>
                                 <constraint firstItem="61x-O0-EuX" firstAttribute="leading" secondItem="3X7-xZ-FQT" secondAttribute="leading" id="UMs-lG-dLZ"/>
                                 <constraint firstItem="Z4I-uf-6Kp" firstAttribute="top" secondItem="61x-O0-EuX" secondAttribute="bottom" constant="20" id="Wqa-og-GI0"/>
+                                <constraint firstItem="gQ3-xK-RbR" firstAttribute="top" secondItem="UeG-oV-4BO" secondAttribute="bottom" constant="20" id="Ws5-Gj-ALe"/>
                                 <constraint firstAttribute="trailing" secondItem="0fR-UE-ZSc" secondAttribute="trailing" id="WvB-ca-0pn"/>
                                 <constraint firstItem="gQ3-xK-RbR" firstAttribute="trailing" secondItem="eNA-hx-NTh" secondAttribute="leading" constant="-10" id="X3K-Oi-4mo"/>
                                 <constraint firstItem="Z4I-uf-6Kp" firstAttribute="height" secondItem="61x-O0-EuX" secondAttribute="height" id="XPA-qh-IA4"/>
                                 <constraint firstAttribute="trailing" secondItem="IsM-y3-vOP" secondAttribute="trailing" id="XSF-6A-ZZH"/>
                                 <constraint firstItem="jmH-fq-1Pl" firstAttribute="leading" secondItem="3X7-xZ-FQT" secondAttribute="leading" id="Y05-V4-X3i"/>
                                 <constraint firstAttribute="trailing" secondItem="Z4I-uf-6Kp" secondAttribute="trailing" id="ZG3-dK-Vgk"/>
-                                <constraint firstAttribute="trailing" secondItem="URY-i1-8rQ" secondAttribute="trailing" id="Zgr-YB-JUe"/>
                                 <constraint firstItem="61x-O0-EuX" firstAttribute="height" secondItem="gQ3-xK-RbR" secondAttribute="height" id="edP-qR-V54"/>
                                 <constraint firstItem="0fR-UE-ZSc" firstAttribute="top" secondItem="IsM-y3-vOP" secondAttribute="bottom" constant="20" id="geU-LU-GO6"/>
                                 <constraint firstItem="Z4I-uf-6Kp" firstAttribute="leading" secondItem="3X7-xZ-FQT" secondAttribute="leading" id="jcJ-Hh-8kh"/>
-                                <constraint firstItem="gQ3-xK-RbR" firstAttribute="height" secondItem="URY-i1-8rQ" secondAttribute="height" id="lE2-6N-yZR"/>
+                                <constraint firstItem="gQ3-xK-RbR" firstAttribute="height" secondItem="UeG-oV-4BO" secondAttribute="height" id="lE2-6N-yZR"/>
                                 <constraint firstItem="61x-O0-EuX" firstAttribute="top" secondItem="gQ3-xK-RbR" secondAttribute="bottom" constant="20" id="mkm-lZ-w6y"/>
+                                <constraint firstItem="UeG-oV-4BO" firstAttribute="top" secondItem="3X7-xZ-FQT" secondAttribute="top" id="oyC-vU-r0M"/>
                                 <constraint firstItem="IsM-y3-vOP" firstAttribute="top" secondItem="jmH-fq-1Pl" secondAttribute="bottom" constant="20" id="qVo-MZ-n5H"/>
-                                <constraint firstItem="gQ3-xK-RbR" firstAttribute="top" secondItem="URY-i1-8rQ" secondAttribute="bottom" constant="20" id="rLT-K1-Cfl"/>
-                                <constraint firstItem="URY-i1-8rQ" firstAttribute="top" secondItem="3X7-xZ-FQT" secondAttribute="top" id="vpR-Mo-hmn"/>
+                                <constraint firstItem="UeG-oV-4BO" firstAttribute="leading" secondItem="3X7-xZ-FQT" secondAttribute="leading" id="qef-Lc-8cl"/>
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w4j-tr-BKP">
@@ -168,9 +178,9 @@
                 <constraint firstItem="8YY-TE-LN4" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="u58-hd-Ene"/>
             </constraints>
             <connections>
+                <outlet property="adresBtn" destination="UeG-oV-4BO" id="lvO-DC-yDE"/>
                 <outlet property="btnSend" destination="0fR-UE-ZSc" id="7eN-hK-3ZD"/>
                 <outlet property="coinSwitch" destination="Z4I-uf-6Kp" id="xd5-C4-oOh"/>
-                <outlet property="coinTextField" destination="URY-i1-8rQ" id="IM8-vl-Hwa"/>
                 <outlet property="coinView" destination="3X7-xZ-FQT" id="viS-pl-Zfn"/>
                 <outlet property="commissionLabel" destination="IsM-y3-vOP" id="HeH-GK-Kmv"/>
                 <outlet property="fetchQR" destination="eNA-hx-NTh" id="hJh-wh-0kO"/>

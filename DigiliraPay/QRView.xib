@@ -32,21 +32,26 @@
                             </constraints>
                             <preferredSymbolConfiguration key="preferredSymbolConfiguration" weight="ultraLight"/>
                         </imageView>
-                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Cüzdan Adresi Seçin" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Plp-5t-ehQ">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sDR-le-Rau">
                             <rect key="frame" x="10" y="0.0" width="314" height="40"/>
-                            <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="18"/>
-                            <textInputTraits key="textInputTraits"/>
-                        </textField>
+                            <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="19"/>
+                            <state key="normal" title="Cüzdan Seçin">
+                                <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <connections>
+                                <action selector="YOUR_BUTTON__TAP_ACTION:" destination="iN0-l3-epB" eventType="touchUpInside" id="rVc-B2-56D"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" systemColor="systemGray6Color"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="40" id="8wg-IL-lPs"/>
-                        <constraint firstAttribute="bottom" secondItem="Plp-5t-ehQ" secondAttribute="bottom" id="FGO-aN-GRk"/>
+                        <constraint firstItem="PYm-zK-cZm" firstAttribute="leading" secondItem="sDR-le-Rau" secondAttribute="trailing" constant="10" id="CTF-XT-mos"/>
                         <constraint firstItem="PYm-zK-cZm" firstAttribute="trailing" secondItem="V4k-Eq-K0o" secondAttribute="trailing" constant="-10" id="Ig3-6Q-8QD"/>
-                        <constraint firstItem="Plp-5t-ehQ" firstAttribute="trailing" secondItem="PYm-zK-cZm" secondAttribute="leading" constant="-10" id="M50-PG-69d"/>
-                        <constraint firstItem="Plp-5t-ehQ" firstAttribute="leading" secondItem="V4k-Eq-K0o" secondAttribute="leading" constant="10" id="WTy-2H-4k6"/>
+                        <constraint firstItem="sDR-le-Rau" firstAttribute="top" secondItem="V4k-Eq-K0o" secondAttribute="top" id="Mcd-x2-etj"/>
+                        <constraint firstItem="sDR-le-Rau" firstAttribute="leading" secondItem="V4k-Eq-K0o" secondAttribute="leading" constant="10" id="PJq-v6-kI1"/>
+                        <constraint firstAttribute="bottom" secondItem="sDR-le-Rau" secondAttribute="bottom" id="RJE-xb-Y8E"/>
                         <constraint firstItem="PYm-zK-cZm" firstAttribute="centerY" secondItem="V4k-Eq-K0o" secondAttribute="centerY" id="Y7a-vA-fSR"/>
-                        <constraint firstItem="Plp-5t-ehQ" firstAttribute="top" secondItem="V4k-Eq-K0o" secondAttribute="top" id="scR-Va-k1N"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BAZ-s6-mE5">
@@ -91,6 +96,12 @@
                     <rect key="frame" x="20" y="184" width="374" height="40"/>
                     <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="22"/>
                     <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="decimalPad" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
+                    <connections>
+                        <action selector="amounTap:" destination="iN0-l3-epB" eventType="touchUpOutside" id="Fso-5e-812"/>
+                        <action selector="amounTap:" destination="iN0-l3-epB" eventType="touchDown" id="clQ-oz-mLn"/>
+                        <action selector="amounTap:" destination="iN0-l3-epB" eventType="touchUpInside" id="wFh-6G-WSz"/>
+                        <action selector="amounTap:" destination="iN0-l3-epB" eventType="editingDidBegin" id="z0T-te-Mr3"/>
+                    </connections>
                 </textField>
                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="j3o-L3-116">
                     <rect key="frame" x="20" y="244" width="374" height="32"/>
@@ -132,7 +143,7 @@
                 <constraint firstItem="VDV-Wc-ADo" firstAttribute="top" secondItem="BAZ-s6-mE5" secondAttribute="bottom" constant="28" id="qAy-Hh-4Sp"/>
             </constraints>
             <connections>
-                <outlet property="adresTextView" destination="Plp-5t-ehQ" id="45d-DV-rmk"/>
+                <outlet property="adresBtn" destination="sDR-le-Rau" id="fAo-ps-e9i"/>
                 <outlet property="adressInfoLabel" destination="cia-f2-1Ms" id="Ewi-RO-RwK"/>
                 <outlet property="copyAddress" destination="V4k-Eq-K0o" id="pca-HY-yMX"/>
                 <outlet property="copyIcon" destination="PYm-zK-cZm" id="oVd-yA-f8R"/>

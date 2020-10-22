@@ -29,7 +29,8 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     @IBOutlet weak var fetchQR: UIImageView!
     @IBOutlet weak var recipientText: UITextField!
     @IBOutlet weak var btnSend: UIButton!
-    
+    @IBOutlet weak var adresBtn: UIButton!
+
     var transaction: SendTrx?
     private var amount: Double = 0.0
     private var price: Double = 0.0
@@ -41,13 +42,14 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     public var address: String?
      
     private var selectedCoinX: digilira.coin = digilira.coin.init(token: "", symbol: "", tokenName: "", network: "")
+    private var selectedIndex: Int = 0
     
     let digiliraPay = digiliraPayApi()
 
     @IBAction func sendMoneyButton(_ sender: Any) {
         let isAmount = amount
         if isAmount == 0.0 { return }
-        if coinTextField.text == "" {return}
+        if adresBtn.currentTitle == "Token" {return}
         if recipientText.text == "" {return}
         
         transaction?.amount = Int64(isAmount * 100000000)
@@ -114,11 +116,11 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         
         
         switch params.network! {
-        case "bitcoin":
+        case digilira.bitcoin.network:
             selectedCoinX = digilira.bitcoin
-        case "ethereum":
+        case digilira.ethereum.network:
             selectedCoinX = digilira.ethereum
-        case "waves", "domestic":
+        case digilira.waves.network, "domestic":
             switch params.assetId {
             case digilira.bitcoin.token:
                 selectedCoinX = digilira.bitcoin
@@ -146,16 +148,19 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         recipientText.text = params.merchant
         coinSwitch.setTitle(price.description + " ₺", forSegmentAt: 0)
         coinSwitch.setTitle(amount.description + " " + selectedCoinX.symbol, forSegmentAt: 1)
-        coinTextField.text = selectedCoinX.tokenName
+        adresBtn.setTitle(selectedCoinX.tokenName, for: .normal)
+//        coinTextField.text = selectedCoinX.tokenName
         
         setPlaceHolderText()
  
         if params.destination == digilira.transactionDestination.interwallets {
-            coinTextField.isEnabled = false
+//            coinTextField.isEnabled = false
+            adresBtn.isEnabled = false
             recipientText.isEnabled = false
         }
         if params.destination == digilira.transactionDestination.domestic {
-            coinTextField.isEnabled = false
+//            coinTextField.isEnabled = false
+            adresBtn.isEnabled = false
             recipientText.isEnabled = false
             textAmount.isEnabled = false
         }
@@ -233,7 +238,8 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        coinTextField.text = pickerData[0].tokenName
+        adresBtn.setTitle(pickerData[0].tokenName, for: .normal)
+//        coinTextField.text = pickerData[0].tokenName
         selectedCoinX = pickerData[0]
         setCoinPrice()
         return 1 // number of session
@@ -242,12 +248,63 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         return pickerData.count // number of dropdown items
     }
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        adresBtn.setTitle(pickerData[row].tokenName, for: .normal)
+        selectedCoinX = pickerData[row]
+        selectedIndex = row
+        setCoinPrice()
+
         return pickerData[row].tokenName // dropdown item
     }
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        coinTextField.text = pickerData[row].tokenName
+        adresBtn.setTitle(pickerData[row].tokenName, for: .normal)
+//        coinTextField.text = pickerData[row].tokenName
         selectedCoinX = pickerData[row]
+        selectedIndex = row
         setCoinPrice()
+    }
+    
+    var toolBar = UIToolbar()
+    var picker  = UIPickerView()
+    var isPicker = false
+    
+    @IBAction func YOUR_BUTTON__TAP_ACTION(_ sender: UIButton) {
+        
+        if isPicker {
+            return
+        }
+        dismissKeyboard()
+        isPicker = true
+        
+        picker = UIPickerView.init()
+        picker.delegate = self
+        picker.backgroundColor = UIColor.white
+        picker.setValue(UIColor.black, forKey: "textColor")
+        picker.autoresizingMask = .flexibleWidth
+        picker.contentMode = .center
+        picker.frame = CGRect.init(x: 0.0, y: UIScreen.main.bounds.size.height - 300, width: UIScreen.main.bounds.size.width, height: 300)
+        picker.selectRow(selectedIndex, inComponent: 0, animated: true)
+
+        self.addSubview(picker)
+        
+
+        toolBar = UIToolbar.init(frame: CGRect.init(x: 0.0, y: UIScreen.main.bounds.size.height - 300, width: UIScreen.main.bounds.size.width, height: 50))
+        toolBar.barStyle = .default
+        toolBar.items = [UIBarButtonItem.init(title: "Tamam", style: .done, target: self, action: #selector(onDoneButtonTapped))]
+        self.addSubview(toolBar)
+    }
+    
+    @objc func onDoneButtonTapped() {
+        isPicker = false
+        toolBar.removeFromSuperview()
+        picker.removeFromSuperview()
+    }
+    
+    @IBAction func amounTap(_ sender: Any) {
+        onDoneButtonTapped()
+    }
+    
+    func dismissKeyboard() {
+        self.endEditing(true)
     }
     
     @IBAction func btnCancel(_ sender: Any) {
@@ -261,8 +318,6 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
 
         pickerData = digilira.networks
         
-        createPickerView()
-        dismissPickerView()
         recipientText?.addDoneCancelToolbar()
         textAmount?.addDoneCancelToolbar()
         textAmount.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
@@ -274,7 +329,14 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         fetchQR.addGestureRecognizer(tap)
         ticker = digiliraPay.ticker()
         siparis.translatesAutoresizingMaskIntoConstraints = true;
-
+        
+        
+        adresBtn.layer.cornerRadius = 5
+        textAmount.layer.cornerRadius = 5
+        recipientText.layer.cornerRadius = 5
+        recipientText.addPadding(padding: .left(10))
+        textAmount.addPadding(padding: .left(10))
+        adresBtn.contentEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
     }
     
     func setCoinPrice () {
@@ -283,18 +345,18 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         }
         
         switch selectedCoinX.network {
-        case "bitcoin":
+        case digilira.bitcoin.network:
             coinPrice = (ticker?.btcUSDPrice)! * (ticker?.usdTLPrice)!
             break
-        case "ethereum":
+        case digilira.ethereum.network:
             coinPrice = (ticker?.ethUSDPrice)! * (ticker?.usdTLPrice)!
             break
-        case "waves":
+        case digilira.waves.network:
             switch selectedCoinX.tokenName {
-            case "Waves":
+            case digilira.waves.tokenName:
                 coinPrice = (ticker?.wavesUSDPrice)! * (ticker?.usdTLPrice)!
                 break
-            case "Kızılay":
+            case digilira.charity.tokenName:
                 coinPrice = 1
             break
             default:
@@ -312,7 +374,6 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     override func didMoveToSuperview() {
-        print(transaction?.products)
         setQR(params: transaction!)
         //setCoinPrice()
     }
@@ -350,23 +411,51 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         
     }
     
-    func createPickerView() {
-        let pickerView = UIPickerView()
-        pickerView.delegate = self
-        coinTextField.inputView = pickerView
-    }
-    func dismissPickerView() {
-        let toolBar = UIToolbar()
-        toolBar.sizeToFit()
-        let button = UIBarButtonItem(title: "Tamam", style: .plain, target: self, action: #selector(action1))
 
-        toolBar.setItems([button], animated: true)
-        toolBar.isUserInteractionEnabled = true
-        coinTextField.inputAccessoryView = toolBar
-    }
     
     @objc func action1() {
           self.endEditing(true)
     }
+    
+    
  
 }
+
+
+extension UITextField {
+
+enum PaddingSpace {
+    case left(CGFloat)
+    case right(CGFloat)
+    case equalSpacing(CGFloat)
+}
+
+func addPadding(padding: PaddingSpace) {
+
+    self.leftViewMode = .always
+    self.layer.masksToBounds = true
+
+    switch padding {
+
+    case .left(let spacing):
+        let leftPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: spacing, height: self.frame.height))
+        self.leftView = leftPaddingView
+        self.leftViewMode = .always
+
+    case .right(let spacing):
+        let rightPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: spacing, height: self.frame.height))
+        self.rightView = rightPaddingView
+        self.rightViewMode = .always
+
+    case .equalSpacing(let spacing):
+        let equalPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: spacing, height: self.frame.height))
+        // left
+        self.leftView = equalPaddingView
+        self.leftViewMode = .always
+        // right
+        self.rightView = equalPaddingView
+        self.rightViewMode = .always
+    }
+}
+}
+

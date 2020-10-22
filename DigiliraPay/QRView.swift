@@ -19,8 +19,9 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     @IBOutlet weak var switchCurrency: UISegmentedControl!
     @IBOutlet weak var copyIcon: UIImageView!
     @IBOutlet weak var copyAddress: UIView!
-    @IBOutlet weak var adresTextView: UITextField!
+    @IBOutlet weak var adresBtn: UIButton!
     
+
     weak var delegate: LoadCoinDelegate?
     let pasteboard = UIPasteboard.general
     public var address: String?
@@ -63,8 +64,6 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         copyAddress.addGestureRecognizer(tap)
         
         pickerData = digilira.networks
-        createPickerView()
-        dismissPickerView()
         
         
         textAmount.isEnabled = false
@@ -109,7 +108,7 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        adresTextView.text = pickerData[0].tokenName
+        adresBtn.setTitle(pickerData[0].tokenName, for: .normal)
         selectedCoinX = pickerData[0]
         setCoinPrice()
         return 1 // number of session
@@ -118,36 +117,78 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         return pickerData.count // number of dropdown items
     }
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        selectedCoinX = pickerData[row]
+        setAdress()
         return pickerData[row].tokenName // dropdown item
     }
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        adresTextView.text = pickerData[0].tokenName
+        adresBtn.setTitle(pickerData[row].tokenName, for: .normal)
         selectedCoinX = pickerData[row]
         setCoinPrice()
  
      }
+    var toolBar = UIToolbar()
+    var picker  = UIPickerView()
+    var isPicker = false
     
-    
-    func setCoinPrice () {
+    @IBAction func YOUR_BUTTON__TAP_ACTION(_ sender: UIButton) {
+        
+        if isPicker {
+            return
+        }
+        dismissKeyboard()
+        isPicker = true
+        
+        picker = UIPickerView.init()
+        picker.delegate = self
+        picker.backgroundColor = UIColor.white
+        picker.setValue(UIColor.black, forKey: "textColor")
+        picker.autoresizingMask = .flexibleWidth
+        picker.contentMode = .center
+        picker.frame = CGRect.init(x: 0.0, y: UIScreen.main.bounds.size.height - 300, width: UIScreen.main.bounds.size.width, height: 300)
+        self.addSubview(picker)
 
+        toolBar = UIToolbar.init(frame: CGRect.init(x: 0.0, y: UIScreen.main.bounds.size.height - 300, width: UIScreen.main.bounds.size.width, height: 50))
+        toolBar.barStyle = .default
+        toolBar.items = [UIBarButtonItem.init(title: "Tamam", style: .done, target: self, action: #selector(onDoneButtonTapped))]
+        self.addSubview(toolBar)
+    }
+    
+    @objc func onDoneButtonTapped() {
+        isPicker = false
+        toolBar.removeFromSuperview()
+        picker.removeFromSuperview()
+    }
+    
+    @IBAction func amounTap(_ sender: Any) {
+        onDoneButtonTapped()
+    }
+    
+    func dismissKeyboard() {
+        self.endEditing(true)
+    }
+    
+    
+    func setAdress()  {
+        
         
         switch selectedCoinX.network {
-        case "bitcoin":
+        case digilira.bitcoin.network:
             coinPrice = (ticker?.btcUSDPrice)! * (ticker?.usdTLPrice)!
             address = kullanici?.btcAddress
             break
-        case "ethereum":
+        case digilira.ethereum.network:
             coinPrice = (ticker?.ethUSDPrice)! * (ticker?.usdTLPrice)!
             address = kullanici?.ethAddress
             break
-        case "waves":
+        case digilira.waves.network:
             switch selectedCoinX.tokenName {
-            case "Waves":
+            case digilira.waves.tokenName:
                 coinPrice = (ticker?.wavesUSDPrice)! * (ticker?.usdTLPrice)!
                 address = kullanici?.wallet
                 assetId = digilira.waves.token
                 break
-            case "Kızılay":
+            case digilira.charity.tokenName:
                 address = kullanici?.wallet
                 assetId = digilira.charity.token
                 coinPrice = 1
@@ -164,11 +205,23 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
             break
         }
         
+        
+        
+    }
+    func setCoinPrice () {
+
+        setAdress()
+        
+        if textAmount.text == nil {
+            textAmount.text = "0"
+        }
+        
         let image = generateQRCode(from: selectedCoinX.network, network: selectedCoinX.network, address: address!, amount: textAmount.text!, assetId: assetId)
         qrImage.image = image
         textAmount.text = ""
         setPlaceHolderText()
-        adresTextView.text = address
+//        adresTextView.text = address
+        adresBtn.setTitle(address, for: .normal)
         switchCurrency.setTitle(selectedCoinX.symbol, forSegmentAt: 1)
         switchCurrency.setTitle("₺", forSegmentAt: 0)
         textAmount.isEnabled = true
@@ -324,31 +377,17 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     @objc func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
         print("ok")
     }
-    
-    
-    func createPickerView() {
-        let pickerView = UIPickerView()
-        pickerView.delegate = self
-        adresTextView.inputView = pickerView
-    }
-    func dismissPickerView() {
-        let toolBar = UIToolbar()
-        toolBar.sizeToFit()
-        let button = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(action1))
-        toolBar.setItems([button], animated: true)
-        toolBar.isUserInteractionEnabled = true
-        adresTextView.inputAccessoryView = toolBar
-    }
-    
-    @objc func action1() {
-          self.endEditing(true)
-    }
+
     
     func generateQRCode(from string: String, network: String, address: String, amount: String, assetId: String) -> UIImage? {
+        var miktar = amount
+        if miktar == "" {
+            miktar = "0.0"
+        }
         let doubleStop = ":".data(using: String.Encoding.ascii)
         let amountPrefix = "?amount=".data(using: String.Encoding.ascii)
         let assetIdPrefix = "&assetId=".data(using: String.Encoding.ascii)
-        var data = string.data(using: String.Encoding.ascii)! + doubleStop! + address.data(using: String.Encoding.ascii)! + amountPrefix! + amount.data(using: String.Encoding.ascii)!
+        var data = string.data(using: String.Encoding.ascii)! + doubleStop! + address.data(using: String.Encoding.ascii)! + amountPrefix! + miktar.data(using: String.Encoding.ascii)!
 
         if network == "waves" {
             let assetIdData = assetId.data(using: String.Encoding.ascii)

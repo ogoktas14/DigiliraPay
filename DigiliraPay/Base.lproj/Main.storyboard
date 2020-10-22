@@ -260,8 +260,8 @@
                                         </constraints>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="₺" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oqx-yc-ZeJ">
-                                        <rect key="frame" x="193.66666666666666" y="46.666666666666671" width="27" height="55.666666666666671"/>
-                                        <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="48"/>
+                                        <rect key="frame" x="193.66666666666666" y="41.666666666666664" width="27" height="65.666666666666686"/>
+                                        <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="48"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>

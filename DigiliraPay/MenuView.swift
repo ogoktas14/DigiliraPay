@@ -95,7 +95,7 @@ class MenuView: UIView {
     {
         wallet()
         
-        delegate?.goWalletScreen(coin: 0)
+        delegate?.goWalletScreen(coin: "")
         
         
     }

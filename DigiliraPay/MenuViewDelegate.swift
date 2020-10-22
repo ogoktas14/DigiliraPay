@@ -11,7 +11,7 @@ import Foundation
 protocol MenuViewDelegate: class
 {
     func goHomeScreen()
-    func goWalletScreen(coin:Int)
+    func goWalletScreen(coin: String)
     func goSettingsScreen()
     func goQRScreen()
     func goPayments()

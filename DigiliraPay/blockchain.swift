@@ -168,35 +168,16 @@ class Blockchain {
     func returnAsset (assetId: String) -> String {
         
         switch assetId {
-        case "FjTB2DdymTfpYbCCdcFwoRbHQnEhQD11CUm6nAF7P1UD":
-            return "Bitcoin"
-        case "LVf3qaCtb9tieS1bHD8gg5XjWvqpBm5TaDxeSVcqPwn":
-            return "Ethereum"
-        case "49hWHwJcTwV7bq76NebfpEj8N4DpF8iYKDSAVHK9w9gF":
-            return "Litecoin"
-        case "HGoEZAsEQpbA3DJyV9J3X1JCTTBuwUB6PE19g1kUYXsH":
-            return "Waves"
-        case "2CrDXATWpvrriHHr1cVpQM65CaP3m7MJ425xz3tn9zMr":
-            return "Charity"
+        case digilira.bitcoin.token:
+            return digilira.bitcoin.tokenName
+        case digilira.ethereum.token:
+            return digilira.ethereum.tokenName
+        case digilira.waves.token:
+            return digilira.waves.tokenName
+        case digilira.charity.token:
+            return digilira.charity.tokenName
         default:
-            return "null"
-        }
-        
-    }
-    
-    func returnNetworkAsset (network: String) -> String {
-        
-        switch network {
-        case "bitcoin":
-            return digilira.bitcoin.token
-        case "ethereum":
-            return digilira.ethereum.token
-        case "waves":
-            return digilira.ethereum.token
-        case "charity":
-            return digilira.ethereum.token
-        default:
-            return "null"
+            return ""
         }
         
     }

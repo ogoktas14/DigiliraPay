@@ -357,11 +357,11 @@ class digiliraPayApi {
         let amountFloat = Double.init(Double.init(amount) / 100000000)
         
         switch network {
-        case "bitcoin":
+        case digilira.bitcoin.network:
             return amountFloat  * symbol.btcUSDPrice! * symbol.usdTLPrice!
-        case "ethereum":
+        case digilira.ethereum.network:
             return amountFloat * symbol.ethUSDPrice! * symbol.usdTLPrice!
-        case "waves":
+        case digilira.waves.network:
             switch assetId {
             case digilira.waves.token:
                 return amountFloat * symbol.wavesUSDPrice! * symbol.usdTLPrice!
@@ -589,9 +589,12 @@ class OpenUrlManager {
             }
             break
         case "bitcoin", "ethereum":
-            let data = array[1].components(separatedBy: "?amount=")
+            var data = array[1].components(separatedBy: "?amount=")
             
             if (data.count > 1) {
+                if data[1] == ""{
+                    data[1] = "0"
+                }
                 amount = Int64(Float.init(data[1])! * 100000000)
             }
             self.onURL!(digilira.QR.init(network: caption, address: data[0], amount: amount))
@@ -599,10 +602,13 @@ class OpenUrlManager {
             
         case "waves":
             let data = array[1].components(separatedBy: "?amount=")
-            let amountAssetId = data[1].components(separatedBy: "&assetId=")
+            var amountAssetId = data[1].components(separatedBy: "&assetId=")
             
             var amount: Int64? = 0
             if (amountAssetId.count > 1) {
+                if amountAssetId[0] == ""{
+                    amountAssetId[0] = "0"
+                }
                 amount = Int64(Float.init(amountAssetId[0])! * 100000000)
                 assetId = amountAssetId[1]
             }

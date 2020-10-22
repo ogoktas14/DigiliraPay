@@ -106,13 +106,7 @@ class MainScreen: UIViewController {
     
     var headerHeightBuffer: CGFloat?
     var QR:digilira.QR = digilira.QR.init()
-    
-    var Assets = [
-        "FjTB2DdymTfpYbCCdcFwoRbHQnEhQD11CUm6nAF7P1UD": "Bitcoin",
-        "LVf3qaCtb9tieS1bHD8gg5XjWvqpBm5TaDxeSVcqPwn": "Ethereum",
-        "49hWHwJcTwV7bq76NebfpEj8N4DpF8iYKDSAVHK9w9gF" : "Litecoin",
-        "HGoEZAsEQpbA3DJyV9J3X1JCTTBuwUB6PE19g1kUYXsH" : "Waves",
-        "2CrDXATWpvrriHHr1cVpQM65CaP3m7MJ425xz3tn9zMr" : "Charity"]
+
     
     let BC = Blockchain()
     
@@ -154,6 +148,7 @@ class MainScreen: UIViewController {
         super.viewDidLoad()
         socketConn()
         coinTableView.refreshControl = refreshControl
+        
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .light
         } else {
@@ -169,15 +164,19 @@ class MainScreen: UIViewController {
         self.contentView.addGestureRecognizer(swipeRight)
         self.contentView.addGestureRecognizer(swipeLeft)
         
+        
         headerHeightBuffer =  headerView.frame.size.height //bu mal degisip duruyo
         //        when requested asset balances
         
         BC.onAssetBalance = { [self] result in
             self.Balances = (result)
-            self.setTableView()
-            self.setWalletView()
-            self.setPaymentView()
-            self.setSettingsView()
+            
+            if isFirstLaunch {
+                self.setTableView()
+                self.setWalletView()
+                self.setPaymentView()
+                self.setSettingsView()
+            }
             self.coinTableView.reloadData()
             self.headerTotal.fadeTransition(0.4)
             self.headerTotal.text  = "₺ 110.313"
@@ -279,11 +278,8 @@ class MainScreen: UIViewController {
             
         }
         
-        
-        
-        
         refreshControl.attributedTitle = NSAttributedString(string: "Güncellemek için çekiniz..")
-        refreshControl.addTarget(self, action: #selector(refreshWeatherData(_:)), for: UIControl.Event.valueChanged)
+        refreshControl.addTarget(self, action: #selector(refreshData(_:)), for: UIControl.Event.valueChanged)
         
         NotificationCenter.default.addObserver( self, selector: #selector(keyboardWillShow(notification:)), name:  UIResponder.keyboardWillShowNotification, object: nil )
         NotificationCenter.default.addObserver( self, selector: #selector(keyboardWillHide(notification:)), name:  UIResponder.keyboardWillHideNotification, object: nil )
@@ -343,7 +339,7 @@ class MainScreen: UIViewController {
                     return
                 }
                 if (isPayments) {
-                    goWalletScreen(coin: 0)
+                    goWalletScreen(coin: "")
                     return
                 }
                 if (isShowWallet) {
@@ -364,7 +360,7 @@ class MainScreen: UIViewController {
                     return
                 }
                 if (isHomeScreen) {
-                    goWalletScreen(coin: 0)
+                    goWalletScreen(coin: "")
                     return
                 }
                 if (isShowSettings) {
@@ -382,15 +378,15 @@ class MainScreen: UIViewController {
         if address.address == nil {return}
         switch address.network {
         
-        case "bitcoin":
+        case digilira.bitcoin.network:
             let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!, assetId:digilira.bitcoin.token)
             sendBTCETH(external: external)
             break
-        case "waves":
+        case digilira.waves.network:
             let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!, assetId: address.assetId!)
             sendBTCETH(external: external)
             break
-        case "ethereum":
+        case digilira.ethereum.network:
             let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!, assetId:digilira.ethereum.token)
             sendBTCETH(external: external)
             break
@@ -473,7 +469,7 @@ class MainScreen: UIViewController {
     }
     
     
-    @objc private func refreshWeatherData(_ sender: Any) {
+    @objc private func refreshData(_ sender: Any) {
         if isSuccessView {
             refreshControl.endRefreshing()
             return
@@ -593,7 +589,7 @@ class MainScreen: UIViewController {
         
         
         walletView.kullanici = self.kullanici
-        walletView.coin = self.homeAmountLabel.text
+//        walletView.coin = "Ethereum"
         
         walletView.layer.zPosition = 0
         
@@ -810,7 +806,8 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
         
         var count = 0
         for asset1 in Balances!.balances {
-            if ((self.Assets[asset1.assetId]) != nil) {
+            let asset = BC.returnAsset(assetId: asset1.assetId)
+            if (asset != "") {
                 Filtered.append(asset1)
                 count = count + 1
             }
@@ -823,7 +820,7 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
         if isSuccessView { //eger basarili ekrani aciksa kapat
             return
         }
-        goWalletScreen(coin: indexPath.item)
+        goWalletScreen(coin: "")
         
     }
     
@@ -831,7 +828,7 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
         if isSuccessView { //eger basarili ekrani aciksa kapat
             return
         }
-        goWalletScreen(coin: recognizer.floatValue)
+        goWalletScreen(coin: recognizer.assetName)
         
     }
     
@@ -844,9 +841,11 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
             tapped.floatValue = indexPath[1]
             cell.addGestureRecognizer(tapped)
             
-            cell.coinIcon.image = UIImage(named:Assets[(Filtered[indexPath[1]]?.issueTransaction.assetId)!]!)
-            
-            cell.coinName.text = Assets[(Filtered[indexPath[1]]?.issueTransaction.assetId)!]
+            let asset = BC.returnAsset(assetId: (Filtered[indexPath[1]]?.issueTransaction.assetId)!)
+            cell.coinIcon.image = UIImage(named: asset)
+            cell.coinName.text = asset
+            tapped.assetName = asset
+
             let double = Double(Filtered[indexPath[1]]!.balance) / Double(100000000)
             cell.coinAmount.text = (double).description
             cell.coinCode.text = (Filtered[indexPath[1]]!.issueTransaction.name)
@@ -1025,10 +1024,12 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         isHomeScreen = true
     }
     
-    func goWalletScreen(coin: Int)
+    func goWalletScreen(coin: String)
     {
         
         menuXib.wallet()
+        walletView.coin = coin
+        walletView.readHistory(coin: coin)
         
         dismissLoadView()
         dismissProfileMenu()
@@ -1051,45 +1052,8 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         {
             isShowWallet = true
             
-            //            headerInfoLabel.isHidden = false
-            //            homeAmountLabel.isHidden = false
             logoView.isHidden = false
             headerTotal.isHidden = true
-            //
-            //            headerInfoLabel.textColor = UIColor(red:0.94, green:0.56, blue:0.10, alpha:1.0)
-            //            if Filtered.count != 0 {
-            //                headerInfoLabel.text = Assets[(Filtered[coin]?.issueTransaction.assetId)!]
-            //                let double = Double(Filtered[coin]!.balance) / Double(100000000)
-            //                homeAmountLabel.text = (double).description
-            //
-            //                let localAseet = Assets[(Filtered[coin]?.issueTransaction.assetId)!]
-            //
-            //                switch localAseet {
-            //                case "Bitcoin":
-            //                    selectedCoin = kullanici?.btcAddress
-            //                    network = "bitcoin"
-            //                    coinSymbol = "BTC"
-            //                    break;
-            //                case "Ethereum":
-            //                    selectedCoin = kullanici?.ethAddress
-            //                    network = "ethereum"
-            //                    coinSymbol = "ETH"
-            //                    break;
-            //                case "Waves":
-            //                    selectedCoin = kullanici?.wallet
-            //                    network = "waves"
-            //                    coinSymbol = "WAVES"
-            //                    break;
-            //                default:
-            //                    selectedCoin = ""
-            //                }
-            //
-            //            } else {
-            //                headerInfoLabel.text = "Bakiye"
-            //                homeAmountLabel.text = "0.0"
-            //
-            //            }
-            
             
             isShowSettings = false
             isPayments = false
@@ -1189,10 +1153,18 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
         }
         newSendMoneyView.coinSwitch.setTitle(params.fiat!.description + " ₺", forSegmentAt: 0)
         newSendMoneyView.coinSwitch.setTitle((Double(params.amount!) / Double(100000000)).description + " " + params.network!, forSegmentAt: 1)
-        newSendMoneyView.coinTextField.text = params.network?.capitalized
+        
+        var networkLabel = params.network?.capitalized
+        
+        if networkLabel == "" {
+            networkLabel = "Cüzdan Seçin"
+        }
+        newSendMoneyView.adresBtn.setTitle(networkLabel, for: .normal)
+        
+
         newSendMoneyView.transaction = params
         if params.destination == digilira.transactionDestination.interwallets {
-            newSendMoneyView.coinTextField.isEnabled = false
+            newSendMoneyView.adresBtn.isEnabled = false
             newSendMoneyView.recipientText.isEnabled = false
         }
         
@@ -1790,8 +1762,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
     
     func showSuccess(mode: Int, transaction: [String : Any])
     {
-        //accountButton.isHidden = true
-        //profileMenuButton.isHidden = true
+        
         let asset = BC.returnAsset(assetId: (transaction["assetId"] as?  String)!)
         var amount: String
         var title: String
@@ -2467,6 +2438,7 @@ extension MainScreen: PinViewDelegate
 
 class MyTapGesture: UITapGestureRecognizer {
     var floatValue = 0
+    var assetName = ""
     var qrAttachment = ""
     
 }
