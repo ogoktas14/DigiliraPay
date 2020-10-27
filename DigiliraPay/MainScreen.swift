@@ -1931,7 +1931,6 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
             DispatchQueue.main.async {
                 switch res {
                 case true:
-                    let destination = digilira.transactionDestination.interwallets
                     let trx = SendTrx.init(merchant: data?.owner!,
                                            recipient: (data?.wallet)!,
                                            assetId: data?.assetId!,
@@ -1940,8 +1939,9 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
                                            fiat: exchange,
                                            attachment: data?.message,
                                            network: data?.network!,
-                                           destination: destination,
-                                           massWallet: data?.wallet
+                                           destination: data?.destination!,
+                                           massWallet: data?.wallet,
+                                           memberCheck: true
                     )
                     
                     self.send(params: trx)
@@ -2020,6 +2020,7 @@ extension MainScreen: UIImagePickerControllerDelegate {
                     OpenUrlManager.onURL = { [self] res in
                         getOrder(address: res)
                     }
+                    print(row.messageString!)
                     OpenUrlManager.parseUrlParams(openUrl: URL(string: row.messageString!))
                 }
                 
@@ -2254,6 +2255,7 @@ extension MainScreen: NewCoinSendDelegate
                         BC.sendTransaction2(recipient: params.recipient!, fee: 900000, amount: params.amount!, assetId: params.assetId!, attachment: params.attachment!, wallet:wallet)
                         break
                     case digilira.transactionDestination.foreign:
+                        BC.massTransferTx(recipient: params.recipient!, fee: 1100000, amount: params.amount!, assetId: params.assetId!, attachment: "", wallet: wallet)
                         print(params)
                         break
                     case digilira.transactionDestination.interwallets:

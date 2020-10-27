@@ -47,16 +47,130 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     let digiliraPay = digiliraPayApi()
 
     @IBAction func sendMoneyButton(_ sender: Any) {
+        var isMissing = false
+
         let isAmount = amount
-        if isAmount == 0.0 { return }
-        if adresBtn.currentTitle == "Token" {return}
-        if recipientText.text == "" {return}
+        if isAmount == 0.0 || isAmount == 0 {
+            textAmount.attributedPlaceholder = NSAttributedString(string: textAmount.placeholder!, attributes: [NSAttributedString.Key.foregroundColor : UIColor.red])
+            textAmount.textColor = .red
+            isMissing = true
+        }
+                
+        if recipientText.text == "" {
+            recipientText.attributedPlaceholder = NSAttributedString(string: recipientText.placeholder!, attributes: [NSAttributedString.Key.foregroundColor : UIColor.red])
+            isMissing = true
+        }
         
-        transaction?.amount = Int64(isAmount * 100000000)
-        delegate?.sendCoinNew(params: transaction!)
+        if selectedCoinX.network == "" {
+            adresBtn.setTitleColor(.red, for: .normal)
+            isMissing = true
+        }
+        
+        if transaction?.destination == digilira.transactionDestination.foreign {
+            if !checkAddress(network: selectedCoinX.network, address: recipientText.text!) {
+                recipientText.textColor = .red
+                isMissing = true
+            }
+        }
+        
+
+        if isMissing {
+            shake()
+            return
+        }
+        
+        if !transaction!.memberCheck {
+            if !checkAddress(network: selectedCoinX.network, address: recipientText.text!) {
+                recipientText.textColor = .red
+                isMissing = true
+            }
+            
+            let external = digilira.externalTransaction.init(network: selectedCoinX.network,
+                                                             address: recipientText.text,
+                                                             amount: Int64(isAmount * 100000000),
+                                                             assetId: selectedCoinX.token)
+            
+            digiliraPay.onMember = { res, data in
+                DispatchQueue.main.async {
+                    switch res {
+                    case true:
+                        let trx = SendTrx.init(merchant: data?.owner!,
+                                               recipient: (data?.wallet)!,
+                                               assetId: data?.assetId!,
+                                               amount: data?.amount!,
+                                               fee: 900000,
+                                               fiat: self.price * 100000000,
+                                               attachment: data?.message,
+                                               network: data?.network!,
+                                               destination: data?.destination!,
+                                               massWallet: data?.wallet,
+                                               memberCheck: true
+                        )
+                        
+                 
+                        self.delegate?.sendCoinNew(params: trx)
+                    default:
+                        return
+                    }
+                }
+                
+                
+                
+            }
+            
+            
+            digiliraPay.isOurMember(external: external)
+
+        }else {
+            transaction?.amount = Int64(isAmount * 100000000)
+            delegate?.sendCoinNew(params: transaction!)
+        }
+         
+        
+
     }
-  
+    
+    func checkAddress(network: String, address: String) -> Bool {
+        var regexString = ""
+        
+        if transaction?.destination != digilira.transactionDestination.foreign {
+            return true
+        }
+        
+        switch network {
+        case digilira.bitcoin.network:
+            regexString = "^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$"
+        case digilira.ethereum.network:
+            regexString = "^0x[a-fA-F0-9]{40}$"
+            break
+        case digilira.waves.network:
+            regexString = "^[3][a-zA-Z0-9]{34}"
+            break
+        default:
+            regexString = "^[3][a-zA-Z0-9]{34}"
+        }
+        let addressTest = NSPredicate(format: "SELF MATCHES %@", regexString)
+        let result = addressTest.evaluate(with: address)
+        
+        if result {
+            recipientText.textColor = .black
+        }
+        return result
+    }
+     
+    func shakeScreen() {
+        let animation = CABasicAnimation(keyPath: "position")
+        animation.duration = 0.07
+        animation.repeatCount = 4
+        animation.autoreverses = true
+        animation.fromValue = NSValue(cgPoint: CGPoint(x: self.center.x - 10, y: self.center.y))
+        animation.toValue = NSValue(cgPoint: CGPoint(x: self.center.x + 10, y: self.center.y))
+        
+        self.layer.add(animation, forKey: "position")
+    }
+    
     @objc func textFieldDidChange(_ textField: UITextField) {
+        textField.textColor = .black
         
         let str = textField.text
         let replaced = str!.replacingOccurrences(of: ",", with: ".")
@@ -114,6 +228,16 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         }
         
         
+        if params.products == nil {
+            for subView in siparis.subviews
+            { subView.removeFromSuperview() }
+        }
+ 
+        if params.destination == digilira.transactionDestination.foreign {
+            adresBtn.isEnabled = true
+            recipientText.isEnabled = true
+            textAmount.isEnabled = true
+        }
         
         switch params.network! {
         case digilira.bitcoin.network:
@@ -121,6 +245,11 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         case digilira.ethereum.network:
             selectedCoinX = digilira.ethereum
         case digilira.waves.network, "domestic":
+            
+            adresBtn.isEnabled = false
+            recipientText.isEnabled = false
+            textAmount.isEnabled = false
+            
             switch params.assetId {
             case digilira.bitcoin.token:
                 selectedCoinX = digilira.bitcoin
@@ -145,6 +274,10 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         amount = (Double(params.amount!) / Double(100000000))
         price = Double(params.fiat!)
         
+        adresBtn.setTitleColor(.black, for: .normal)
+        recipientText.textColor = .black
+        textAmount.textColor = .black
+
         recipientText.text = params.merchant
         coinSwitch.setTitle(price.description + " ₺", forSegmentAt: 0)
         coinSwitch.setTitle(amount.description + " " + selectedCoinX.symbol, forSegmentAt: 1)
@@ -164,19 +297,27 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
             recipientText.isEnabled = false
             textAmount.isEnabled = false
         }
+        btnSend.isEnabled = true
+        btnSend.backgroundColor = .systemBlue
+
+        if params.destination == digilira.transactionDestination.foreign {
+            let isValid = checkAddress(network: selectedCoinX.network, address: params.merchant!)
+            if !isValid {
+                recipientText.textColor = .red
+                btnSend.backgroundColor = .red
+                btnSend.isEnabled = false
+            }
+
+        }
     }
     
     func setTextAmount() {
         if coinSwitch.selectedSegmentIndex == 0 { //₺
-             
             textAmount.text = price.description
- 
         }
         
         if coinSwitch.selectedSegmentIndex == 1 { //token
-            
             textAmount.text = amount.description
-  
         }
     }
     
@@ -249,6 +390,7 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     }
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         adresBtn.setTitle(pickerData[row].tokenName, for: .normal)
+        adresBtn.setTitleColor(.black, for: .normal)
         selectedCoinX = pickerData[row]
         selectedIndex = row
         setCoinPrice()
@@ -294,6 +436,15 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     @objc func onDoneButtonTapped() {
+        
+        if !checkAddress(network: selectedCoinX.network, address: recipientText.text!) {
+            recipientText.textColor = .red
+            
+        } else {
+            btnSend.backgroundColor = .systemBlue
+            btnSend.isEnabled = true
+        }
+        
         isPicker = false
         toolBar.removeFromSuperview()
         picker.removeFromSuperview()
@@ -374,7 +525,9 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     override func didMoveToSuperview() {
-        setQR(params: transaction!)
+        if (transaction != nil) {
+            setQR(params: transaction!)
+        }
         //setCoinPrice()
     }
     

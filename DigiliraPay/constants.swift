@@ -138,6 +138,7 @@ struct digilira {
         var owner: String?
         var wallet: String?
         var assetId: String?
+        var destination: String?
     }
      
     struct ticker {

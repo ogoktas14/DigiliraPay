@@ -44,6 +44,7 @@
                                     <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="20"/>
                                     <textInputTraits key="textInputTraits"/>
                                     <connections>
+                                        <action selector="amounTap:" destination="iN0-l3-epB" eventType="editingDidEnd" id="ePD-su-kv9"/>
                                         <action selector="amounTap:" destination="iN0-l3-epB" eventType="editingDidBegin" id="ysz-KU-hfW"/>
                                     </connections>
                                 </textField>

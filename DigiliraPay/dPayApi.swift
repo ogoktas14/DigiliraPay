@@ -400,7 +400,8 @@ class digiliraPayApi {
                                                                  amount: external.amount,
                                                                  owner: res["owner"] as? String,
                                                                  wallet: (res["wallet"] as! String),
-                                                                 assetId: external.assetId
+                                                                 assetId: external.assetId,
+                                                                 destination: res["destination"] as? String
                 )
                 
                 self.onMember!(true, response)
@@ -561,6 +562,9 @@ class OpenUrlManager {
     static var onURL: ((_ result: digilira.QR)->())?
     
     class func parseUrlParams(openUrl: URL?) {
+        if openUrl?.absoluteString == nil {
+            return
+        }
         let array = openUrl!.absoluteString.components(separatedBy: CharacterSet.init(charactersIn: ":"))
         let caption = array[0]
         var amount: Int64? = 0

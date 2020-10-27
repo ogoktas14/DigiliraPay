@@ -17,11 +17,12 @@ import Foundation
         var fiat: Double?
         var attachment:String?
         var network: String?
-        var destination: String = digilira.transactionDestination.domestic
+        var destination: String?
         var externalAddress: String?
         var massWallet: String?
         var massNameSurname: String?
         var products: [digilira.product]?
+        var memberCheck: Bool = false
    }
 
 
