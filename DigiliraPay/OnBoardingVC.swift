@@ -9,7 +9,15 @@
 import UIKit
 import UserNotifications
 
-class OnBoardingVC: UIViewController, PinViewDelegate {
+class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDelegate {
+    
+    var gotoSeedRecover = false
+    func doSomethingWith() {
+        importAccountView.isHidden = true
+        letsGoView.isHidden = true
+        nowLetsGo()
+    }
+    
     
     func closePinView() {
         
@@ -56,6 +64,28 @@ class OnBoardingVC: UIViewController, PinViewDelegate {
          
         UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
 
+        let seedRecovery = UserDefaults.standard.value(forKey: "seedRecovery") as? Bool
+        
+        let versionLegal = UserDefaults.standard.value(forKey: "isLegalView") as? Int
+        let versionTerms = UserDefaults.standard.value(forKey: "isTermsOfUse") as? Int
+        
+        if versionLegal != nil && versionTerms != nil {
+            switch seedRecovery {
+            case nil:
+                gotoSeedRecover = false
+                nowLetsGo()
+                return
+            case false:
+                gotoSeedRecover = true
+                nowLetsGo()
+                return
+            case true:
+                gotoSeedRecover = false
+            default:
+                return
+            }
+        }
+ 
         if BC.checkIfUser() {
             digiliraPay.login() { (json, status) in
                 DispatchQueue.main.async {
@@ -187,6 +217,11 @@ class OnBoardingVC: UIViewController, PinViewDelegate {
             vc?.pinkodaktivasyon = true
             vc?.QR = QR
         }
+        if segue.identifier == "toLetsStartVC"
+        {
+            let vc = segue.destination as? LetsStartVC
+            vc?.gotoSeedRecover = self.gotoSeedRecover
+        }
     }
 
     func setLetsGoView()
@@ -207,17 +242,36 @@ class OnBoardingVC: UIViewController, PinViewDelegate {
     
     @objc func letsGO()
     {
+//        let defaults = UserDefaults.standard
+//        let dictionary = defaults.dictionaryRepresentation()
+//        dictionary.keys.forEach { key in
+//            defaults.removeObject(forKey: key)
+//        }
+        let versionLegal = UserDefaults.standard.value(forKey: "isLegalView") as? Int
+        let versionTerms = UserDefaults.standard.value(forKey: "isTermsOfUse") as? Int
         
-        let alert = UIAlertController(title: "Lütfen bekleyin", message: "Cüzdanınız oluşturuluyor..", preferredStyle: .alert)
-        self.present(alert, animated: true, completion: nil)
-
-        BC.create(){ (seed) in
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                alert.dismiss(animated: true, completion: nil)
-                self.performSegue(withIdentifier: "toLetsStartVC", sender: nil)
-            }
+        if versionLegal != nil && versionTerms != nil {
+            
+            nowLetsGo()
+ 
+        } else {
+            let controller = DynamicViewController()
+            controller.delegate = self
+            show(controller, sender: "sender")
         }
         
+  
+    }
+    
+    func nowLetsGo() {
+        let alert = UIAlertController(title: "Lütfen bekleyin", message: "Cüzdanınız oluşturuluyor..", preferredStyle: .alert)
+                self.present(alert, animated: true, completion: nil)
+                BC.create(){ (seed) in
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        alert.dismiss(animated: true, completion: nil)
+                        self.performSegue(withIdentifier: "toLetsStartVC", sender: nil)
+                    }
+                }
     }
     
     @objc func impoertAccount()
@@ -318,3 +372,87 @@ func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent noti
 print(notification.request.content.body);
 completionHandler([.alert, .sound])
 }}
+
+
+class DynamicViewController: UIViewController, LegalDelegate {
+    weak var delegate : DisplayViewControllerDelegate?
+    
+    var m: String?
+    var v: Int?
+    let BC = Blockchain()
+
+    
+    func showLegal(mode: digilira.terms) {
+        print(1)
+    }
+    
+    func dismissLegalView() {
+        
+        let versionLegal = UserDefaults.standard.value(forKey: "isLegalView") as? Int
+        let versionTerms = UserDefaults.standard.value(forKey: "isTermsOfUse") as? Int
+        
+        if versionLegal != nil && versionTerms != nil {
+            UIView.animate(withDuration: 0.4, animations: {
+                self.view.frame.origin.y = self.view.frame.height
+            })
+            
+            self.dismiss(animated: true, completion: nil)
+            
+            delegate?.doSomethingWith()
+        }
+ 
+        
+        showView()
+    }
+    
+    override func loadView() {
+
+        // super.loadView()   // DO NOT CALL SUPER
+        
+        showView()
+
+
+    }
+    
+    func showView() {
+        
+        view = UIView()
+        view.backgroundColor = .white
+        view.alpha = 1
+        
+        let versionLegal = UserDefaults.standard.value(forKey: "isLegalView") as? Int
+        let versionTerms = UserDefaults.standard.value(forKey: "isTermsOfUse") as? Int
+        
+ 
+        let legalXib = UIView().loadNib(name: "LegalView") as! LegalView
+        
+        legalXib.frame = CGRect(x: 0,
+                                y: 0,
+                                width: view.frame.width,
+                                height: view.frame.height)
+        
+        legalXib.delegate = self
+        
+
+        legalXib.backView.isHidden = true
+        
+        if versionLegal == nil {
+            legalXib.titleLabel.text = digilira.legalView.title
+            legalXib.contentLabel.text = digilira.legalView.text
+        }
+         
+        if versionTerms == nil {
+                legalXib.titleLabel.text = digilira.termsOfUse.title
+                legalXib.contentLabel.text = digilira.termsOfUse.text
+        }
+        
+
+        legalXib.setView()
+
+        view.addSubview(legalXib)
+    }
+}
+
+protocol DisplayViewControllerDelegate : NSObjectProtocol{
+    func doSomethingWith()
+}

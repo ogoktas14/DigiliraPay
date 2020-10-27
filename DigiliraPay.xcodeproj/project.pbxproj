@@ -125,6 +125,7 @@
 		93534036253C4F2C00FFEA4D /* newSendView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93534035253C4F2C00FFEA4D /* newSendView.xib */; };
 		93534039253C528600FFEA4D /* newSendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93534038253C528600FFEA4D /* newSendView.swift */; };
 		9353403E253EFC9800FFEA4D /* testView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9353403D253EFC9700FFEA4D /* testView.xib */; };
+		93534F1425483A4F0000329F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93534F1325483A4F0000329F /* ViewController.swift */; };
 		936F25B125323B0300C5FA85 /* ColoredCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 936F25B025323B0300C5FA85 /* ColoredCardView.xib */; };
 		936F25B425323B2E00C5FA85 /* ColoredCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F25B325323B2E00C5FA85 /* ColoredCardView.swift */; };
 		936F25B725323B3900C5FA85 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F25B625323B3900C5FA85 /* UIViewExtension.swift */; };
@@ -262,6 +263,7 @@
 		93534035253C4F2C00FFEA4D /* newSendView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = newSendView.xib; sourceTree = "<group>"; };
 		93534038253C528600FFEA4D /* newSendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newSendView.swift; sourceTree = "<group>"; };
 		9353403D253EFC9700FFEA4D /* testView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = testView.xib; sourceTree = "<group>"; };
+		93534F1325483A4F0000329F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		936F25B025323B0300C5FA85 /* ColoredCardView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ColoredCardView.xib; sourceTree = "<group>"; };
 		936F25B325323B2E00C5FA85 /* ColoredCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColoredCardView.swift; sourceTree = "<group>"; };
 		936F25B625323B3900C5FA85 /* UIViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
@@ -465,6 +467,7 @@
 				936F25B325323B2E00C5FA85 /* ColoredCardView.swift */,
 				9381D2B325358B99007DEE7E /* DepositeMoneyView.swift */,
 				93534038253C528600FFEA4D /* newSendView.swift */,
+				93534F1325483A4F0000329F /* ViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -725,6 +728,7 @@
 				882AAB0722FC96DD004CDAA6 /* OnBoardingVC.swift in Sources */,
 				88CA938F231BD0AE008F894B /* ProfileSettingsView.swift in Sources */,
 				9381D2B425358B99007DEE7E /* DepositeMoneyView.swift in Sources */,
+				93534F1425483A4F0000329F /* ViewController.swift in Sources */,
 				88CA938B231B9E1C008F894B /* SendCoinDelegate.swift in Sources */,
 				93B7A11E252F0F0A00C89E66 /* PaymentCategories.swift in Sources */,
 				88F4A1BF2312AF7B007172A6 /* MenuView.swift in Sources */,

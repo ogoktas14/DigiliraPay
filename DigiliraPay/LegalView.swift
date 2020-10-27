@@ -14,7 +14,8 @@ class LegalView: UIView {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var contentLabel: UILabel!
     @IBOutlet weak var confirmView: UIView!
-    
+    @IBOutlet weak var backView: UIView!
+
     weak var delegate: LegalDelegate?
     var tapOkGesture = UITapGestureRecognizer()
     var m: String?
@@ -42,7 +43,7 @@ class LegalView: UIView {
         dictionary.keys.forEach { key in
             defaults.removeObject(forKey: key)
         }
-        exit(1)
+        //exit(10)
     }
     @objc func respondToSwipeGesture(gesture: UIGestureRecognizer) {
 
@@ -60,6 +61,11 @@ class LegalView: UIView {
     }
     
     func setView() {
+        if #available(iOS 13.0, *) {
+            overrideUserInterfaceStyle = .light
+        } else {
+            // Fallback on earlier versions
+        }
         
         tapOkGesture = UITapGestureRecognizer(target: self, action: #selector(setOK))
         confirmView.addGestureRecognizer(tapOkGesture)
@@ -82,12 +88,12 @@ class LegalView: UIView {
             if (v! <= version!) {
                 confirmView.isHidden = true
             }
-            
         }
     }
     
     @objc func setOK() {
         UserDefaults.standard.set(v, forKey: self.m!)
+        delegate?.dismissLegalView()
         confirmView.isHidden = true
     }
     

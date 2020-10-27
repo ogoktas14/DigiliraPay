@@ -196,7 +196,7 @@
                                     <constraint firstAttribute="bottom" secondItem="K81-Kh-xus" secondAttribute="bottom" constant="20" id="bYe-jy-bMK"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qfJ-6v-kNX">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qfJ-6v-kNX">
                                 <rect key="frame" x="354" y="85" width="25" height="25"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="25" id="FkB-MB-54r"/>
@@ -540,7 +540,7 @@
                                     <constraint firstAttribute="height" constant="45" id="laz-QZ-tfR"/>
                                 </constraints>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hf5-0j-N10">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hf5-0j-N10">
                                 <rect key="frame" x="354" y="85" width="25" height="25"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="25" id="0Bx-Bk-s26"/>
@@ -629,7 +629,7 @@ scan, text, view, shape, pool, chapter </string>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="d5S-nY-SlF"/>
+        <segue reference="oyz-da-CHm"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="account" width="20" height="20"/>

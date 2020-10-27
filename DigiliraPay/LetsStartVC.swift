@@ -20,6 +20,8 @@ class LetsStartVC: UIViewController {
     var goMainVCGesture = UITapGestureRecognizer()
     var isKeyWordView = false
     
+    var gotoSeedRecover = false
+    
     let digiliraPay = digiliraPayApi()
 
     let BC = Blockchain()
@@ -61,6 +63,10 @@ class LetsStartVC: UIViewController {
     }
     override func viewDidAppear(_ animated: Bool) {
         setScrollView()
+        if (gotoSeedRecover == true) {
+            letsStartScrollView.scrollToPage(index: 3)
+            nextButtonLabel.text = "Yedekledim"
+        }
         nextButtonView.translatesAutoresizingMaskIntoConstraints = true
     }
     
@@ -100,6 +106,7 @@ class LetsStartVC: UIViewController {
             nextButtonLabel.text = "Anahtar Oluştur"
         case 3:
             nextButtonLabel.text = "Yedekledim"
+            UserDefaults.standard.set(false, forKey: "seedRecovery")
         case 4:
             nextButtonView.isHidden = true
             nextButtonLabel.text = "Doğrula ve Başla"
@@ -305,6 +312,7 @@ extension LetsStartVC: LetsStartSkipDelegate
     }
     
     func dogrula() {
+        UserDefaults.standard.set(true, forKey: "seedRecovery")
         goMainVC()
     }
 }
