@@ -58,7 +58,8 @@ class MainScreen: UIViewController {
     var depositeMoneyView = DepositeMoneyView()
     let imagePicker = UIImagePickerController()
     var newSendMoneyView = newSendView()
-    
+    var bitexenAPIView = BitexenAPIView()
+
     var tapProfileMenuGesture = UITapGestureRecognizer()
     var tapCloseProfileMenuGesture = UITapGestureRecognizer()
     
@@ -74,6 +75,7 @@ class MainScreen: UIViewController {
     var isHomeScreen = false
     var isDepositeMoneyView = false
     var isNewSendScreen = false
+    var isBitexenAPI = false
     
     var isKeyboard = false
     
@@ -99,7 +101,8 @@ class MainScreen: UIViewController {
     var pinkodaktivasyon: Bool? = false
     
     var Balances: NodeService.DTO.AddressAssetsBalance?
-    var Filtered: [NodeService.DTO.AssetBalance?] = []
+    var Filtered: [digilira.DigiliraPayBalance] = []
+    var BitexenBalances:[digilira.bitexenBalance?] = []
     
     var onPinSuccess: ((_ result: Bool)->())?
     
@@ -109,9 +112,9 @@ class MainScreen: UIViewController {
 
     
     let BC = Blockchain()
-    
+    let bitexenSign = bitexenSignature()
     let digiliraPay = digiliraPayApi()
-    let socket1 = WebSocket(url: URL(string: "wss://api.digilirapay.com/socket/" + NSUUID().uuidString )!)
+    let socket1 = WebSocket(url: URL(string: "wss://pay.digilirapay.com/socket/" + NSUUID().uuidString )!)
     
     func socketConn () {
         
@@ -168,14 +171,77 @@ class MainScreen: UIViewController {
         headerHeightBuffer =  headerView.frame.size.height //bu mal degisip duruyo
         //        when requested asset balances
         
-        BC.onAssetBalance = { [self] result in
-            self.Balances = (result)
+        
+        
+        bitexenSign.onBitexenBalance = { [self] balances, statusCode in
+                     
+            if statusCode == 200 {
+
+                let balanceDictionary = balances["data"] as? NSDictionary
+                if let array = balanceDictionary {
+                    
+                    let balanceDictionary2 = array["balances"] as? NSDictionary
+                    if let array2 = balanceDictionary2 { 
+                        for obj in array2 {
+                            let bbb = digilira.bitexenBalance(json: obj.value as! NSDictionary )
+
+                            if Double(bbb.balances)! > 0.0 {
+                                
+                                let digiliraBalance = digilira.DigiliraPayBalance.init(
+                                    tokenName: bbb.currency_code,
+                                    tokenSymbol: "Bitexen " + bbb.currency_code,
+                                    availableBalance: Int64(Double(bbb.available_balance)! * 100000000),
+                                    balance: Int64(Double(bbb.balances)! * 100000000))
+                                     
+                                Filtered.append(digiliraBalance)
+                                 
+                                self.BitexenBalances.append(bbb)
+                                 
+                            }
+                        }
+                        coinTableView.reloadData()
+                    }
+                }
+                 
+                 
+                
+            }
             
+        }
+         
+        BC.onAssetBalance = { [self] result in
+            
+            for asset1 in result.balances {
+                let asset = BC.returnAsset(assetId: asset1.assetId)
+                if (asset != "") {
+                    
+                    let digiliraBalance = digilira.DigiliraPayBalance.init(
+                        tokenName: asset,
+                        tokenSymbol: asset1.issueTransaction.name,
+                        availableBalance: asset1.balance,
+                        balance: asset1.balance)
+                    
+                    Filtered.append(digiliraBalance)
+                    
+                }
+            }
+             
             if isFirstLaunch {
                 self.setTableView()
                 self.setWalletView()
                 self.setPaymentView()
                 self.setSettingsView()
+                
+                if  digiliraPay.isKeyPresentInUserDefaults(key: "bitexenAPI") {
+                                
+                    let defaults = UserDefaults.standard
+                    if let savedAPI = defaults.object(forKey: "bitexenAPI") as? Data {
+                        let decoder = JSONDecoder()
+                        let loadedAPI = try? decoder.decode(digilira.bitexenAPICred.self, from: savedAPI)
+                        bitexenSign.getBalances(keys: loadedAPI!)
+         
+                    }
+                }
             }
             self.coinTableView.reloadData()
             self.headerTotal.fadeTransition(0.4)
@@ -482,8 +548,21 @@ class MainScreen: UIViewController {
     
     
     func fetch() {
+        Filtered.removeAll()
+        if  digiliraPay.isKeyPresentInUserDefaults(key: "bitexenAPI") {
+                        
+            let defaults = UserDefaults.standard
+            if let savedAPI = defaults.object(forKey: "bitexenAPI") as? Data {
+                let decoder = JSONDecoder()
+                let loadedAPI = try? decoder.decode(digilira.bitexenAPICred.self, from: savedAPI)
+                bitexenSign.getBalances(keys: loadedAPI!)
+ 
+            }
+        }
         BC.checkAssetBalance(address: kullanici!.wallet!)
     }
+    
+    
     
     override func viewWillAppear(_ animated: Bool)
     {
@@ -802,18 +881,7 @@ class MainScreen: UIViewController {
 extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ayarları, coinlerin listelenmesinde bu fonksiyonlar kullanılır.
 {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        Filtered.removeAll()
-        
-        var count = 0
-        for asset1 in Balances!.balances {
-            let asset = BC.returnAsset(assetId: asset1.assetId)
-            if (asset != "") {
-                Filtered.append(asset1)
-                count = count + 1
-            }
-        }
-        
-        return count
+        return Filtered.count
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -840,16 +908,31 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
             
             tapped.floatValue = indexPath[1]
             cell.addGestureRecognizer(tapped)
-            
-            let asset = BC.returnAsset(assetId: (Filtered[indexPath[1]]?.issueTransaction.assetId)!)
-            cell.coinIcon.image = UIImage(named: asset)
-            cell.coinName.text = asset
-            tapped.assetName = asset
+//
+//            let asset = BC.returnAsset(assetId: (Filtered[indexPath[1]]?.issueTransaction.assetId)!)
+//            cell.coinIcon.image = UIImage(named: asset)
+//            cell.coinName.text = asset
+//            tapped.assetName = asset
+//
+//            let double = Double(Filtered[indexPath[1]]!.balance) / Double(100000000)
+//            cell.coinAmount.text = (double).description
+//            cell.coinCode.text = (Filtered[indexPath[1]]!.issueTransaction.name)
+//
+//
+            if Filtered.count > 0 {
+                
+                let asset = Filtered[indexPath[1]]
+                cell.coinIcon.image = UIImage(named: asset.tokenName)
+                cell.coinName.text = asset.tokenName
+                tapped.assetName = asset.tokenName
 
-            let double = Double(Filtered[indexPath[1]]!.balance) / Double(100000000)
-            cell.coinAmount.text = (double).description
-            cell.coinCode.text = (Filtered[indexPath[1]]!.issueTransaction.name)
-            
+                let double = Double(asset.balance) / Double(100000000)
+                cell.coinAmount.text = (double).description
+                cell.coinCode.text = (asset.tokenSymbol)
+
+                
+                
+            }
             
             return cell
             
@@ -1078,12 +1161,38 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         }
     }
     
+    private func bitexenScreen() {
+        isBitexenAPI = true
+        bitexenAPIView = UIView().loadNib(name: "bitexenApiView") as! BitexenAPIView
+        sendWithQRView.frame.origin.y = self.view.frame.height
+        bitexenAPIView.frame = CGRect(x: 0,
+                                        y: 0,
+                                        width: view.frame.width,
+                                        height: view.frame.height)
+        bitexenAPIView.delegate = self
+        
+        for subView in sendWithQRView.subviews
+        { subView.removeFromSuperview() }
+        
+        menuXib.isHidden = true
+        
+        sendWithQRView.addSubview(bitexenAPIView)
+        sendWithQRView.isHidden = false
+        sendWithQRView.translatesAutoresizingMaskIntoConstraints = true
+        closeProfileView()
+        
+        UIView.animate(withDuration: 0.3)
+        {
+            self.sendWithQRView.frame.origin.y = 0
+            self.sendWithQRView.alpha = 1
+        }
+    }
+    
     private func seedScreen() {
         isSeedScreen = true
         for view in self.sendWithQRView.subviews
         { view.removeFromSuperview() }
         self.sendWithQRView.translatesAutoresizingMaskIntoConstraints = true
-        
         
         let letsStartView4: LetsStartWordsView = UIView().loadNib(name: "LetsStartWordView") as! LetsStartWordsView
         
@@ -1581,8 +1690,59 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
         
     }
 }
+
+extension MainScreen: BitexenAPIDelegate
+{
+    func dismissBitexen() {
+        UIView.animate(withDuration: 0.4, animations: {
+            self.sendWithQRView.frame.origin.y = self.view.frame.height
+        }) { (_) in
+            
+        }
+        menuXib.isHidden = false
+        dismissKeyboard()
+    }
+    
+    
+}
 extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları gibi yan menü işlemleri
 {
+    
+    func showBitexenView() {
+        
+        if  !digiliraPay.isKeyPresentInUserDefaults(key: "bitexenAPI") {
+            self.bitexenScreen()
+            return
+        }
+        
+        
+        self.onPinSuccess = { [self] res in
+            switch res {
+            case true:
+                self.bitexenScreen()
+                self.closeProfileView()
+                break
+            case false:
+                self.closeProfileView()
+                break
+            }
+            
+        }
+        
+        digiliraPay.onTouchID = { res, err in
+            if res == true {
+                self.bitexenScreen()
+            } else {
+                self.isTouchIDCanceled = true
+                self.openPinView()
+                self.closeProfileView()
+            }
+        }
+        
+        digiliraPay.touchID(reason: "API bilgilerini görüntüleyebilmek için kimliğinizi onaylamanız gerekmektedir.")
+
+    }
+    
     func showSeedView() {
         
         self.onPinSuccess = { [self] res in
@@ -2038,8 +2198,11 @@ extension MainScreen: UINavigationControllerDelegate {
 
 extension MainScreen: PaymentCatViewsDelegate {
     func dismiss() {
-        print("ok")
-    }
+        UIView.animate(withDuration: 0.4, animations: {
+            self.profileSettingsView.frame.origin.y = self.view.frame.height
+        }) { (_) in
+            
+        }    }
     
     
     
@@ -2156,7 +2319,7 @@ extension MainScreen: LegalDelegate // kullanım sözleşmesi gibi view'ların g
 extension MainScreen: SendWithQrDelegate
 {
     
-    
+
     func dismissSendWithQr(url: String)
     {
         if (url != "") {
@@ -2388,6 +2551,11 @@ extension MainScreen: PinViewDelegate
         
         if isSeedScreen {
             isSeedScreen = false
+            return
+        }
+        
+        if isBitexenAPI {
+            isBitexenAPI = false
             return
         }
         

@@ -13,6 +13,8 @@ import Starscream
 class Socket {
         
 
+    func sslPinning() {
+    }
     
     
     

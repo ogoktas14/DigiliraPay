@@ -42,6 +42,7 @@ class Blockchain {
     var onSmartAvailable: ((_ result: Bool)->())?
 
     func checkAssetBalance(address: String ) {
+        
         WavesSDK.shared.services.nodeServices.assetsNodeService
             .assetsBalances(address: address)
             .observeOn(MainScheduler.asyncInstance)
@@ -138,6 +139,7 @@ class Blockchain {
         
         var request = URLRequest(url: URL(string: rURL)!)
         request.httpMethod = digilira.requestMethod.get
+
         
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let httpResponse = response as? HTTPURLResponse {

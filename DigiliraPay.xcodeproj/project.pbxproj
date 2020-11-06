@@ -126,9 +126,14 @@
 		93534039253C528600FFEA4D /* newSendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93534038253C528600FFEA4D /* newSendView.swift */; };
 		9353403E253EFC9800FFEA4D /* testView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9353403D253EFC9700FFEA4D /* testView.xib */; };
 		93534F1425483A4F0000329F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93534F1325483A4F0000329F /* ViewController.swift */; };
+		93534F1825496A950000329F /* bitexenApiView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93534F1725496A950000329F /* bitexenApiView.xib */; };
+		93534F1B2549851A0000329F /* BitexenAPIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93534F1A2549851A0000329F /* BitexenAPIView.swift */; };
+		93534F1E2549958C0000329F /* bitexenSignature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93534F1D2549958C0000329F /* bitexenSignature.swift */; };
 		936F25B125323B0300C5FA85 /* ColoredCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 936F25B025323B0300C5FA85 /* ColoredCardView.xib */; };
 		936F25B425323B2E00C5FA85 /* ColoredCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F25B325323B2E00C5FA85 /* ColoredCardView.swift */; };
 		936F25B725323B3900C5FA85 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F25B625323B3900C5FA85 /* UIViewExtension.swift */; };
+		936FB3162553F5B200A97BF9 /* digilirapay.com.der in Resources */ = {isa = PBXBuildFile; fileRef = 936FB3152553F5B200A97BF9 /* digilirapay.com.der */; };
+		936FB3192553F5CF00A97BF9 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936FB3182553F5CF00A97BF9 /* NetworkClient.swift */; };
 		9381D2B125357B38007DEE7E /* DepositeMoneyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9381D2B025357B38007DEE7E /* DepositeMoneyView.xib */; };
 		9381D2B425358B99007DEE7E /* DepositeMoneyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9381D2B325358B99007DEE7E /* DepositeMoneyView.swift */; };
 		93B7A11B252F0D8000C89E66 /* PaymentCategories.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93B7A11A252F0D8000C89E66 /* PaymentCategories.xib */; };
@@ -264,9 +269,14 @@
 		93534038253C528600FFEA4D /* newSendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newSendView.swift; sourceTree = "<group>"; };
 		9353403D253EFC9700FFEA4D /* testView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = testView.xib; sourceTree = "<group>"; };
 		93534F1325483A4F0000329F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		93534F1725496A950000329F /* bitexenApiView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = bitexenApiView.xib; sourceTree = "<group>"; };
+		93534F1A2549851A0000329F /* BitexenAPIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitexenAPIView.swift; sourceTree = "<group>"; };
+		93534F1D2549958C0000329F /* bitexenSignature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bitexenSignature.swift; sourceTree = "<group>"; };
 		936F25B025323B0300C5FA85 /* ColoredCardView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ColoredCardView.xib; sourceTree = "<group>"; };
 		936F25B325323B2E00C5FA85 /* ColoredCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColoredCardView.swift; sourceTree = "<group>"; };
 		936F25B625323B3900C5FA85 /* UIViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
+		936FB3152553F5B200A97BF9 /* digilirapay.com.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = digilirapay.com.der; sourceTree = "<group>"; };
+		936FB3182553F5CF00A97BF9 /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
 		9381D2B025357B38007DEE7E /* DepositeMoneyView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositeMoneyView.xib; sourceTree = "<group>"; };
 		9381D2B325358B99007DEE7E /* DepositeMoneyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositeMoneyView.swift; sourceTree = "<group>"; };
 		93B7A11A252F0D8000C89E66 /* PaymentCategories.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentCategories.xib; sourceTree = "<group>"; };
@@ -297,10 +307,13 @@
 		0080FAC2234CA09B00B6D636 /* blockchain */ = {
 			isa = PBXGroup;
 			children = (
+				936FB3152553F5B200A97BF9 /* digilirapay.com.der */,
 				0080FAC3234CA0B900B6D636 /* blockchain.swift */,
 				006B1EE7234CC2720045B6B4 /* dPayApi.swift */,
 				0060807D23795453006FFBD2 /* constants.swift */,
 				002B28192386E5E6007BE3AD /* digiSocket.swift */,
+				93534F1D2549958C0000329F /* bitexenSignature.swift */,
+				936FB3182553F5CF00A97BF9 /* NetworkClient.swift */,
 			);
 			name = blockchain;
 			sourceTree = "<group>";
@@ -430,6 +443,7 @@
 				9381D2B025357B38007DEE7E /* DepositeMoneyView.xib */,
 				93534035253C4F2C00FFEA4D /* newSendView.xib */,
 				9353403D253EFC9700FFEA4D /* testView.xib */,
+				93534F1725496A950000329F /* bitexenApiView.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -468,6 +482,7 @@
 				9381D2B325358B99007DEE7E /* DepositeMoneyView.swift */,
 				93534038253C528600FFEA4D /* newSendView.swift */,
 				93534F1325483A4F0000329F /* ViewController.swift */,
+				93534F1A2549851A0000329F /* BitexenAPIView.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -609,6 +624,7 @@
 				882AAB4B22FCAAEE004CDAA6 /* MontserratAlternates-BlackItalic.otf in Resources */,
 				882AAB6222FCAAEE004CDAA6 /* Montserrat-SemiBold.otf in Resources */,
 				882AAB0F22FC96DE004CDAA6 /* LaunchScreen.storyboard in Resources */,
+				936FB3162553F5B200A97BF9 /* digilirapay.com.der in Resources */,
 				88309EB2231E73C600F96C05 /* TransactionPopup.xib in Resources */,
 				882AAB4522FCAAEE004CDAA6 /* Montserrat-BoldItalic.otf in Resources */,
 				88CA936E2319A6C6008F894B /* transactionHistoryCell.xib in Resources */,
@@ -637,6 +653,7 @@
 				889F2A2323158C5D00ACD656 /* ProfileMenuview.xib in Resources */,
 				00C592B223A556AA0036A346 /* TransactionDetailPopup.xib in Resources */,
 				882AAB4322FCAAEE004CDAA6 /* MontserratAlternates-LightItalic.otf in Resources */,
+				93534F1825496A950000329F /* bitexenApiView.xib in Resources */,
 				882AAB5422FCAAEE004CDAA6 /* Montserrat-Italic.otf in Resources */,
 				882AAB4F22FCAAEE004CDAA6 /* Montserrat-LightItalic.otf in Resources */,
 				882AAB4822FCAAEE004CDAA6 /* Montserrat-Thin.otf in Resources */,
@@ -748,6 +765,7 @@
 				88A6BA4923203580002640D6 /* LegalView.swift in Sources */,
 				882E99BD232301BB0061C7AC /* LetsStartSkipDelegate.swift in Sources */,
 				88CA9381231A4B04008F894B /* UIScrollViewExtensions.swift in Sources */,
+				93534F1B2549851A0000329F /* BitexenAPIView.swift in Sources */,
 				889F2A2523158D5400ACD656 /* ProfileMenuView.swift in Sources */,
 				88114F6A2321703800AB3B5A /* SendWithQrDelegate.swift in Sources */,
 				88CA93612319741A008F894B /* MenuViewDelegate.swift in Sources */,
@@ -759,6 +777,7 @@
 				888F26B1233E8DF500AB7E4C /* PinView.swift in Sources */,
 				8891704523058673005AAA02 /* LetsStartVC.swift in Sources */,
 				936F25B725323B3900C5FA85 /* UIViewExtension.swift in Sources */,
+				93534F1E2549958C0000329F /* bitexenSignature.swift in Sources */,
 				93534039253C528600FFEA4D /* newSendView.swift in Sources */,
 				88309EB4231E73DC00F96C05 /* TransactionPopup.swift in Sources */,
 				88A6BA4B232039D7002640D6 /* LegalDelegate.swift in Sources */,
@@ -766,6 +785,7 @@
 				88CA937B231A48A0008F894B /* TransactionHistoryDetailCellDeatils.swift in Sources */,
 				882AAB0522FC96DD004CDAA6 /* SceneDelegate.swift in Sources */,
 				880541F62319692D004EE85F /* TableViewCellExtension.swift in Sources */,
+				936FB3192553F5CF00A97BF9 /* NetworkClient.swift in Sources */,
 				88CA936D2319A6C6008F894B /* transactionHistoryCell.swift in Sources */,
 				88CA93662319793B008F894B /* WalletView.swift in Sources */,
 			);
@@ -914,7 +934,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 38;
+				CURRENT_PROJECT_VERSION = 42;
 				DEVELOPMENT_TEAM = 5TJACH7D4X;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -938,7 +958,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPayRelease.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 38;
+				CURRENT_PROJECT_VERSION = 42;
 				DEVELOPMENT_TEAM = 5TJACH7D4X;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;

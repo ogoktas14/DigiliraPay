@@ -16,9 +16,15 @@ protocol ProfileMenuDelegate: class
     func showLegalText()
     func showPinView()
     func showSeedView()
+    func showBitexenView()
 }
 
 protocol ProfileSettingsViewDelegate: class 
 {
     func dismissProfileMenu()
+}
+
+protocol BitexenAPIDelegate: class
+{
+    func dismissBitexen()
 }

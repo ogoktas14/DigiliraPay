@@ -379,6 +379,10 @@ class digiliraPayApi {
         
     }
     
+    func isKeyPresentInUserDefaults(key: String) -> Bool {
+        return UserDefaults.standard.object(forKey: key) != nil
+    }
+    
     
     func isOurMember(external: digilira.externalTransaction) {
         

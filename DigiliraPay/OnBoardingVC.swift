@@ -69,22 +69,22 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
         let versionLegal = UserDefaults.standard.value(forKey: "isLegalView") as? Int
         let versionTerms = UserDefaults.standard.value(forKey: "isTermsOfUse") as? Int
         
-        if versionLegal != nil && versionTerms != nil {
-            switch seedRecovery {
-            case nil:
-                gotoSeedRecover = false
-                nowLetsGo()
-                return
-            case false:
-                gotoSeedRecover = true
-                nowLetsGo()
-                return
-            case true:
-                gotoSeedRecover = false
-            default:
-                return
-            }
-        }
+//        if versionLegal != nil && versionTerms != nil {
+//            switch seedRecovery {
+//            case nil:
+//                gotoSeedRecover = false
+//                nowLetsGo()
+//                return
+//            case false:
+//                gotoSeedRecover = true
+//                nowLetsGo()
+//                return
+//            case true:
+//                gotoSeedRecover = false
+//            default:
+//                return
+//            }
+//        }
  
         if BC.checkIfUser() {
             digiliraPay.login() { (json, status) in

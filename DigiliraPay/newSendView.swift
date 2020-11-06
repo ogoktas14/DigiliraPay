@@ -79,6 +79,11 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
             return
         }
         
+        if transaction?.network == digilira.transactionDestination.domestic {
+            transaction?.memberCheck = true
+            transaction?.destination = digilira.transactionDestination.domestic
+        }
+        
         if !transaction!.memberCheck {
             if !checkAddress(network: selectedCoinX.network, address: recipientText.text!) {
                 recipientText.textColor = .red
