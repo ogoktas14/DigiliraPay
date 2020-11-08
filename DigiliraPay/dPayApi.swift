@@ -339,10 +339,10 @@ class digiliraPayApi {
     }
     
     func ticker () -> digilira.ticker {
-        let ethUSDPrice: Double? = 376.77
-        let btcUSDPrice: Double? = 11352
-        let wavesUSDPrice: Double? = 2.49
-        let usdTLPrice: Double? = 7.8
+        let ethUSDPrice: Double? = 447.77
+        let btcUSDPrice: Double? = 15255
+        let wavesUSDPrice: Double? = 3.5
+        let usdTLPrice: Double? = 8.5
         
         let res = digilira.ticker.init(ethUSDPrice: ethUSDPrice,
                                        btcUSDPrice: btcUSDPrice,
@@ -365,7 +365,6 @@ class digiliraPayApi {
             switch assetId {
             case digilira.waves.token:
                 return amountFloat * symbol.wavesUSDPrice! * symbol.usdTLPrice!
-                
             case digilira.charity.token:
                 return amountFloat * 1
                 

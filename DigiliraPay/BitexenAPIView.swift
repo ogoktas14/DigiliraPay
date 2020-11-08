@@ -22,7 +22,7 @@ class BitexenAPIView: UIView {
     weak var delegate: BitexenAPIDelegate?
 
     let digiliraPay = digiliraPayApi()
-    let bitexenSign = bitexenSignature()
+    let bitexenSign = bex()
 
     @IBAction func btnExit(_ sender: Any) {
         delegate?.dismissBitexen()
@@ -37,7 +37,7 @@ class BitexenAPIView: UIView {
             let defaults = UserDefaults.standard
             if let savedAPI = defaults.object(forKey: "bitexenAPI") as? Data {
                 let decoder = JSONDecoder()
-                let loadedAPI = try? decoder.decode(digilira.bitexenAPICred.self, from: savedAPI)
+                let loadedAPI = try? decoder.decode(bex.bitexenAPICred.self, from: savedAPI)
 
                 self.textApiKey.text = loadedAPI?.apiKey ?? ""
                 self.textApiSecret.text = loadedAPI?.apiSecret ?? ""
@@ -56,15 +56,22 @@ class BitexenAPIView: UIView {
     
     func saveAPI() {
         
-        let res = digilira.bitexenAPICred.init(apiKey: textApiKey.text!,
+        let res = bex.bitexenAPICred.init(apiKey: textApiKey.text!,
                                                apiSecret: textApiSecret.text!,
                                                passphrase: textApiPassphrase.text!,
                                                username: textUsername.text!)
         
+        
         bitexenSign.onBitexenBalance = { _, statusCode in
-            if statusCode == 200 {
+            if statusCode == 200 {  
                 self.labelError.isHidden = true
                 self.delegate?.dismissBitexen()
+                let window = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
+
+                let alert = UIAlertController(title: "İşlem Başarılı",message:"API bilgileriniz kaydedildi.",
+                                              preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "OK",style:UIAlertAction.Style.default,handler: nil))
+                window?.rootViewController?.presentedViewController?.present(alert, animated: true, completion: nil)
             } else {
                 self.shake()
                 self.labelError.isHidden = false

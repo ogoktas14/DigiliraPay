@@ -88,6 +88,8 @@ class MainScreen: UIViewController {
     var selectedCoin : String?
     var network : String?
     
+    var totalBalance: Double = 0.0
+    
     private let refreshControl = UIRefreshControl()
     
     var isAlive = false
@@ -102,7 +104,10 @@ class MainScreen: UIViewController {
     
     var Balances: NodeService.DTO.AddressAssetsBalance?
     var Filtered: [digilira.DigiliraPayBalance] = []
-    var BitexenBalances:[digilira.bitexenBalance?] = []
+    var BitexenBalances:[bex.BalanceValue?] = []
+    
+    var bexTicker: bex.bexAllTicker?
+    var bexMarketInfo: bex.bexMarketInfo?
     
     var onPinSuccess: ((_ result: Bool)->())?
     
@@ -112,7 +117,7 @@ class MainScreen: UIViewController {
 
     
     let BC = Blockchain()
-    let bitexenSign = bitexenSignature()
+    let bitexenSign = bex()
     let digiliraPay = digiliraPayApi()
     let socket1 = WebSocket(url: URL(string: "wss://pay.digilirapay.com/socket/" + NSUUID().uuidString )!)
     
@@ -168,43 +173,40 @@ class MainScreen: UIViewController {
         self.contentView.addGestureRecognizer(swipeLeft)
         
         
-        headerHeightBuffer =  headerView.frame.size.height //bu mal degisip duruyo
+        headerHeightBuffer =  headerView.frame.size.height 
         //        when requested asset balances
         
-        
-        
         bitexenSign.onBitexenBalance = { [self] balances, statusCode in
-                     
             if statusCode == 200 {
+                for bakiye in balances.data.balances {
+                    if Double(bakiye.value.balance)! > 0 {
 
-                let balanceDictionary = balances["data"] as? NSDictionary
-                if let array = balanceDictionary {
-                    
-                    let balanceDictionary2 = array["balances"] as? NSDictionary
-                    if let array2 = balanceDictionary2 { 
-                        for obj in array2 {
-                            let bbb = digilira.bitexenBalance(json: obj.value as! NSDictionary )
-
-                            if Double(bbb.balances)! > 0.0 {
+                        let digiliraBalance = digilira.DigiliraPayBalance.init(
+                            tokenName: bakiye.value.currencyCode,
+                            tokenSymbol: "Bitexen " + bakiye.value.currencyCode,
+                            availableBalance: Int64(Double(bakiye.value.availableBalance)! * 100000000),
+                            balance: Int64(Double(bakiye.value.balance)! * 100000000))
+                        
+                        
+                        for mrkt in (bexMarketInfo?.data.markets)! {
+                            
+                            if bakiye.value.currencyCode == mrkt.baseCurrency {
                                 
-                                let digiliraBalance = digilira.DigiliraPayBalance.init(
-                                    tokenName: bbb.currency_code,
-                                    tokenSymbol: "Bitexen " + bbb.currency_code,
-                                    availableBalance: Int64(Double(bbb.available_balance)! * 100000000),
-                                    balance: Int64(Double(bbb.balances)! * 100000000))
+                                let coinPrice = bexTicker?.data.ticker[mrkt.marketCode]
+                                let lastPrice = Double(bakiye.value.availableBalance)! * Double(coinPrice!.lastPrice)!
                                      
+                                totalBalance += lastPrice
+                                setHeaderTotal()
                                 Filtered.append(digiliraBalance)
                                  
-                                self.BitexenBalances.append(bbb)
-                                 
+                                self.BitexenBalances.append(bakiye.value)
                             }
+                            
                         }
-                        coinTableView.reloadData()
-                    }
                 }
-                 
-                 
-                
+                }
+                coinTableView.reloadData()
+   
             }
             
         }
@@ -221,6 +223,30 @@ class MainScreen: UIViewController {
                         availableBalance: asset1.balance,
                         balance: asset1.balance)
                     
+                    let ticker = digiliraPay.ticker()
+                    var coinPrice:Double = 0
+                    
+                    switch asset {
+                    case "Bitcoin":
+                        coinPrice = (ticker.btcUSDPrice)! * (ticker.usdTLPrice)! * Double(asset1.balance) / Double(100000000)
+                        break
+                    case "Ethereum":
+                         coinPrice = (ticker.ethUSDPrice)! * (ticker.usdTLPrice)! * Double(asset1.balance) / Double(100000000)
+                        break
+                    case "Kızılay Token":
+                         coinPrice = 1 * Double(asset1.balance) / Double(100000000)
+                        break
+                    case "Waves":
+                         coinPrice = (ticker.wavesUSDPrice)! * (ticker.usdTLPrice)! * Double(asset1.balance) / Double(100000000)
+                        break
+                    default:
+                         coinPrice = 0
+                        break
+                    }
+                
+                         
+                    totalBalance += coinPrice
+                    
                     Filtered.append(digiliraBalance)
                     
                 }
@@ -231,21 +257,10 @@ class MainScreen: UIViewController {
                 self.setWalletView()
                 self.setPaymentView()
                 self.setSettingsView()
-                
-                if  digiliraPay.isKeyPresentInUserDefaults(key: "bitexenAPI") {
-                                
-                    let defaults = UserDefaults.standard
-                    if let savedAPI = defaults.object(forKey: "bitexenAPI") as? Data {
-                        let decoder = JSONDecoder()
-                        let loadedAPI = try? decoder.decode(digilira.bitexenAPICred.self, from: savedAPI)
-                        bitexenSign.getBalances(keys: loadedAPI!)
-         
-                    }
-                }
             }
             self.coinTableView.reloadData()
             self.headerTotal.fadeTransition(0.4)
-            self.headerTotal.text  = "₺ 110.313"
+            self.setHeaderTotal()
             self.goHomeScreen()
             if  self.isKeyPresentInUserDefaults(key: "QRARRAY2") {
                 
@@ -372,6 +387,21 @@ class MainScreen: UIViewController {
     
     func isKeyPresentInUserDefaults(key: String) -> Bool {
         return UserDefaults.standard.object(forKey: key) != nil
+    }
+    
+    static func df2so(_ price: Double) -> String{
+            let numberFormatter = NumberFormatter()
+            numberFormatter.groupingSeparator = "."
+            numberFormatter.groupingSize = 3
+            numberFormatter.usesGroupingSeparator = true
+            numberFormatter.decimalSeparator = ","
+            numberFormatter.numberStyle = .decimal
+            numberFormatter.maximumFractionDigits = 2
+            return numberFormatter.string(from: price as NSNumber)!
+        }
+    
+    func setHeaderTotal() {
+        headerTotal.text = "₺" + MainScreen.df2so(totalBalance)
     }
     
     func shake() {
@@ -548,16 +578,28 @@ class MainScreen: UIViewController {
     
     
     func fetch() {
+        
         Filtered.removeAll()
-        if  digiliraPay.isKeyPresentInUserDefaults(key: "bitexenAPI") {
+        totalBalance = 0
+        if  digiliraPay.isKeyPresentInUserDefaults(key: "bitexenAPI") {  //if bitexen api set; check marketinfo, getticker, getbalances
                         
-            let defaults = UserDefaults.standard
-            if let savedAPI = defaults.object(forKey: "bitexenAPI") as? Data {
-                let decoder = JSONDecoder()
-                let loadedAPI = try? decoder.decode(digilira.bitexenAPICred.self, from: savedAPI)
-                bitexenSign.getBalances(keys: loadedAPI!)
- 
+            bitexenSign.onBitexenMarketInfo = { [self] res, sts in
+                bexMarketInfo = res
+                bitexenSign.onBitexenTicker = { [self] res, sts in
+                    if sts == 200 {
+                        
+                        bexTicker = res
+                        let defaults = UserDefaults.standard
+                        if let savedAPI = defaults.object(forKey: "bitexenAPI") as? Data {
+                            let decoder = JSONDecoder()
+                            let loadedAPI = try? decoder.decode(bex.bitexenAPICred.self, from: savedAPI)
+                            bitexenSign.getBalances(keys: loadedAPI!)
+                        }
+                    }
+                }
+                bitexenSign.getTicker()
             }
+            bitexenSign.getMarketInfo()
         }
         BC.checkAssetBalance(address: kullanici!.wallet!)
     }

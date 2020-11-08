@@ -31,9 +31,11 @@ struct digilira {
         static let url = "https://nodes-testnet.wavesnodes.com"
     }
     
-    struct bitexenURL {
+    struct bexURL {
         static let baseUrl = "https://www.bitexen.com"
         static let balances = "/api/v1/balance/"
+        static let ticker = "/api/v1/ticker/"
+        static let marketInfo = "/api/v1/market_info/"
     }
     struct messages {
         static let profileUpdateHeader = "Profilinizi Güncelleyin"
@@ -109,13 +111,6 @@ struct digilira {
        var address: String?
        var amount: Int64?
        var assetId: String?
-    }
-    
-    struct bitexenAPICred: Codable {
-        var apiKey: String?
-        var apiSecret: String?
-        var passphrase: String?
-        var username: String?
     }
    
     struct setScript: Encodable {
@@ -228,18 +223,6 @@ struct digilira {
             self.order_status = json["order_status"] as? Int64 ?? 0
         }
         
-    }
-     
-    
-    struct bitexenBalance: Encodable {
-        let balances: String
-        let currency_code: String
-        let available_balance: String
-        init(json: NSDictionary) {
-            self.balances = json["balance"] as? String ?? "0.0"
-            self.currency_code = json["currency_code"] as? String ?? "N/A"
-            self.available_balance = json["available_balance"] as? String ?? "0.0"
-        }
     }
     
     struct DigiliraPayBalance: Encodable {

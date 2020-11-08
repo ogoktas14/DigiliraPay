@@ -10,12 +10,145 @@ import Foundation
 import CommonCrypto
 
 
-class bitexenSignature {
-    var onBitexenBalance: ((_ result: [String : Any], _ statusCode: Int?)->())?
+class bex {
+    var onBitexenBalance: ((_ result: bexBalance, _ statusCode: Int?)->())?
+    var onBitexenTicker: ((_ result: bexAllTicker, _ statusCode: Int?)->())?
+    var onBitexenTickerCoin: ((_ result: bexTicker, _ statusCode: Int?)->())?
+    var onBitexenMarketInfo: ((_ result: bexMarketInfo, _ statusCode: Int?)->())?
+
+    struct bitexenAPICred: Codable {
+        var apiKey: String
+        var apiSecret: String
+        var passphrase: String
+        var username: String
+    }
     
-    var apiLogin: digilira.bitexenAPICred?
+    // MARK: - bexTicker
+    struct bexTicker: Codable {
+        let status: String
+        let data: DataClass
+    }
+
+    // MARK: - DataClass
+    struct DataClass: Codable {
+        let ticker: Ticker
+    }
     
-    func loginInit(params: digilira.bitexenAPICred) -> digilira.bitexenAPICred{
+    // MARK: - bexAllTicker
+    struct bexAllTicker: Codable {
+        let status: String
+        let data: AllDataClass
+    }
+    
+    // MARK: - AllDataClass
+    struct AllDataClass: Codable {
+        let ticker: [String: Ticker]
+    }
+
+
+    // MARK: - Ticker
+    struct Ticker: Codable {
+        let market: Market
+        let bid, ask, lastPrice, lastSize: String
+        let volume24H, change24H, low24H, high24H: String
+        let avg24H, timestamp: String
+
+        enum CodingKeys: String, CodingKey {
+            case market, bid, ask
+            case lastPrice = "last_price"
+            case lastSize = "last_size"
+            case volume24H = "volume_24h"
+            case change24H = "change_24h"
+            case low24H = "low_24h"
+            case high24H = "high_24h"
+            case avg24H = "avg_24h"
+            case timestamp
+        }
+    }
+
+    // MARK: - Market
+    struct Market: Codable {
+        let marketCode, baseCurrencyCode, counterCurrencyCode: String
+
+        enum CodingKeys: String, CodingKey {
+            case marketCode = "market_code"
+            case baseCurrencyCode = "base_currency_code"
+            case counterCurrencyCode = "counter_currency_code"
+        }
+    }
+    
+    // MARK: - bexBalance
+    struct bexBalance: Codable {
+        let status: String
+        let data: DataClassBalance
+    }
+
+    // MARK: - DataClass
+    struct DataClassBalance: Codable {
+        let balances: [String: BalanceValue]
+    }
+
+    // MARK: - BalanceValue
+    struct BalanceValue: Codable {
+        let currencyCode, balance, availableBalance: String
+
+        enum CodingKeys: String, CodingKey {
+            case currencyCode = "currency_code"
+            case balance
+            case availableBalance = "available_balance"
+        }
+    }
+    
+    enum CounterCurrencyCode: String, Codable {
+        case btc = "BTC"
+        case counterCurrencyCodeTRY = "TRY"
+        case usdt = "USDT"
+    }
+    
+    
+    // MARK: - bexMarketInfo
+    struct bexMarketInfo: Codable {
+        let status: String
+        let data: MarketDataClass
+    }
+
+    // MARK: - DataClass
+    struct MarketDataClass: Codable {
+        let markets: [Markets]
+    }
+
+    // MARK: - Market
+    struct Markets: Codable {
+        let marketCode, urlSymbol, baseCurrency: String
+        let counterCurrency: CounterCurrency
+        let minimumOrderAmount, maximumOrderAmount: String
+        let baseCurrencyDecimal, counterCurrencyDecimal, presentationDecimal: Int
+        let resellMarket: Bool
+
+        enum CodingKeys: String, CodingKey {
+            case marketCode = "market_code"
+            case urlSymbol = "url_symbol"
+            case baseCurrency = "base_currency"
+            case counterCurrency = "counter_currency"
+            case minimumOrderAmount = "minimum_order_amount"
+            case maximumOrderAmount = "maximum_order_amount"
+            case baseCurrencyDecimal = "base_currency_decimal"
+            case counterCurrencyDecimal = "counter_currency_decimal"
+            case presentationDecimal = "presentation_decimal"
+            case resellMarket = "resell_market"
+        }
+    }
+
+    enum CounterCurrency: String, Codable {
+        case btc = "BTC"
+        case counterCurrencyTRY = "TRY"
+        case usdt = "USDT"
+    }
+
+
+    var apiLogin: bitexenAPICred?
+    
+    func loginInit(params: bitexenAPICred) -> bitexenAPICred{
         apiLogin?.apiKey = params.apiKey
         apiLogin?.apiSecret = params.apiSecret
         apiLogin?.passphrase = params.passphrase
@@ -24,47 +157,97 @@ class bitexenSignature {
         return apiLogin!
     }
     
-    public func signHmac (keys: digilira.bitexenAPICred) {
-        let timestamp = Int64(Date().timeIntervalSince1970) * 1000
-        
-        let text = (keys.apiKey)! + (keys.username)! + (keys.passphrase)! + String(timestamp) + "{}"
-        var hmac = text.hmac(algorithm: .SHA256, key: (keys.apiSecret)!)
-        print(hmac)
-
+    public func signHmac (keys: bitexenAPICred, params:String) ->  (String, String) {
+        let timestamp = String(Int64(Date().timeIntervalSince1970) * 1000)
+        let text = (keys.apiKey) + (keys.username) + (keys.passphrase) + String(timestamp) + params
+        let hmac = text.hmac(algorithm: .SHA256, key: (keys.apiSecret)).uppercased()
+        return (hmac, timestamp)
     }
     
-    public func getBalances(keys: digilira.bitexenAPICred) {
-        let timestamp = Int64(Date().timeIntervalSince1970) * 1000
+    public func getTicker(coin: String = "") {
+        let apiURL = digilira.bexURL.baseUrl + digilira.bexURL.ticker + coin
         
-        let text = (keys.apiKey)! + (keys.username)! + (keys.passphrase)! + String(timestamp) + "{}"
-        let hmac = text.hmac(algorithm: .SHA256, key: (keys.apiSecret)!).uppercased()
+        request(rURL: apiURL,
+                METHOD: digilira.requestMethod.get, returnCompletion: { (json, statusCode) in
+            DispatchQueue.main.async {
+                do{
+                    if coin == "" {
+                        let ticker = try JSONDecoder().decode(bexAllTicker.self, from: json!)
+                        self.onBitexenTicker!(ticker, statusCode)
+                    } else {
+                        let ticker = try JSONDecoder().decode(bexTicker.self, from: json!)
+                        self.onBitexenTickerCoin!(ticker, statusCode)
+                    }
+                    
+                } catch let parsingError {
+                    print("Error", parsingError)
+                }
+            }
+        })
+    }
+    
+    public func getMarketInfo() {
+        let apiURL = digilira.bexURL.baseUrl + digilira.bexURL.marketInfo
         
-        let balance = "/api/v1/balance/"
-        let baseURL = "https://www.bitexen.com"
+        request(rURL: apiURL,
+                METHOD: digilira.requestMethod.get, returnCompletion: { (json, statusCode) in
+            DispatchQueue.main.async {
+                do{
+                    let ticker = try JSONDecoder().decode(bexMarketInfo.self, from: json!)
+                    self.onBitexenMarketInfo!(ticker, statusCode)
+                } catch let parsingError {
+                    print("Error", parsingError)
+                }
+            }
+        })
+    }
+    
+    public func getBalances(keys: bitexenAPICred) {
         
-        request(rURL: baseURL + balance, METHOD: "GET", AUTH: keys, TIMESTAMP: String(timestamp), HMAC: hmac, returnCompletion: { (json, statusCode) in
+        let (hmac, timestamp) = signHmac(keys: keys, params: "{}")
+        
+        request(rURL: digilira.bexURL.baseUrl + digilira.bexURL.balances,
+                METHOD: digilira.requestMethod.get,
+                AUTH: keys,
+                TIMESTAMP: timestamp,
+                HMAC: hmac,
+                returnCompletion: { (json, statusCode) in
             
             DispatchQueue.main.async {
-                self.onBitexenBalance!(json, statusCode)
+                
+                do{
+                    let ticker = try JSONDecoder().decode(bexBalance.self, from: json!)
+                    self.onBitexenBalance!(ticker, statusCode)
+                } catch let parsingError {
+                    print("Error", parsingError)
+                }
+                
             }
-        }
-        )
+        })
     }
     
-    func request(rURL: String, JSON: Data? = nil,
-                 PARAMS: String = "", METHOD: String, AUTH: digilira.bitexenAPICred, TIMESTAMP: String, HMAC: String,
-                 returnCompletion: @escaping ([String:Any], Int?) -> ()) {
+    func request(rURL: String,
+                 JSON: Data? = nil,
+                 PARAMS: String = "",
+                 METHOD: String,
+                 AUTH: bitexenAPICred? = nil,
+                 TIMESTAMP: String? = nil,
+                 HMAC: String? = nil,
+                 returnCompletion: @escaping (Data?, Int?) -> ()) {
         
         var request = URLRequest(url: URL(string: rURL)!)
         
         request.httpMethod = METHOD
         
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue(AUTH.username!, forHTTPHeaderField: "ACCESS-USER")
-        request.addValue(AUTH.passphrase!, forHTTPHeaderField: "ACCESS-PASSPHRASE")
-        request.addValue(TIMESTAMP, forHTTPHeaderField: "ACCESS-TIMESTAMP")
-        request.addValue(HMAC, forHTTPHeaderField: "ACCESS-SIGN")
-        request.addValue(AUTH.apiKey!, forHTTPHeaderField: "ACCESS-KEY")
+        
+        if AUTH != nil {
+            request.addValue(AUTH!.username, forHTTPHeaderField: "ACCESS-USER")
+            request.addValue(AUTH!.passphrase, forHTTPHeaderField: "ACCESS-PASSPHRASE")
+            request.addValue(TIMESTAMP!, forHTTPHeaderField: "ACCESS-TIMESTAMP")
+            request.addValue(HMAC!, forHTTPHeaderField: "ACCESS-SIGN")
+            request.addValue(AUTH!.apiKey, forHTTPHeaderField: "ACCESS-KEY")
+        }
         
         if JSON != nil {
             request.httpBody = JSON
@@ -81,24 +264,13 @@ class bitexenSignature {
                   error == nil else {
                 print(error?.localizedDescription ?? "Response Error")
                 return }
-            do{
-                let jsonResponse = try JSONSerialization.jsonObject(with: dataResponse) as! Dictionary<String, AnyObject>
-                
-                returnCompletion(jsonResponse, httpResponse?.statusCode)
-                
-            } catch let parsingError {
-                print("Error", parsingError)
-                returnCompletion([:], httpResponse?.statusCode)
-            }
+            returnCompletion(dataResponse, httpResponse?.statusCode)
         }
         task.resume()
-        
         
     }
     
 }
-
-
 
 enum CryptoAlgorithm {
     case MD5, SHA1, SHA224, SHA256, SHA384, SHA512
@@ -144,7 +316,6 @@ extension String {
         let digest = stringFromResult(result: result, length: digestLen)
 
         result.deallocate()
-        //result.deallocate(capacity: digestLen)
 
         return digest
     }
@@ -156,52 +327,3 @@ extension String {
         return String(hash).lowercased()
     }
 }
-
-//const crypto = require('crypto');
-//const baseurl = "https://www.bitexen.com/api/v1/balance/";
-//const axios = require("axios");
-//var https = require('https');
-//
-//
-//var apiKey = "aBEn6jMErPH7en0fDj5L4g"
-//var apiSecret = "rj1Yy-X4cIY1kydfcYXb5A"
-//var apiPassphrase = "WHATISTHISFIELD"
-//var apiUsername = "serkan@digilirapay.com"
-//
-//var time = Date.now();
-//var message = apiKey + apiUsername + apiPassphrase + time + "{}";
-//var hmac = crypto.createHmac('sha256', apiSecret).update(message).digest('hex').toUpperCase()
-//
-//var header = {
-//    "ACCESS-USER": apiUsername,
-//    "ACCESS-PASSPHRASE": apiPassphrase,
-//    "ACCESS-TIMESTAMP": time.toString(),
-//    "ACCESS-SIGN": hmac,
-//    "ACCESS-KEY": apiKey,
-//    "Content-Type": "application/json"
-//}
-//
-//function getBalance() {
-//
-//    try {
-//        const url = baseurl;
-//        const getData = async url => {
-//            try {
-//                const response = await axios.get(url, { headers: header });
-//                const data = response.data;
-//                console.log(data)
-//            } catch (error) {
-//                console.log(error.response.data);
-//            }
-//        };
-//        getData(url);
-//    } catch (error) {
-//        console.log('HATA');
-//        resolve("hata");
-//    }
-//
-//}
-//
-//getBalance()
-
-
