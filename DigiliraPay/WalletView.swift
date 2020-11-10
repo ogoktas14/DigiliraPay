@@ -71,6 +71,7 @@ class WalletView: UIView {
         BC.checkTransactions(address: self.kullanici!.wallet!){ (data) in
             DispatchQueue.main.async {
                 data?.forEach { trx in
+                    
                     let dateWaves = (978307200 + (trx["timestamp"] as! Int)) * 1000
                     
                     let dateFormatter = DateFormatter()
@@ -213,7 +214,6 @@ extension WalletView: UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell().loadXib(name: "transactionHistoryCell") as! transactionHistoryCell
-        print(trxs.count)
         if trxs.count == 0 {
             return cell
         }

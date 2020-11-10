@@ -193,7 +193,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate
             lastName: surnameText.text,
             tcno: tcText.text,
             tel: telText.text,
-            mail: mailText.text,
+            mail: mailText.text, 
             status: 1,
             id1: b64
         )

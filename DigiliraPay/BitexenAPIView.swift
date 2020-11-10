@@ -45,13 +45,25 @@ class BitexenAPIView: UIView {
                 self.textUsername.text = loadedAPI?.username ?? ""
             }
         }
+        
+        
+        bitexenSign.onBitexenError = { res, sts in
+            
+            
+            self.shake()
+            self.labelError.isHidden = false
+            self.labelError.lineBreakMode = .byWordWrapping // notice the 'b' instead of 'B'
+            self.labelError.numberOfLines = 0
+            self.labelError.text = "Girdiğiniz bilgileri kontrol edip tekrar deneyin."
+            
+            
+        }
+        
+        
     }
     
     @IBAction func btnSave(_ sender: Any) {
-        
-        saveAPI()
-       
-
+        saveAPI() 
     }
     
     func saveAPI() {
@@ -72,21 +84,19 @@ class BitexenAPIView: UIView {
                                               preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "OK",style:UIAlertAction.Style.default,handler: nil))
                 window?.rootViewController?.presentedViewController?.present(alert, animated: true, completion: nil)
-            } else {
-                self.shake()
-                self.labelError.isHidden = false
-                self.labelError.lineBreakMode = .byWordWrapping // notice the 'b' instead of 'B'
-                self.labelError.numberOfLines = 0
-                self.labelError.text = "Girdiğiniz bilgileri kontrol edip tekrar deneyin."
-            }
+            } 
             
         }
         bitexenSign.getBalances(keys: res)
-        
+        save2defaults(forKey: "bitexenAPI", data: res)
+
+    }
+    
+    func save2defaults (forKey: String, data: bex.bitexenAPICred) {
         let encoder = JSONEncoder()
-        if let encoded = try? encoder.encode(res) {
+        if let encoded = try? encoder.encode(data) {
             let defaults = UserDefaults.standard
-            defaults.set(encoded, forKey: "bitexenAPI")
+            defaults.set(encoded, forKey: forKey)
         }
     }
     

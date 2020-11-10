@@ -18,6 +18,7 @@ struct digilira {
         static let get = "GET"
     }
     struct api {
+        static let sslpin = "https://pay.digilirapay.com/"
         static let url = "https://pay.digilirapay.com/v4"
         static let url2 = "https://api.digilirapay.com/v4"
         static let payment = "/payment/"
@@ -29,6 +30,13 @@ struct digilira {
     }
     struct node {
         static let url = "https://nodes-testnet.wavesnodes.com"
+    }
+    
+    struct sslPinning {
+        static let cert = "cloudflaressl"
+        static let bexCert = "bitexen.com"
+        static let wavesCert = "wavesnodes.com"
+        static let fileType = "cer"
     }
     
     struct bexURL {
@@ -280,6 +288,72 @@ struct digilira {
         var refund: [refund]?
         
     }
+    
+   
+    // MARK: - MarketInfoElement
+    struct MarketInfoElement: Codable {
+        let type: Int
+        let id, sender, senderPublicKey: String
+        let fee: Int
+        let feeAssetID: JSONNull?
+        let timestamp: Int
+        let proofs: [String]
+        let version: Int
+        let assetID, attachment: String
+        let transferCount, totalAmount: Int?
+        let transfers: [Transfer]?
+        let applicationStatus: String
+        let height: Int
+        let recipient: String?
+        let feeAsset: JSONNull?
+        let amount: Int?
+
+        enum CodingKeys: String, CodingKey {
+            case type, id, sender, senderPublicKey, fee
+            case feeAssetID = "feeAssetId"
+            case timestamp, proofs, version
+            case assetID = "assetId"
+            case attachment, transferCount, totalAmount, transfers, applicationStatus, height, recipient, feeAsset, amount
+        }
+    }
+
+    // MARK: - Transfer
+    struct Transfer: Codable {
+        let recipient: String
+        let amount: Int
+    }
+
+    typealias MarketInfo = [[MarketInfoElement]]
+
+    // MARK: - Encode/decode helpers
+
+    class JSONNull: Codable, Hashable {
+
+        public static func == (lhs: JSONNull, rhs: JSONNull) -> Bool {
+            return true
+        }
+
+        public var hashValue: Int {
+            return 0
+        }
+
+        public init() {}
+
+        public required init(from decoder: Decoder) throws {
+            let container = try decoder.singleValueContainer()
+            if !container.decodeNil() {
+                throw DecodingError.typeMismatch(JSONNull.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Wrong type for JSONNull"))
+            }
+        }
+
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.singleValueContainer()
+            try container.encodeNil()
+        }
+    }
+
+    
+    
 }
 
 

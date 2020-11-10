@@ -17,8 +17,9 @@ import LocalAuthentication
 import Starscream
 
 
-class digiliraPayApi {
-    
+class digiliraPayApi: NSObject {
+    private var isCertificatePinning: Bool = true
+
     var token:String?
     
     let jsonEncoder = JSONEncoder()
@@ -52,25 +53,38 @@ class digiliraPayApi {
             request.setValue(tokenString, forHTTPHeaderField: "Authorization")
         }
         
-        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-            
+        
+        let session2 = URLSession(configuration: .ephemeral, delegate: self, delegateQueue: nil)
+        
+        self.isCertificatePinning = true
+        
+        let task2 = session2.dataTask(with: request) { (data, response, error) in
             let httpResponse = response as? HTTPURLResponse
-            guard let dataResponse = data,
-                  error == nil else {
-                print(error?.localizedDescription ?? "Response Error")
-                return }
-            do{
+            if error != nil {
+                print("error: \(error!.localizedDescription): \(error!)")
+                self.onError!("error: \(error!.localizedDescription): \(error!)")
                 
-                let jsonResponse = try JSONSerialization.jsonObject(with: dataResponse) as! Dictionary<String, AnyObject>
-                
-                returnCompletion(jsonResponse, httpResponse?.statusCode)
-                
-            } catch let parsingError {
-                print("Error", parsingError)
-                returnCompletion([:], httpResponse?.statusCode)    
+            } else if data != nil {
+  
+                 guard let dataResponse = data,
+                      error == nil else {
+                    print(error?.localizedDescription ?? "Response Error")
+                    return }
+                do{
+                    
+                    let jsonResponse = try JSONSerialization.jsonObject(with: dataResponse) as! Dictionary<String, AnyObject>
+                    
+                    returnCompletion(jsonResponse, httpResponse?.statusCode)
+                    
+                } catch let parsingError {
+                    print("Error", parsingError)
+                    returnCompletion([:], httpResponse?.statusCode)
+                }
             }
+      
         }
-        task.resume()
+        task2.resume()
+      
         
         
     }
@@ -123,70 +137,96 @@ class digiliraPayApi {
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue(tokenString, forHTTPHeaderField: "Authorization")
         
+        
+        let session2 = URLSession(configuration: .ephemeral, delegate: self, delegateQueue: nil)
+        
+        self.isCertificatePinning = true
+        
+        let task2 = session2.dataTask(with: request) { (data, response, error) in
+
+            if error != nil {
+                print("error: \(error!.localizedDescription): \(error!)")
+                self.onError!("error: \(error!.localizedDescription): \(error!)")
+
+            } else if data != nil {
+  
+                do {
+                    let json = try JSONSerialization.jsonObject(with: data!) as! Dictionary<String, AnyObject>
+                    DispatchQueue.main.async { // Correct
+                        
+                        let products = json["products"] as? Array<[String:Any]>
+                        let refunds = json["refunds"] as? Array<[String:Any]>
+                        
+                        var someArray = [digilira.product]()
+                        var someRefunds = [digilira.refund]()
+                        
+                        if products != nil {
+                            for item in products! {
+                                someArray.append(digilira.product(json:item))
+                            }
+                        }
+                        
+                        if refunds != nil {
+                            for item in refunds! {
+                                someRefunds.append(digilira.refund(json:item))
+                            }
+                        }
+                        
+                        
+                        let order = digilira.order.init(_id: (json["id"] as? String)!,
+                                                        merchant: (json["merchant"] as? String)!,
+                                                        user: json["merchant"] as? String,
+                                                        language: json["language"] as? String,
+                                                        order_ref: json["order_ref"] as? String,
+                                                        createdDate: json["createdDate"] as? String,
+                                                        order_date: json["order_date"] as? String,
+                                                        order_shipping: json["order_shipping"] as? Double,
+                                                        conversationId: json["conversationId"] as? String,
+                                                        rate: (json["rate"] as? Int64)!,
+                                                        totalPrice: json["totalPrice"] as? Double,
+                                                        paidPrice: json["paidPrice"] as? Double,
+                                                        refundPrice: json["refundPrice"] as? Double,
+                                                        currency: json["currency"] as? String,
+                                                        currencyFiat: json["currencyFiat"] as? Double,
+                                                        userId: json["userId"] as? String,
+                                                        paymentChannel: json["paymentChannel"] as? String,
+                                                        ip: json["ip"] as? String,
+                                                        registrationDate: json["registrationDate"] as? String,
+                                                        wallet: (json["wallet"] as? String)!,
+                                                        asset: json["asset"] as? String,
+                                                        successUrl: json["successUrl"] as? String,
+                                                        failureUrl: json["failureUrl"] as? String,
+                                                        callbackSuccess: json["callbackSuccess"] as? String,
+                                                        callbackFailure: json["callbackFailure"] as? String,
+                                                        mobile: json["mobile"] as? Int64,
+                                                        status: json["status"] as? Int64,
+                                                        products: someArray,
+                                                        refund: someRefunds
+                        )
+                        
+                        self.onGetOrder?(order)
+                    }
+                } catch {
+                    print(error)
+                }
+                
+            }
+      
+        }
+        task2.resume()
+         
+        
+        
+        
+        
+        
+        
         let session = URLSession.shared
         
         let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
             //let httpResponse = response as? HTTPURLResponse
             
-            do {
-                let json = try JSONSerialization.jsonObject(with: data!) as! Dictionary<String, AnyObject>
-                DispatchQueue.main.async { // Correct
-                    
-                    let products = json["products"] as? Array<[String:Any]>
-                    let refunds = json["refunds"] as? Array<[String:Any]>
-                    
-                    var someArray = [digilira.product]()
-                    var someRefunds = [digilira.refund]()
-                    
-                    if products != nil {
-                        for item in products! {
-                            someArray.append(digilira.product(json:item))
-                        }
-                    }
-                    
-                    if refunds != nil {
-                        for item in refunds! {
-                            someRefunds.append(digilira.refund(json:item))
-                        }
-                    }
-                    
-                    
-                    let order = digilira.order.init(_id: (json["id"] as? String)!,
-                                                    merchant: (json["merchant"] as? String)!,
-                                                    user: json["merchant"] as? String,
-                                                    language: json["language"] as? String,
-                                                    order_ref: json["order_ref"] as? String,
-                                                    createdDate: json["createdDate"] as? String,
-                                                    order_date: json["order_date"] as? String,
-                                                    order_shipping: json["order_shipping"] as? Double,
-                                                    conversationId: json["conversationId"] as? String,
-                                                    rate: (json["rate"] as? Int64)!,
-                                                    totalPrice: json["totalPrice"] as? Double,
-                                                    paidPrice: json["paidPrice"] as? Double,
-                                                    refundPrice: json["refundPrice"] as? Double,
-                                                    currency: json["currency"] as? String,
-                                                    currencyFiat: json["currencyFiat"] as? Double,
-                                                    userId: json["userId"] as? String,
-                                                    paymentChannel: json["paymentChannel"] as? String,
-                                                    ip: json["ip"] as? String,
-                                                    registrationDate: json["registrationDate"] as? String,
-                                                    wallet: (json["wallet"] as? String)!,
-                                                    asset: json["asset"] as? String,
-                                                    successUrl: json["successUrl"] as? String,
-                                                    failureUrl: json["failureUrl"] as? String,
-                                                    callbackSuccess: json["callbackSuccess"] as? String,
-                                                    callbackFailure: json["callbackFailure"] as? String,
-                                                    mobile: json["mobile"] as? Int64,
-                                                    status: json["status"] as? Int64,
-                                                    products: someArray,
-                                                    refund: someRefunds
-                    )
-                    
-                    self.onGetOrder?(order)
-                }
-            } catch {
-                print(error)
-            }
+            
         })
         
         task.resume()
@@ -255,26 +295,36 @@ class digiliraPayApi {
             let tokenString = "Bearer " + auth().token!
             request.setValue(tokenString, forHTTPHeaderField: "Authorization")
         }
+   
+        let session2 = URLSession(configuration: .ephemeral, delegate: self, delegateQueue: nil)
         
-        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-            
+        self.isCertificatePinning = true
+        
+        let task2 = session2.dataTask(with: request) { (data, response, error) in
             let httpResponse = response as? HTTPURLResponse
-            guard let dataResponse = data,
-                  error == nil else {
-                print(error?.localizedDescription ?? "Response Error")
-                return }
-            do{
+            if error != nil {
+                self.onError!("SSL PINNING MISMATCH")
                 
-                let jsonResponse = try JSONSerialization.jsonObject(with: dataResponse) as! Dictionary<String, AnyObject>
-                self.onResponse!(jsonResponse, httpResponse?.statusCode)
-                
-                
-            } catch let parsingError {
-                print("Error", parsingError)
-                self.onResponse!([:], httpResponse?.statusCode)
+            } else if data != nil {
+  
+                 guard let dataResponse = data,
+                      error == nil else {
+                    print(error?.localizedDescription ?? "Response Error")
+                    return }
+                do{
+                    
+                    let jsonResponse = try JSONSerialization.jsonObject(with: dataResponse) as! Dictionary<String, AnyObject>
+                    self.onResponse!(jsonResponse, httpResponse?.statusCode)
+                    
+                } catch let parsingError {
+                    print("Error", parsingError)
+                    self.onResponse!([:], httpResponse?.statusCode)
+                }
             }
+      
         }
-        task.resume()
+        task2.resume()
+   
         
         
     }
@@ -671,8 +721,9 @@ class OpenUrlManager {
                 picker.sourceType = .camera
                 self.viewController!.present(picker, animated: true, completion: nil)
             } else {
-                let alertWarning = UIAlertView(title:"Warning", message: "You don't have camera", delegate:nil, cancelButtonTitle:"OK", otherButtonTitles:"")
-                alertWarning.show()
+                let alert = UIAlertController(title: "Dikkat", message: "Kameranız bulunmamaktadır.", preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
+                alert.show(self.viewController!, sender: nil)
             }
         }
         func openGallery(){
@@ -707,6 +758,45 @@ class OpenUrlManager {
         }
         
     }
+     
     
+}
+ 
+extension digiliraPayApi: URLSessionDelegate {
+    
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        
+        guard let serverTrust = challenge.protectionSpace.serverTrust else {
+            completionHandler(.cancelAuthenticationChallenge, nil);
+            return
+        }
+        
+        if self.isCertificatePinning {
+             
+            let certificate = SecTrustGetCertificateAtIndex(serverTrust, 0)
+            // SSL Policies for domain name check
+            let policy = NSMutableArray()
+            policy.add(SecPolicyCreateSSL(true, challenge.protectionSpace.host as CFString))
+            
+            //evaluate server certifiacte
+            let isServerTrusted = SecTrustEvaluateWithError(serverTrust, nil)
+            
+            //Local and Remote certificate Data
+            let remoteCertificateData:NSData =  SecCertificateCopyData(certificate!)
+            //let LocalCertificate = Bundle.main.path(forResource: "github.com", ofType: "cer")
+            let pathToCertificate = Bundle.main.path(forResource: digilira.sslPinning.cert, ofType: digilira.sslPinning.fileType)
+            let localCertificateData:NSData = NSData(contentsOfFile: pathToCertificate!)!
+            
+            //Compare certificates
+            if(isServerTrusted && remoteCertificateData.isEqual(to: localCertificateData as Data)){
+                let credential:URLCredential =  URLCredential(trust:serverTrust)
+                print("Certificate pinning is successfully completed")
+                completionHandler(.useCredential,credential)
+            }
+            else{
+                completionHandler(.cancelAuthenticationChallenge,nil)
+            }
+        }
+    }
     
 }

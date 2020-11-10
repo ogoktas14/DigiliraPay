@@ -21,3 +21,8 @@ protocol NewCoinSendDelegate: class {
     func dismissNewSend()
     func sendCoinNew(params:SendTrx)
 }
+
+protocol SelectCoinViewDelegate: class {
+    func dismissNewSend()
+    func selectCoin(params: String)
+}

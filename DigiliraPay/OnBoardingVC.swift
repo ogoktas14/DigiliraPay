@@ -86,6 +86,17 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
 //            }
 //        }
  
+        digiliraPay.onError = { res in
+            DispatchQueue.main.async {
+
+            let alert = UIAlertController(title: "Bir Hata Oluştu..", message: "Maalesef şu an işleminizi gerçekleştiremiyoruz. Lütfen birazdan tekrar deneyin.", preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
+                    exit(1)
+                }))
+            self.present(alert, animated: true, completion: nil)
+            }
+        }
+        
         if BC.checkIfUser() {
             digiliraPay.login() { (json, status) in
                 DispatchQueue.main.async {
@@ -116,6 +127,18 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
                         
                     case 200:
                         self.kullanici = json
+                        
+                        if self.kullanici?.status == 403 {
+                            let alert = UIAlertController(title: "Hata", message: "Hesabınız bloke edilmiştir.", preferredStyle: .alert)
+                            
+                            alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
+                                self.letsGoView.isHidden = false
+                                self.importAccountView.isHidden = false
+                                exit(0)
+                            }))
+                            self.present(alert, animated: true)
+                            
+                        }
                         
                         //openPinView
                         if self.kullanici?.pincode == -1

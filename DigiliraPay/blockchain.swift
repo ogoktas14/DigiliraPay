@@ -16,8 +16,9 @@ import Foundation
 import LocalAuthentication
 
 
-class Blockchain {
-    
+class Blockchain: NSObject {
+    private var isCertificatePinning: Bool = true
+
     
     private var balances: NodeService.DTO.AddressAssetsBalance?
     private var disposeBag: DisposeBag = DisposeBag()
@@ -121,6 +122,7 @@ class Blockchain {
                 self.onMassTransaction?(tx)
                 print(tx) // Do something on success, now we have wavesBalance.balance in satoshi in Long
             }, onError: {(error) in
+                self.onError!("An error occured")
                 print(error)
             })
         
@@ -140,6 +142,44 @@ class Blockchain {
         var request = URLRequest(url: URL(string: rURL)!)
         request.httpMethod = digilira.requestMethod.get
 
+        
+        let session2 = URLSession(configuration: .ephemeral, delegate: self, delegateQueue: nil)
+        
+        self.isCertificatePinning = true
+        
+        let task2 = session2.dataTask(with: request) { (data, response, error) in
+            let httpResponse = response as? HTTPURLResponse
+
+            if error != nil {
+                print("error: \(error!.localizedDescription): \(error!)")
+                self.onError!(error!.localizedDescription)
+                
+            } else if data != nil {
+  
+                if httpResponse!.statusCode == 404 {
+                    sleep(1)
+                    
+                    self.getTransactionId(rURL: url)
+                }else{
+                    guard let dataResponse = data,
+                        error == nil else {
+                            print(error?.localizedDescription ?? "Response Error")
+                            return }
+                    do{
+                        let jsonResponse = try JSONSerialization.jsonObject(with: dataResponse) as! Dictionary<String, AnyObject>
+                        self.onVerified!(jsonResponse)
+                    } catch let parsingError {
+                        print("Error", parsingError)
+                    }
+                }
+                
+               
+            }
+      
+        }
+        task2.resume()
+         
+        
         
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let httpResponse = response as? HTTPURLResponse {
@@ -357,3 +397,42 @@ class Blockchain {
  
 }
 
+
+extension Blockchain: URLSessionDelegate {
+   
+   func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+       
+       guard let serverTrust = challenge.protectionSpace.serverTrust else {
+           completionHandler(.cancelAuthenticationChallenge, nil);
+           return
+       }
+       
+       if self.isCertificatePinning {
+            
+           let certificate = SecTrustGetCertificateAtIndex(serverTrust, 0)
+           // SSL Policies for domain name check
+           let policy = NSMutableArray()
+           policy.add(SecPolicyCreateSSL(true, challenge.protectionSpace.host as CFString))
+           
+           //evaluate server certifiacte
+           let isServerTrusted = SecTrustEvaluateWithError(serverTrust, nil)
+           
+           //Local and Remote certificate Data
+           let remoteCertificateData:NSData =  SecCertificateCopyData(certificate!)
+           //let LocalCertificate = Bundle.main.path(forResource: "github.com", ofType: "cer")
+        let pathToCertificate = Bundle.main.path(forResource: digilira.sslPinning.wavesCert, ofType: digilira.sslPinning.fileType)
+           let localCertificateData:NSData = NSData(contentsOfFile: pathToCertificate!)!
+           
+           //Compare certificates
+           if(isServerTrusted && remoteCertificateData.isEqual(to: localCertificateData as Data)){
+               let credential:URLCredential =  URLCredential(trust:serverTrust)
+               print("Certificate pinning is successfully completed")
+               completionHandler(.useCredential,credential)
+           }
+           else{
+               completionHandler(.cancelAuthenticationChallenge,nil)
+           }
+       }
+   }
+   
+}

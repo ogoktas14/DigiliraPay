@@ -10,12 +10,17 @@ import Foundation
 import CommonCrypto
 
 
-class bex {
+class bex: NSObject {
+    
+    private var isCertificatePinning: Bool = true
+
     var onBitexenBalance: ((_ result: bexBalance, _ statusCode: Int?)->())?
     var onBitexenTicker: ((_ result: bexAllTicker, _ statusCode: Int?)->())?
     var onBitexenTickerCoin: ((_ result: bexTicker, _ statusCode: Int?)->())?
     var onBitexenMarketInfo: ((_ result: bexMarketInfo, _ statusCode: Int?)->())?
-
+    var onBitexenError: ((_ result: String, _ statusCode: Int?)->())?
+    
+    
     struct bitexenAPICred: Codable {
         var apiKey: String
         var apiSecret: String
@@ -219,6 +224,7 @@ class bex {
                     let ticker = try JSONDecoder().decode(bexBalance.self, from: json!)
                     self.onBitexenBalance!(ticker, statusCode)
                 } catch let parsingError {
+                    self.onBitexenError!("parsingError", statusCode)
                     print("Error", parsingError)
                 }
                 
@@ -257,16 +263,42 @@ class bex {
             request.url?.appendPathComponent(PARAMS, isDirectory: true)
         }
         
-        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-            
+        
+        let session2 = URLSession(configuration: .ephemeral, delegate: self, delegateQueue: nil)
+        
+        self.isCertificatePinning = true
+        
+        let task2 = session2.dataTask(with: request) { (data, response, error) in
             let httpResponse = response as? HTTPURLResponse
-            guard let dataResponse = data,
-                  error == nil else {
-                print(error?.localizedDescription ?? "Response Error")
-                return }
-            returnCompletion(dataResponse, httpResponse?.statusCode)
+            if error != nil {
+                print("error: \(error!.localizedDescription): \(error!)")
+                self.onBitexenError!("SSL PINNING MISMATCH", httpResponse?.statusCode)
+                
+            } else if data != nil {
+  
+                 guard let dataResponse = data,
+                      error == nil else {
+                    print(error?.localizedDescription ?? "Response Error")
+                    return }
+                
+                    returnCompletion(dataResponse, httpResponse?.statusCode)
+                
+            }
+      
         }
-        task.resume()
+        task2.resume()
+         
+        
+//        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+//
+//            let httpResponse = response as? HTTPURLResponse
+//            guard let dataResponse = data,
+//                  error == nil else {
+//                print(error?.localizedDescription ?? "Response Error")
+//                return }
+//            returnCompletion(dataResponse, httpResponse?.statusCode)
+//        }
+//        task.resume()
         
     }
     
@@ -326,4 +358,43 @@ extension String {
         }
         return String(hash).lowercased()
     }
+}
+
+extension bex: URLSessionDelegate {
+   
+   func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+       
+       guard let serverTrust = challenge.protectionSpace.serverTrust else {
+           completionHandler(.cancelAuthenticationChallenge, nil);
+           return
+       }
+       
+       if self.isCertificatePinning {
+            
+           let certificate = SecTrustGetCertificateAtIndex(serverTrust, 0)
+           // SSL Policies for domain name check
+           let policy = NSMutableArray()
+           policy.add(SecPolicyCreateSSL(true, challenge.protectionSpace.host as CFString))
+           
+           //evaluate server certifiacte
+           let isServerTrusted = SecTrustEvaluateWithError(serverTrust, nil)
+           
+           //Local and Remote certificate Data
+           let remoteCertificateData:NSData =  SecCertificateCopyData(certificate!)
+           //let LocalCertificate = Bundle.main.path(forResource: "github.com", ofType: "cer")
+            let pathToCertificate = Bundle.main.path(forResource: digilira.sslPinning.bexCert, ofType: digilira.sslPinning.fileType)
+           let localCertificateData:NSData = NSData(contentsOfFile: pathToCertificate!)!
+           
+           //Compare certificates
+           if(isServerTrusted && remoteCertificateData.isEqual(to: localCertificateData as Data)){
+               let credential:URLCredential =  URLCredential(trust:serverTrust)
+               print("Certificate pinning is successfully completed")
+               completionHandler(.useCredential,credential)
+           }
+           else{
+               completionHandler(.cancelAuthenticationChallenge,nil)
+           }
+       }
+   }
+   
 }

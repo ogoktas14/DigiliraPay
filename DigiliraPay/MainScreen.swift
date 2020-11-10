@@ -58,6 +58,7 @@ class MainScreen: UIViewController {
     var depositeMoneyView = DepositeMoneyView()
     let imagePicker = UIImagePickerController()
     var newSendMoneyView = newSendView()
+    var selectCoin = selectCoinView()
     var bitexenAPIView = BitexenAPIView()
 
     var tapProfileMenuGesture = UITapGestureRecognizer()
@@ -337,6 +338,27 @@ class MainScreen: UIViewController {
             
         }
         
+        digiliraPay.onError = { res in
+            
+            DispatchQueue.main.async {
+            switch res {
+            case "SSL PINNING MISMATCH":
+                let alert = UIAlertController(title: "Bir Hata Oluştu..", message: "Maalesef şu anda işleminizi gerçekleştiremiyoruz. Lütfen birazdan tekrar deneyin.", preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: { _ in
+                    exit(1)
+                }))
+                
+                self.present(alert, animated: true, completion: nil)
+            default:
+                let alert = UIAlertController(title: "Bir Hata Oluştu..", message: "Maalesef şu anda işleminizi gerçekleştiremiyoruz. Lütfen birazdan tekrar deneyin.", preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
+                
+                self.present(alert, animated: true, completion: nil)
+            }
+            }
+            
+        }
+        
         BC.onError = { res in
             switch res {
             case "Canceled by user.":
@@ -354,8 +376,31 @@ class MainScreen: UIViewController {
                 self.closeSendView()
                 break
             default:
+                DispatchQueue.main.async { 
+                    let alert = UIAlertController(title: "Bir Hata Oluştu..", message: "Maalesef şu an işleminizi gerçekleştiremiyoruz. Lütfen birazdan tekrar deneyin.", preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
+                    
+                    self.present(alert, animated: true, completion: nil)
+                    self.closeSendView()
+                }
                 break
+                
             }
+            
+        }
+        
+        
+        bitexenSign.onBitexenError = { res, sts in
+            
+            DispatchQueue.main.async {
+            self.shake()
+            
+            let alert = UIAlertController(title: "Bitexen API", message: "Bitexen API bilgileriniz hatalıdır.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: nil))
+            self.present(alert, animated: true)
+            }
+            
+            
             
         }
         
@@ -488,6 +533,7 @@ class MainScreen: UIViewController {
             break
         default:
             digiliraPay.onGetOrder = { res in
+                //self.goSelectCoinView(ORDER: res)
                 self.sendQR(ORDER: res)
                 
             }
@@ -578,7 +624,7 @@ class MainScreen: UIViewController {
     
     
     func fetch() {
-        
+ 
         Filtered.removeAll()
         totalBalance = 0
         if  digiliraPay.isKeyPresentInUserDefaults(key: "bitexenAPI") {  //if bitexen api set; check marketinfo, getticker, getbalances
@@ -1962,6 +2008,35 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
     }
     
     
+    
+    func goSelectCoinView(ORDER: digilira.order) {
+        
+        selectCoin = UIView().loadNib(name: "selectCoinView") as! selectCoinView
+        sendWithQRView.frame.origin.y = self.view.frame.height
+        selectCoin.frame = CGRect(x: 0,
+                                        y: 0,
+                                        width: view.frame.width,
+                                        height: view.frame.height)
+        selectCoin.delegate = self
+        
+        for subView in sendWithQRView.subviews
+        { subView.removeFromSuperview() }
+        
+        menuXib.isHidden = true
+        
+        sendWithQRView.addSubview(selectCoin)
+        sendWithQRView.isHidden = false
+        sendWithQRView.translatesAutoresizingMaskIntoConstraints = true
+        
+        UIView.animate(withDuration: 0.3)
+        {
+            self.sendWithQRView.frame.origin.y = 0
+            self.sendWithQRView.alpha = 1
+        }
+        
+    }
+    
+    
     func showSuccess(mode: Int, transaction: [String : Any])
     {
         
@@ -2427,6 +2502,15 @@ extension Notification.Name {
     static let orderClick = Notification.Name("orderClick")
 }
 
+extension MainScreen: SelectCoinViewDelegate
+{
+    func selectCoin(params: String) {
+        print(params)
+    }
+    
+    
+    
+}
 
 extension MainScreen: NewCoinSendDelegate
 {
