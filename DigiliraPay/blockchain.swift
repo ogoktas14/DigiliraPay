@@ -125,9 +125,6 @@ class Blockchain: NSObject {
                 self.onError!("An error occured")
                 print(error)
             })
-        
-
-
     }
     
      
@@ -136,13 +133,12 @@ class Blockchain: NSObject {
     }
     
     func getTransactionId(rURL: String) {
-        
+         
         let url = rURL
         
         var request = URLRequest(url: URL(string: rURL)!)
         request.httpMethod = digilira.requestMethod.get
 
-        
         let session2 = URLSession(configuration: .ephemeral, delegate: self, delegateQueue: nil)
         
         self.isCertificatePinning = true
@@ -157,9 +153,9 @@ class Blockchain: NSObject {
             } else if data != nil {
   
                 if httpResponse!.statusCode == 404 {
-                    sleep(1)
-                    
+                    sleep(2)
                     self.getTransactionId(rURL: url)
+                    return
                 }else{
                     guard let dataResponse = data,
                         error == nil else {
@@ -172,37 +168,11 @@ class Blockchain: NSObject {
                         print("Error", parsingError)
                     }
                 }
-                
-               
             }
       
         }
         task2.resume()
          
-        
-        
-        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-            if let httpResponse = response as? HTTPURLResponse {
-                print(httpResponse.statusCode)
-                if httpResponse.statusCode == 404 {
-                    sleep(1)
-                    
-                    self.getTransactionId(rURL: url)
-                }else {
-                    guard let dataResponse = data,
-                        error == nil else {
-                            print(error?.localizedDescription ?? "Response Error")
-                            return }
-                    do{
-                        let jsonResponse = try JSONSerialization.jsonObject(with: dataResponse) as! Dictionary<String, AnyObject>
-                        self.onVerified!(jsonResponse)
-                    } catch let parsingError {
-                        print("Error", parsingError)
-                    }
-                }
-            }
-        }
-        task.resume()
     }
     
     

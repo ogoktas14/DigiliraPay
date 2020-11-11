@@ -77,6 +77,7 @@ class MainScreen: UIViewController {
     var isDepositeMoneyView = false
     var isNewSendScreen = false
     var isBitexenAPI = false
+    var isVerifyAccount = false
     
     var isKeyboard = false
     
@@ -112,11 +113,11 @@ class MainScreen: UIViewController {
     
     var onPinSuccess: ((_ result: Bool)->())?
     
-    
     var headerHeightBuffer: CGFloat?
     var QR:digilira.QR = digilira.QR.init()
-
     
+    let defaults = UserDefaults.standard
+
     let BC = Blockchain()
     let bitexenSign = bex()
     let digiliraPay = digiliraPayApi()
@@ -142,8 +143,6 @@ class MainScreen: UIViewController {
     
     
     func sendMessage(_ message: SocketMessage) {
-        print(message)
-        
         if (!isAlive) {
             socket1.connect()
         }
@@ -251,6 +250,7 @@ class MainScreen: UIViewController {
                     Filtered.append(digiliraBalance)
                     
                 }
+                coinTableView.reloadData()
             }
              
             if isFirstLaunch {
@@ -263,21 +263,21 @@ class MainScreen: UIViewController {
             self.headerTotal.fadeTransition(0.4)
             self.setHeaderTotal()
             self.goHomeScreen()
-            if  self.isKeyPresentInUserDefaults(key: "QRARRAY2") {
-                
-                let defaults = UserDefaults.standard
-                if let savedQR = defaults.object(forKey: "QRARRAY2") as? Data {
-                    let decoder = JSONDecoder()
-                    let loadedQR = try? decoder.decode(digilira.QR.self, from: savedQR)
-                    QR = loadedQR!
-                    UserDefaults.standard.set(nil, forKey: "QRARRAY2")
-                    self.getOrder(address: QR)
-                }
+            
+            if let qr = decodeDefaults(forKey: "QRARRAY2", conformance: digilira.QR.self, setNil: true) {
+                QR = qr
+                self.getOrder(address: QR)
             }
             
-            
-            
-            
+//            if  self.isKeyPresentInUserDefaults(key: "QRARRAY2") {
+//                if let savedQR = defaults.object(forKey: "QRARRAY2") as? Data {
+//                    let decoder = JSONDecoder()
+//                    let loadedQR = try? decoder.decode(digilira.QR.self, from: savedQR)
+//                    QR = loadedQR!
+//                    UserDefaults.standard.set(nil, forKey: "QRARRAY2")
+//                    self.getOrder(address: QR)
+//                }
+//            }
             
         }
         
@@ -319,6 +319,7 @@ class MainScreen: UIViewController {
         }
         
         BC.onVerified = { res in
+            print("verified verified verified")
             NotificationCenter.default.post(name: .didCompleteTask, object: nil)
             DispatchQueue.main.async {
                 self.showSuccess(mode: 2, transaction: res)
@@ -533,8 +534,8 @@ class MainScreen: UIViewController {
             break
         default:
             digiliraPay.onGetOrder = { res in
-                //self.goSelectCoinView(ORDER: res)
-                self.sendQR(ORDER: res)
+                self.goSelectCoinView(ORDER: res)
+                //self.sendQR(ORDER: res)
                 
             }
             digiliraPay.getOrder(PARAMS: address.address!)
@@ -549,25 +550,29 @@ class MainScreen: UIViewController {
         if (isDepositeMoneyView) {
             closeDeposite()
         }
-        let defaults = UserDefaults.standard
-        if let savedQR = defaults.object(forKey: "QRARRAY2") as? Data {
-            let decoder = JSONDecoder()
-            let loadedQR = try? decoder.decode(digilira.QR.self, from: savedQR)
-            QR = loadedQR!
-            if (self.QR.address != nil) {
-                getOrder(address: self.QR)
-                self.QR = digilira.QR.init()
-                UserDefaults.standard.set(nil, forKey: "QRARRAY2")
-            }
+        
+        if let qr = decodeDefaults(forKey: "QRARRAY2", conformance: digilira.QR.self, setNil: true) {
+            QR = qr
+            self.getOrder(address: QR)
         }
+
+//        if let savedQR = defaults.object(forKey: "QRARRAY2") as? Data {
+//            let decoder = JSONDecoder()
+//            let loadedQR = try? decoder.decode(digilira.QR.self, from: savedQR)
+//            QR = loadedQR!
+//            if (self.QR.address != nil) {
+//                getOrder(address: self.QR)
+//                self.QR = digilira.QR.init()
+//                UserDefaults.standard.set(nil, forKey: "QRARRAY2")
+//            }
+//        }
         if (isSuccessView) {
             self.close()
         }
         
-        
-        self.dismissVErifyAccountView(user: kullanici!)
-        
-        
+        if isVerifyAccount {
+            self.dismissVErifyAccountView(user: kullanici!)
+        }
         
     }
     
@@ -622,30 +627,41 @@ class MainScreen: UIViewController {
         
     }
     
+    func decodeDefaults<T>(forKey: String, conformance: T.Type, setNil: Bool = false ) -> T? where T: Decodable  {
+        if let savedAPI = defaults.object(forKey: forKey) as? Data {
+            let decoder = JSONDecoder()
+            let loadedAPI = try? decoder.decode(conformance.self, from: savedAPI)
+            
+            if setNil {
+                defaults.set(nil, forKey: forKey)
+            }
+            return loadedAPI!
+        }
+        return nil
+    }
+    
     
     func fetch() {
  
         Filtered.removeAll()
         totalBalance = 0
-        if  digiliraPay.isKeyPresentInUserDefaults(key: "bitexenAPI") {  //if bitexen api set; check marketinfo, getticker, getbalances
-                        
-            bitexenSign.onBitexenMarketInfo = { [self] res, sts in
-                bexMarketInfo = res
-                bitexenSign.onBitexenTicker = { [self] res, sts in
+        
+        if let api = decodeDefaults(forKey: bex.bexApiDefaultKey.key, conformance: bex.bitexenAPICred.self) {
+            if (api.valid) { // if bitexen api valid
+                bitexenSign.onBitexenMarketInfo = { [self] res, sts in
                     if sts == 200 {
-                        
-                        bexTicker = res
-                        let defaults = UserDefaults.standard
-                        if let savedAPI = defaults.object(forKey: "bitexenAPI") as? Data {
-                            let decoder = JSONDecoder()
-                            let loadedAPI = try? decoder.decode(bex.bitexenAPICred.self, from: savedAPI)
-                            bitexenSign.getBalances(keys: loadedAPI!)
+                        bexMarketInfo = res
+                        bitexenSign.onBitexenTicker = { [self] res, sts in
+                            if sts == 200 {
+                                bexTicker = res
+                                bitexenSign.getBalances(keys: api)
+                            }
                         }
                     }
+                    bitexenSign.getTicker()
                 }
-                bitexenSign.getTicker()
+                bitexenSign.getMarketInfo()
             }
-            bitexenSign.getMarketInfo()
         }
         BC.checkAssetBalance(address: kullanici!.wallet!)
     }
@@ -1586,6 +1602,7 @@ extension MainScreen: TransactionPopupDelegate2 {
         //profileMenuButton.isHidden = false
         
         UIView.animate(withDuration: 1) {
+            self.fetch()
             self.successView.frame.origin.y = (self.contentView.frame.maxY)
             self.successView.alpha = 0
             self.isSuccessView = false
@@ -1798,7 +1815,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
     
     func showBitexenView() {
         
-        if  !digiliraPay.isKeyPresentInUserDefaults(key: "bitexenAPI") {
+        if  !digiliraPay.isKeyPresentInUserDefaults(key: bex.bexApiDefaultKey.key) {
             self.bitexenScreen()
             return
         }
@@ -1868,7 +1885,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         qrView.frame.origin.y = view.frame.height
         bottomView.isHidden = true // alttaki boslugun kadldirilmasi
         
-        
+        isVerifyAccount = true
         //profil onay sureci
         
         switch kullanici?.status {
@@ -1928,13 +1945,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
             print("ok")
             
         }
-        
-        
-        
-        
-        
-        
-        
+     
     }
     
     func goProfileSettings()
@@ -2018,7 +2029,8 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
                                         width: view.frame.width,
                                         height: view.frame.height)
         selectCoin.delegate = self
-        
+        selectCoin.Filtered = self.Filtered
+        selectCoin.Order = ORDER
         for subView in sendWithQRView.subviews
         { subView.removeFromSuperview() }
         
@@ -2055,8 +2067,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
             
         }
         
-        
-        print(transaction)
+        print("ÖDEME")
         
         if isSuccessView {
             
@@ -2388,6 +2399,7 @@ extension MainScreen: VerifyAccountDelegate
         }
         menuXib.isHidden = false
         bottomView.isHidden = false
+        isVerifyAccount = false
     }
 }
 
@@ -2504,6 +2516,20 @@ extension Notification.Name {
 
 extension MainScreen: SelectCoinViewDelegate
 {
+    func dismissNewSend(params: digilira.order) {
+        fetch()
+        isNewSendScreen = false
+        menuXib.isHidden = false
+        
+        UIView.animate(withDuration: 0.3) {
+            self.sendWithQRView.frame.origin.y = self.view.frame.height
+        }
+        for subView in self.sendWithQRView.subviews
+        { subView.removeFromSuperview() }
+        
+        self.sendQR(ORDER: params)
+    }
+    
     func selectCoin(params: String) {
         print(params)
     }

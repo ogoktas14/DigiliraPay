@@ -85,8 +85,6 @@ class digiliraPayApi: NSObject {
         }
         task2.resume()
       
-        
-        
     }
     
     
@@ -214,23 +212,7 @@ class digiliraPayApi: NSObject {
       
         }
         task2.resume()
-         
-        
-        
-        
-        
-        
-        
-        let session = URLSession.shared
-        
-        let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-            //let httpResponse = response as? HTTPURLResponse
-            
-            
-        })
-        
-        task.resume()
-        
+           
     }
     
     func updateUser(user: Data?) {
@@ -400,6 +382,26 @@ class digiliraPayApi: NSObject {
                                        usdTLPrice: usdTLPrice
         )
         return res
+    }
+    
+    func ratePrice(price: Double, asset: String) -> (Double, String) {
+        let symbol = ticker()
+        let digits: Double = 100000000
+        switch asset {
+        case digilira.bitcoin.tokenName:
+            let result = price / (symbol.btcUSDPrice! * symbol.usdTLPrice!)
+            return (Double(round(digits * result)), digilira.bitcoin.token)
+        case digilira.ethereum.tokenName:
+            let result = price / (symbol.ethUSDPrice! * symbol.usdTLPrice!)
+            return (Double(round(digits * result)), digilira.ethereum.token)
+        case digilira.waves.tokenName:
+            let result = price / (symbol.wavesUSDPrice! * symbol.usdTLPrice!)
+            return (Double(round(digits * result)), digilira.waves.token)
+        case digilira.charity.tokenName:
+            return (price * 100000000, digilira.charity.token)
+        default:
+            return (0.0, "TL")
+        }
     }
     
     func exchange(amount: Int64, network: String, assetId:String) -> Double {

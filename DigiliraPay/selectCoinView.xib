@@ -33,14 +33,14 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xxU-AY-NbD">
-                    <rect key="frame" x="20" y="148" width="335" height="630"/>
+                    <rect key="frame" x="0.0" y="148" width="375" height="630"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3X7-xZ-FQT">
-                            <rect key="frame" x="0.0" y="0.0" width="335" height="380"/>
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="630"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w4j-tr-BKP">
-                            <rect key="frame" x="0.0" y="400" width="335" height="10"/>
+                            <rect key="frame" x="0.0" y="650" width="375" height="10"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="10" id="Lbd-oM-CSZ"/>
@@ -49,7 +49,7 @@
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstItem="3X7-xZ-FQT" firstAttribute="height" secondItem="xxU-AY-NbD" secondAttribute="height" multiplier="0.603175" id="07e-Nw-JBY"/>
+                        <constraint firstItem="3X7-xZ-FQT" firstAttribute="height" secondItem="xxU-AY-NbD" secondAttribute="height" id="07e-Nw-JBY"/>
                         <constraint firstItem="3X7-xZ-FQT" firstAttribute="trailing" secondItem="xxU-AY-NbD" secondAttribute="trailing" id="4QP-FW-YJV"/>
                         <constraint firstItem="3X7-xZ-FQT" firstAttribute="top" secondItem="xxU-AY-NbD" secondAttribute="top" id="6QK-ox-GJ2"/>
                         <constraint firstAttribute="trailing" secondItem="w4j-tr-BKP" secondAttribute="trailing" id="AsA-mD-Qaf"/>
@@ -65,15 +65,18 @@
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
-                <constraint firstItem="xxU-AY-NbD" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="0cM-KL-9QN"/>
+                <constraint firstItem="xxU-AY-NbD" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="0cM-KL-9QN"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="xxU-AY-NbD" secondAttribute="bottom" id="4HB-gA-7Sg"/>
-                <constraint firstItem="xxU-AY-NbD" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" constant="-20" id="4dM-OD-mj7"/>
+                <constraint firstItem="xxU-AY-NbD" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="4dM-OD-mj7"/>
                 <constraint firstItem="xxU-AY-NbD" firstAttribute="top" secondItem="8YY-TE-LN4" secondAttribute="bottom" constant="20" id="KFF-0p-BbH"/>
                 <constraint firstItem="8YY-TE-LN4" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="40" id="ejb-2j-Xkr"/>
                 <constraint firstItem="XRl-ix-r1k" firstAttribute="centerY" secondItem="8YY-TE-LN4" secondAttribute="centerY" id="fKR-v2-EL9"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="XRl-ix-r1k" secondAttribute="trailing" constant="20" id="g9j-bF-hs2"/>
                 <constraint firstItem="8YY-TE-LN4" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="u58-hd-Ene"/>
             </constraints>
+            <connections>
+                <outlet property="viewTable" destination="3X7-xZ-FQT" id="REQ-GH-pdR"/>
+            </connections>
             <point key="canvasLocation" x="84" y="121.88905547226388"/>
         </view>
     </objects>

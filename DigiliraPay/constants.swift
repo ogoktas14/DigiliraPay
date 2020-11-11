@@ -28,6 +28,7 @@ struct digilira {
         static let updateScript =  "/users/signscript/update"
         static let isOurMember = "/transfer/recipient"
     }
+    
     struct node {
         static let url = "https://nodes-testnet.wavesnodes.com"
     }

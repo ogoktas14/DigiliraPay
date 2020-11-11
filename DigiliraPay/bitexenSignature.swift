@@ -20,12 +20,16 @@ class bex: NSObject {
     var onBitexenMarketInfo: ((_ result: bexMarketInfo, _ statusCode: Int?)->())?
     var onBitexenError: ((_ result: String, _ statusCode: Int?)->())?
     
-    
+    struct bexApiDefaultKey {
+        static let key = "bitexenAPI2"
+    }
+      
     struct bitexenAPICred: Codable {
         var apiKey: String
         var apiSecret: String
         var passphrase: String
         var username: String
+        var valid: Bool = false
     }
     
     // MARK: - bexTicker
@@ -175,18 +179,24 @@ class bex: NSObject {
         request(rURL: apiURL,
                 METHOD: digilira.requestMethod.get, returnCompletion: { (json, statusCode) in
             DispatchQueue.main.async {
-                do{
-                    if coin == "" {
-                        let ticker = try JSONDecoder().decode(bexAllTicker.self, from: json!)
-                        self.onBitexenTicker!(ticker, statusCode)
-                    } else {
-                        let ticker = try JSONDecoder().decode(bexTicker.self, from: json!)
-                        self.onBitexenTickerCoin!(ticker, statusCode)
+                
+                switch coin {
+                case "":
+                    if let marketInfo = self.decodeDefaults(forKey: json!, conformance: bexAllTicker.self) {
+                        self.onBitexenTicker!(marketInfo, statusCode)
+                        return
                     }
+                    break
+                default:
                     
-                } catch let parsingError {
-                    print("Error", parsingError)
+                    if let marketInfo = self.decodeDefaults(forKey: json!, conformance: bexTicker.self) {
+                        self.onBitexenTickerCoin!(marketInfo, statusCode)
+                        return
+                    }
+                    break
                 }
+                self.onBitexenError!("parsingError", statusCode)
+                 
             }
         })
     }
@@ -197,12 +207,11 @@ class bex: NSObject {
         request(rURL: apiURL,
                 METHOD: digilira.requestMethod.get, returnCompletion: { (json, statusCode) in
             DispatchQueue.main.async {
-                do{
-                    let ticker = try JSONDecoder().decode(bexMarketInfo.self, from: json!)
-                    self.onBitexenMarketInfo!(ticker, statusCode)
-                } catch let parsingError {
-                    print("Error", parsingError)
+                if let marketInfo = self.decodeDefaults(forKey: json!, conformance: bexMarketInfo.self) {
+                    self.onBitexenMarketInfo!(marketInfo, statusCode)
+                    return
                 }
+                self.onBitexenError!("parsingError", statusCode)
             }
         })
     }
@@ -219,17 +228,24 @@ class bex: NSObject {
                 returnCompletion: { (json, statusCode) in
             
             DispatchQueue.main.async {
-                
-                do{
-                    let ticker = try JSONDecoder().decode(bexBalance.self, from: json!)
+                if let ticker = self.decodeDefaults(forKey: json!, conformance: bexBalance.self) {
                     self.onBitexenBalance!(ticker, statusCode)
-                } catch let parsingError {
-                    self.onBitexenError!("parsingError", statusCode)
-                    print("Error", parsingError)
+                    return
                 }
-                
+                self.onBitexenError!("parsingError", statusCode)
             }
         })
+    }
+    
+    func decodeDefaults<T>(forKey: Data, conformance: T.Type, setNil: Bool = false ) -> T? where T: Decodable  {
+        do{
+            let ticker = try JSONDecoder().decode(conformance, from: forKey)
+            return ticker
+        } catch let parsingError {
+            print("Error", parsingError)
+            return nil
+        }
+        
     }
     
     func request(rURL: String,
@@ -287,19 +303,6 @@ class bex: NSObject {
       
         }
         task2.resume()
-         
-        
-//        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-//
-//            let httpResponse = response as? HTTPURLResponse
-//            guard let dataResponse = data,
-//                  error == nil else {
-//                print(error?.localizedDescription ?? "Response Error")
-//                return }
-//            returnCompletion(dataResponse, httpResponse?.statusCode)
-//        }
-//        task.resume()
-        
     }
     
 }

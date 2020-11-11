@@ -32,10 +32,10 @@ class BitexenAPIView: UIView {
     override func awakeFromNib()
     {
         labelError.text = "";
-        if  digiliraPay.isKeyPresentInUserDefaults(key: "bitexenAPI") {
+        if  digiliraPay.isKeyPresentInUserDefaults(key: bex.bexApiDefaultKey.key) {
                         
             let defaults = UserDefaults.standard
-            if let savedAPI = defaults.object(forKey: "bitexenAPI") as? Data {
+            if let savedAPI = defaults.object(forKey: bex.bexApiDefaultKey.key) as? Data {
                 let decoder = JSONDecoder()
                 let loadedAPI = try? decoder.decode(bex.bitexenAPICred.self, from: savedAPI)
 
@@ -68,16 +68,20 @@ class BitexenAPIView: UIView {
     
     func saveAPI() {
         
-        let res = bex.bitexenAPICred.init(apiKey: textApiKey.text!,
+        var res = bex.bitexenAPICred.init(apiKey: textApiKey.text!,
                                                apiSecret: textApiSecret.text!,
                                                passphrase: textApiPassphrase.text!,
-                                               username: textUsername.text!)
+                                               username: textUsername.text!,
+                                               valid: false)
         
         
-        bitexenSign.onBitexenBalance = { _, statusCode in
+        bitexenSign.onBitexenBalance = { [self] _, statusCode in
             if statusCode == 200 {  
                 self.labelError.isHidden = true
                 self.delegate?.dismissBitexen()
+                
+                res.valid = true
+                save2defaults(forKey: bex.bexApiDefaultKey.key, data: res)
                 let window = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
 
                 let alert = UIAlertController(title: "İşlem Başarılı",message:"API bilgileriniz kaydedildi.",
@@ -88,7 +92,7 @@ class BitexenAPIView: UIView {
             
         }
         bitexenSign.getBalances(keys: res)
-        save2defaults(forKey: "bitexenAPI", data: res)
+        save2defaults(forKey:bex.bexApiDefaultKey.key, data: res)
 
     }
     
