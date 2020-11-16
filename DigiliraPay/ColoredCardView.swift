@@ -8,23 +8,35 @@ class ColoredCardView: CardView {
     @IBOutlet weak var contentView: UIView!
     
     @IBOutlet weak var cardNumber: UILabel!
+    @IBOutlet weak var remarks: UILabel!
     @IBOutlet weak var nameSurname: UILabel!
-    
+    @IBOutlet weak var logoView: UIImageView!
+
     @IBOutlet weak var indexLabel: UILabel!
+    weak var delegate: ColoredCardViewDelegate?
     
-    let digiliraPay = digiliraPayApi()
+    var color: UIColor?
+    var logo: UIImage?
+    var apiSet: Bool = false
+    var cardMode: String = ""
+    
+    var cardInfo: digilira.cardData = digilira.cardData.init(org: "", bgColor: .red, logoName: "", cardHolder: "", cardNumber: "1", remarks: "")
+    
     var index: Int = 0 {
         didSet {
-            cardNumber.text = "# \(index)"
-            nameSurname.text = digiliraPay.getName()
+            //indexLabel.text = "# \(index)"
+
         }
     }
-    
     override func awakeFromNib() {
         super.awakeFromNib()
-        
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(setLogo))
+        cardNumber.addGestureRecognizer(tap)
+        cardNumber.isUserInteractionEnabled = true
+
         contentView.layer.cornerRadius  = 10
         contentView.layer.masksToBounds = true
+        
                 
     }
     
@@ -45,8 +57,32 @@ class ColoredCardView: CardView {
     
     func presentedDidUpdate() {
                 
-        setGradientBackground(colorTop: randomColor(), colorBottom: randomColor())
+        if presented {
+            remarks.isHidden = false
+            remarks.sizeToFit()
+        } else {
+            remarks.isHidden = true
+        }
+        
+        cardNumber.text = cardInfo.cardNumber
+        nameSurname.text = cardInfo.cardHolder
+        cardNumber.text = cardInfo.cardNumber
+        logoView.image = UIImage(named: cardInfo.logoName)
+        cardMode = cardInfo.org
+        remarks.text = cardInfo.remarks
+        
+        setGradientBackground(colorTop: cardInfo.bgColor, colorBottom: cardInfo.bgColor)
         contentView.addTransitionFade()
+        
+    }
+    
+    @objc func setLogo () {
+        
+        if presented {
+            if !cardInfo.apiSet {
+                delegate?.passData(data: cardInfo.org)
+            }
+        }
         
     }
     
@@ -62,6 +98,7 @@ class ColoredCardView: CardView {
     }
     
     @IBOutlet weak var removeCardViewButton: UIButton!
+    
     @IBAction func removeCardView(_ sender: Any) {
         walletView?.remove(cardView: self, animated: true)
     }

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import UIKit
  
 struct digilira {
     
@@ -40,6 +40,16 @@ struct digilira {
         static let fileType = "cer"
     }
     
+    struct cardData {
+        var org: String
+        var bgColor: UIColor
+        var logoName: String
+        var cardHolder: String
+        var cardNumber: String
+        var remarks: String
+        var apiSet: Bool = false
+    }
+    
     struct bexURL {
         static let baseUrl = "https://www.bitexen.com"
         static let balances = "/api/v1/balance/"
@@ -48,9 +58,13 @@ struct digilira {
     }
     struct messages {
         static let profileUpdateHeader = "Profilinizi Güncelleyin"
-        static let profileUpdateMessage = "Ödeme yapmadan önce profilinizi tamamlamanız gerekmektedir."
+        static let profileUpdateMessage = "Müşteri tanıma politikası kapsamında önce profil bilgilerinizi tamamlamanız gerekmektedir."
         static let qrErrorHeader = "QR Kod Hatası"
         static let qrErrorMessage = "Ödeme bilgileri bulunamadı"
+    }
+    
+    struct prompt {
+        static let ok = "Tamam" 
     }
     
     struct coin {

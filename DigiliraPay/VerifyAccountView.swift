@@ -179,6 +179,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate
             self.digiliraPay.login() { (json, status) in
                 DispatchQueue.main.async {
                     print(json)
+                    self.delegate?.dismissVErifyAccountView(user: json)
                     self.kullanici = json
                 }
              }

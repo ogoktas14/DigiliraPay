@@ -23,6 +23,7 @@ protocol NewCoinSendDelegate: class {
 }
 
 protocol SelectCoinViewDelegate: class {
+    func cancel()
     func dismissNewSend(params: digilira.order)
     func selectCoin(params: String)
 }

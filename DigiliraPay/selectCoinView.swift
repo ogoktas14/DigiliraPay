@@ -12,27 +12,75 @@ import UIKit
 class selectCoinView: UIView, UITableViewDelegate  {
     
     weak var delegate: SelectCoinViewDelegate?
-    @IBOutlet weak var viewTable: UIView!
     var Filtered: [digilira.DigiliraPayBalance] = []
     let digiliraPay = digiliraPayApi()
     let BC = Blockchain()
 
     var Order: digilira.order?
     
-    let tableView = UITableView()
+    @IBOutlet weak var viewTable: UIView!
+    @IBOutlet weak var siparisView: UIView!
     
+    let tableView = UITableView()
+
     override func awakeFromNib()
     {
-        
+        siparisView.translatesAutoresizingMaskIntoConstraints = true;
+        tableView.translatesAutoresizingMaskIntoConstraints = true;
     }
     
     override func didMoveToSuperview() {
-        setupTableView()
-        print(Order?.totalPrice)
 
+        print(Order?.totalPrice)
+         
     }
     
-    
+    func setCustomCell(view1: UIView, rowIndex: Int, info: String, price: Double) {
+        let height1 = CGFloat(30)
+        
+        let width = self.frame.width - 40
+        let originX = view1.frame.origin.x + 20
+        let label = UILabel(frame: CGRect(x: originX, y: (height1 * 2 + 10) * CGFloat(rowIndex) , width: width, height: height1))
+        let priceLbl = UILabel(frame: CGRect(x: originX, y: label.frame.maxY, width: width, height: height1))
+        let solidLine = UIView(frame: CGRect(x: originX, y: priceLbl.frame.maxY, width: width, height: 2))
+
+        solidLine.backgroundColor = .lightGray
+        
+        label.textAlignment = .left
+        label.text = info
+        
+        priceLbl.textAlignment = .left
+        priceLbl.text = String(price) + " ₺"
+
+
+        label.backgroundColor = .white
+        //To set the font Dynamic
+        label.font = UIFont(name: "Avenir", size: 20.0)
+        priceLbl.font = UIFont(name: "Avenir", size: 26.0)
+        
+        view1.addSubview(label)
+        view1.addSubview(priceLbl)
+        view1.addSubview(solidLine)
+        
+        view1.frame.size.height = solidLine.frame.maxY
+        view1.frame.size.width = width
+
+    }
+
+    func adjustTableViewHeight() {
+         var height = tableView.contentSize.height
+         let maxHeight = (tableView.superview?.frame.size.height)! - self.tableView.frame.origin.y
+
+        if height > maxHeight {
+            height = maxHeight
+        }
+
+        selectCoinView.animate(withDuration: 0.5) {
+            //Assuming 'tableViewHeightConstraint` is an IBOutlet from your storyboard/XIB
+             //self.tableViewHeightConstraint.constant = height
+             self.tableView.setNeedsUpdateConstraints()
+         }
+     }
     
     
     func setupTableView() {
@@ -47,6 +95,22 @@ class selectCoinView: UIView, UITableViewDelegate  {
       tableView.rightAnchor.constraint(equalTo: viewTable.rightAnchor).isActive = true
       tableView.register(UITableViewCell.self, forCellReuseIdentifier: "CoinTableViewCell")
         tableView.reloadData()
+        
+        tableView.frame.size.height = 400
+        if Order?.products != nil {
+
+            for (index, item) in Order!.products!.enumerated() {
+                setCustomCell(view1: siparisView, rowIndex: index, info: item.order_pname!, price: item.order_price!)
+            }
+        }
+        
+        
+        if Order?.products == nil {
+            for subView in siparisView.subviews
+            { subView.removeFromSuperview() }
+        }
+        
+        
 
     }
  
@@ -54,7 +118,7 @@ class selectCoinView: UIView, UITableViewDelegate  {
         self.endEditing(true)
     }
     @IBAction func btnCancel(_ sender: Any) {
-        delegate?.dismissNewSend(params: Order!)
+        delegate?.cancel()
     }
     
     
@@ -101,7 +165,9 @@ extension selectCoinView: UITableViewDataSource {
             cell.coinCode.text = (asset.tokenSymbol)
  
         }
+        
         return cell
+        
     }else
     { return UITableViewCell() }
 

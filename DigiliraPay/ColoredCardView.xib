@@ -3,7 +3,7 @@
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -18,43 +18,61 @@
                     <rect key="frame" x="10" y="0.0" width="355" height="236.5"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4001 **** **** 4246" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s5j-p2-PxI">
-                            <rect key="frame" x="10" y="123.5" width="315" height="33"/>
-                            <fontDescription key="fontDescription" name="KohinoorGujarati-Bold" family="Kohinoor Gujarati" pointSize="22"/>
+                            <rect key="frame" x="10" y="126" width="315" height="30.5"/>
+                            <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="22"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CAN MALAY" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kgB-fs-lRE">
-                            <rect key="frame" x="30" y="172.5" width="315" height="24"/>
-                            <fontDescription key="fontDescription" name="KohinoorTelugu-Regular" family="Kohinoor Telugu" pointSize="17"/>
+                            <rect key="frame" x="30" y="167.5" width="315" height="29"/>
+                            <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="21"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="sQQ-x4-oSq">
+                            <rect key="frame" x="30" y="20" width="177.5" height="71"/>
+                        </imageView>
                     </subviews>
                     <color key="backgroundColor" systemColor="systemTealColor"/>
                     <constraints>
+                        <constraint firstItem="sQQ-x4-oSq" firstAttribute="width" secondItem="OGR-lR-C5v" secondAttribute="width" multiplier="0.5" id="0Zp-6V-tCy"/>
+                        <constraint firstItem="sQQ-x4-oSq" firstAttribute="height" secondItem="OGR-lR-C5v" secondAttribute="height" multiplier="0.3" id="65o-Ce-vo8"/>
                         <constraint firstAttribute="bottom" secondItem="kgB-fs-lRE" secondAttribute="bottom" constant="40" id="8AV-ns-5wt"/>
                         <constraint firstAttribute="trailing" secondItem="s5j-p2-PxI" secondAttribute="trailing" constant="30" id="EAV-Qr-eFh"/>
+                        <constraint firstItem="sQQ-x4-oSq" firstAttribute="top" secondItem="OGR-lR-C5v" secondAttribute="top" constant="20" id="FdB-y5-f2T"/>
                         <constraint firstItem="kgB-fs-lRE" firstAttribute="leading" secondItem="OGR-lR-C5v" secondAttribute="leading" constant="30" id="VOl-rJ-WWi"/>
                         <constraint firstAttribute="width" secondItem="OGR-lR-C5v" secondAttribute="height" multiplier="84:56" id="cQQ-Dl-T29"/>
                         <constraint firstItem="s5j-p2-PxI" firstAttribute="leading" secondItem="OGR-lR-C5v" secondAttribute="leading" constant="10" id="jbh-Wz-Nm5"/>
+                        <constraint firstItem="sQQ-x4-oSq" firstAttribute="leading" secondItem="OGR-lR-C5v" secondAttribute="leading" constant="30" id="lCb-FQ-r4U"/>
                         <constraint firstAttribute="bottom" secondItem="s5j-p2-PxI" secondAttribute="bottom" constant="80" id="o8I-rb-iwg"/>
                         <constraint firstAttribute="trailing" secondItem="kgB-fs-lRE" secondAttribute="trailing" constant="10" id="sib-2C-RA6"/>
                     </constraints>
                 </view>
+                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oYh-rf-XaK">
+                    <rect key="frame" x="10" y="265.5" width="355" height="27.5"/>
+                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="20"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="OGR-lR-C5v" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="6Au-be-gZ8"/>
                 <constraint firstItem="OGR-lR-C5v" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="AnK-n2-6a2"/>
+                <constraint firstAttribute="trailing" secondItem="oYh-rf-XaK" secondAttribute="trailing" constant="10" id="KLK-BK-BkV"/>
                 <constraint firstItem="OGR-lR-C5v" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" constant="-20" id="TEo-HT-6Tw"/>
+                <constraint firstItem="oYh-rf-XaK" firstAttribute="top" secondItem="OGR-lR-C5v" secondAttribute="bottom" constant="29" id="dk0-Bg-7Pa"/>
+                <constraint firstItem="oYh-rf-XaK" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="ftk-gn-jlR"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <connections>
                 <outlet property="cardNumber" destination="s5j-p2-PxI" id="yzV-5Y-KRg"/>
                 <outlet property="contentView" destination="OGR-lR-C5v" id="fSz-Gj-R5Z"/>
+                <outlet property="logoView" destination="sQQ-x4-oSq" id="xwi-2N-qKN"/>
                 <outlet property="nameSurname" destination="kgB-fs-lRE" id="YcG-ny-2oW"/>
+                <outlet property="remarks" destination="oYh-rf-XaK" id="SyR-ic-9Ry"/>
             </connections>
-            <point key="canvasLocation" x="-45" y="-38"/>
+            <point key="canvasLocation" x="-45.600000000000001" y="-38.23088455772114"/>
         </view>
     </objects>
     <resources>

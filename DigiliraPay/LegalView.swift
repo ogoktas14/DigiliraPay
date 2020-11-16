@@ -43,7 +43,8 @@ class LegalView: UIView {
         dictionary.keys.forEach { key in
             defaults.removeObject(forKey: key)
         }
-        //exit(10)
+        delegate?.dismissLegalView()
+        
     }
     @objc func respondToSwipeGesture(gesture: UIGestureRecognizer) {
 

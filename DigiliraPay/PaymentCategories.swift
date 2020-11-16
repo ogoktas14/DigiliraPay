@@ -9,7 +9,11 @@
 import UIKit
 import Wallet
 
-class PaymentCat: WalletView1 {
+class PaymentCat: WalletView1, ColoredCardViewDelegate {
+    func passData(data: String) {
+        delegate?.passData(data: data)
+    }
+    
     
 
     @IBOutlet weak var contentView: UIView!
@@ -18,6 +22,10 @@ class PaymentCat: WalletView1 {
     var frameValue = CGRect()
     
     var cardCount = 1
+    var cards: [digilira.cardData] = []
+    
+
+    let digiliraPay = digiliraPayApi()
 
     var ViewOriginMaxXValue: CGPoint = CGPoint(x: 0, y: 0)
 
@@ -25,15 +33,25 @@ class PaymentCat: WalletView1 {
         super.awakeFromNib()
     }
     
-    func setView() {
+    func setView() {
         self.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
         
         var coloredCardViews = [ColoredCardView]()
-        for index in 1...cardCount {
+        
+        for item in cards {
             let cardView = ColoredCardView.nibForClass()
-            cardView.index = index
+            cardView.delegate = self
+            cardView.index = 1
+            cardView.cardInfo = item
+//            cardView.color = item.bgColor
+//            cardView.nameSurname.text = item.cardHolder
+//            cardView.cardNumber.text = item.cardNumber
+//            cardView.logoView.image = UIImage(named: item.logoName)
+//            cardView.cardMode = item.org
+//            cardView.remarks.text = item.remarks
             coloredCardViews.append(cardView)
         }
+        
         
         self.reload(cardViews: coloredCardViews)
         

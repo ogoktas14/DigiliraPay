@@ -78,7 +78,7 @@ class BitexenAPIView: UIView {
         bitexenSign.onBitexenBalance = { [self] _, statusCode in
             if statusCode == 200 {  
                 self.labelError.isHidden = true
-                self.delegate?.dismissBitexen()
+                
                 
                 res.valid = true
                 save2defaults(forKey: bex.bexApiDefaultKey.key, data: res)
@@ -86,7 +86,9 @@ class BitexenAPIView: UIView {
 
                 let alert = UIAlertController(title: "İşlem Başarılı",message:"API bilgileriniz kaydedildi.",
                                               preferredStyle: UIAlertController.Style.alert)
-                alert.addAction(UIAlertAction(title: "OK",style:UIAlertAction.Style.default,handler: nil))
+                alert.addAction(UIAlertAction(title: "OK",style:UIAlertAction.Style.default,handler: { action in
+                    self.delegate?.dismissBitexen()
+                }))
                 window?.rootViewController?.presentedViewController?.present(alert, animated: true, completion: nil)
             } 
             

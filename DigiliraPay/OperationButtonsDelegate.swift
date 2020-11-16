@@ -35,4 +35,10 @@ protocol OperationButtonsDelegate: class
 
 protocol PaymentCatViewsDelegate: class {
     func dismiss()
+    func passData(data: String)
+}
+
+
+protocol ColoredCardViewDelegate: class {
+    func passData(data: String)
 }

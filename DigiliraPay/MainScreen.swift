@@ -258,6 +258,7 @@ class MainScreen: UIViewController {
                 self.setWalletView()
                 self.setPaymentView()
                 self.setSettingsView()
+                isFirstLaunch = false
             }
             self.coinTableView.reloadData()
             self.headerTotal.fadeTransition(0.4)
@@ -790,7 +791,6 @@ class MainScreen: UIViewController {
                     openPinView()
                 }
             }
-            isFirstLaunch = false
         }
         
     }
@@ -816,15 +816,59 @@ class MainScreen: UIViewController {
     
     func setPaymentView() // payments ekranı
     {
+        var cards: [digilira.cardData] = []
+
+        var bitexen = digilira.cardData.init(
+            org: "Bitexen",
+            bgColor: UIColor(red: 0.1882, green: 0.2588, blue: 0.3804, alpha: 1.0),
+            logoName: "logo_bitexen",
+            cardHolder:  "",
+            cardNumber: "Bitexen Hesabı Ekle",
+            remarks: "Bitexen hesabınızı DigiliraPAY'e bağlayarak hesabınızdaki bakiyelerinizi kullanarak alışveriş yapabilirsiniz.",
+            apiSet: false
+        )
+        
+        if let api = decodeDefaults(forKey: bex.bexApiDefaultKey.key, conformance: bex.bitexenAPICred.self) {
+            bitexen.cardNumber = "Hesap Bilgilerini Düzenle"
+            if (api.valid) { // if bitexen api valid
+                bitexen.apiSet = true
+                bitexen.cardNumber = "Hesap Aktif"
+                bitexen.cardHolder = digiliraPay.getName()
+                bitexen.remarks = "Alışverişlerinizde Bitexen hesabınızdaki bakiyelerinizi kullanabilirsiniz."
+            }
+        }
+        
+        cards.append(bitexen)
+        
+        let okex = digilira.cardData.init(
+            org: "Okex",
+            bgColor:  UIColor(red: 0.0431, green: 0.1294, blue: 0.3843, alpha: 1.0), /* #0b2162 */
+            logoName: "logo_okex",
+            cardHolder:  "",
+            cardNumber: "Okex Hesabı Ekle",
+            remarks: "Bitexen hesabınıza giriş yapın, Ayarlar bölümünden Erişim Ayarları",
+            apiSet: false
+
+        )
+        
+        cards.append(okex)
+        
+        if !isFirstLaunch {
+            paymentCat.cards = cards
+            paymentCat.setView()
+        }
+        
+        
         paymentCat = UIView().loadNib(name: "PaymentCategories") as! PaymentCat
-        paymentCat.cardCount = 3
+        paymentCat.cardCount = 1
         paymentCat.frame = CGRect(x: contentView.frame.width * 2,
                                   y: 0,
                                   width: contentView.frame.width,
                                   height: contentView.frame.height)
         
         paymentCat.layer.zPosition = 1
-        
+        paymentCat.delegate = self
+        paymentCat.cards = cards
         paymentCat.frameValue = walletView.frame
         paymentCat.ViewOriginMaxXValue.y = menuView.frame.height
         paymentCat.setView()
@@ -1525,6 +1569,9 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
                 viewController.kullanici = self.kullanici
             }
         }
+        
+        
+
     }
     
     
@@ -1571,7 +1618,13 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
             return
         }
         
-        performSegue(withIdentifier: "showLoadMoney", sender: nil)
+        if kullanici?.status == 0 {
+            alertError()
+            return
+        }else {
+            performSegue(withIdentifier: "showLoadMoney", sender: nil)
+
+        }
         
         
         //showMyQr()
@@ -1806,6 +1859,7 @@ extension MainScreen: BitexenAPIDelegate
         }
         menuXib.isHidden = false
         dismissKeyboard()
+        setPaymentView()
     }
     
     
@@ -2031,12 +2085,14 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         selectCoin.delegate = self
         selectCoin.Filtered = self.Filtered
         selectCoin.Order = ORDER
+
         for subView in sendWithQRView.subviews
         { subView.removeFromSuperview() }
         
         menuXib.isHidden = true
         
         sendWithQRView.addSubview(selectCoin)
+        selectCoin.setupTableView()
         sendWithQRView.isHidden = false
         sendWithQRView.translatesAutoresizingMaskIntoConstraints = true
         
@@ -2331,7 +2387,18 @@ extension MainScreen: PaymentCatViewsDelegate {
         }) { (_) in
             
         }    }
-    
+    func passData(data: String) {
+        
+        switch data {
+        case "Bitexen":
+            showBitexenView()
+        case "Okex":
+            alertWarning(title: "Yapım Aşamasında", message: "OKEX API bağlantısı yapım aşamasındadır.")
+        default:
+            alertWarning(title: "Bir Hata Oluştu", message: "Şu anda işleminizi gerçekleştiremiyoruz.")
+        }
+         print(data)
+    }
     
     
 }
@@ -2478,9 +2545,16 @@ extension MainScreen: SendWithQrDelegate
         
         self.present(alert, animated: true)
         
-        
     }
     
+    func alertWarning (title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+
+        alert.addAction(UIAlertAction(title: digilira.prompt.ok, style: .default, handler: nil))
+        
+        self.present(alert, animated: true)
+        
+    }
     
     
     
@@ -2516,6 +2590,18 @@ extension Notification.Name {
 
 extension MainScreen: SelectCoinViewDelegate
 {
+    func cancel() {
+        fetch()
+        isNewSendScreen = false
+        menuXib.isHidden = false
+        
+        UIView.animate(withDuration: 0.3) {
+            self.sendWithQRView.frame.origin.y = self.view.frame.height
+        }
+        for subView in self.sendWithQRView.subviews
+        { subView.removeFromSuperview() }
+        
+    }
     func dismissNewSend(params: digilira.order) {
         fetch()
         isNewSendScreen = false
