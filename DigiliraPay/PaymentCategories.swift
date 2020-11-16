@@ -43,12 +43,6 @@ class PaymentCat: WalletView1, ColoredCardViewDelegate {
             cardView.delegate = self
             cardView.index = 1
             cardView.cardInfo = item
-//            cardView.color = item.bgColor
-//            cardView.nameSurname.text = item.cardHolder
-//            cardView.cardNumber.text = item.cardNumber
-//            cardView.logoView.image = UIImage(named: item.logoName)
-//            cardView.cardMode = item.org
-//            cardView.remarks.text = item.remarks
             coloredCardViews.append(cardView)
         }
         

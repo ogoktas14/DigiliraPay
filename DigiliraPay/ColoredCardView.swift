@@ -14,7 +14,7 @@ class ColoredCardView: CardView {
 
     @IBOutlet weak var indexLabel: UILabel!
     weak var delegate: ColoredCardViewDelegate?
-    
+    let generator = UINotificationFeedbackGenerator()
     var color: UIColor?
     var logo: UIImage?
     var apiSet: Bool = false
@@ -32,7 +32,6 @@ class ColoredCardView: CardView {
         super.awakeFromNib()
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(setLogo))
         cardNumber.addGestureRecognizer(tap)
-        cardNumber.isUserInteractionEnabled = true
 
         contentView.layer.cornerRadius  = 10
         contentView.layer.masksToBounds = true
@@ -58,9 +57,13 @@ class ColoredCardView: CardView {
     func presentedDidUpdate() {
                 
         if presented {
+            cardNumber.isUserInteractionEnabled = true
+
             remarks.isHidden = false
             remarks.sizeToFit()
         } else {
+            cardNumber.isUserInteractionEnabled = false
+
             remarks.isHidden = true
         }
         
@@ -76,13 +79,17 @@ class ColoredCardView: CardView {
         
     }
     
+    override func longPressed(gestureRecognizer: UILongPressGestureRecognizer) {
+        setLogo()
+    }
+    
     @objc func setLogo () {
-        
-        if presented {
+         
             if !cardInfo.apiSet {
+                generator.notificationOccurred(.success)
                 delegate?.passData(data: cardInfo.org)
             }
-        }
+        
         
     }
     

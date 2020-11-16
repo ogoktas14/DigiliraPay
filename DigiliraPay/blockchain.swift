@@ -337,14 +337,6 @@ class Blockchain: NSObject {
         
         let user = digilira.user.init(username: username,
                                    password: uuid,
-                                   firstName: "Ad",
-                                   lastName: "Soyad",
-                                   tcno: "11111111111",
-                                   tel: "0000000000",
-                                   mail: "0000000000",
-                                   btcAddress: "",
-                                   ethAddress: "",
-                                   ltcAddress: "",
                                    wallet: address!,
                                    imported: imported
         )

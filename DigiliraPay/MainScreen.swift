@@ -180,20 +180,20 @@ class MainScreen: UIViewController {
             if statusCode == 200 {
                 for bakiye in balances.data.balances {
                     if Double(bakiye.value.balance)! > 0 {
-
-                        let digiliraBalance = digilira.DigiliraPayBalance.init(
-                            tokenName: bakiye.value.currencyCode,
-                            tokenSymbol: "Bitexen " + bakiye.value.currencyCode,
-                            availableBalance: Int64(Double(bakiye.value.availableBalance)! * 100000000),
-                            balance: Int64(Double(bakiye.value.balance)! * 100000000))
-                        
-                        
                         for mrkt in (bexMarketInfo?.data.markets)! {
                             
                             if bakiye.value.currencyCode == mrkt.baseCurrency {
-                                
                                 let coinPrice = bexTicker?.data.ticker[mrkt.marketCode]
                                 let lastPrice = Double(bakiye.value.availableBalance)! * Double(coinPrice!.lastPrice)!
+                                
+                                let digiliraBalance = digilira.DigiliraPayBalance.init(
+                                    tokenName: bakiye.value.currencyCode,
+                                    tokenSymbol: "Bitexen " + bakiye.value.currencyCode,
+                                    availableBalance: Int64(Double(bakiye.value.availableBalance)! * 100000000),
+                                    balance: Int64(Double(bakiye.value.balance)! * 100000000),
+                                    tlExchange: lastPrice)
+                                
+
                                      
                                 totalBalance += lastPrice
                                 setHeaderTotal()
@@ -203,6 +203,7 @@ class MainScreen: UIViewController {
                             }
                             
                         }
+
                 }
                 }
                 coinTableView.reloadData()
@@ -217,11 +218,6 @@ class MainScreen: UIViewController {
                 let asset = BC.returnAsset(assetId: asset1.assetId)
                 if (asset != "") {
                     
-                    let digiliraBalance = digilira.DigiliraPayBalance.init(
-                        tokenName: asset,
-                        tokenSymbol: asset1.issueTransaction.name,
-                        availableBalance: asset1.balance,
-                        balance: asset1.balance)
                     
                     let ticker = digiliraPay.ticker()
                     var coinPrice:Double = 0
@@ -243,6 +239,13 @@ class MainScreen: UIViewController {
                          coinPrice = 0
                         break
                     }
+                    
+                    let digiliraBalance = digilira.DigiliraPayBalance.init(
+                        tokenName: asset,
+                        tokenSymbol: asset1.issueTransaction.name,
+                        availableBalance: asset1.balance,
+                        balance: asset1.balance,
+                        tlExchange: coinPrice)
                 
                          
                     totalBalance += coinPrice
@@ -436,14 +439,14 @@ class MainScreen: UIViewController {
         return UserDefaults.standard.object(forKey: key) != nil
     }
     
-    static func df2so(_ price: Double) -> String{
+    static func df2so(_ price: Double, digits: Int = 2) -> String{
             let numberFormatter = NumberFormatter()
             numberFormatter.groupingSeparator = "."
             numberFormatter.groupingSize = 3
             numberFormatter.usesGroupingSeparator = true
             numberFormatter.decimalSeparator = ","
             numberFormatter.numberStyle = .decimal
-            numberFormatter.maximumFractionDigits = 2
+            numberFormatter.maximumFractionDigits = digits
             return numberFormatter.string(from: price as NSNumber)!
         }
     
@@ -1072,10 +1075,11 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
                 let asset = Filtered[indexPath[1]]
                 cell.coinIcon.image = UIImage(named: asset.tokenName)
                 cell.coinName.text = asset.tokenName
+                cell.type.text = "₺" + MainScreen.df2so(asset.tlExchange)
                 tapped.assetName = asset.tokenName
 
                 let double = Double(asset.balance) / Double(100000000)
-                cell.coinAmount.text = (double).description
+                cell.coinAmount.text = MainScreen.df2so(double, digits: 8)
                 cell.coinCode.text = (asset.tokenSymbol)
 
                 

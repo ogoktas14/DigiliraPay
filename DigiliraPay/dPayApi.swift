@@ -102,6 +102,11 @@ class digiliraPayApi: NSObject {
                 }
                 return
             }
+        } else {
+            DispatchQueue.main.async {
+                self.onTouchID!(false, "Fallback authentication mechanism selected.")
+            }
+            return
         }
         
         if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
@@ -492,92 +497,109 @@ class digiliraPayApi: NSObject {
         
     }
     
+    func encode2<T>(jsonData: T) -> Data? where T: Encodable {
+        let encoder = JSONEncoder()
+        do {
+            let load = try encoder.encode(jsonData)
+            return load
+        } catch  {
+            return nil
+        }
+        
+    }
     
     func login(returnCompletion: @escaping (digilira.user, Int?) -> () ) {
         
         let loginCredits = credentials(PARAMS: "sensitive")
         
-        request(rURL: digilira.api.url + digilira.api.auth,
-                JSON: try? self.jsonEncoder.encode(loginCredits),
-                METHOD: digilira.requestMethod.post
-        ) { (json, statusCode) in
+        if let json = encode2(jsonData: loginCredits) {
             
-            DispatchQueue.main.async {
+            request(rURL: digilira.api.url + digilira.api.auth, JSON: json, METHOD: digilira.requestMethod.post
+            ) { (json, statusCode) in
                 
-                switch (statusCode) {
-                
-                case 503:
-                    let kullanici = digilira.user.init()
-                    returnCompletion(kullanici, statusCode)
-                    break;
+                DispatchQueue.main.async {
                     
-                case 400, 404:
-                    let kullanici = digilira.user.init()
-                    try? Locksmith.deleteDataForUserAccount(userAccount: "sensitive")
-                    returnCompletion(kullanici, statusCode)
-                    break;
+                    switch (statusCode) {
                     
-                case 200:
-                    let pin =  Int32((json["pincode"] as? String)!)
-                    
-                    let kullanici = digilira.user.init(username: json["username"] as? String,
-                                                       firstName: json["firstName"] as? String,
-                                                       lastName: json["lastName"] as? String,
-                                                       tcno: json["tcno"] as? String,
-                                                       tel: json["tel"] as? String,
-                                                       mail: json["mail"] as? String,
-                                                       btcAddress: json["btcAddress"] as? String,
-                                                       ethAddress: json["ethAddress"] as? String,
-                                                       ltcAddress: json["ltcAddress"] as? String,
-                                                       wallet: json["wallet"] as? String,
-                                                       token: json["token"] as? String,
-                                                       status: json["status"] as? Int64,
-                                                       pincode: pin,
-                                                       apnToken: json["apnToken"] as? String
-                    )
-                    
-                    
-                    try? Locksmith.deleteDataForUserAccount(userAccount: "auth")
-                    
-                    try? Locksmith.saveData(data: [
-                        "token": json["token"] as Any,
-                        "name": json["firstName"] as Any,
-                        "surname": json["lastName"] as Any,
-                        "status": json["status"] as Any,
-                        "pincode": json["pincode"] as Any
-                    ], forUserAccount: "auth")
-                    
-                    let defaults = UserDefaults.standard
-                    if let savedApnToken = defaults.object(forKey: "deviceToken") as? String {
-                        if savedApnToken != kullanici.apnToken {
-                            let user = digilira.user.init(
-                                apnToken:savedApnToken
-                            )
-                            
-                            let encoder = JSONEncoder()
-                            let data = try? encoder.encode(user)
-                            self.onUpdate = { res in
-                                print(res)
-                            }
-                            self.updateUser(user: data)
+                    case 503:
+                        let kullanici = digilira.user.init()
+                        returnCompletion(kullanici, statusCode)
+                        break;
+                        
+                    case 400, 404:
+                        let kullanici = digilira.user.init()
+                        do {
+                            try Locksmith.deleteDataForUserAccount(userAccount: "sensitive")
+                        } catch  {
+                            print("error")
                         }
+                        returnCompletion(kullanici, statusCode)
+                        break;
+                        
+                    case 200:
+                        let pin =  Int32((json["pincode"] as? String)!)
+                        
+                        let kullanici = digilira.user.init(username: json["username"] as? String,
+                                                           firstName: json["firstName"] as? String,
+                                                           lastName: json["lastName"] as? String,
+                                                           tcno: json["tcno"] as? String,
+                                                           tel: json["tel"] as? String,
+                                                           mail: json["mail"] as? String,
+                                                           btcAddress: json["btcAddress"] as? String,
+                                                           ethAddress: json["ethAddress"] as? String,
+                                                           ltcAddress: json["ltcAddress"] as? String,
+                                                           wallet: json["wallet"] as? String,
+                                                           token: json["token"] as? String,
+                                                           status: json["status"] as? Int64,
+                                                           pincode: pin,
+                                                           apnToken: json["apnToken"] as? String
+                        )
+                        
+                        do {
+                            try Locksmith.deleteDataForUserAccount(userAccount: "auth")
+                        } catch  {
+                            print("error")
+                        }
+                        
+                        try? Locksmith.saveData(data: [
+                            "token": json["token"] as Any,
+                            "name": json["firstName"] as Any,
+                            "surname": json["lastName"] as Any,
+                            "status": json["status"] as Any,
+                            "pincode": json["pincode"] as Any
+                        ], forUserAccount: "auth")
+                        
+                        let defaults = UserDefaults.standard
+                        if let savedApnToken = defaults.object(forKey: "deviceToken") as? String {
+                            if savedApnToken != kullanici.apnToken {
+                                let user = digilira.user.init(
+                                    apnToken:savedApnToken
+                                )
+                                
+                                let encoder = JSONEncoder()
+                                let data = try? encoder.encode(user)
+                                self.onUpdate = { res in
+                                    print(res)
+                                }
+                                self.updateUser(user: data)
+                            }
+                            
+                        }
+                        
+                        
+                        
+                        returnCompletion(kullanici, statusCode)
+                        break;
+                        
+                    default:
+                        break;
                         
                     }
                     
-                    
-                    
-                    returnCompletion(kullanici, statusCode)
-                    break;
-                    
-                default:
-                    break;
-                    
                 }
-                
-                
-                
             }
         }
+        
         
     }
     

@@ -158,10 +158,11 @@ extension selectCoinView: UITableViewDataSource {
             let asset = Filtered[indexPath[1]]
             cell.coinIcon.image = UIImage(named: asset.tokenName)
             cell.coinName.text = asset.tokenName
+            cell.type.text = "₺" + MainScreen.df2so(asset.tlExchange)
             tapped.assetName = asset.tokenName
 
             let double = Double(asset.balance) / Double(100000000)
-            cell.coinAmount.text = (double).description
+            cell.coinAmount.text = MainScreen.df2so(double, digits: 8)
             cell.coinCode.text = (asset.tokenSymbol)
  
         }

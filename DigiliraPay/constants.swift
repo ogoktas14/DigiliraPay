@@ -253,6 +253,7 @@ struct digilira {
         let tokenSymbol: String
         let availableBalance: Int64
         let balance: Int64
+        let tlExchange: Double
     }
     
     struct refund: Encodable {
