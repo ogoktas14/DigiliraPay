@@ -141,6 +141,8 @@
 		9381D2B425358B99007DEE7E /* DepositeMoneyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9381D2B325358B99007DEE7E /* DepositeMoneyView.swift */; };
 		93B7A11B252F0D8000C89E66 /* PaymentCategories.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93B7A11A252F0D8000C89E66 /* PaymentCategories.xib */; };
 		93B7A11E252F0F0A00C89E66 /* PaymentCategories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93B7A11D252F0F0A00C89E66 /* PaymentCategories.swift */; };
+		93FC66C02562AB4E00E42AAC /* binance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93FC66BF2562AB4E00E42AAC /* binance.swift */; };
+		93FC66C32562ABAB00E42AAC /* binance.com.cer in Resources */ = {isa = PBXBuildFile; fileRef = 93FC66C22562AB9400E42AAC /* binance.com.cer */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -287,6 +289,8 @@
 		9381D2B325358B99007DEE7E /* DepositeMoneyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositeMoneyView.swift; sourceTree = "<group>"; };
 		93B7A11A252F0D8000C89E66 /* PaymentCategories.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentCategories.xib; sourceTree = "<group>"; };
 		93B7A11D252F0F0A00C89E66 /* PaymentCategories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCategories.swift; sourceTree = "<group>"; };
+		93FC66BF2562AB4E00E42AAC /* binance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = binance.swift; sourceTree = "<group>"; };
+		93FC66C22562AB9400E42AAC /* binance.com.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = binance.com.cer; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -318,6 +322,7 @@
 				0060807D23795453006FFBD2 /* constants.swift */,
 				002B28192386E5E6007BE3AD /* digiSocket.swift */,
 				93534F1D2549958C0000329F /* bitexenSignature.swift */,
+				93FC66BF2562AB4E00E42AAC /* binance.swift */,
 			);
 			name = blockchain;
 			sourceTree = "<group>";
@@ -549,6 +554,7 @@
 			children = (
 				93390885255A76CD0005B64A /* cloudflaressl.cer */,
 				93390893255AB1230005B64A /* bitexen.com.cer */,
+				93FC66C22562AB9400E42AAC /* binance.com.cer */,
 				93390894255AB1760005B64A /* wavesnodes.com.cer */,
 			);
 			name = SSLPinning;
@@ -624,6 +630,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				93FC66C32562ABAB00E42AAC /* binance.com.cer in Resources */,
 				93390895255AB18F0005B64A /* bitexen.com.cer in Resources */,
 				93390896255AB18F0005B64A /* wavesnodes.com.cer in Resources */,
 				93390886255A76D40005B64A /* cloudflaressl.cer in Resources */,
@@ -774,6 +781,7 @@
 				889F2A272316D8D400ACD656 /* Languages.swift in Sources */,
 				88CA9377231A488A008F894B /* TransactionHistoryDetailCellHeader.swift in Sources */,
 				888F26B3233E9DF700AB7E4C /* PinViewDelegate.swift in Sources */,
+				93FC66C02562AB4E00E42AAC /* binance.swift in Sources */,
 				88CA9389231B9866008F894B /* OperationButtonsDelegate.swift in Sources */,
 				88309EBA231E7FD200F96C05 /* QRView.swift in Sources */,
 				0060807E23795453006FFBD2 /* constants.swift in Sources */,

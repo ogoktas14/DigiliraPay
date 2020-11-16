@@ -16,6 +16,10 @@ class selectCoinView: UIView, UITableViewDelegate  {
     let digiliraPay = digiliraPayApi()
     let BC = Blockchain()
 
+    var Ticker: binance.BinanceMarketInfo = []
+    let binanceAPI = binance()
+    var ticker: digilira.ticker?
+
     var Order: digilira.order?
     
     @IBOutlet weak var viewTable: UIView!
@@ -27,12 +31,19 @@ class selectCoinView: UIView, UITableViewDelegate  {
     {
         siparisView.translatesAutoresizingMaskIntoConstraints = true;
         tableView.translatesAutoresizingMaskIntoConstraints = true;
+        
+        binanceAPI.onBinanceError = { res, sts in
+            print("error")
+        }
+        
+        binanceAPI.onBinanceTicker = { [self] res, sts in
+            ticker = digiliraPay.ticker(ticker: res)
+        }
+        binanceAPI.getTicker()
     }
     
     override func didMoveToSuperview() {
 
-        print(Order?.totalPrice)
-         
     }
     
     func setCustomCell(view1: UIView, rowIndex: Int, info: String, price: Double) {
@@ -130,7 +141,7 @@ extension selectCoinView: UITableViewDataSource {
   }
     @objc func handleTap(recognizer: MyTapGesture) {
         if let price = Order?.totalPrice {
-            let (amount, asset) = digiliraPay.ratePrice(price: price, asset: recognizer.assetName)
+            let (amount, asset) = digiliraPay.ratePrice(price: price, asset: recognizer.assetName, symbol: ticker!)
             print(amount, asset)
             let balance = Filtered[recognizer.floatValue].availableBalance
             self.Order?.asset = asset

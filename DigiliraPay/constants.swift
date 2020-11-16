@@ -35,6 +35,7 @@ struct digilira {
     
     struct sslPinning {
         static let cert = "cloudflaressl"
+        static let binance = "binance.com"
         static let bexCert = "bitexen.com"
         static let wavesCert = "wavesnodes.com"
         static let fileType = "cer"
@@ -55,6 +56,10 @@ struct digilira {
         static let balances = "/api/v1/balance/"
         static let ticker = "/api/v1/ticker/"
         static let marketInfo = "/api/v1/market_info/"
+    }
+    struct binanceURL {
+        static let baseUrl = "https://www.binance.com"
+        static let ticker = "/api/v3/ticker/price"
     }
     struct messages {
         static let profileUpdateHeader = "Profilinizi Güncelleyin"

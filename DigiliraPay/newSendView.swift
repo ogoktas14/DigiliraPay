@@ -483,7 +483,7 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(getQR))
         fetchQR.isUserInteractionEnabled = true
         fetchQR.addGestureRecognizer(tap)
-        ticker = digiliraPay.ticker()
+
         siparis.translatesAutoresizingMaskIntoConstraints = true;
         
         

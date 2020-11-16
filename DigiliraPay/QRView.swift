@@ -41,6 +41,9 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     var ticker: digilira.ticker?
     var kullanici: digilira.user?
     
+    var Ticker: binance.BinanceMarketInfo = []
+    let binanceAPI = binance()
+    
     public var selectedCoinX: digilira.coin = digilira.coin.init(token: "", symbol: "", tokenName: "", network: "")
 
     override func awakeFromNib()
@@ -51,7 +54,6 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         textAmount?.addDoneCancelToolbar()
         
         textAmount.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
-        ticker = digiliraPay.ticker()
         
         copyAddress.layer.cornerRadius = 5
         copyAddress.layer.shadowColor = UIColor.black.cgColor
@@ -64,13 +66,21 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         copyAddress.addGestureRecognizer(tap)
         
         pickerData = digilira.networks
-        
-        
+         
         textAmount.isEnabled = false
         switchCurrency.isEnabled = false
 
         shareButtonView.isHidden = true
         copyIcon.isHidden = true
+        
+        binanceAPI.onBinanceError = { res, sts in
+            print("error")
+        }
+        
+        binanceAPI.onBinanceTicker = { [self] res, sts in
+            ticker = digiliraPay.ticker(ticker: res)
+        }
+        binanceAPI.getTicker()
 
         
     }

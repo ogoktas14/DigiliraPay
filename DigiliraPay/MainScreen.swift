@@ -105,6 +105,7 @@ class MainScreen: UIViewController {
     var pinkodaktivasyon: Bool? = false
     
     var Balances: NodeService.DTO.AddressAssetsBalance?
+    var Ticker: binance.BinanceMarketInfo = []
     var Filtered: [digilira.DigiliraPayBalance] = []
     var BitexenBalances:[bex.BalanceValue?] = []
     
@@ -120,6 +121,8 @@ class MainScreen: UIViewController {
 
     let BC = Blockchain()
     let bitexenSign = bex()
+    let binanceAPI = binance()
+    
     let digiliraPay = digiliraPayApi()
     let socket1 = WebSocket(url: URL(string: "wss://pay.digilirapay.com/socket/" + NSUUID().uuidString )!)
     
@@ -168,10 +171,8 @@ class MainScreen: UIViewController {
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
         swipeLeft.direction = .left
         
-        
         self.contentView.addGestureRecognizer(swipeRight)
         self.contentView.addGestureRecognizer(swipeLeft)
-        
         
         headerHeightBuffer =  headerView.frame.size.height 
         //        when requested asset balances
@@ -219,7 +220,7 @@ class MainScreen: UIViewController {
                 if (asset != "") {
                     
                     
-                    let ticker = digiliraPay.ticker()
+                    let ticker = digiliraPay.ticker(ticker: Ticker)
                     var coinPrice:Double = 0
                     
                     switch asset {
@@ -272,17 +273,6 @@ class MainScreen: UIViewController {
                 QR = qr
                 self.getOrder(address: QR)
             }
-            
-//            if  self.isKeyPresentInUserDefaults(key: "QRARRAY2") {
-//                if let savedQR = defaults.object(forKey: "QRARRAY2") as? Data {
-//                    let decoder = JSONDecoder()
-//                    let loadedQR = try? decoder.decode(digilira.QR.self, from: savedQR)
-//                    QR = loadedQR!
-//                    UserDefaults.standard.set(nil, forKey: "QRARRAY2")
-//                    self.getOrder(address: QR)
-//                }
-//            }
-            
         }
         
         BC.onMassTransaction = { res in
@@ -526,15 +516,15 @@ class MainScreen: UIViewController {
         
         case digilira.bitcoin.network:
             let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!, assetId:digilira.bitcoin.token)
-            sendBTCETH(external: external)
+            sendBTCETH(external: external, ticker:digiliraPay.ticker(ticker: Ticker))
             break
         case digilira.waves.network:
             let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!, assetId: address.assetId!)
-            sendBTCETH(external: external)
+            sendBTCETH(external: external, ticker:digiliraPay.ticker(ticker: Ticker))
             break
         case digilira.ethereum.network:
             let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!, assetId:digilira.ethereum.token)
-            sendBTCETH(external: external)
+            sendBTCETH(external: external, ticker:digiliraPay.ticker(ticker: Ticker))
             break
         default:
             digiliraPay.onGetOrder = { res in
@@ -667,7 +657,17 @@ class MainScreen: UIViewController {
                 bitexenSign.getMarketInfo()
             }
         }
-        BC.checkAssetBalance(address: kullanici!.wallet!)
+        
+        binanceAPI.onBinanceError = { res, sts in
+            print("error")
+        }
+        
+        binanceAPI.onBinanceTicker = { res, sts in
+            self.Ticker = res
+            self.BC.checkAssetBalance(address: self.kullanici!.wallet!)
+        }
+        binanceAPI.getTicker()
+         
     }
     
     
@@ -2272,8 +2272,8 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         }
     }
     
-    func sendBTCETH (external: digilira.externalTransaction) {
-        let exchange = digiliraPay.exchange(amount: external.amount!, network: external.network!, assetId: external.assetId!)
+    func sendBTCETH (external: digilira.externalTransaction, ticker: digilira.ticker) {
+        let exchange = digiliraPay.exchange(amount: external.amount!, network: external.network!, assetId: external.assetId!, symbol: digiliraPay.ticker(ticker: Ticker))
         
         digiliraPay.onMember = { res, data in
             DispatchQueue.main.async {

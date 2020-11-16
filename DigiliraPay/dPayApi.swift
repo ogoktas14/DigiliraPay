@@ -375,22 +375,49 @@ class digiliraPayApi: NSObject {
         return loginCredentials
     }
     
-    func ticker () -> digilira.ticker {
-        let ethUSDPrice: Double? = 447.77
-        let btcUSDPrice: Double? = 15255
-        let wavesUSDPrice: Double? = 3.5
-        let usdTLPrice: Double? = 8.5
+    func ticker (ticker: binance.BinanceMarketInfo) -> digilira.ticker {
         
-        let res = digilira.ticker.init(ethUSDPrice: ethUSDPrice,
-                                       btcUSDPrice: btcUSDPrice,
-                                       wavesUSDPrice: wavesUSDPrice,
-                                       usdTLPrice: usdTLPrice
+        var btcUsdtPrice: Double = 0
+        var ethUsdtPrice: Double = 0
+        var wavesUsdtPrice: Double = 0
+        var tryUsdtPrice: Double = 0
+        
+        for ticks in ticker {
+            switch ticks.symbol {
+            case "BTCUSDT":
+                if let doublePrice = Double(ticks.price) {
+                    btcUsdtPrice = doublePrice
+                }
+                break
+            case "ETHUSDT":
+                if let doublePrice = Double(ticks.price) {
+                    ethUsdtPrice = doublePrice
+                }
+                break
+            case "WAVESUSDT":
+                if let doublePrice = Double(ticks.price) {
+                    wavesUsdtPrice = doublePrice
+                }
+                break
+            case "USDTTRY":
+                if let doublePrice = Double(ticks.price) {
+                    tryUsdtPrice = doublePrice
+                }
+                break
+            default:
+                break
+            }
+        }
+        
+        let res = digilira.ticker.init(ethUSDPrice: ethUsdtPrice,
+                                       btcUSDPrice: btcUsdtPrice,
+                                       wavesUSDPrice: wavesUsdtPrice,
+                                       usdTLPrice: tryUsdtPrice
         )
         return res
     }
     
-    func ratePrice(price: Double, asset: String) -> (Double, String) {
-        let symbol = ticker()
+    func ratePrice(price: Double, asset: String, symbol: digilira.ticker) -> (Double, String) {
         let digits: Double = 100000000
         switch asset {
         case digilira.bitcoin.tokenName:
@@ -409,8 +436,7 @@ class digiliraPayApi: NSObject {
         }
     }
     
-    func exchange(amount: Int64, network: String, assetId:String) -> Double {
-        let symbol = ticker()
+    func exchange(amount: Int64, network: String, assetId:String, symbol:digilira.ticker) -> Double {
         let amountFloat = Double.init(Double.init(amount) / 100000000)
         
         switch network {
