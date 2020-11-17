@@ -40,9 +40,7 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     let digiliraPay = digiliraPayApi()
     var ticker: digilira.ticker?
     var kullanici: digilira.user?
-    
-    var Ticker: binance.BinanceMarketInfo = []
-    let binanceAPI = binance()
+ 
     
     public var selectedCoinX: digilira.coin = digilira.coin.init(token: "", symbol: "", tokenName: "", network: "")
 
@@ -72,15 +70,7 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
 
         shareButtonView.isHidden = true
         copyIcon.isHidden = true
-        
-        binanceAPI.onBinanceError = { res, sts in
-            print("error")
-        }
-        
-        binanceAPI.onBinanceTicker = { [self] res, sts in
-            ticker = digiliraPay.ticker(ticker: res)
-        }
-        binanceAPI.getTicker()
+ 
 
         
     }

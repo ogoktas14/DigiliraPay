@@ -24,6 +24,7 @@ class ShareQRVC: UIViewController {
     public var tokenName: String?
     public var adSoyad: String?
     var kullanici: digilira.user?
+    var ticker: digilira.ticker?
     private var amount: Double?
     private var price: Double?
     
@@ -31,7 +32,6 @@ class ShareQRVC: UIViewController {
     private var usdPrice: Double?
 
     let digiliraPay = digiliraPayApi()
-    var ticker: digilira.ticker?
     
     override func viewDidLoad() {
         if #available(iOS 13.0, *) {
@@ -49,7 +49,7 @@ class ShareQRVC: UIViewController {
     func shareQRScreen() {
          
         loadMoneyView = UIView().loadNib(name: "QRView") as! QRView
-
+        loadMoneyView.ticker = ticker
         loadMoneyView.frame = CGRect(x: 0,
                                      y: 0,
                                      width: view.frame.width,

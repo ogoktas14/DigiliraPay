@@ -64,28 +64,6 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
          
         UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
 
-        let seedRecovery = UserDefaults.standard.value(forKey: "seedRecovery") as? Bool
-        
-        let versionLegal = UserDefaults.standard.value(forKey: "isLegalView") as? Int
-        let versionTerms = UserDefaults.standard.value(forKey: "isTermsOfUse") as? Int
-        
-//        if versionLegal != nil && versionTerms != nil {
-//            switch seedRecovery {
-//            case nil:
-//                gotoSeedRecover = false
-//                nowLetsGo()
-//                return
-//            case false:
-//                gotoSeedRecover = true
-//                nowLetsGo()
-//                return
-//            case true:
-//                gotoSeedRecover = false
-//            default:
-//                return
-//            }
-//        }
- 
         digiliraPay.onError = { res in
             DispatchQueue.main.async {
 
@@ -160,7 +138,6 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
                                                width: self.view.frame.width,
                                                height: self.view.frame.height)
                         self.view.addSubview(pinView)
-                        
                         break
                         
                     default:
@@ -174,8 +151,6 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
                         self.present(alert, animated: true)
                         break
                     }
-                    
-
                 }
              }
         } else {
@@ -274,16 +249,12 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
         let versionTerms = UserDefaults.standard.value(forKey: "isTermsOfUse") as? Int
         
         if versionLegal != nil && versionTerms != nil {
-            
             nowLetsGo()
- 
         } else {
             let controller = DynamicViewController()
             controller.delegate = self
             show(controller, sender: "sender")
         }
-        
-  
     }
     
     func nowLetsGo() {
@@ -299,7 +270,6 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
     
     @objc func impoertAccount()
     {
-
         performSegue(withIdentifier: "toImportAccountVC", sender: nil)
     }
 }
@@ -423,18 +393,12 @@ class DynamicViewController: UIViewController, LegalDelegate {
             
             delegate?.doSomethingWith()
         }
- 
-        
         showView()
     }
     
     override func loadView() {
-
         // super.loadView()   // DO NOT CALL SUPER
-        
         showView()
-
-
     }
     
     func showView() {

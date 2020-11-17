@@ -79,6 +79,15 @@ class MainScreen: UIViewController {
     var isBitexenAPI = false
     var isVerifyAccount = false
     
+    var isBitexenFetched = false
+    var isBinanceFetched = false
+    
+    var isBitexenReload = false
+    var isBinanceReload = false
+    
+    var lastBitexenCheck: Date = Date()
+    var lastBinanceCheck: Date = Date()
+
     var isKeyboard = false
     
     var ethAddress: String?
@@ -154,6 +163,24 @@ class MainScreen: UIViewController {
         socket1.write(data: jsonData!)
     }
     
+    func checkEssentials() {
+        if let versionLegal = UserDefaults.standard.value(forKey: "isLegalView") as? Int {
+            let v = digilira.legalView.version
+            if (versionLegal < v) {
+                alertWarning(title: digilira.messages.newLegalViewTitle, message: digilira.messages.newLegalViewMessage)
+                showLegalText()
+            }
+        }
+        
+        if let versionTerms = UserDefaults.standard.value(forKey: "isTermsOfUse") as? Int {
+            let v = digilira.termsOfUse.version
+            if (versionTerms < v) {
+                alertWarning(title: digilira.messages.newTermsOfUseTitle, message: digilira.messages.newTermsOfUseMessage)
+                showTermsofUse()
+            }
+        }
+    }
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -194,8 +221,6 @@ class MainScreen: UIViewController {
                                     balance: Int64(Double(bakiye.value.balance)! * 100000000),
                                     tlExchange: lastPrice)
                                 
-
-                                     
                                 totalBalance += lastPrice
                                 setHeaderTotal()
                                 Filtered.append(digiliraBalance)
@@ -254,21 +279,25 @@ class MainScreen: UIViewController {
                     Filtered.append(digiliraBalance)
                     
                 }
-                coinTableView.reloadData()
             }
              
-            if isFirstLaunch {
-                self.setTableView()
-                self.setWalletView()
-                self.setPaymentView()
-                self.setSettingsView()
-                isFirstLaunch = false
-            }
+
             self.coinTableView.reloadData()
             self.headerTotal.fadeTransition(0.4)
             self.setHeaderTotal()
             self.goHomeScreen()
             
+            if isFirstLaunch {
+                self.setTableView()
+                self.setWalletView()
+                self.setPaymentView()
+                self.setSettingsView()
+            }
+           if isFirstLaunch {
+            checkEssentials()
+            isFirstLaunch = false
+           }
+
             if let qr = decodeDefaults(forKey: "QRARRAY2", conformance: digilira.QR.self, setNil: true) {
                 QR = qr
                 self.getOrder(address: QR)
@@ -394,9 +423,7 @@ class MainScreen: UIViewController {
             alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: nil))
             self.present(alert, animated: true)
             }
-            
-            
-            
+             
         }
         
         refreshControl.attributedTitle = NSAttributedString(string: "Güncellemek için çekiniz..")
@@ -535,7 +562,6 @@ class MainScreen: UIViewController {
             digiliraPay.getOrder(PARAMS: address.address!)
         }
         
-        
     }
     
     @objc func onDidReceiveData(_ sender: Notification) {
@@ -612,12 +638,18 @@ class MainScreen: UIViewController {
     
     @objc private func refreshData(_ sender: Any) {
         if isSuccessView {
-            refreshControl.endRefreshing()
+            refreshControl.endRefreshing() // dogrulama ekraninda guncelleme yapilmasin
             return
         }
-        fetch()
-        //coinTableView.reloadData()
-        refreshControl.endRefreshing()
+        let lamda = Date()
+        let differenceInSeconds = lamda.timeIntervalSince(lastBinanceCheck)
+        
+        if differenceInSeconds > 10  {
+            fetch()
+            lastBinanceCheck = lamda
+        } else {
+            refreshControl.endRefreshing() // dogrulama ekraninda guncelleme yapilmasin
+        }
         
     }
     
@@ -649,12 +681,17 @@ class MainScreen: UIViewController {
                             if sts == 200 {
                                 bexTicker = res
                                 bitexenSign.getBalances(keys: api)
+                                isBitexenFetched = true
+                                self.endRefresh()
                             }
                         }
                     }
                     bitexenSign.getTicker()
                 }
                 bitexenSign.getMarketInfo()
+                isBitexenFetched = false
+            }else {
+                isBitexenFetched = true //is bex not valid do not wait
             }
         }
         
@@ -665,13 +702,22 @@ class MainScreen: UIViewController {
         binanceAPI.onBinanceTicker = { res, sts in
             self.Ticker = res
             self.BC.checkAssetBalance(address: self.kullanici!.wallet!)
+            self.isBinanceFetched = true
+            self.endRefresh()
         }
         binanceAPI.getTicker()
-         
+      
+        self.isBinanceFetched = false
     }
     
-    
-    
+    func endRefresh() {
+        if isBitexenFetched && isBinanceFetched {
+            self.isBinanceFetched = false
+            self.isBitexenFetched = false
+            self.refreshControl.endRefreshing()
+        }
+    }
+     
     override func viewWillAppear(_ animated: Bool)
     {
         loadMenu()
@@ -723,10 +769,6 @@ class MainScreen: UIViewController {
         setScrollView()
         headerView.translatesAutoresizingMaskIntoConstraints = true
         profileSettingsView.translatesAutoresizingMaskIntoConstraints = true
-        
-        
-        
-        
     }
     
     func setScrollView() // Ana sayfadaki içeriklerin gösterildiği scrollView
@@ -735,8 +777,7 @@ class MainScreen: UIViewController {
                                          y: 0,
                                          width: contentView.frame.width,
                                          height: contentView.frame.height)
-        
-        
+         
         contentScrollView.isScrollEnabled = false
         contentScrollView.isPagingEnabled = true
         contentScrollView.showsVerticalScrollIndicator = false
@@ -745,10 +786,8 @@ class MainScreen: UIViewController {
             contentView.willRemoveSubview(contentView.subviews[0])
         }
         contentView.addSubview(contentScrollView)
-        
-        
+ 
         fetch()
-        
     }
     
     func setTableView() // ana sayfa coinler tableview, paralar burada listeleniyor
@@ -762,8 +801,7 @@ class MainScreen: UIViewController {
         coinTableView.dataSource = self
         contentScrollView.addSubview(coinTableView)
         contentScrollView.contentSize.width = contentScrollView.frame.width * CGFloat(contentScrollView.subviews.count)
-        
-        
+         
     }
     
     func setWalletView() // Wallet ekranı detayları aşağıda
@@ -797,8 +835,7 @@ class MainScreen: UIViewController {
         }
         
     }
-    
-    
+     
     func setSettingsView() {
         profileMenuView = UIView().loadNib(name: "ProfileMenuview") as! ProfileMenuView
         profileMenuView.frame = CGRect(x: contentView.frame.width * 3,
@@ -849,7 +886,7 @@ class MainScreen: UIViewController {
             logoName: "logo_okex",
             cardHolder:  "",
             cardNumber: "Okex Hesabı Ekle",
-            remarks: "Bitexen hesabınıza giriş yapın, Ayarlar bölümünden Erişim Ayarları",
+            remarks: "OKEX hesabınıza giriş yapın, Ayarlar bölümünden Erişim Ayarlarını belirleyin.",
             apiSet: false
 
         )
@@ -860,8 +897,7 @@ class MainScreen: UIViewController {
             paymentCat.cards = cards
             paymentCat.setView()
         }
-        
-        
+         
         paymentCat = UIView().loadNib(name: "PaymentCategories") as! PaymentCat
         paymentCat.cardCount = 1
         paymentCat.frame = CGRect(x: contentView.frame.width * 2,
@@ -916,13 +952,11 @@ class MainScreen: UIViewController {
     {
         self.QR = digilira.QR.init()
         UserDefaults.standard.set(nil, forKey: "QRARRAY2")
-        
-        
+         
         //profileMenuButton.isHidden = false
         closeCoinSendView()
         dismissLoadView()
-        
-        
+         
     }
     
     @objc func tapAccountButton()
@@ -1197,8 +1231,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
     func goHomeScreen()
     {
         menuXib.home()
-        
-        
+         
         dismissLoadView()
         dismissProfileMenu()
         
@@ -1211,9 +1244,6 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
             headerInfoLabel.isHidden = true
             closeCoinSendView()
             isShowWallet = false
-            //            walletOperationView.removeFromSuperview()
-            
-            
         }
         
         if !isHomeScreen {
@@ -1224,19 +1254,14 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
                                                height: 100)
             walletOperationView.delegate = self
             walletOperationView.alpha = 1
-            
-            
-            
-            
+             
             UIView.animate(withDuration: 0.3) {
                 self.headerView.addSubview(self.walletOperationView)
                 self.contentScrollView.contentOffset.x = 0
                 self.headerView.frame.size.height =  self.walletOperationView.frame.maxY
             }
         }
-        
-        
-        
+         
         if !isSuccessView {
             bottomView.isHidden = false
         }
@@ -1244,7 +1269,6 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         if isPayments || isShowSettings {
             isPayments = false
             isShowSettings = false
-            
         }
         
         headerInfoLabel.isHidden = true
@@ -1254,9 +1278,9 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         
         logoView.isHidden = true
         menuXib.isHidden = false
-        
-        
+         
         isHomeScreen = true
+
     }
     
     func goWalletScreen(coin: String)
@@ -1395,10 +1419,10 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
             shake()
             return
         }
-        
-        
-        
+         
         newSendMoneyView = UIView().loadNib(name: "newSendView") as! newSendView
+        newSendMoneyView.ticker = digiliraPay.ticker(ticker: Ticker)
+
         sendWithQRView.frame.origin.y = self.view.frame.height
         newSendMoneyView.frame = CGRect(x: 0,
                                         y: 0,
@@ -1445,23 +1469,9 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
             self.sendWithQRView.frame.origin.y = 0
             self.sendWithQRView.alpha = 1
         }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+         
         return
-        
-        
-        
-        
-        
-        
+         //old method
         let y = logoView.frame.maxY
         
         if !isShowSendCoinView
@@ -1542,7 +1552,6 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
         
         isShowLoadCoinView = true
         qrView.frame.origin.y = view.frame.height
-        
         loadMoneyView = UIView().loadNib(name: "QRView") as! QRView
         loadMoneyView.frame = qrView.frame
         loadMoneyView.delegate = self
@@ -1571,6 +1580,8 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
         if segue.identifier == "showLoadMoney" {
             if let viewController = segue.destination as? ShareQRVC {
                 viewController.kullanici = self.kullanici
+                viewController.ticker = digiliraPay.ticker(ticker: Ticker)
+
             }
         }
         
@@ -2553,11 +2564,8 @@ extension MainScreen: SendWithQrDelegate
     
     func alertWarning (title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-
         alert.addAction(UIAlertAction(title: digilira.prompt.ok, style: .default, handler: nil))
-        
         self.present(alert, animated: true)
-        
     }
     
     
