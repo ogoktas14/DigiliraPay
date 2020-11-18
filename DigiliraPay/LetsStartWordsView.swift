@@ -81,16 +81,14 @@ class LetsStartWordsView: UIView {
         
         okButtonView.isHidden = true
         
-        let dictionary = Locksmith.loadDataForUserAccount(userAccount: "sensitive")
-        let seed = dictionary?["seed"] as! String
-        let fullNameArr : [String] = seed.components(separatedBy: " ")
-        
-        for i in 0..<15 {
-            self.labelArray[i].text = fullNameArr[i]
+        if let loginCredits = secretKeys.LocksmithLoad(forKey: "sensitive", conformance: digilira.login.self) {
+            let seed = loginCredits.seed
+            let fullNameArr : [String] = seed.components(separatedBy: " ")
+            
+            for i in 0..<15 {
+                self.labelArray[i].text = fullNameArr[i]
+            }
         }
-        
-        
-
     }
     func setTitles(title: String, subTitle: String, desc: String)
     {

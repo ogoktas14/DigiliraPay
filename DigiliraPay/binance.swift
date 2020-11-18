@@ -50,7 +50,6 @@ class binance: NSObject {
                 
                     returnCompletion(dataResponse, httpResponse?.statusCode)
             }
-      
         }
         task2.resume()
     }
@@ -63,7 +62,6 @@ class binance: NSObject {
             print("Error", parsingError)
             return nil
         }
-        
     }
         
     

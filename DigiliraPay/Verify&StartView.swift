@@ -30,12 +30,15 @@ class Verify_StartView: UIView {
     
     override func awakeFromNib()
     {
-        let dictionary = Locksmith.loadDataForUserAccount(userAccount: "sensitive")
-        let seed = dictionary?["seed"] as! String
+        if let loginCredits = secretKeys.LocksmithLoad(forKey: "sensitive", conformance: digilira.login.self) {
+            let seed = loginCredits.seed
+            
+            let fullNameArr : [String] = seed.components(separatedBy: " ")
+            keywordArray = fullNameArr
+            shuffled = fullNameArr.shuffled()
+        }
         
-        let fullNameArr : [String] = seed.components(separatedBy: " ")
-        keywordArray = fullNameArr
-        shuffled = fullNameArr.shuffled()
+
         
     }
 

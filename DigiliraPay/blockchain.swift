@@ -201,7 +201,7 @@ class Blockchain: NSObject {
     }
     
     func smartD(initial: Bool) {
-        let wallet = getSeed();
+        let wallet = getSeed()
  
         guard let chainId = WavesSDK.shared.enviroment.chainId else { return }
         guard let senderPublicKey = WavesCrypto.shared.publicKey(seed: wallet.seed!) else { return }
@@ -305,22 +305,17 @@ class Blockchain: NSObject {
     }
     
     private func getSeed() -> digilira.wallet {
-        
         var seed = digilira.wallet.init(seed: "")
-        
-        let dictionary = Locksmith.loadDataForUserAccount(userAccount: "sensitive")
-        if dictionary != nil {
-            seed = digilira.wallet.init(seed: dictionary?["seed"] as? String)
+        if let loginCredits = secretKeys.LocksmithLoad(forKey: "sensitive", conformance: digilira.login.self) {
+            seed.seed = loginCredits.seed
         }
         return seed
     }
     
     func checkIfUser() -> Bool {
-        //try? Locksmith.deleteDataForUserAccount(userAccount: "sensitive")
         if getSeed().seed == "" {return false}
         return true
     }
-    
     
     func create (imported: Bool = false, importedSeed: String = "", returnCompletion: @escaping (String) -> () ) {
         

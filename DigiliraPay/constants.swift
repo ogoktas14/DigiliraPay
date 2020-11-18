@@ -8,6 +8,11 @@
 
 import Foundation
 import UIKit
+
+enum DeviceLockState {
+    case locked
+    case unlocked
+}
  
 struct digilira {
     
@@ -49,6 +54,7 @@ struct digilira {
         var cardNumber: String
         var remarks: String
         var apiSet: Bool = false
+        var bg: String?
     }
     
     struct bexURL {
@@ -222,18 +228,37 @@ struct digilira {
         var surname: String?
     }
     
-    struct login: Encodable {
-        var username: String
-        var password: String
+    struct login: Codable {
+        let username: String
+        let password: String
+        let seed: String
+        
+        enum CodingKeys: String, CodingKey {
+            case username = "username"
+            case password = "password"
+            case seed = "seed"
+        }
     }
 
-    struct auth: Encodable {
-        var name: String?
-        var surname: String?
-        var token: String?
-        var status: Int64?
-        var pincode: Int32?
+    struct auth: Codable {
+        let userRole, status: Int
+        let pincode: String
+        let imported: Bool
+        let apnToken, id, username, wallet: String
+        let firstName, lastName, ltcAddress, btcAddress, ethAddress: String?
+        let createdDate: String
+        let v: Int?
+        let token: String
+
+        enum CodingKeys: String, CodingKey {
+            case userRole, status, pincode, imported, apnToken
+            case id = "_id"
+            case username, lastName, firstName, wallet, btcAddress, ethAddress, ltcAddress, createdDate
+            case v = "__v"
+            case token
+        }
     }
+    
     struct wallet: Encodable {
         var seed: String?
     }

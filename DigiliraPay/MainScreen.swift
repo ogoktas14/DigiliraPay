@@ -85,6 +85,8 @@ class MainScreen: UIViewController {
     var isBitexenReload = false
     var isBinanceReload = false
     
+    var isFetching = false
+    
     var lastBitexenCheck: Date = Date()
     var lastBinanceCheck: Date = Date()
 
@@ -186,7 +188,6 @@ class MainScreen: UIViewController {
         super.viewDidLoad()
         socketConn()
         coinTableView.refreshControl = refreshControl
-        
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .light
         } else {
@@ -431,6 +432,7 @@ class MainScreen: UIViewController {
         
         NotificationCenter.default.addObserver( self, selector: #selector(keyboardWillShow(notification:)), name:  UIResponder.keyboardWillShowNotification, object: nil )
         NotificationCenter.default.addObserver( self, selector: #selector(keyboardWillHide(notification:)), name:  UIResponder.keyboardWillHideNotification, object: nil )
+        NotificationCenter.default.addObserver(self, selector: #selector(onDidCompleteTask(_:)), name: .didCompleteTask, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(onDidReceiveData(_:)), name: .didReceiveData, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(onTrxCompleted), name: .didCompleteTask, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(onOrderClicked), name: .orderClick, object: nil)
@@ -454,6 +456,44 @@ class MainScreen: UIViewController {
     
     func isKeyPresentInUserDefaults(key: String) -> Bool {
         return UserDefaults.standard.object(forKey: key) != nil
+    }
+    
+    struct JwtAlg: Codable {
+        let alg, typ: String
+    }
+    
+    struct JwtPayload: Codable {
+        let sub: String
+        let def: Int
+        let m: String
+        let iat, exp: Int64
+    }
+
+    func isTokenOK() {
+        if let token = kullanici?.token {
+            let jwt = token.split(separator: ".")
+            
+            if let decodedData = Data(base64Encoded: String(jwt[1])) {
+                if let jwtPayload = digiliraPay.decodeDefaults(forKey: decodedData, conformance: JwtPayload.self) {
+                    let now = Date().millisecondsSince1970
+                    let then : Int64 = jwtPayload.exp * Int64(1000)
+                    
+                    let diff = ((then - now) / Int64(1000)) / 60
+                    
+                    if diff < 10 {
+                        self.digiliraPay.login() { (json, status) in
+                            DispatchQueue.main.async {
+                                self.kullanici = json
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    @objc func onDidCompleteTask(_ sender: Notification) {
+        isTokenOK()
     }
     
     static func df2so(_ price: Double, digits: Int = 2) -> String{
@@ -668,7 +708,11 @@ class MainScreen: UIViewController {
     
     
     func fetch() {
- 
+        if isFetching {
+            
+        }
+        isFetching = true
+        
         Filtered.removeAll()
         totalBalance = 0
         
@@ -693,6 +737,8 @@ class MainScreen: UIViewController {
             }else {
                 isBitexenFetched = true //is bex not valid do not wait
             }
+        }else {
+            isBitexenFetched = true //is bex not valid do not wait
         }
         
         binanceAPI.onBinanceError = { res, sts in
@@ -714,6 +760,7 @@ class MainScreen: UIViewController {
         if isBitexenFetched && isBinanceFetched {
             self.isBinanceFetched = false
             self.isBitexenFetched = false
+            self.isFetching = false
             self.refreshControl.endRefreshing()
         }
     }
@@ -865,7 +912,8 @@ class MainScreen: UIViewController {
             cardHolder:  "",
             cardNumber: "Bitexen Hesabı Ekle",
             remarks: "Bitexen hesabınızı DigiliraPAY'e bağlayarak hesabınızdaki bakiyelerinizi kullanarak alışveriş yapabilirsiniz.",
-            apiSet: false
+            apiSet: false,
+            bg: "bexbg"
         )
         
         if let api = decodeDefaults(forKey: bex.bexApiDefaultKey.key, conformance: bex.bitexenAPICred.self) {
@@ -892,6 +940,19 @@ class MainScreen: UIViewController {
         )
         
         cards.append(okex)
+        
+        let kizilay = digilira.cardData.init(
+            org: "Kızılay",
+            bgColor:  UIColor(red: 0.7529, green: 0.0039, blue: 0, alpha: 1.0), /* #c00100 */
+            logoName: "logo_kizilay",
+            cardHolder:  "",
+            cardNumber: "Kızılay",
+            remarks: "Kızılay'a kripto varlıklarınızı kullanarak bağış yapabilirsiniz.",
+            apiSet: false
+
+        )
+        
+        cards.append(kizilay)
         
         if !isFirstLaunch {
             paymentCat.cards = cards
@@ -2336,8 +2397,8 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         let odeme = digilira.odemeStatus.init(
             id: ORDER._id,
             status: "1",
-            name: auth.name,
-            surname: auth.surname
+            name: auth.firstName,
+            surname: auth.lastName
         )
         
         self.digiliraPay.setOdemeAliniyor(JSON: try? self.digiliraPay.jsonEncoder.encode(odeme))
@@ -2410,7 +2471,7 @@ extension MainScreen: PaymentCatViewsDelegate {
         case "Okex":
             alertWarning(title: "Yapım Aşamasında", message: "OKEX API bağlantısı yapım aşamasındadır.")
         default:
-            alertWarning(title: "Bir Hata Oluştu", message: "Şu anda işleminizi gerçekleştiremiyoruz.")
+            break
         }
          print(data)
     }

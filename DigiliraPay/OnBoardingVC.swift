@@ -184,7 +184,6 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
         importAccountView.addGestureRecognizer(importGesture)
         
         
-        NotificationCenter.default.addObserver(self, selector: #selector(onDidReceiveData(_:)), name: .didReceiveData, object: nil)
 
         
     }

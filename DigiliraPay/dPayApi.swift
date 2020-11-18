@@ -49,7 +49,7 @@ class digiliraPayApi: NSObject {
         }
         
         if AUTH  {
-            let tokenString = "Bearer " + auth().token!
+            let tokenString = "Bearer " + auth().token
             request.setValue(tokenString, forHTTPHeaderField: "Authorization")
         }
         
@@ -87,8 +87,16 @@ class digiliraPayApi: NSObject {
       
     }
     
-    
-    
+    func decodeDefaults<T>(forKey: Data, conformance: T.Type, setNil: Bool = false ) -> T? where T: Decodable  {
+        do{
+            let ticker = try JSONDecoder().decode(conformance, from: forKey)
+            return ticker
+        } catch let parsingError {
+            print("Error", parsingError)
+            return nil
+        }
+    }
+
     func touchID(reason: String) {
         
         let context = LAContext()
@@ -135,7 +143,7 @@ class digiliraPayApi: NSObject {
         var request = URLRequest(url: URL(string: digilira.api.url + digilira.api.payment + PARAMS)!)
         
         request.httpMethod = "GET"
-        let tokenString = "Bearer " + auth().token!
+        let tokenString = "Bearer " + auth().token
         
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue(tokenString, forHTTPHeaderField: "Authorization")
@@ -243,8 +251,7 @@ class digiliraPayApi: NSObject {
         }
         
         request2(rURL: digilira.api.url + digilira.api.updateScript, JSON: data.data, METHOD: digilira.requestMethod.post, AUTH: true)
-        
-        
+         
     }
     
     func getSymbolTicker(symbol:String) {
@@ -260,9 +267,7 @@ class digiliraPayApi: NSObject {
         request2(rURL: "https://api.binance.com/api/v3/ticker/price?symbol=" + symbol, METHOD: digilira.requestMethod.get)
         
     }
-    
-    
-    
+     
     func request2(rURL: String, JSON: Data? = nil, PARAMS: String = "", METHOD: String, AUTH: Bool = false) {
         
         var request = URLRequest(url: URL(string: rURL)!)
@@ -279,7 +284,7 @@ class digiliraPayApi: NSObject {
         }
         
         if AUTH  {
-            let tokenString = "Bearer " + auth().token!
+            let tokenString = "Bearer " + auth().token
             request.setValue(tokenString, forHTTPHeaderField: "Authorization")
         }
    
@@ -316,13 +321,9 @@ class digiliraPayApi: NSObject {
         
     }
     
-    func getToken() -> String {
-        let token = UserDefaults.standard.string(forKey: "token")
-        return token!
-    }
     
     func getName() -> String {
-        return auth().name! + " " + auth().surname!
+        return auth().firstName! + " " + auth().lastName!
     }
     
     func isLoggedIn() -> Bool {
@@ -362,17 +363,6 @@ class digiliraPayApi: NSObject {
         let imageData = Data.init(base64Encoded: imageBase64String, options: .init(rawValue: 0))
         let image = UIImage(data: imageData!)
         return image!
-    }
-    
-    
-    
-    
-    func credentials (PARAMS: String) -> digilira.login {
-        let dictionary = Locksmith.loadDataForUserAccount(userAccount: PARAMS)
-        let loginCredentials = digilira.login.init(username: dictionary?["username"] as! String,
-                                                   password: dictionary?["password"] as! String
-        )
-        return loginCredentials
     }
     
     func ticker (ticker: binance.BinanceMarketInfo) -> digilira.ticker {
@@ -502,25 +492,12 @@ class digiliraPayApi: NSObject {
             }
         }
         request2(rURL: digilira.api.url + digilira.api.isOurMember, JSON: data, METHOD: digilira.requestMethod.post, AUTH: true)
-        
-        
+         
     }
-    
-    
-    
-    
+     
     func auth() -> digilira.auth {
-        
-        let dictionary = Locksmith.loadDataForUserAccount(userAccount: "auth")
-        
-        let authCredentials = digilira.auth.init(name: dictionary?["name"] as? String,
-                                                 surname: dictionary?["surname"] as? String,
-                                                 token: dictionary?["token"] as? String,
-                                                 status: dictionary?["status"] as? Int64,
-                                                 pincode: dictionary?["pincode"] as? Int32
-        )
-        return authCredentials
-        
+        let loginCredits = secretKeys.LocksmithLoad(forKey: "auth", conformance: digilira.auth.self)
+        return loginCredits!
     }
     
     func encode2<T>(jsonData: T) -> Data? where T: Encodable {
@@ -534,10 +511,14 @@ class digiliraPayApi: NSObject {
         
     }
     
+    func isTokenAvailable() {
+        
+    }
+    
     func login(returnCompletion: @escaping (digilira.user, Int?) -> () ) {
         
-        let loginCredits = credentials(PARAMS: "sensitive")
-        
+        let loginCredits = secretKeys.LocksmithLoad(forKey: "sensitive", conformance: digilira.login.self)
+
         if let json = encode2(jsonData: loginCredits) {
             
             request(rURL: digilira.api.url + digilira.api.auth, JSON: json, METHOD: digilira.requestMethod.post
@@ -587,13 +568,11 @@ class digiliraPayApi: NSObject {
                             print("error")
                         }
                         
-                        try? Locksmith.saveData(data: [
-                            "token": json["token"] as Any,
-                            "name": json["firstName"] as Any,
-                            "surname": json["lastName"] as Any,
-                            "status": json["status"] as Any,
-                            "pincode": json["pincode"] as Any
-                        ], forUserAccount: "auth")
+                        do {
+                            try Locksmith.saveData(data: json, forUserAccount: "auth")
+                        } catch  {
+                            print("error")
+                        }
                         
                         let defaults = UserDefaults.standard
                         if let savedApnToken = defaults.object(forKey: "deviceToken") as? String {
@@ -609,11 +588,8 @@ class digiliraPayApi: NSObject {
                                 }
                                 self.updateUser(user: data)
                             }
-                            
                         }
-                        
-                        
-                        
+                         
                         returnCompletion(kullanici, statusCode)
                         break;
                         
@@ -631,7 +607,7 @@ class digiliraPayApi: NSObject {
     
 }
 
-class deviceToken1 {
+class deviceToken {
     
     class func updateMyToken () {
         
@@ -849,4 +825,40 @@ extension digiliraPayApi: URLSessionDelegate {
         }
     }
     
+}
+
+class Utility {
+    
+    class func checkDeviceLockState(completion: @escaping (DeviceLockState) -> Void) {
+        
+       DispatchQueue.main.async {
+            if UIApplication.shared.isProtectedDataAvailable {
+                completion(.unlocked)
+            } else {
+                completion(.locked)
+            }
+        }
+    }
+}
+
+
+class secretKeys {
+    class func LocksmithLoad<T>(forKey: String, conformance: T.Type, setNil: Bool = false) -> T? where T: Decodable  {
+         
+        if let dictionary = Locksmith.loadDataForUserAccount(userAccount: forKey) {
+            
+            let jsonData = try! JSONSerialization.data(withJSONObject: dictionary, options: [])
+            
+            do{
+                
+                let structData = try JSONDecoder().decode(conformance, from: jsonData)
+                return structData
+                
+            } catch let parsingError {
+                print("Error", parsingError)
+                return nil
+            }
+        }
+        return nil
+    }
 }

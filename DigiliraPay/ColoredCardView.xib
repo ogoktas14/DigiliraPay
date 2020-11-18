@@ -17,6 +17,9 @@
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OGR-lR-C5v">
                     <rect key="frame" x="10" y="0.0" width="355" height="236.5"/>
                     <subviews>
+                        <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.40000000000000002" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Zds-GX-gv9">
+                            <rect key="frame" x="0.0" y="0.0" width="355" height="236.5"/>
+                        </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4001 **** **** 4246" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s5j-p2-PxI">
                             <rect key="frame" x="10" y="126" width="315" height="30.5"/>
                             <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="22"/>
@@ -29,23 +32,27 @@
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="sQQ-x4-oSq">
-                            <rect key="frame" x="30" y="20" width="177.5" height="71"/>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" semanticContentAttribute="forceLeftToRight" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="sQQ-x4-oSq">
+                            <rect key="frame" x="30" y="20" width="142" height="94.5"/>
                         </imageView>
                     </subviews>
                     <color key="backgroundColor" systemColor="systemTealColor"/>
                     <constraints>
-                        <constraint firstItem="sQQ-x4-oSq" firstAttribute="width" secondItem="OGR-lR-C5v" secondAttribute="width" multiplier="0.5" id="0Zp-6V-tCy"/>
-                        <constraint firstItem="sQQ-x4-oSq" firstAttribute="height" secondItem="OGR-lR-C5v" secondAttribute="height" multiplier="0.3" id="65o-Ce-vo8"/>
+                        <constraint firstItem="sQQ-x4-oSq" firstAttribute="width" secondItem="OGR-lR-C5v" secondAttribute="width" multiplier="0.4" id="0Zp-6V-tCy"/>
+                        <constraint firstItem="sQQ-x4-oSq" firstAttribute="height" secondItem="OGR-lR-C5v" secondAttribute="height" multiplier="0.4" id="65o-Ce-vo8"/>
                         <constraint firstAttribute="bottom" secondItem="kgB-fs-lRE" secondAttribute="bottom" constant="40" id="8AV-ns-5wt"/>
                         <constraint firstAttribute="trailing" secondItem="s5j-p2-PxI" secondAttribute="trailing" constant="30" id="EAV-Qr-eFh"/>
                         <constraint firstItem="sQQ-x4-oSq" firstAttribute="top" secondItem="OGR-lR-C5v" secondAttribute="top" constant="20" id="FdB-y5-f2T"/>
+                        <constraint firstItem="Zds-GX-gv9" firstAttribute="leading" secondItem="OGR-lR-C5v" secondAttribute="leading" id="I6D-T0-q63"/>
+                        <constraint firstAttribute="trailing" secondItem="Zds-GX-gv9" secondAttribute="trailing" id="ULG-eJ-96C"/>
                         <constraint firstItem="kgB-fs-lRE" firstAttribute="leading" secondItem="OGR-lR-C5v" secondAttribute="leading" constant="30" id="VOl-rJ-WWi"/>
                         <constraint firstAttribute="width" secondItem="OGR-lR-C5v" secondAttribute="height" multiplier="84:56" id="cQQ-Dl-T29"/>
+                        <constraint firstItem="Zds-GX-gv9" firstAttribute="top" secondItem="OGR-lR-C5v" secondAttribute="top" id="fvI-zd-Li6"/>
                         <constraint firstItem="s5j-p2-PxI" firstAttribute="leading" secondItem="OGR-lR-C5v" secondAttribute="leading" constant="10" id="jbh-Wz-Nm5"/>
                         <constraint firstItem="sQQ-x4-oSq" firstAttribute="leading" secondItem="OGR-lR-C5v" secondAttribute="leading" constant="30" id="lCb-FQ-r4U"/>
                         <constraint firstAttribute="bottom" secondItem="s5j-p2-PxI" secondAttribute="bottom" constant="80" id="o8I-rb-iwg"/>
                         <constraint firstAttribute="trailing" secondItem="kgB-fs-lRE" secondAttribute="trailing" constant="10" id="sib-2C-RA6"/>
+                        <constraint firstAttribute="bottom" secondItem="Zds-GX-gv9" secondAttribute="bottom" id="xXn-ag-FMH"/>
                     </constraints>
                 </view>
                 <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oYh-rf-XaK">
@@ -66,6 +73,7 @@
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <connections>
+                <outlet property="bgView" destination="Zds-GX-gv9" id="muU-Ag-JVY"/>
                 <outlet property="cardNumber" destination="s5j-p2-PxI" id="yzV-5Y-KRg"/>
                 <outlet property="contentView" destination="OGR-lR-C5v" id="fSz-Gj-R5Z"/>
                 <outlet property="logoView" destination="sQQ-x4-oSq" id="xwi-2N-qKN"/>

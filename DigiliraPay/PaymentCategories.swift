@@ -43,7 +43,13 @@ class PaymentCat: WalletView1, ColoredCardViewDelegate {
             cardView.delegate = self
             cardView.index = 1
             cardView.cardInfo = item
+            if let bg = item.bg {
+                cardView.bgView.image = UIImage(named: bg)
+                cardView.bgView.isHidden = false
+
+            }
             coloredCardViews.append(cardView)
+            
         }
         
         

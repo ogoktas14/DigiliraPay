@@ -11,6 +11,7 @@ class ColoredCardView: CardView {
     @IBOutlet weak var remarks: UILabel!
     @IBOutlet weak var nameSurname: UILabel!
     @IBOutlet weak var logoView: UIImageView!
+    @IBOutlet weak var bgView: UIImageView!
 
     @IBOutlet weak var indexLabel: UILabel!
     weak var delegate: ColoredCardViewDelegate?
