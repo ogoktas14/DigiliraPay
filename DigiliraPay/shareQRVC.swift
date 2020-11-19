@@ -23,7 +23,7 @@ class ShareQRVC: UIViewController {
     public var network: String?
     public var tokenName: String?
     public var adSoyad: String?
-    var kullanici: digilira.user?
+    var kullanici: digilira.auth?
     var ticker: digilira.ticker?
     private var amount: Double?
     private var price: Double?

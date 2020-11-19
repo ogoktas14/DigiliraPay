@@ -330,7 +330,7 @@ class Blockchain: NSObject {
         
         let username = NSUUID().uuidString
         
-        let user = digilira.user.init(username: username,
+        let user = digilira.exUser.init(username: username,
                                    password: uuid,
                                    wallet: address!,
                                    imported: imported
@@ -342,6 +342,7 @@ class Blockchain: NSObject {
                             METHOD: digilira.requestMethod.post
         ) { (json, statusCode) in
             DispatchQueue.main.async {
+                
                 try? Locksmith.saveData(data: ["password": uuid, "seed": seed, "username": username], forUserAccount: "sensitive")
                 returnCompletion(address!)
             }

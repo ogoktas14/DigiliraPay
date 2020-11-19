@@ -37,9 +37,6 @@ class Verify_StartView: UIView {
             keywordArray = fullNameArr
             shuffled = fullNameArr.shuffled()
         }
-        
-
-        
     }
 
     func setView()

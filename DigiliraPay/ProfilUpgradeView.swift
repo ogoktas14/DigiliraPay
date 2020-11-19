@@ -20,7 +20,7 @@ class ProfilUpgradeView: UIView {
     
     weak var delegate: VerifyAccountDelegate?
     
-    var kullanici: digilira.user?
+    var kullanici: digilira.auth?
         
         override func awakeFromNib()
         {

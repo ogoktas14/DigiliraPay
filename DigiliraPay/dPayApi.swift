@@ -24,11 +24,14 @@ class digiliraPayApi: NSObject {
     
     let jsonEncoder = JSONEncoder()
     var onTouchID: ((_ result: Bool, _ status: String)->())?
-    var onError: ((_ result: String)->())?
+    var onError: ((_ result: String, _ statusCode: Int)->())?
     var onResponse: ((_ result: [String:Any], _ statusCode: Int?)->())?
     var onUpdate: ((_ result: Bool)->())?
     var onTicker: ((_ result: String)->())?
+    var onLogin2: ((_ result: digilira.auth, _ statusCode: Int?)->())?
     var onMember: ((_ result: Bool, _ data: digilira.externalTransaction?)->())?
+     
+    var crud = centralRequest()
     
     func request(rURL: String, JSON: Data? = nil,
                  PARAMS: String = "", METHOD: String, AUTH: Bool = false,
@@ -62,7 +65,7 @@ class digiliraPayApi: NSObject {
             let httpResponse = response as? HTTPURLResponse
             if error != nil {
                 print("error: \(error!.localizedDescription): \(error!)")
-                self.onError!("error: \(error!.localizedDescription): \(error!)")
+                self.onError!("error: \(error!.localizedDescription): \(error!)", httpResponse!.statusCode)
                 
             } else if data != nil {
   
@@ -157,7 +160,7 @@ class digiliraPayApi: NSObject {
 
             if error != nil {
                 print("error: \(error!.localizedDescription): \(error!)")
-                self.onError!("error: \(error!.localizedDescription): \(error!)")
+                self.onError!("error: \(error!.localizedDescription): \(error!)", 503)
 
             } else if data != nil {
   
@@ -295,7 +298,7 @@ class digiliraPayApi: NSObject {
         let task2 = session2.dataTask(with: request) { (data, response, error) in
             let httpResponse = response as? HTTPURLResponse
             if error != nil {
-                self.onError!("SSL PINNING MISMATCH")
+                self.onError!("SSL PINNING MISMATCH", 503)
                 
             } else if data != nil {
   
@@ -514,106 +517,73 @@ class digiliraPayApi: NSObject {
     func isTokenAvailable() {
         
     }
-    
-    func login(returnCompletion: @escaping (digilira.user, Int?) -> () ) {
-        
+    var maxTRY = 2
+    func login2() {
         let loginCredits = secretKeys.LocksmithLoad(forKey: "sensitive", conformance: digilira.login.self)
-
+        
+        if maxTRY == 0 {
+            
+        }
         if let json = encode2(jsonData: loginCredits) {
             
-            request(rURL: digilira.api.url + digilira.api.auth, JSON: json, METHOD: digilira.requestMethod.post
-            ) { (json, statusCode) in
+            crud.onResponse = { [self] res, sts in
                 
-                DispatchQueue.main.async {
+                switch (sts) {
+                
+                case 503, 502:
+                    onError!("Şu anda hizmet veremiyoruz", sts)
+                    break;
                     
-                    switch (statusCode) {
+                case 400, 404:
+                    onError!("Kullanıcı Bulunamadı", sts)
+                    do {
+                        try Locksmith.deleteDataForUserAccount(userAccount: "sensitive")
+                    } catch  {
+                        print("error")
+                    }
+                    break;
                     
-                    case 503:
-                        let kullanici = digilira.user.init()
-                        returnCompletion(kullanici, statusCode)
-                        break;
-                        
-                    case 400, 404:
-                        let kullanici = digilira.user.init()
-                        do {
-                            try Locksmith.deleteDataForUserAccount(userAccount: "sensitive")
-                        } catch  {
-                            print("error")
-                        }
-                        returnCompletion(kullanici, statusCode)
-                        break;
-                        
-                    case 200:
-                        let pin =  Int32((json["pincode"] as? String)!)
-                        
-                        let kullanici = digilira.user.init(username: json["username"] as? String,
-                                                           firstName: json["firstName"] as? String,
-                                                           lastName: json["lastName"] as? String,
-                                                           tcno: json["tcno"] as? String,
-                                                           tel: json["tel"] as? String,
-                                                           mail: json["mail"] as? String,
-                                                           btcAddress: json["btcAddress"] as? String,
-                                                           ethAddress: json["ethAddress"] as? String,
-                                                           ltcAddress: json["ltcAddress"] as? String,
-                                                           wallet: json["wallet"] as? String,
-                                                           token: json["token"] as? String,
-                                                           status: json["status"] as? Int64,
-                                                           pincode: pin,
-                                                           apnToken: json["apnToken"] as? String
-                        )
-                        
-                        do {
-                            try Locksmith.deleteDataForUserAccount(userAccount: "auth")
-                        } catch  {
-                            print("error")
-                        }
-                        
-                        do {
-                            try Locksmith.saveData(data: json, forUserAccount: "auth")
-                        } catch  {
-                            print("error")
-                        }
-                        
-                        let defaults = UserDefaults.standard
-                        if let savedApnToken = defaults.object(forKey: "deviceToken") as? String {
-                            if savedApnToken != kullanici.apnToken {
-                                let user = digilira.user.init(
-                                    apnToken:savedApnToken
-                                )
-                                
-                                let encoder = JSONEncoder()
-                                let data = try? encoder.encode(user)
-                                self.onUpdate = { res in
-                                    print(res)
+                case 200:                    
+                    if secretKeys.LocksmithSave(forKey: "auth", data: res) {
+                        if let user = self.decodeDefaults(forKey: res, conformance: digilira.auth.self) {
+                            onLogin2!(user, sts)
+                            
+                            let defaults = UserDefaults.standard
+                            if let savedApnToken = defaults.object(forKey: "deviceToken") as? String {
+                                if savedApnToken != user.apnToken {
+                                    let user = digilira.exUser.init(
+                                        apnToken:savedApnToken
+                                    )
+                                    
+                                    let encoder = JSONEncoder()
+                                    let data = try? encoder.encode(user)
+                                    self.onUpdate = { res in
+                                        print(res)
+                                    }
+                                    self.updateUser(user: data)
                                 }
-                                self.updateUser(user: data)
                             }
                         }
-                         
-                        returnCompletion(kullanici, statusCode)
-                        break;
-                        
-                    default:
-                        break;
-                        
                     }
+                    break;
+                    
+                default:
+                    break;
                     
                 }
+                
             }
-        }
-        
-        
-    }
-    
-}
 
-class deviceToken {
-    
-    class func updateMyToken () {
-        
+            crud.onError = { [self] res, sts in
+                sleep(10)
+                login2()
+            }
+            
+            crud.request(rURL: digilira.api.url + digilira.api.auth, postData: json, method: digilira.requestMethod.post)
+        }
     }
     
-    
+ 
     
 }
 
@@ -842,7 +812,19 @@ class Utility {
 }
 
 
-class secretKeys {
+class secretKeys: NSObject {
+    let jsonEncoder = JSONEncoder()
+    
+    func decodeDefaults<T>(forKey: Data, conformance: T.Type, setNil: Bool = false ) -> T? where T: Decodable  {
+        do{
+            let ticker = try JSONDecoder().decode(conformance, from: forKey)
+            return ticker
+        } catch let parsingError {
+            print("Error", parsingError)
+            return nil
+        }
+    }
+    
     class func LocksmithLoad<T>(forKey: String, conformance: T.Type, setNil: Bool = false) -> T? where T: Decodable  {
          
         if let dictionary = Locksmith.loadDataForUserAccount(userAccount: forKey) {
@@ -850,7 +832,6 @@ class secretKeys {
             let jsonData = try! JSONSerialization.data(withJSONObject: dictionary, options: [])
             
             do{
-                
                 let structData = try JSONDecoder().decode(conformance, from: jsonData)
                 return structData
                 
@@ -861,4 +842,126 @@ class secretKeys {
         }
         return nil
     }
+    
+    
+    class func LocksmithSave(forKey: String, data: Data, setNil: Bool = false) -> Bool {
+                 
+        if let exist = Locksmith.loadDataForUserAccount(userAccount: forKey) {
+            do{
+                try Locksmith.updateData(data: exist, forUserAccount: String(forKey))
+                return true
+            } catch let parsingError {
+                print("Error", parsingError)
+                return false
+            }
+        } else {
+            do{
+                let jsonResponse = try JSONSerialization.jsonObject(with: data) as! Dictionary<String, AnyObject>
+                try Locksmith.saveData(data: jsonResponse, forUserAccount: String(forKey))
+                return true
+            } catch let parsingError {
+                print("Error", parsingError)
+                return false
+            }
+        }
+    }
+
+}
+
+
+
+class centralRequest: NSObject {
+    
+    private var isCertificatePinning: Bool = true
+    
+    var onError: ((_ result: String, _ statusCode: Int)->())?
+    var onResponse: ((_ result: Data, _ statusCode: Int)->())?
+    
+    func request(rURL: String, postData: Data? = nil, urlParams: String? = "", method: String, token: String? = "") {
+        
+        if let url = URL(string: rURL) {
+            var request = URLRequest(url: url)
+            
+            request.httpMethod = method
+            
+            if let json = postData {
+                request.httpBody = json
+                request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            }
+            
+            if urlParams != "" {
+                request.url?.appendPathComponent(urlParams!, isDirectory: true)
+            }
+            
+            if token != "" {
+                let tokenString = "Bearer " + token!
+                request.setValue(tokenString, forHTTPHeaderField: "Authorization")
+            }
+            
+            let session = URLSession(configuration: .ephemeral, delegate: self, delegateQueue: nil)
+            
+            isCertificatePinning = true
+            
+            let task = session.dataTask(with: request) { (data, response, error) in
+                if let httpResponse = response as? HTTPURLResponse {
+                    if error != nil {
+                        
+                        print("error: \(error!.localizedDescription): \(error!)")
+                        self.onError!("error: \(error!.localizedDescription): \(error!)", httpResponse.statusCode)
+                        
+                    } else if data != nil {
+                        
+                        guard let dataResponse = data,
+                              error == nil else {
+                            self.onError!(error!.localizedDescription, httpResponse.statusCode)
+                            return }
+
+                        self.onResponse!(dataResponse, httpResponse.statusCode)
+                    }
+                }
+            }
+            task.resume()
+        }
+    }
+    
+}
+    
+
+extension centralRequest: URLSessionDelegate {
+    
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        
+        guard let serverTrust = challenge.protectionSpace.serverTrust else {
+            completionHandler(.cancelAuthenticationChallenge, nil);
+            return
+        }
+        
+        if self.isCertificatePinning {
+             
+            let certificate = SecTrustGetCertificateAtIndex(serverTrust, 0)
+            // SSL Policies for domain name check
+            let policy = NSMutableArray()
+            policy.add(SecPolicyCreateSSL(true, challenge.protectionSpace.host as CFString))
+            
+            //evaluate server certifiacte
+            let isServerTrusted = SecTrustEvaluateWithError(serverTrust, nil)
+            
+            //Local and Remote certificate Data
+            let remoteCertificateData:NSData =  SecCertificateCopyData(certificate!)
+            //let LocalCertificate = Bundle.main.path(forResource: "github.com", ofType: "cer")
+            let pathToCertificate = Bundle.main.path(forResource: digilira.sslPinning.cert, ofType: digilira.sslPinning.fileType)
+            let localCertificateData:NSData = NSData(contentsOfFile: pathToCertificate!)!
+            
+            //Compare certificates
+            if(isServerTrusted && remoteCertificateData.isEqual(to: localCertificateData as Data)){
+                let credential:URLCredential =  URLCredential(trust:serverTrust)
+                print("Certificate pinning is successfully completed")
+                completionHandler(.useCredential,credential)
+            }
+            else{
+                completionHandler(.cancelAuthenticationChallenge,nil)
+            }
+        }
+    }
+    
 }

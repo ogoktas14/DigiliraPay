@@ -39,7 +39,7 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
 
     let digiliraPay = digiliraPayApi()
     var ticker: digilira.ticker?
-    var kullanici: digilira.user?
+    var kullanici: digilira.auth?
  
     
     public var selectedCoinX: digilira.coin = digilira.coin.init(token: "", symbol: "", tokenName: "", network: "")

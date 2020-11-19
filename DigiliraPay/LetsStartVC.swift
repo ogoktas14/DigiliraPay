@@ -25,19 +25,19 @@ class LetsStartVC: UIViewController {
     let digiliraPay = digiliraPayApi()
 
     let BC = Blockchain()
-    var kullanici: digilira.user?
+    var kullanici: digilira.auth?
 
     
     private func initial() {
         
-        digiliraPay.login() { (json, status) in
-            DispatchQueue.main.async {
-                print(json)
-                self.kullanici = json
-                self.BC.checkSmart(address: json["wallet"] as! String)
 
-            }
-         }
+        
+        self.digiliraPay.onLogin2 = { user, status in
+            self.kullanici = user
+            self.BC.checkSmart(address: user.wallet)
+        }
+        
+        self.digiliraPay.login2()
   
     }
     

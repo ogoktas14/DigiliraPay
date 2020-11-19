@@ -33,7 +33,7 @@ class WalletView: UIView {
     
     let BC = Blockchain()
     var trxs:[digilira.transfer] = []
-    var kullanici: digilira.user?
+    var kullanici: digilira.auth?
     var coin: String = ""
     
     
@@ -68,7 +68,7 @@ class WalletView: UIView {
     func readHistory (coin: String) {
 
         self.trxs.removeAll()
-        BC.checkTransactions(address: self.kullanici!.wallet!){ (data) in
+        BC.checkTransactions(address: self.kullanici!.wallet){ (data) in
             DispatchQueue.main.async {
                 data?.forEach { trx in
                     

@@ -34,7 +34,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate
     let digiliraPay = digiliraPayApi()
     var onUpdate: ((_ result: [String:Any])->())?
 
-    var kullanici: digilira.user?
+    var kullanici: digilira.auth?
 
     override func didMoveToSuperview() {
         
@@ -42,7 +42,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate
         case 0:
            nameText.text = kullanici?.firstName
            surnameText.text = kullanici?.lastName
-           tcText.text = kullanici?.tcno
+            tcText.text = kullanici?.tcno
            telText.text = kullanici?.tel
            mailText.text = kullanici?.mail
             break
@@ -176,20 +176,20 @@ class VerifyAccountView: UIView, UITextFieldDelegate
     
     func KYC() {
         digiliraPay.onUpdate = { res in
-            self.digiliraPay.login() { (json, status) in
-                DispatchQueue.main.async {
-                    print(json)
-                    self.delegate?.dismissVErifyAccountView(user: json)
-                    self.kullanici = json
-                }
-             }
+
+            self.digiliraPay.onLogin2 = { user, status in
+                self.delegate?.dismissVErifyAccountView(user: user)
+                self.kullanici = user
+            }
+            
+            self.digiliraPay.login2()
         }
         
         let b64 = digiliraPay.convertImageToBase64String(img: UIImage(named: "test.jpg")!)
 
         delegate?.dismissKeyboard()
  
-        let user = digilira.user.init(
+        let user = digilira.exUser.init(
             firstName: nameText.text,
             lastName: surnameText.text,
             tcno: tcText.text,

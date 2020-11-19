@@ -192,7 +192,7 @@ struct digilira {
         var usdTLPrice: Double? 
     }
     
-    struct user: Encodable {
+    struct exUser: Encodable {
         var username: String?
         var password: String?
         var firstName: String?
@@ -245,7 +245,7 @@ struct digilira {
         let pincode: String
         let imported: Bool
         let apnToken, id, username, wallet: String
-        let firstName, lastName, ltcAddress, btcAddress, ethAddress: String?
+        let firstName, lastName, ltcAddress, btcAddress, ethAddress, tcno, tel, mail: String?
         let createdDate: String
         let v: Int?
         let token: String
@@ -253,7 +253,7 @@ struct digilira {
         enum CodingKeys: String, CodingKey {
             case userRole, status, pincode, imported, apnToken
             case id = "_id"
-            case username, lastName, firstName, wallet, btcAddress, ethAddress, ltcAddress, createdDate
+            case username, lastName, firstName, wallet, btcAddress, ethAddress, ltcAddress, createdDate, tcno, tel, mail
             case v = "__v"
             case token
         }

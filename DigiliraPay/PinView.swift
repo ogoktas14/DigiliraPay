@@ -50,7 +50,7 @@ class PinView: UIView {
     var QR:String?
     let BC = Blockchain()
 
-    var kullanici: digilira.user?
+    var kullanici: digilira.auth?
 
     override func awakeFromNib()
     {
@@ -64,7 +64,7 @@ class PinView: UIView {
         }
         
         
-        digiliraPay.onError = { res in
+        digiliraPay.onError = { res, sts in
             print(res)
         }
         

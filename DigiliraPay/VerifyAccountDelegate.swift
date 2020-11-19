@@ -10,6 +10,6 @@ import Foundation
 
 protocol VerifyAccountDelegate: class
 {
-    func dismissVErifyAccountView(user: digilira.user)
+    func dismissVErifyAccountView(user: digilira.auth)
     func dismissKeyboard()
 }

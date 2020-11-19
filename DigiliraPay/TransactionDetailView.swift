@@ -20,7 +20,7 @@ class TransactionDetailView: UIView
     var originValueLast: CGPoint = CGPoint(x: 0, y: 0)
     
     var transaction:digilira.transfer?
-    var kullanici: digilira.user?
+    var kullanici: digilira.auth?
     let digiliraPay = digiliraPayApi()
 
     

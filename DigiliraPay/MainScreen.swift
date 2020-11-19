@@ -112,7 +112,7 @@ class MainScreen: UIViewController {
     
     var walletOperationsViewOrigin = CGPoint(x: 0, y: 0)
     
-    var kullanici: digilira.user?
+    var kullanici: digilira.auth?
     var pinkodaktivasyon: Bool? = false
     
     var Balances: NodeService.DTO.AddressAssetsBalance?
@@ -363,7 +363,7 @@ class MainScreen: UIViewController {
             
         }
         
-        digiliraPay.onError = { res in
+        digiliraPay.onError = { res, sts in
             
             DispatchQueue.main.async {
             switch res {
@@ -480,12 +480,15 @@ class MainScreen: UIViewController {
                     
                     let diff = ((then - now) / Int64(1000)) / 60
                     
-                    if diff < 10 {
-                        self.digiliraPay.login() { (json, status) in
-                            DispatchQueue.main.async {
-                                self.kullanici = json
-                            }
+                    if diff < 5 {
+                        
+                        self.digiliraPay.onLogin2 = { user, status in
+                            self.kullanici = user
                         }
+                        
+                        self.digiliraPay.login2()
+                        
+                        
                     }
                 }
             }
@@ -747,7 +750,7 @@ class MainScreen: UIViewController {
         
         binanceAPI.onBinanceTicker = { res, sts in
             self.Ticker = res
-            self.BC.checkAssetBalance(address: self.kullanici!.wallet!)
+            self.BC.checkAssetBalance(address: self.kullanici!.wallet)
             self.isBinanceFetched = true
             self.endRefresh()
         }
@@ -875,7 +878,7 @@ class MainScreen: UIViewController {
         if isFirstLaunch {
             //
             if pinkodaktivasyon! {
-                if kullanici?.pincode == -1 {
+                if kullanici?.pincode == "-1" {
                     openPinView()
                 }
             }
@@ -1811,7 +1814,7 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
     {
         let ifPin = kullanici?.pincode
         
-        if ifPin == -1 {
+        if ifPin == "-1" {
             openPinView()
         }else {
             
@@ -2524,7 +2527,7 @@ extension MainScreen: LoadCoinDelegate
 
 extension MainScreen: VerifyAccountDelegate
 {
-    func dismissVErifyAccountView(user: digilira.user) // profil doğrulama sayfasının kapatılması
+    func dismissVErifyAccountView(user: digilira.auth) // profil doğrulama sayfasının kapatılması
     {
         
         if QR.address != nil {
@@ -2715,7 +2718,7 @@ extension MainScreen: NewCoinSendDelegate
     {
         let ifPin = kullanici?.pincode
         
-        if ifPin == -1 {
+        if ifPin == "-1" {
             openPinView()
         }else {
             
@@ -2815,7 +2818,7 @@ extension MainScreen: PinViewDelegate
         
         if !isNewPin {
             
-            if kullanici?.pincode != -1 {
+            if kullanici?.pincode != "-1" {
                 
                 pinView.isEntryMode = true
             }else {
@@ -2827,7 +2830,7 @@ extension MainScreen: PinViewDelegate
             }
         }else {
             
-            if kullanici?.pincode != -1 {
+            if kullanici?.pincode != "-1" {
                 pinView.isEntryMode = false
                 pinView.isUpdateMode = true
             }else{
@@ -2904,12 +2907,12 @@ extension MainScreen: PinViewDelegate
                 alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
                 
                 self.present(alert, animated: true, completion: nil)
-                
-                self.digiliraPay.login() { (json, status) in
-                    DispatchQueue.main.async {
-                        self.kullanici = json
-                    }
+
+                self.digiliraPay.onLogin2 = { user, status in
+                    self.kullanici = user
                 }
+                
+                self.digiliraPay.login2()
             }
         }
     }
