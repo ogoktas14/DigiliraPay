@@ -112,7 +112,7 @@ class MainScreen: UIViewController {
     
     var walletOperationsViewOrigin = CGPoint(x: 0, y: 0)
     
-    var kullanici: digilira.auth?
+    var kullanici: digilira.auth = try! secretKeys.userData()
     var pinkodaktivasyon: Bool? = false
     
     var Balances: NodeService.DTO.AddressAssetsBalance?
@@ -187,7 +187,18 @@ class MainScreen: UIViewController {
     {
         super.viewDidLoad()
         socketConn()
+        
         coinTableView.refreshControl = refreshControl
+        
+        do {
+            kullanici = try secretKeys.userData()
+        } catch {
+            self.digiliraPay.onLogin2 = { user, status in
+                self.kullanici = user
+            }
+            digiliraPay.login2()
+        }
+         
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .light
         } else {
@@ -468,31 +479,31 @@ class MainScreen: UIViewController {
         let m: String
         let iat, exp: Int64
     }
-
+    
     func isTokenOK() {
-        if let token = kullanici?.token {
-            let jwt = token.split(separator: ".")
-            
-            if let decodedData = Data(base64Encoded: String(jwt[1])) {
-                if let jwtPayload = digiliraPay.decodeDefaults(forKey: decodedData, conformance: JwtPayload.self) {
-                    let now = Date().millisecondsSince1970
-                    let then : Int64 = jwtPayload.exp * Int64(1000)
+        let token = kullanici.token
+        let jwt = token.split(separator: ".")
+        
+        if let decodedData = Data(base64Encoded: String(jwt[1])) {
+            if let jwtPayload = digiliraPay.decodeDefaults(forKey: decodedData, conformance: JwtPayload.self) {
+                let now = Date().millisecondsSince1970
+                let then : Int64 = jwtPayload.exp * Int64(1000)
+                
+                let diff = ((then - now) / Int64(1000)) / 60
+                
+                if diff < 5 {
                     
-                    let diff = ((then - now) / Int64(1000)) / 60
-                    
-                    if diff < 5 {
-                        
-                        self.digiliraPay.onLogin2 = { user, status in
-                            self.kullanici = user
-                        }
-                        
-                        self.digiliraPay.login2()
-                        
-                        
+                    self.digiliraPay.onLogin2 = { user, status in
+                        self.kullanici = user
                     }
+                    
+                    self.digiliraPay.login2()
+                    
+                    
                 }
             }
         }
+        
     }
     
     @objc func onDidCompleteTask(_ sender: Notification) {
@@ -634,7 +645,7 @@ class MainScreen: UIViewController {
         }
         
         if isVerifyAccount {
-            self.dismissVErifyAccountView(user: kullanici!)
+            self.dismissVErifyAccountView()
         }
         
     }
@@ -750,7 +761,7 @@ class MainScreen: UIViewController {
         
         binanceAPI.onBinanceTicker = { res, sts in
             self.Ticker = res
-            self.BC.checkAssetBalance(address: self.kullanici!.wallet)
+            self.BC.checkAssetBalance(address: self.kullanici.wallet)
             self.isBinanceFetched = true
             self.endRefresh()
         }
@@ -878,7 +889,7 @@ class MainScreen: UIViewController {
         if isFirstLaunch {
             //
             if pinkodaktivasyon! {
-                if kullanici?.pincode == "-1" {
+                if kullanici.pincode == "-1" {
                     openPinView()
                 }
             }
@@ -1643,7 +1654,6 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showLoadMoney" {
             if let viewController = segue.destination as? ShareQRVC {
-                viewController.kullanici = self.kullanici
                 viewController.ticker = digiliraPay.ticker(ticker: Ticker)
 
             }
@@ -1697,7 +1707,7 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
             return
         }
         
-        if kullanici?.status == 0 {
+        if kullanici.status == 0 {
             alertError()
             return
         }else {
@@ -1812,7 +1822,7 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
     
     func sendCoin(params:SendTrx) // gelen parametrelerle birlikte gönder butonuna basıldı.
     {
-        let ifPin = kullanici?.pincode
+        let ifPin = kullanici.pincode
         
         if ifPin == "-1" {
             openPinView()
@@ -2021,10 +2031,9 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         isVerifyAccount = true
         //profil onay sureci
         
-        switch kullanici?.status {
+        switch kullanici.status {
         case 0:
             let verifyProfileXib = UIView().loadNib(name: "VerifyAccountView") as! VerifyAccountView
-            verifyProfileXib.kullanici = kullanici //kullanici bilgilerinin aktarilmasi
             
             verifyProfileXib.frame = CGRect(x: 0,
                                             y: 0,
@@ -2051,7 +2060,6 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
             
         case 1:
             let verifyProfileXib = UIView().loadNib(name: "ProfileUpgradeView") as! ProfilUpgradeView
-            verifyProfileXib.kullanici = kullanici //kullanici bilgilerinin aktarilmasi
             
             verifyProfileXib.frame = CGRect(x: 0,
                                             y: 0,
@@ -2522,12 +2530,17 @@ extension MainScreen: LoadCoinDelegate
     }
     
     func shareQR(image: UIImage?) {
+        
+    }
+    
+    func errorHandler(message: String) {
+        alertWarning(title: "Bir Hata Oluştu", message: message)
     }
 }
 
 extension MainScreen: VerifyAccountDelegate
 {
-    func dismissVErifyAccountView(user: digilira.auth) // profil doğrulama sayfasının kapatılması
+    func dismissVErifyAccountView() // profil doğrulama sayfasının kapatılması
     {
         
         if QR.address != nil {
@@ -2537,15 +2550,22 @@ extension MainScreen: VerifyAccountDelegate
             
         }
         
-        
-        self.kullanici = user
-        UIView.animate(withDuration: 0.3) {
-            self.qrView.frame.origin.y = self.view.frame.height
-            self.qrView.alpha = 0
+        do {
+            try self.kullanici = secretKeys.userData()
+        } catch {
+            print("")
         }
-        menuXib.isHidden = false
-        bottomView.isHidden = false
-        isVerifyAccount = false
+        
+        DispatchQueue.main.async { [self] in
+            UIView.animate(withDuration: 0.3) {
+                self.qrView.frame.origin.y = self.view.frame.height
+                self.qrView.alpha = 0
+            }
+            menuXib.isHidden = false
+            bottomView.isHidden = false
+            isVerifyAccount = false
+            
+        }
     }
 }
 
@@ -2716,7 +2736,7 @@ extension MainScreen: NewCoinSendDelegate
     
     func sendCoinNew(params:SendTrx) // gelen parametrelerle birlikte gönder butonuna basıldı.
     {
-        let ifPin = kullanici?.pincode
+        let ifPin = kullanici.pincode
         
         if ifPin == "-1" {
             openPinView()
@@ -2809,7 +2829,6 @@ extension MainScreen: PinViewDelegate
         { view.removeFromSuperview() }
         sendWithQRView.translatesAutoresizingMaskIntoConstraints = true
         let pinView = UIView().loadNib(name: "PinView") as! PinView
-        pinView.kullanici = kullanici
         
         if isTouchIDCanceled {
             pinView.isTouchIDCanceled = true
@@ -2818,7 +2837,7 @@ extension MainScreen: PinViewDelegate
         
         if !isNewPin {
             
-            if kullanici?.pincode != "-1" {
+            if kullanici.pincode != "-1" {
                 
                 pinView.isEntryMode = true
             }else {
@@ -2830,7 +2849,7 @@ extension MainScreen: PinViewDelegate
             }
         }else {
             
-            if kullanici?.pincode != "-1" {
+            if kullanici.pincode != "-1" {
                 pinView.isEntryMode = false
                 pinView.isUpdateMode = true
             }else{

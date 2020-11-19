@@ -20,7 +20,7 @@ class TransactionDetailView: UIView
     var originValueLast: CGPoint = CGPoint(x: 0, y: 0)
     
     var transaction:digilira.transfer?
-    var kullanici: digilira.auth?
+    var kullanici: digilira.auth = try! secretKeys.userData()
     let digiliraPay = digiliraPayApi()
 
     
@@ -33,6 +33,14 @@ class TransactionDetailView: UIView
         self.clipsToBounds = true
         self.layer.cornerRadius = 20
         
+        do {
+            kullanici = try secretKeys.userData()
+        } catch {
+            self.digiliraPay.onLogin2 = { user, status in
+                self.kullanici = user
+            }
+            digiliraPay.login2()
+        }
 
     }
 
@@ -107,8 +115,8 @@ extension TransactionDetailView: UITableViewDelegate, UITableViewDataSource
         {
             let cell = UITableViewCell().loadXib(name: "TransactionHistoryDetailCellHeader") as! TransactionHistoryDetailCellHeader
             
-            if (transaction!.recipient == kullanici?.wallet) {cell.cellImage.image = UIImage(named: "tReceive48")}
-            if (transaction!.sender == kullanici?.wallet) {cell.cellImage.image = UIImage(named: "tSend48")}
+            if (transaction!.recipient == kullanici.wallet) {cell.cellImage.image = UIImage(named: "tReceive48")}
+            if (transaction!.sender == kullanici.wallet) {cell.cellImage.image = UIImage(named: "tSend48")}
             
             cell.cellTitle.text = transaction!.assetId!
             cell.cellAmount.text = (Double(transaction!.amount) / Double(100000000)).description

@@ -23,7 +23,7 @@ class ShareQRVC: UIViewController {
     public var network: String?
     public var tokenName: String?
     public var adSoyad: String?
-    var kullanici: digilira.auth?
+
     var ticker: digilira.ticker?
     private var amount: Double?
     private var price: Double?
@@ -55,9 +55,6 @@ class ShareQRVC: UIViewController {
                                      width: view.frame.width,
                                      height: view.frame.height)
         loadMoneyView.delegate = self
-        
-        loadMoneyView.kullanici = kullanici
-
         mainView.addSubview(loadMoneyView)
         mainView.isHidden = false
         mainView.translatesAutoresizingMaskIntoConstraints = true
@@ -72,12 +69,6 @@ class ShareQRVC: UIViewController {
                                      y: 0,
                                      width: view.frame.width,
                                      height: view.frame.height)
- 
-//
-//        loadMoneyView.tokenName = tokenName
-//        loadMoneyView.network = network
-//        loadMoneyView.address = address
-//        loadMoneyView.adSoyad = adSoyad
 
         mainView.addSubview(sendMoneyView)
         mainView.isHidden = false
@@ -126,6 +117,10 @@ class ShareQRVC: UIViewController {
 
 extension ShareQRVC: LoadCoinDelegate
 {
+    func errorHandler(message: String) {
+        print(message)
+    }
+    
     func dismissLoadView() // para yükleme sayfasının gizlenmesi
     {
 //        isShowLoadCoinView = false

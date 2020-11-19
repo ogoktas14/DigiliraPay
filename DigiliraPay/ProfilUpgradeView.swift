@@ -19,9 +19,7 @@ class ProfilUpgradeView: UIView {
     @IBOutlet weak var verifiedGoHomeView: UIView!
     
     weak var delegate: VerifyAccountDelegate?
-    
-    var kullanici: digilira.auth?
-        
+     
         override func awakeFromNib()
         {
             FinishedView.alpha = 0
@@ -96,6 +94,6 @@ class ProfilUpgradeView: UIView {
         
         @objc func goHome()
         {
-            delegate?.dismissVErifyAccountView(user: kullanici!)
+            delegate?.dismissVErifyAccountView()
         }
     }

@@ -825,6 +825,19 @@ class secretKeys: NSObject {
         }
     }
     
+    enum SecurityError: Error {
+        case emptyAuth
+        case emptyPassword
+    }
+    
+    class func userData() throws -> digilira.auth {
+        if let data = secretKeys.LocksmithLoad(forKey: "auth", conformance: digilira.auth.self) {
+            return data
+        } else {
+            throw SecurityError.emptyAuth
+        }
+    }
+    
     class func LocksmithLoad<T>(forKey: String, conformance: T.Type, setNil: Bool = false) -> T? where T: Decodable  {
          
         if let dictionary = Locksmith.loadDataForUserAccount(userAccount: forKey) {
@@ -846,15 +859,14 @@ class secretKeys: NSObject {
     
     class func LocksmithSave(forKey: String, data: Data, setNil: Bool = false) -> Bool {
                  
-        if let exist = Locksmith.loadDataForUserAccount(userAccount: forKey) {
+        if Locksmith.loadDataForUserAccount(userAccount: forKey) != nil {
             do{
-                try Locksmith.updateData(data: exist, forUserAccount: String(forKey))
-                return true
+                try Locksmith.deleteDataForUserAccount(userAccount: String(forKey))
             } catch let parsingError {
                 print("Error", parsingError)
                 return false
             }
-        } else {
+        }
             do{
                 let jsonResponse = try JSONSerialization.jsonObject(with: data) as! Dictionary<String, AnyObject>
                 try Locksmith.saveData(data: jsonResponse, forUserAccount: String(forKey))
@@ -863,7 +875,7 @@ class secretKeys: NSObject {
                 print("Error", parsingError)
                 return false
             }
-        }
+        
     }
 
 }

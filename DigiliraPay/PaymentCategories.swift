@@ -55,7 +55,7 @@ class PaymentCat: WalletView1, ColoredCardViewDelegate {
         
         self.reload(cardViews: coloredCardViews)
         
-        self.didUpdatePresentedCardViewBlock = { [weak self] (_) in
+        self.didUpdatePresentedCardViewBlock = { (_) in
             
         }
     }

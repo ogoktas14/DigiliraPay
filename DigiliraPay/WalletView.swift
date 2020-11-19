@@ -33,10 +33,17 @@ class WalletView: UIView {
     
     let BC = Blockchain()
     var trxs:[digilira.transfer] = []
-    var kullanici: digilira.auth?
+
+    var kullanici: digilira.auth = try! secretKeys.userData()
+  
     var coin: String = ""
-    
-    
+     
+    override func awakeFromNib()
+    { 
+ 
+
+    }
+     
     func setView()
     {
         headerLabel.textColor = UIColor(red:0.70, green:0.70, blue:0.70, alpha:1.0)
@@ -68,7 +75,7 @@ class WalletView: UIView {
     func readHistory (coin: String) {
 
         self.trxs.removeAll()
-        BC.checkTransactions(address: self.kullanici!.wallet){ (data) in
+        BC.checkTransactions(address: self.kullanici.wallet){ (data) in
             DispatchQueue.main.async {
                 data?.forEach { trx in
                     
@@ -221,8 +228,8 @@ extension WalletView: UITableViewDelegate, UITableViewDataSource
         cell.operationTitle.text = trxs[indexPath[1]].assetId
         cell.operationDate.text = trxs[indexPath[1]].timestamp!
          
-        if (trxs[indexPath[1]].recipient == kullanici?.wallet) {cell.operationImage.image = UIImage(named: "tReceive48")}
-        if (trxs[indexPath[1]].sender == kullanici?.wallet) {cell.operationImage.image = UIImage(named: "tSend48")}
+        if (trxs[indexPath[1]].recipient == kullanici.wallet) {cell.operationImage.image = UIImage(named: "tReceive48")}
+        if (trxs[indexPath[1]].sender == kullanici.wallet) {cell.operationImage.image = UIImage(named: "tSend48")}
         
         let tapped = MyTapGesture.init(target: self, action: #selector(handleTap))
         tapped.floatValue = indexPath[1]
@@ -287,7 +294,6 @@ extension WalletView: UITableViewDelegate, UITableViewDataSource
         
         transactionDetailView.delegate = self
         transactionDetailView.transaction = trxs[index]
-        transactionDetailView.kullanici = self.kullanici
         
         transactionHistory.addSubview(transactionDetailView)
         transactionHistory.isHidden = false

@@ -50,11 +50,9 @@ class PinView: UIView {
     var QR:String?
     let BC = Blockchain()
 
-    var kullanici: digilira.auth?
 
     override func awakeFromNib()
-    {
-
+    { 
         setView()
         
         digiliraPay.onTouchID = { res, err in
@@ -164,26 +162,35 @@ class PinView: UIView {
     }
     
     func setCode() {
-        isVerify = isEntryMode
+        
+        do {
+            let user = try secretKeys.userData()
+            
+            isVerify = isEntryMode
 
-        if isInit {
-            titleLabel.text = "Bir Pin Belirleyin"
+            if isInit {
+                titleLabel.text = "Bir Pin Belirleyin"
+            }
+            
+            if isEntryMode && !isTouchIDCanceled {
+                digiliraPay.touchID(reason: "Parmak izini okutarak giriş yapabilirsin.")
+                self.goBackButtonView.isHidden = true
+                
+                self.lastCode = String((user.pincode))
+            }
+            if isUpdateMode {
+                self.lastCode = String((user.pincode))
+                isVerify = true
+            }
+            if isTouchIDCanceled {
+                self.lastCode = String((user.pincode))
+                self.goBackButtonView.isHidden = false
+            }
+            
+        } catch {
+            print("kullanici bilgileri okunamdi")
         }
         
-        if isEntryMode && !isTouchIDCanceled {
-            digiliraPay.touchID(reason: "Parmak izini okutarak giriş yapabilirsin.")
-            self.goBackButtonView.isHidden = true
-            
-            self.lastCode = String((kullanici?.pincode)!)
-        }
-        if isUpdateMode {
-            self.lastCode = String((kullanici?.pincode)!)
-            isVerify = true
-        }
-        if isTouchIDCanceled {
-            self.lastCode = String((kullanici?.pincode)!)
-            self.goBackButtonView.isHidden = false
-        }
     }
     
     func goVerify()

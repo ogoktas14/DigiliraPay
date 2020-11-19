@@ -39,9 +39,7 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
 
     let digiliraPay = digiliraPayApi()
     var ticker: digilira.ticker?
-    var kullanici: digilira.auth?
  
-    
     public var selectedCoinX: digilira.coin = digilira.coin.init(token: "", symbol: "", tokenName: "", network: "")
 
     override func awakeFromNib()
@@ -70,9 +68,7 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
 
         shareButtonView.isHidden = true
         copyIcon.isHidden = true
- 
-
-        
+  
     }
     
     @objc func respondToSwipeGesture(gesture: UIGestureRecognizer) {
@@ -170,40 +166,46 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     
     
     func setAdress()  {
-        
-        
-        switch selectedCoinX.network {
-        case digilira.bitcoin.network:
-            coinPrice = (ticker?.btcUSDPrice)! * (ticker?.usdTLPrice)!
-            address = kullanici?.btcAddress
-            break
-        case digilira.ethereum.network:
-            coinPrice = (ticker?.ethUSDPrice)! * (ticker?.usdTLPrice)!
-            address = kullanici?.ethAddress
-            break
-        case digilira.waves.network:
-            switch selectedCoinX.tokenName {
-            case digilira.waves.tokenName:
-                coinPrice = (ticker?.wavesUSDPrice)! * (ticker?.usdTLPrice)!
-                address = kullanici?.wallet
-                assetId = digilira.waves.token
+        do {
+            let user = try secretKeys.userData()
+            
+            switch selectedCoinX.network {
+            case digilira.bitcoin.network:
+                coinPrice = (ticker?.btcUSDPrice)! * (ticker?.usdTLPrice)!
+                address = user.btcAddress
                 break
-            case digilira.charity.tokenName:
-                address = kullanici?.wallet
-                assetId = digilira.charity.token
-                coinPrice = 1
-            break
+            case digilira.ethereum.network:
+                coinPrice = (ticker?.ethUSDPrice)! * (ticker?.usdTLPrice)!
+                address = user.ethAddress
+                break
+            case digilira.waves.network:
+                switch selectedCoinX.tokenName {
+                case digilira.waves.tokenName:
+                    coinPrice = (ticker?.wavesUSDPrice)! * (ticker?.usdTLPrice)!
+                    address = user.wallet
+                    assetId = digilira.waves.token
+                    break
+                case digilira.charity.tokenName:
+                    address = user.wallet
+                    assetId = digilira.charity.token
+                    coinPrice = 1
+                break
+                default:
+                    coinPrice = 0
+                }
+                break
+            case "digilira":
+                coinPrice = 0
+                break
             default:
                 coinPrice = 0
+                break
             }
-            break
-        case "digilira":
-            coinPrice = 0
-            break
-        default:
-            coinPrice = 0
-            break
+        } catch {
+            
         }
+        
+
         
         
         
@@ -354,23 +356,43 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
 
     @IBAction func shareButton(_ sender: Any)
     {
-        shareButtonView.isHidden = true
-        let buffer = textAmount.text
-        if textAmount.text == "" {
-            switchCurrency.isHidden = true
+        do {
+            let user = try secretKeys.userData()
+            
+            shareButtonView.isHidden = true
+            let buffer = textAmount.text
+            if textAmount.text == "" {
+                switchCurrency.isHidden = true
+            }
+            
+            copyIcon.isHidden = true
+            
+            if let n = user.firstName {
+                if let s = user.lastName {
+                    textAmount.text = n + " " + s
+                    
+                    textAmount.isEnabled = false
+
+                    delegate?.shareQR(image: takeScreenshot())
+                    textAmount.text = buffer
+                    textAmount.isHidden = false
+                    textAmount.isEnabled = true
+                    copyIcon.isHidden = false
+
+                    switchCurrency.isHidden = false
+                    shareButtonView.isHidden = false
+                    
+                }
+            } else {
+                delegate?.errorHandler(message: "İsim bilgisi okunamadı, lütfen yeniden giriş yapın.")
+            }
+             
+        } catch {
+            delegate?.errorHandler(message: "Kullanıcı bilgileri okunamadı, lütfen yeniden giriş yapın.")
         }
-        copyIcon.isHidden = true
-        textAmount.text = (kullanici?.firstName)! + " " + (kullanici?.lastName)!
-        textAmount.isEnabled = false
+        
+        
 
-        delegate?.shareQR(image: takeScreenshot())
-        textAmount.text = buffer
-        textAmount.isHidden = false
-        textAmount.isEnabled = true
-        copyIcon.isHidden = false
-
-        switchCurrency.isHidden = false
-        shareButtonView.isHidden = false
     }
  
 

@@ -20,9 +20,7 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
     
     
     func closePinView() {
-        
         self.goMainVC()
-        self.BC.checkSmart(address: self.kullanici!.wallet)
     }
     
     func updatePinCode(code: Int32) {
@@ -30,10 +28,7 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
     }
     
     func pinSuccess(res: Bool) {
-        
-        self.goMainVC()
-        self.BC.checkSmart(address: self.kullanici!.wallet)
-        
+        self.goMainVC()        
     }
     
     
@@ -51,7 +46,6 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
     
     var onPinSuccess: ((_ result: Bool)->())?
     
-    var kullanici: digilira.auth?
     
     var trxs:[digilira.transfer] = []
     var QR:digilira.QR = digilira.QR.init()
@@ -103,9 +97,7 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
                         break
                         
                     case 200:
-                        self.kullanici = user
-                        
-                        if self.kullanici?.status == 403 {
+                        if user.status == 403 {
                             let alert = UIAlertController(title: "Hata", message: "Hesabınız bloke edilmiştir.", preferredStyle: .alert)
                             
                             alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
@@ -117,16 +109,16 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
                             
                         }
                         
+                        self.BC.checkSmart(address: user.wallet)
+                        
                         //openPinView
-                        if self.kullanici?.pincode == "-1"
+                        if user.pincode == "-1"
                         {
                             self.goMainVC()
-                            self.BC.checkSmart(address: self.kullanici!.wallet)
                             return
                         }
                         
                         let pinView = UIView().loadNib(name: "PinView") as! PinView
-                        pinView.kullanici = user
                         pinView.isEntryMode = true
                         pinView.setCode()
                         
@@ -215,7 +207,6 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
         if segue.identifier == "toMainScreen"
         {
             let vc = segue.destination as? MainScreen
-            vc?.kullanici = kullanici
             vc?.pinkodaktivasyon = true
             vc?.QR = QR
         }

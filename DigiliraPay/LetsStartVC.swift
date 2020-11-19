@@ -25,16 +25,12 @@ class LetsStartVC: UIViewController {
     let digiliraPay = digiliraPayApi()
 
     let BC = Blockchain()
-    var kullanici: digilira.auth?
-
     
     private func initial() {
-        
-
-        
         self.digiliraPay.onLogin2 = { user, status in
-            self.kullanici = user
-            self.BC.checkSmart(address: user.wallet)
+            DispatchQueue.main.async {
+                self.BC.checkSmart(address: user.wallet)
+             }
         }
         
         self.digiliraPay.login2()
@@ -181,7 +177,6 @@ class LetsStartVC: UIViewController {
         if segue.identifier == "toMainScreen"
         {
             let vc = segue.destination as? MainScreen
-            vc?.kullanici = kullanici
             vc?.pinkodaktivasyon = true
         }
     }

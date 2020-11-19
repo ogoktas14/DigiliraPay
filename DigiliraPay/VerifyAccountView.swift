@@ -34,33 +34,34 @@ class VerifyAccountView: UIView, UITextFieldDelegate
     let digiliraPay = digiliraPayApi()
     var onUpdate: ((_ result: [String:Any])->())?
 
-    var kullanici: digilira.auth?
-
     override func didMoveToSuperview() {
-        
-        switch kullanici?.status {
-        case 0:
-           nameText.text = kullanici?.firstName
-           surnameText.text = kullanici?.lastName
-            tcText.text = kullanici?.tcno
-           telText.text = kullanici?.tel
-           mailText.text = kullanici?.mail
-            break
-        case 1:
-           nameText.text = kullanici?.firstName
-           surnameText.text = kullanici?.lastName
-           tcText.text = kullanici?.tcno
-           telText.text = kullanici?.tel
-           mailText.text = kullanici?.mail
+        do {
+            let user = try secretKeys.userData()
+            switch user.status {
+            case 0:
+               nameText.text = user.firstName
+               surnameText.text = user.lastName
+                tcText.text = user.tcno
+               telText.text = user.tel
+               mailText.text = user.mail
+                break
+            case 1:
+               nameText.text = user.firstName
+               surnameText.text = user.lastName
+               tcText.text = user.tcno
+               telText.text = user.tel
+               mailText.text = user.mail
+                
+                nameText.isEnabled = false
+                surnameText.isEnabled = false
+                tcText.isEnabled = false
+                break
+            default:
+                break
+            }
+        }catch{
             
-            nameText.isEnabled = false
-            surnameText.isEnabled = false
-            tcText.isEnabled = false
-            break
-        default:
-            break
         }
-
     }
     
     
@@ -178,8 +179,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate
         digiliraPay.onUpdate = { res in
 
             self.digiliraPay.onLogin2 = { user, status in
-                self.delegate?.dismissVErifyAccountView(user: user)
-                self.kullanici = user
+                self.delegate?.dismissVErifyAccountView()
             }
             
             self.digiliraPay.login2()
@@ -274,6 +274,6 @@ class VerifyAccountView: UIView, UITextFieldDelegate
     
     @objc func goHome()
     {
-        delegate?.dismissVErifyAccountView(user: kullanici!)
+        delegate?.dismissVErifyAccountView()
     }
 }

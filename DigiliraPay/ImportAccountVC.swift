@@ -17,7 +17,6 @@ class ImportAccountVC: UIViewController {
     
     let digiliraPay = digiliraPayApi()
     let BC = Blockchain()
-    var kullanici: digilira.auth?
     
     var isKeyboard = false
     
@@ -86,7 +85,6 @@ class ImportAccountVC: UIViewController {
                         let alert = UIAlertController(title: "Cüzdanınız Başarıyla Aktarıldı!", message: "Ödeme yapabilmek ve kripto varlıklarınızı transfer edebilmek için KYC sürecini yeniden tamamlamanız gerekmektedir.", preferredStyle: .alert)
 
                         alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
-                            self.kullanici = user
                             self.performSegue(withIdentifier: "toMainVCFromImport", sender: nil)
                         }))
                         self.present(alert, animated: true)
@@ -118,7 +116,6 @@ class ImportAccountVC: UIViewController {
         if segue.identifier == "toMainVCFromImport"
         {
             let vc = segue.destination as? MainScreen
-            vc?.kullanici = kullanici
             vc?.pinkodaktivasyon = true
         }
     }
