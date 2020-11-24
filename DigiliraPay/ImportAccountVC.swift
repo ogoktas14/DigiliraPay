@@ -77,34 +77,36 @@ class ImportAccountVC: UIViewController {
 
                 
                 self.digiliraPay.onLogin2 = { user, status in
-                    alert.dismiss(animated: true, completion: nil)
-                    switch (status) {
+                    DispatchQueue.main.sync {
+                        alert.dismiss(animated: true, completion: nil)
+                        switch (status) {
 
-                    case 200:
-                        UserDefaults.standard.set(false, forKey: "isSecure")
-                        let alert = UIAlertController(title: "Cüzdanınız Başarıyla Aktarıldı!", message: "Ödeme yapabilmek ve kripto varlıklarınızı transfer edebilmek için KYC sürecini yeniden tamamlamanız gerekmektedir.", preferredStyle: .alert)
+                        case 200:
+                            UserDefaults.standard.set(false, forKey: "isSecure")
+                            let alert = UIAlertController(title: "Cüzdanınız Başarıyla Aktarıldı!", message: "Ödeme yapabilmek ve kripto varlıklarınızı transfer edebilmek için KYC sürecini yeniden tamamlamanız gerekmektedir.", preferredStyle: .alert)
 
-                        alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
-                            self.performSegue(withIdentifier: "toMainVCFromImport", sender: nil)
-                        }))
-                        self.present(alert, animated: true)
-                        break
+                            alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
+                                self.performSegue(withIdentifier: "toMainVCFromImport", sender: nil)
+                            }))
+                            self.present(alert, animated: true)
+                            break
 
-                    case 400, 404:
+                        case 400, 404:
 
-                        let alert = UIAlertController(title: "Kullanıcı Bulunamadı", message: "Girdiğiniz anahtar kelimeler ile eşleşen bir cüzdan bulunamadı lütfen girdiğiniz kelimeleri kontrol ederek yeniden deneyin.", preferredStyle: .alert)
+                            let alert = UIAlertController(title: "Kullanıcı Bulunamadı", message: "Girdiğiniz anahtar kelimeler ile eşleşen bir cüzdan bulunamadı lütfen girdiğiniz kelimeleri kontrol ederek yeniden deneyin.", preferredStyle: .alert)
 
-                        alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
-                        }))
-                        self.present(alert, animated: true)
+                            alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
+                            }))
+                            self.present(alert, animated: true)
 
-                        break
-                    default:
-                        break
+                            break
+                        default:
+                            break
 
 
-                    }
-                }
+                        }
+                    }                    }
+
                 
                 self.digiliraPay.login2()
             }

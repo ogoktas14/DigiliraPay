@@ -67,14 +67,8 @@ class TransactionDetailView: UIView
  
     
     @objc func handleTap (recognizer: MyTapGesture) {
-        guard let QrDict:[String: String] = ["qr": recognizer.qrAttachment] else {
-            return
-        }
-        
+        let QrDict:[String: String] = ["qr": recognizer.qrAttachment]
         NotificationCenter.default.post(name: .orderClick, object: nil, userInfo: QrDict )
-
-
-        
     }
     
     @IBAction func slideGesture(_ sender: UIPanGestureRecognizer)

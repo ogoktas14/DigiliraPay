@@ -139,15 +139,16 @@ class Blockchain: NSObject {
         var request = URLRequest(url: URL(string: rURL)!)
         request.httpMethod = digilira.requestMethod.get
 
-        let session2 = URLSession(configuration: .ephemeral, delegate: self, delegateQueue: nil)
+        let session2 = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
         
         self.isCertificatePinning = true
+        
         
         let task2 = session2.dataTask(with: request) { (data, response, error) in
             let httpResponse = response as? HTTPURLResponse
 
             if error != nil {
-                print("error: \(error!.localizedDescription): \(error!)")
+//                print("error: \(error!.localizedDescription): \(error!)")
                 self.onError!(error!.localizedDescription)
                 
             } else if data != nil {

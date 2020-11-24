@@ -31,15 +31,15 @@ class binance: NSObject {
         
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        let session2 = URLSession(configuration: .ephemeral, delegate: self, delegateQueue: nil)
+        let session2 = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
         
         self.isCertificatePinning = true
         
         let task2 = session2.dataTask(with: request) { (data, response, error) in
             let httpResponse = response as? HTTPURLResponse
             if error != nil {
-                print("error: \(error!.localizedDescription): \(error!)")
-                self.onBinanceError!("SSL PINNING MISMATCH", httpResponse?.statusCode)
+//                print("error: \(error!.localizedDescription): \(error!)")
+                self.onBinanceError!("SSL PINNING MISMATCH", 0)
                 
             } else if data != nil {
 

@@ -141,15 +141,18 @@ extension selectCoinView: UITableViewDataSource {
   }
     @objc func handleTap(recognizer: MyTapGesture) {
         if let price = Order?.totalPrice {
-            let (amount, asset) = digiliraPay.ratePrice(price: price, asset: recognizer.assetName, symbol: ticker!)
-            print(amount, asset)
-            let balance = Filtered[recognizer.floatValue].availableBalance
-            self.Order?.asset = asset
-            if balance < (Int64(amount)) {
-                return
+            if let ticky = ticker  {
+                let (amount, asset) = digiliraPay.ratePrice(price: price, asset: recognizer.assetName, symbol: ticky)
+                print(amount, asset)
+                let balance = Filtered[recognizer.floatValue].availableBalance
+                self.Order?.asset = asset
+                if balance < (Int64(amount)) {
+                    return
+                }
+                self.Order?.rate = (Int64(amount))
+                delegate?.dismissNewSend(params: Order!)
             }
-            self.Order?.rate = (Int64(amount))
-            delegate?.dismissNewSend(params: Order!)
+
         }
          
     }

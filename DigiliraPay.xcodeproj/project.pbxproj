@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		0023C0FC2517C92B0042B50C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0023C0FA2517C92B0042B50C /* Main.storyboard */; };
-		002B281A2386E5E6007BE3AD /* digiSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 002B28192386E5E6007BE3AD /* digiSocket.swift */; };
 		003B35DC23564409004EE63F /* TransactionPopupDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 003B35DB23564409004EE63F /* TransactionPopupDelegate.swift */; };
 		0060807E23795453006FFBD2 /* constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0060807D23795453006FFBD2 /* constants.swift */; };
 		00608083237B404F006FFBD2 /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00608082237B404F006FFBD2 /* LocalAuthentication.framework */; };
@@ -147,7 +146,6 @@
 
 /* Begin PBXFileReference section */
 		0023C0FB2517C92B0042B50C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		002B28192386E5E6007BE3AD /* digiSocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = digiSocket.swift; sourceTree = "<group>"; };
 		003B3508234E2299004EE63F /* WavesSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = WavesSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		003B3509234E2299004EE63F /* WavesSDKCrypto.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = WavesSDKCrypto.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		003B350A234E2299004EE63F /* WavesSDKExtensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = WavesSDKExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -320,7 +318,6 @@
 				0080FAC3234CA0B900B6D636 /* blockchain.swift */,
 				006B1EE7234CC2720045B6B4 /* dPayApi.swift */,
 				0060807D23795453006FFBD2 /* constants.swift */,
-				002B28192386E5E6007BE3AD /* digiSocket.swift */,
 				93534F1D2549958C0000329F /* bitexenSignature.swift */,
 				93FC66BF2562AB4E00E42AAC /* binance.swift */,
 			);
@@ -581,7 +578,7 @@
 				882AAAFB22FC96DD004CDAA6 /* Sources */,
 				882AAAFC22FC96DD004CDAA6 /* Frameworks */,
 				882AAAFD22FC96DD004CDAA6 /* Resources */,
-				96C0EC7617232C9DA949B134 /* [CP] Embed Pods Frameworks */,
+				01EB1E1FBB66A80400364167 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -599,7 +596,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1100;
-				LastUpgradeCheck = 1100;
+				LastUpgradeCheck = 1210;
 				ORGANIZATIONNAME = Ilao;
 				TargetAttributes = {
 					882AAAFE22FC96DD004CDAA6 = {
@@ -711,7 +708,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		96C0EC7617232C9DA949B134 /* [CP] Embed Pods Frameworks */ = {
+		01EB1E1FBB66A80400364167 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -797,7 +794,6 @@
 				889F2A2523158D5400ACD656 /* ProfileMenuView.swift in Sources */,
 				88114F6A2321703800AB3B5A /* SendWithQrDelegate.swift in Sources */,
 				88CA93612319741A008F894B /* MenuViewDelegate.swift in Sources */,
-				002B281A2386E5E6007BE3AD /* digiSocket.swift in Sources */,
 				880664EF22FEFF5B00C4DF69 /* OnBoardingView.swift in Sources */,
 				88CA9383231A5F46008F894B /* TransactionDetailCloseDelegate.swift in Sources */,
 				880541FA2319702B004EE85F /* CoinTableViewCell.swift in Sources */,
@@ -867,6 +863,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -927,6 +924,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -962,7 +960,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 51.3;
+				CURRENT_PROJECT_VERSION = 52.3;
 				DEVELOPMENT_TEAM = 5TJACH7D4X;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -986,7 +984,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPayRelease.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 51.3;
+				CURRENT_PROJECT_VERSION = 52.3;
 				DEVELOPMENT_TEAM = 5TJACH7D4X;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;

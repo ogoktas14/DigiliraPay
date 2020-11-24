@@ -280,14 +280,14 @@ class bex: NSObject {
         }
         
         
-        let session2 = URLSession(configuration: .ephemeral, delegate: self, delegateQueue: nil)
+        let session2 = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
         
         self.isCertificatePinning = true
         
         let task2 = session2.dataTask(with: request) { (data, response, error) in
             let httpResponse = response as? HTTPURLResponse
             if error != nil {
-                print("error: \(error!.localizedDescription): \(error!)")
+//                print("error: \(error!.localizedDescription): \(error!)")
                 self.onBitexenError!("SSL PINNING MISMATCH", httpResponse?.statusCode)
                 
             } else if data != nil {

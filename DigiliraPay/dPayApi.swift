@@ -14,8 +14,6 @@ import RxSwift
 import Locksmith
 import QRCoder
 import LocalAuthentication
-import Starscream
-
 
 class digiliraPayApi: NSObject {
     private var isCertificatePinning: Bool = true
@@ -57,15 +55,16 @@ class digiliraPayApi: NSObject {
         }
         
         
-        let session2 = URLSession(configuration: .ephemeral, delegate: self, delegateQueue: nil)
+        let session2 = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
         
         self.isCertificatePinning = true
         
         let task2 = session2.dataTask(with: request) { (data, response, error) in
             let httpResponse = response as? HTTPURLResponse
             if error != nil {
-                print("error: \(error!.localizedDescription): \(error!)")
-                self.onError!("error: \(error!.localizedDescription): \(error!)", httpResponse!.statusCode)
+                
+//                print("error: \(error!.localizedDescription): \(error!)")
+                self.onError!("error: \(error!.localizedDescription): \(error!)", 0)
                 
             } else if data != nil {
   
@@ -152,15 +151,15 @@ class digiliraPayApi: NSObject {
         request.setValue(tokenString, forHTTPHeaderField: "Authorization")
         
         
-        let session2 = URLSession(configuration: .ephemeral, delegate: self, delegateQueue: nil)
+        let session2 = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
         
         self.isCertificatePinning = true
         
         let task2 = session2.dataTask(with: request) { (data, response, error) in
 
             if error != nil {
-                print("error: \(error!.localizedDescription): \(error!)")
-                self.onError!("error: \(error!.localizedDescription): \(error!)", 503)
+//                print("error: \(error!.localizedDescription): \(error!)")
+                self.onError!("error: \(error!.localizedDescription): \(error!)", 0)
 
             } else if data != nil {
   
@@ -196,7 +195,7 @@ class digiliraPayApi: NSObject {
                                                         order_date: json["order_date"] as? String,
                                                         order_shipping: json["order_shipping"] as? Double,
                                                         conversationId: json["conversationId"] as? String,
-                                                        rate: (json["rate"] as? Int64)!,
+                                                        rate: (json["rate"] as? Int64),
                                                         totalPrice: json["totalPrice"] as? Double,
                                                         paidPrice: json["paidPrice"] as? Double,
                                                         refundPrice: json["refundPrice"] as? Double,
@@ -291,7 +290,7 @@ class digiliraPayApi: NSObject {
             request.setValue(tokenString, forHTTPHeaderField: "Authorization")
         }
    
-        let session2 = URLSession(configuration: .ephemeral, delegate: self, delegateQueue: nil)
+        let session2 = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
         
         self.isCertificatePinning = true
         
@@ -323,18 +322,11 @@ class digiliraPayApi: NSObject {
         
         
     }
-    
-    
-    func getName() -> String {
-        return auth().firstName! + " " + auth().lastName!
-    }
-    
+     
     func isLoggedIn() -> Bool {
         return false
     }
-    
-    
-    
+     
     func setOdemeAliniyor(JSON : Data?) {
         if let json = try! JSONSerialization.jsonObject(with: JSON!, options: []) as? [String: Any] {
             // try to read out a string array
@@ -499,7 +491,7 @@ class digiliraPayApi: NSObject {
     }
      
     func auth() -> digilira.auth {
-        let loginCredits = secretKeys.LocksmithLoad(forKey: "auth", conformance: digilira.auth.self)
+        let loginCredits = secretKeys.LocksmithLoad(forKey: "authenticate", conformance: digilira.auth.self)
         return loginCredits!
     }
     
@@ -514,16 +506,9 @@ class digiliraPayApi: NSObject {
         
     }
     
-    func isTokenAvailable() {
-        
-    }
-    var maxTRY = 2
     func login2() {
         let loginCredits = secretKeys.LocksmithLoad(forKey: "sensitive", conformance: digilira.login.self)
         
-        if maxTRY == 0 {
-            
-        }
         if let json = encode2(jsonData: loginCredits) {
             
             crud.onResponse = { [self] res, sts in
@@ -544,25 +529,28 @@ class digiliraPayApi: NSObject {
                     break;
                     
                 case 200:                    
-                    if secretKeys.LocksmithSave(forKey: "auth", data: res) {
+                    if secretKeys.LocksmithSave(forKey: "authenticate", data: res) {
                         if let user = self.decodeDefaults(forKey: res, conformance: digilira.auth.self) {
                             onLogin2!(user, sts)
-                            
-                            let defaults = UserDefaults.standard
-                            if let savedApnToken = defaults.object(forKey: "deviceToken") as? String {
-                                if savedApnToken != user.apnToken {
-                                    let user = digilira.exUser.init(
-                                        apnToken:savedApnToken
-                                    )
-                                    
-                                    let encoder = JSONEncoder()
-                                    let data = try? encoder.encode(user)
-                                    self.onUpdate = { res in
-                                        print(res)
+                            DispatchQueue.main.async {
+                                let defaults = UserDefaults.standard
+                                if let savedApnToken = defaults.object(forKey: "deviceToken") as? String {
+                                    if savedApnToken != user.apnToken {
+                                        let user = digilira.exUser.init(
+                                            apnToken:savedApnToken
+                                        )
+                                        
+                                        let encoder = JSONEncoder()
+                                        let data = try? encoder.encode(user)
+                                        self.onUpdate = { res in
+                                            print(res)
+                                        }
+                                        self.updateUser(user: data)
                                     }
-                                    self.updateUser(user: data)
                                 }
+                                
                             }
+
                         }
                     }
                     break;
@@ -831,7 +819,7 @@ class secretKeys: NSObject {
     }
     
     class func userData() throws -> digilira.auth {
-        if let data = secretKeys.LocksmithLoad(forKey: "auth", conformance: digilira.auth.self) {
+        if let data = secretKeys.LocksmithLoad(forKey: "authenticate", conformance: digilira.auth.self) {
             return data
         } else {
             throw SecurityError.emptyAuth
@@ -910,7 +898,7 @@ class centralRequest: NSObject {
                 request.setValue(tokenString, forHTTPHeaderField: "Authorization")
             }
             
-            let session = URLSession(configuration: .ephemeral, delegate: self, delegateQueue: nil)
+            let session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
             
             isCertificatePinning = true
             
@@ -918,8 +906,8 @@ class centralRequest: NSObject {
                 if let httpResponse = response as? HTTPURLResponse {
                     if error != nil {
                         
-                        print("error: \(error!.localizedDescription): \(error!)")
-                        self.onError!("error: \(error!.localizedDescription): \(error!)", httpResponse.statusCode)
+                        //print("error: \(error!.localizedDescription): \(error!)")
+                        self.onError!("error: \(error!.localizedDescription): \(error!)", 0)
                         
                     } else if data != nil {
                         
@@ -940,6 +928,7 @@ class centralRequest: NSObject {
     
 
 extension centralRequest: URLSessionDelegate {
+    
     
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         

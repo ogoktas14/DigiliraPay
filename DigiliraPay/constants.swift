@@ -314,7 +314,7 @@ struct digilira {
         var order_date: String?
         var order_shipping: Double?
         var conversationId: String?
-        var rate: Int64
+        var rate: Int64?
         var totalPrice: Double?
         var paidPrice: Double?
         var refundPrice: Double?
@@ -375,7 +375,7 @@ struct digilira {
 
     // MARK: - Encode/decode helpers
 
-    class JSONNull: Codable, Hashable {
+    class JSONNull: Codable {
 
         public static func == (lhs: JSONNull, rhs: JSONNull) -> Bool {
             return true
