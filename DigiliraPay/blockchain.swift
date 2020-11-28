@@ -18,7 +18,7 @@ import LocalAuthentication
 
 class Blockchain: NSObject {
     private var isCertificatePinning: Bool = true
-
+    
     
     private var balances: NodeService.DTO.AddressAssetsBalance?
     private var disposeBag: DisposeBag = DisposeBag()
@@ -41,7 +41,7 @@ class Blockchain: NSObject {
     var onError: ((_ result: String)->())?
     var onPinSuccess: ((_ result: Bool)->())?
     var onSmartAvailable: ((_ result: Bool)->())?
-
+    
     func checkAssetBalance(address: String ) {
         
         WavesSDK.shared.services.nodeServices.assetsNodeService
@@ -52,44 +52,44 @@ class Blockchain: NSObject {
             })
             .disposed(by: disposeBag)
     }
-        
-
+    
+    
     func sendTransaction2(recipient: String, fee: Int64, amount:Int64, assetId:String, attachment:String, wallet:digilira.wallet) {
-            guard let chainId = WavesSDK.shared.enviroment.chainId else { return }
-            guard WavesCrypto.shared.address(seed: wallet.seed!, chainId: chainId) != nil else { return }
+        guard let chainId = WavesSDK.shared.enviroment.chainId else { return }
+        guard WavesCrypto.shared.address(seed: wallet.seed!, chainId: chainId) != nil else { return }
         guard let senderPublicKey = WavesCrypto.shared.publicKey(seed: wallet.seed!) else { return }
-
+        
         let feeAssetId = digilira.sponsorToken
-            let buf: [UInt8] = Array(attachment.utf8)
-            let attachment58 = WavesCrypto.shared.base58encode(input: buf)
-            let timestamp = Int64(Date().timeIntervalSince1970) * 1000
-             
-            var queryModel = NodeService.Query.Transaction.Transfer(recipient: recipient,
-                                                                  assetId: assetId,
-                                                                  amount: amount,
-                                                                  fee: 9,
-                                                                  attachment: attachment58!,
-                                                                  feeAssetId: feeAssetId,
-                                                                  timestamp: timestamp,
-                                                                  senderPublicKey: senderPublicKey, chainId: chainId)
-             
-            
-            // sign transfer transaction using seed
-            queryModel.sign(seed: wallet.seed!)
-             
-            let send = NodeService.Query.Transaction.transfer(queryModel)
-            
-            WavesSDK.shared.services
-                .nodeServices // You can choose different Waves services: node, matcher and data service
-                .transactionNodeService // Here methods of service
-                .transactions(query: send)
-                .observeOn(MainScheduler.asyncInstance)
-                .subscribe(onNext: { [weak self] (tx) in
-                    self!.onTransferTransaction?(tx)
-                }, onError: { (error ) -> Void in
-                    self.onError!(error.localizedDescription)
-                })
-                .disposed(by: disposeBag)
+        let buf: [UInt8] = Array(attachment.utf8)
+        let attachment58 = WavesCrypto.shared.base58encode(input: buf)
+        let timestamp = Int64(Date().timeIntervalSince1970) * 1000
+        
+        var queryModel = NodeService.Query.Transaction.Transfer(recipient: recipient,
+                                                                assetId: assetId,
+                                                                amount: amount,
+                                                                fee: 9,
+                                                                attachment: attachment58!,
+                                                                feeAssetId: feeAssetId,
+                                                                timestamp: timestamp,
+                                                                senderPublicKey: senderPublicKey, chainId: chainId)
+        
+        
+        // sign transfer transaction using seed
+        queryModel.sign(seed: wallet.seed!)
+        
+        let send = NodeService.Query.Transaction.transfer(queryModel)
+        
+        WavesSDK.shared.services
+            .nodeServices // You can choose different Waves services: node, matcher and data service
+            .transactionNodeService // Here methods of service
+            .transactions(query: send)
+            .observeOn(MainScheduler.asyncInstance)
+            .subscribe(onNext: { [weak self] (tx) in
+                self!.onTransferTransaction?(tx)
+            }, onError: { (error ) -> Void in
+                self.onError!(error.localizedDescription)
+            })
+            .disposed(by: disposeBag)
     }
     
     func massTransferTx(recipient: String, fee: Int64, amount:Int64, assetId:String, attachment:String, wallet:digilira.wallet) {
@@ -98,20 +98,19 @@ class Blockchain: NSObject {
         guard let senderPublicKey = WavesCrypto.shared.publicKey(seed: wallet.seed!) else { return }
         
         let fee: Int64 = fee
-        let feeAssetId: String = digilira.sponsorToken
         let timestamp = Int64(Date().timeIntervalSince1970) * 1000
-
+        
         var queryModel = NodeService.Query.Transaction.MassTransfer.init(chainId: chainId,
-                                                                       fee: fee,
-                                                                       timestamp: timestamp,
-                                                                       senderPublicKey: senderPublicKey,
-                                                                       assetId: assetId,
-                                                                       attachment: attachment,
-                                                                       transfers: [.init(recipient: "3NCpyPuNzUaB7LFS4KBzwzWVnXmjur582oy", amount: amount / 200),
-                                                                                   .init(recipient: recipient, amount: amount)])
-
+                                                                         fee: fee,
+                                                                         timestamp: timestamp,
+                                                                         senderPublicKey: senderPublicKey,
+                                                                         assetId: assetId,
+                                                                         attachment: attachment,
+                                                                         transfers: [.init(recipient: "3NCpyPuNzUaB7LFS4KBzwzWVnXmjur582oy", amount: amount / 200),
+                                                                                     .init(recipient: recipient, amount: amount)])
+        
         queryModel.sign(seed: wallet.seed!)
-
+        
         let send = NodeService.Query.Transaction.massTransfer(queryModel)
         print(send)
         WavesSDK.shared.services
@@ -128,18 +127,18 @@ class Blockchain: NSObject {
             })
     }
     
-     
+    
     func verifyTrx(txid: String) {
         getTransactionId(rURL: digilira.node.url + "/transactions/info/" + txid)
     }
     
     func getTransactionId(rURL: String) {
-         
+        
         let url = rURL
         
         var request = URLRequest(url: URL(string: rURL)!)
         request.httpMethod = digilira.requestMethod.get
-
+        
         let session2 = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
         
         self.isCertificatePinning = true
@@ -147,22 +146,22 @@ class Blockchain: NSObject {
         
         let task2 = session2.dataTask(with: request) { (data, response, error) in
             let httpResponse = response as? HTTPURLResponse
-
+            
             if error != nil {
-//                print("error: \(error!.localizedDescription): \(error!)")
+                //                print("error: \(error!.localizedDescription): \(error!)")
                 self.onError!(error!.localizedDescription)
                 
             } else if data != nil {
-  
+                
                 if httpResponse!.statusCode == 404 {
                     sleep(2)
                     self.getTransactionId(rURL: url)
                     return
                 }else{
                     guard let dataResponse = data,
-                        error == nil else {
-                            print(error?.localizedDescription ?? "Response Error")
-                            return }
+                          error == nil else {
+                        print(error?.localizedDescription ?? "Response Error")
+                        return }
                     do{
                         let jsonResponse = try JSONSerialization.jsonObject(with: dataResponse) as! Dictionary<String, AnyObject>
                         self.onVerified!(jsonResponse)
@@ -171,10 +170,10 @@ class Blockchain: NSObject {
                     }
                 }
             }
-      
+            
         }
         task2.resume()
-         
+        
     }
     
     
@@ -204,22 +203,22 @@ class Blockchain: NSObject {
     
     func smartD(initial: Bool) {
         let wallet = getSeed()
- 
+        
         guard let chainId = WavesSDK.shared.enviroment.chainId else { return }
         guard let senderPublicKey = WavesCrypto.shared.publicKey(seed: wallet.seed!) else { return }
-                
+        
         let fee: Int64 = 1400000
         let timestamp = Int64(Date().timeIntervalSince1970) * 1000
-                
+        
         var queryModel = NodeService.Query.Transaction.SetScript.init(chainId: chainId,
-                                                                              fee: fee,
-                                                                              timestamp: timestamp,
-                                                                              senderPublicKey: senderPublicKey,
-                                                                              script: digilira.smartAccount.script)
-                
+                                                                      fee: fee,
+                                                                      timestamp: timestamp,
+                                                                      senderPublicKey: senderPublicKey,
+                                                                      script: digilira.smartAccount.script)
+        
         queryModel.sign(seed: wallet.seed!)
         let send = NodeService.Query.Transaction.setScript(queryModel)
-
+        
         if initial {
             WavesSDK.shared.services
                 .nodeServices
@@ -233,9 +232,9 @@ class Blockchain: NSObject {
         } else {
             digiliraPay.updateSmartAcountScript(data: send)
         }
-
+        
     }
-     
+    
     func checkBalance(account: NodeService.DTO.AddressScriptInfo) {
         WavesSDK.shared.services
             .nodeServices
@@ -287,7 +286,7 @@ class Blockchain: NSObject {
     }
     
     func getSensitive(pin:Bool) {
-
+        
         if pin {
             self.onSensitive!(getSeed(), "ok")
             return
@@ -303,7 +302,7 @@ class Blockchain: NSObject {
         }
         
         digiliraPay.touchID(reason: "Transferin gerçekleşebilmesi için biometrik onayınız gerekmektedir!")
-   
+        
     }
     
     private func getSeed() -> digilira.wallet {
@@ -328,71 +327,81 @@ class Blockchain: NSObject {
             seed = wavesCrypto.randomSeed()
         }
         
-        let address = wavesCrypto.address(seed: seed, chainId: "T")
-        
-        let username = NSUUID().uuidString
-        
-        let user = digilira.exUser.init(username: username,
-                                   password: uuid,
-                                   wallet: address!,
-                                   imported: imported
-        )
-         
-        
-        digiliraPay.request(rURL: digilira.api.url + "/users/register",
-                            JSON:  try? digiliraPay.jsonEncoder.encode(user),
-                            METHOD: digilira.requestMethod.post
-        ) { (json, statusCode) in
-            DispatchQueue.main.async {
-                
-                try? Locksmith.saveData(data: ["password": uuid, "seed": seed, "username": username], forUserAccount: "sensitive")
-                returnCompletion(address!)
+        if let address = wavesCrypto.address(seed: seed, chainId: "T") {
+            let username = NSUUID().uuidString
+            
+            let user = digilira.exUser.init(username: username,
+                                            password: uuid,
+                                            wallet: address,
+                                            imported: imported
+            )
+            
+            
+            digiliraPay.request(rURL: digilira.api.url + "/users/register",
+                                JSON:  try? digiliraPay.jsonEncoder.encode(user),
+                                METHOD: digilira.requestMethod.post
+            ) { (json, statusCode) in
+                DispatchQueue.main.async {
+                    
+                    do {
+                        try Locksmith.saveData(
+                            data: ["password": uuid,
+                                   "seed": seed,
+                                   "username": username
+                            ],
+                            forUserAccount: "sensitive")
+                    }catch {
+                        returnCompletion("TRY AGAIN")
+                    }
+                    returnCompletion(address)
+                }
             }
-         }
- 
- 
+        }
+        
+        
+        
         
     }
     
- 
+    
 }
 
 
 extension Blockchain: URLSessionDelegate {
-   
-   func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
-       
-       guard let serverTrust = challenge.protectionSpace.serverTrust else {
-           completionHandler(.cancelAuthenticationChallenge, nil);
-           return
-       }
-       
-       if self.isCertificatePinning {
+    
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        
+        guard let serverTrust = challenge.protectionSpace.serverTrust else {
+            completionHandler(.cancelAuthenticationChallenge, nil);
+            return
+        }
+        
+        if self.isCertificatePinning {
             
-           let certificate = SecTrustGetCertificateAtIndex(serverTrust, 0)
-           // SSL Policies for domain name check
-           let policy = NSMutableArray()
-           policy.add(SecPolicyCreateSSL(true, challenge.protectionSpace.host as CFString))
-           
-           //evaluate server certifiacte
-           let isServerTrusted = SecTrustEvaluateWithError(serverTrust, nil)
-           
-           //Local and Remote certificate Data
-           let remoteCertificateData:NSData =  SecCertificateCopyData(certificate!)
-           //let LocalCertificate = Bundle.main.path(forResource: "github.com", ofType: "cer")
-        let pathToCertificate = Bundle.main.path(forResource: digilira.sslPinning.wavesCert, ofType: digilira.sslPinning.fileType)
-           let localCertificateData:NSData = NSData(contentsOfFile: pathToCertificate!)!
-           
-           //Compare certificates
-           if(isServerTrusted && remoteCertificateData.isEqual(to: localCertificateData as Data)){
-               let credential:URLCredential =  URLCredential(trust:serverTrust)
-               print("Certificate pinning is successfully completed")
-               completionHandler(.useCredential,credential)
-           }
-           else{
-               completionHandler(.cancelAuthenticationChallenge,nil)
-           }
-       }
-   }
-   
+            let certificate = SecTrustGetCertificateAtIndex(serverTrust, 0)
+            // SSL Policies for domain name check
+            let policy = NSMutableArray()
+            policy.add(SecPolicyCreateSSL(true, challenge.protectionSpace.host as CFString))
+            
+            //evaluate server certifiacte
+            let isServerTrusted = SecTrustEvaluateWithError(serverTrust, nil)
+            
+            //Local and Remote certificate Data
+            let remoteCertificateData:NSData =  SecCertificateCopyData(certificate!)
+            //let LocalCertificate = Bundle.main.path(forResource: "github.com", ofType: "cer")
+            let pathToCertificate = Bundle.main.path(forResource: digilira.sslPinning.wavesCert, ofType: digilira.sslPinning.fileType)
+            let localCertificateData:NSData = NSData(contentsOfFile: pathToCertificate!)!
+            
+            //Compare certificates
+            if(isServerTrusted && remoteCertificateData.isEqual(to: localCertificateData as Data)){
+                let credential:URLCredential =  URLCredential(trust:serverTrust)
+                print("Certificate pinning is successfully completed")
+                completionHandler(.useCredential,credential)
+            }
+            else{
+                completionHandler(.cancelAuthenticationChallenge,nil)
+            }
+        }
+    }
+    
 }

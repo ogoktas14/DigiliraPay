@@ -14,8 +14,9 @@ import UIKit
 
 class PayTableViewCell: UITableViewCell {
     @IBOutlet weak var prodName: UILabel!
-    @IBOutlet weak var prodPrice: UILabel! 
-    @IBOutlet weak var BGView: UIView! 
+    @IBOutlet weak var prodPrice: UILabel!
+    @IBOutlet weak var BGView: UIView!
+    @IBOutlet weak var discountView: UIView!
  
     
     

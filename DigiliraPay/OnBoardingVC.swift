@@ -18,7 +18,6 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
         nowLetsGo()
     }
     
-    
     func closePinView() {
         self.goMainVC()
     }
@@ -30,7 +29,6 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
     func pinSuccess(res: Bool) {
         self.goMainVC()        
     }
-    
     
     @IBOutlet weak var scrollAreaView: UIView!
     @IBOutlet weak var pinView: UIView!
@@ -61,11 +59,39 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
         digiliraPay.onError = { res, sts in
             DispatchQueue.main.async {
                 
-                let alert = UIAlertController(title: "Bir Hata Oluştu..", message: "Maalesef şu an işleminizi gerçekleştiremiyoruz. Lütfen birazdan tekrar deneyin.", preferredStyle: UIAlertController.Style.alert)
-                alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
-                    exit(1)
-                }))
-                self.present(alert, animated: true, completion: nil)
+                switch sts {
+                
+                case 503:
+                    let alert = UIAlertController(title: "Bir Hata Oluştu", message: "Şu anda hizmet veremiyoruz. Lütfen daha sonra yeniden deneyin.", preferredStyle: .alert)
+                    
+                    alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
+                        exit(1)
+                    }))
+                    self.present(alert, animated: true)
+                    
+                    break;
+                case 400, 404:
+                    
+                    let alert = UIAlertController(title: "Kullanıcı Bulunamadı", message: "Cüzdanınızı içeri aktararak başka bir cihazda açtıysanız bu cihazdan giriş yapamazsınız. Böyle bir işlem yapmadıysanız anahtar kelimelerinizi kullanarak cüzdanınızı yeniden tanımlayabilirsiniz.", preferredStyle: .alert)
+                    
+                    alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
+                        self.letsGoView.isHidden = false
+                        self.importAccountView.isHidden = false
+                    }))
+                    self.present(alert, animated: true)
+                    
+                    break
+                    
+                default:
+                    
+                    let alert = UIAlertController(title: "Bir Hata Oluştu..", message: "Maalesef şu an işleminizi gerçekleştiremiyoruz. Lütfen birazdan tekrar deneyin.", preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
+                        exit(1)
+                    }))
+                    self.present(alert, animated: true, completion: nil)
+                    break
+                    
+                }
             }
         }
         
@@ -73,30 +99,8 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
             
             digiliraPay.onLogin2 = {user, status in
                 DispatchQueue.main.async {
-                    switch  status {
-                    
-                    case 503:
-                        let alert = UIAlertController(title: "Bir Hata Oluştu", message: "Şu anda hizmet veremiyoruz. Lütfen daha sonra yeniden deneyin.", preferredStyle: .alert)
-                        
-                        alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
-                            exit(1)
-                        }))
-                        self.present(alert, animated: true)
-                        
-                        break;
-                    case 400, 404:
-                        
-                        let alert = UIAlertController(title: "Kullanıcı Bulunamadı", message: "Cüzdanınızı içeri aktararak başka bir cihazda açtıysanız bu cihazdan giriş yapamazsınız. Böyle bir işlem yapmadıysanız anahtar kelimelerinizi kullanarak cüzdanınızı yeniden tanımlayabilirsiniz.", preferredStyle: .alert)
-                        
-                        alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
-                            self.letsGoView.isHidden = false
-                            self.importAccountView.isHidden = false
-                        }))
-                        self.present(alert, animated: true)
-                        
-                        break
-                        
-                    case 200:
+                    switch status {
+                        case 200:
                         if user.status == 403 {
                             let alert = UIAlertController(title: "Hata", message: "Hesabınız bloke edilmiştir.", preferredStyle: .alert)
                             
@@ -111,30 +115,30 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
                         
                         self.BC.checkSmart(address: user.wallet)
                         
-                        //openPinView
                         if user.pincode == "-1"
                         {
                             self.goMainVC()
                             return
                         }
                         
-                        let pinView = UIView().loadNib(name: "PinView") as! PinView
-                        pinView.isEntryMode = true
-                        pinView.setCode()
+                        if let pinView = UIView().loadNib(name: "PinView") as? PinView {
+                            pinView.isEntryMode = true
+                            pinView.setCode()
+                            
+                            pinView.delegate = self
+                            
+                            pinView.frame = CGRect(x: 0,
+                                                   y: 0,
+                                                   width: self.view.frame.width,
+                                                   height: self.view.frame.height)
+                            self.view.addSubview(pinView)
+                        }
                         
-                        pinView.delegate = self
-                        
-                        pinView.frame = CGRect(x: 0,
-                                               y: 0,
-                                               width: self.view.frame.width,
-                                               height: self.view.frame.height)
-                        self.view.addSubview(pinView)
                         break
                         
                     default:
                         
                         let alert = UIAlertController(title: "Hata", message: String(status!), preferredStyle: .alert)
-                        
                         alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
                             self.letsGoView.isHidden = false
                             self.importAccountView.isHidden = false
@@ -142,14 +146,9 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
                         self.present(alert, animated: true)
                         break
                     }
-                    
                 }
-                
             }
-            
             digiliraPay.login2()
-            
-
         } else {
             self.letsGoView.isHidden = false
             self.importAccountView.isHidden = false
@@ -190,13 +189,7 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
     }
     
     @objc func onDidReceiveData(_ sender: Notification) {
-        //       // Do what you need, including updating IBOutlets
-        //        let defaults = UserDefaults.standard
-        //        if let savedQR = defaults.object(forKey: "QRARRAY2") as? Data {
-        //            let decoder = JSONDecoder()
-        //            let loadedQR = try? decoder.decode(digilira.QR.self, from: savedQR)
-        //            QR = loadedQR!
-        //        }
+
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle
@@ -235,13 +228,8 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
     
     @objc func letsGO()
     {
-        //        let defaults = UserDefaults.standard
-        //        let dictionary = defaults.dictionaryRepresentation()
-        //        dictionary.keys.forEach { key in
-        //            defaults.removeObject(forKey: key)
-        //        }
-        let versionLegal = UserDefaults.standard.value(forKey: "isLegalView") as? Int
-        let versionTerms = UserDefaults.standard.value(forKey: "isTermsOfUse") as? Int
+        let versionLegal = UserDefaults.standard.value(forKey: "isLegalView")
+        let versionTerms = UserDefaults.standard.value(forKey: "isTermsOfUse")
         
         if versionLegal != nil && versionTerms != nil {
             nowLetsGo()
@@ -255,7 +243,10 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
     func nowLetsGo() {
         let alert = UIAlertController(title: "Lütfen bekleyin", message: "Cüzdanınız oluşturuluyor..", preferredStyle: .alert)
         self.present(alert, animated: true, completion: nil)
-        BC.create(){ (seed) in
+        BC.create(){ (address) in
+            if (address == "TRY AGAIN") {
+                return
+            }
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 alert.dismiss(animated: true, completion: nil)
                 self.performSegue(withIdentifier: "toLetsStartVC", sender: nil)
@@ -392,7 +383,6 @@ class DynamicViewController: UIViewController, LegalDelegate {
     }
     
     override func loadView() {
-        // super.loadView()   // DO NOT CALL SUPER
         showView()
     }
     

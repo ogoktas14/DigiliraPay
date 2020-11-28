@@ -47,32 +47,35 @@ class ShareQRVC: UIViewController {
     }
     
     func shareQRScreen() {
+        
+        if let loadMoneyView =  UIView().loadNib(name: "QRView") as? QRView {
+           loadMoneyView.ticker = ticker
+           loadMoneyView.frame = CGRect(x: 0,
+                                        y: 0,
+                                        width: view.frame.width,
+                                        height: view.frame.height)
+           loadMoneyView.delegate = self
+           mainView.addSubview(loadMoneyView)
+           mainView.isHidden = false
+           mainView.translatesAutoresizingMaskIntoConstraints = true
+        }
          
-        loadMoneyView = UIView().loadNib(name: "QRView") as! QRView
-        loadMoneyView.ticker = ticker
-        loadMoneyView.frame = CGRect(x: 0,
-                                     y: 0,
-                                     width: view.frame.width,
-                                     height: view.frame.height)
-        loadMoneyView.delegate = self
-        mainView.addSubview(loadMoneyView)
-        mainView.isHidden = false
-        mainView.translatesAutoresizingMaskIntoConstraints = true
         
     }
     
     func goNewSendView() {
          
-        sendMoneyView = UIView().loadNib(name: "newSendView") as! newSendView
+        if let sendMoneyView = UIView().loadNib(name: "newSendView") as? newSendView {
+            
+            sendMoneyView.frame = CGRect(x: 0,
+                                         y: 0,
+                                         width: view.frame.width,
+                                         height: view.frame.height)
 
-        sendMoneyView.frame = CGRect(x: 0,
-                                     y: 0,
-                                     width: view.frame.width,
-                                     height: view.frame.height)
-
-        mainView.addSubview(sendMoneyView)
-        mainView.isHidden = false
-        mainView.translatesAutoresizingMaskIntoConstraints = true
+            mainView.addSubview(sendMoneyView)
+            mainView.isHidden = false
+            mainView.translatesAutoresizingMaskIntoConstraints = true
+        }
         
     }
     
@@ -85,33 +88,28 @@ class ShareQRVC: UIViewController {
             
         }
          
-        // Convert the image into png image data
-        let pngImageData = image!.pngData()
+        if let image = image {
+            if let pngImageData = image.pngData() {
+                // Write the png image into a filepath and return the filepath in NSURL
+                if let pngImageURL = pngImageData.dataToFile(fileName:  UUID().uuidString + ".png") {
+                    
+                    // Create the Array which includes the files you want to share
+                    var filesToShare = [Any]()
 
-        // Write the png image into a filepath and return the filepath in NSURL
-        let pngImageURL = pngImageData?.dataToFile(fileName:  UUID().uuidString + ".png")
-
-        // Create the Array which includes the files you want to share
-        var filesToShare = [Any]()
-
-        // Add the path of png image to the Array
-        filesToShare.append(pngImageURL!)
-        
-        // image to share
-
-        
-        let activityViewController = UIActivityViewController(activityItems:filesToShare , applicationActivities: nil)
-        if #available(iOS 13.0, *) {
-            activityViewController.isModalInPresentation = true
-        } else {
-            // Fallback on earlier versions
+                    // Add the path of png image to the Array
+                    filesToShare.append(pngImageURL)
+                    
+                    let activityViewController = UIActivityViewController(activityItems:filesToShare, applicationActivities: nil)
+                    if #available(iOS 13.0, *) {
+                        activityViewController.isModalInPresentation = true
+                    } else {
+                        // Fallback on earlier versions
+                    }
+                    present(activityViewController, animated: true)
+                }
+            }
         }
-        //activityViewController.popoverPresentationController?.sourceView = self
-        
-        present(activityViewController, animated: true)
     }
-    
-    
 }
 
 
@@ -123,18 +121,13 @@ extension ShareQRVC: LoadCoinDelegate
     
     func dismissLoadView() // para yükleme sayfasının gizlenmesi
     {
-//        isShowLoadCoinView = false
-//        sendMoneyBackButton.isHidden = true
-//
-//        UIView.animate(withDuration: 0.3) {
-//            self.qrView.frame.origin.y = self.view.frame.height
-//        }
-//        for subView in self.qrView.subviews
-//        { subView.removeFromSuperview() }
+
     }
     
     func shareQR(image: UIImage?) {
-        popup(image: image!)
+        if let image = image {
+            popup(image: image)
+        }
     }
 }
  

@@ -20,7 +20,7 @@ class TransactionDetailView: UIView
     var originValueLast: CGPoint = CGPoint(x: 0, y: 0)
     
     var transaction:digilira.transfer?
-    var kullanici: digilira.auth = try! secretKeys.userData()
+    var kullanici: digilira.auth?
     let digiliraPay = digiliraPayApi()
 
     
@@ -33,6 +33,21 @@ class TransactionDetailView: UIView
         self.clipsToBounds = true
         self.layer.cornerRadius = 20
         
+        digiliraPay.onError = { res, sts in
+            DispatchQueue.main.async {
+                
+                switch sts {
+                default:
+                    
+                    let alert = UIAlertController(title: "Bir Hata Oluştu..", message: "Maalesef şu an işleminizi gerçekleştiremiyoruz. Lütfen birazdan tekrar deneyin.", preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
+                        exit(1)
+                    }))
+                    break
+                    
+                }
+            }
+        }
         do {
             kullanici = try secretKeys.userData()
         } catch {
@@ -107,44 +122,55 @@ extension TransactionDetailView: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row == 0
         {
-            let cell = UITableViewCell().loadXib(name: "TransactionHistoryDetailCellHeader") as! TransactionHistoryDetailCellHeader
-            
-            if (transaction!.recipient == kullanici.wallet) {cell.cellImage.image = UIImage(named: "tReceive48")}
-            if (transaction!.sender == kullanici.wallet) {cell.cellImage.image = UIImage(named: "tSend48")}
-            
-            cell.cellTitle.text = transaction!.assetId!
-            cell.cellAmount.text = (Double(transaction!.amount) / Double(100000000)).description
-            
-            return cell
+            if let cell = UITableViewCell().loadXib(name: "TransactionHistoryDetailCellHeader") as? TransactionHistoryDetailCellHeader {
+                
+                if let t = transaction {
+                    if let k = kullanici {
+                        if (t.recipient == k.wallet) {cell.cellImage.image = UIImage(named: "tReceive48")}
+                        if (t.sender == k.wallet) {cell.cellImage.image = UIImage(named: "tSend48")}
+                        
+                        cell.cellTitle.text = t.assetId!
+                        cell.cellAmount.text = (Double(t.amount) / Double(100000000)).description
+                    }
+                }
+                return cell
+            }
         }
         else
         {
-            let cell = UITableViewCell().loadXib(name: "TransactionHistoryDetailCellDeatils") as! TransactionHistoryDetailCellDeatils
+            if let cell = UITableViewCell().loadXib(name: "TransactionHistoryDetailCellDeatils") as? TransactionHistoryDetailCellDeatils {
+                
+                
+                if let t = transaction {
+                    switch indexPath.row {
+                        
+                    case 1:
+                        cell.setView(image: UIImage(named: "sendericon")!, title: "Gönderici", detail: t.sender!)
+                    case 2:
+                        cell.setView(image: UIImage(named: "receiveicon")!, title: "Alıcı", detail: t.recipient!)
+                    case 3:
+                        cell.setView(image: UIImage(named: "transactionTime")!, title: "İşlem Zamanı", detail: t.timestamp!)
+                    case 4:
+                            cell.setView(image: UIImage(), title: "İşlem", detail: t.attachment ?? "##" )
+                        let tapped = MyTapGesture.init(target: self, action: #selector(handleTap))
+                            tapped.qrAttachment = t.attachment ?? "##"
+                        cell.addGestureRecognizer(tapped)
+                        
+                        
+                    case 5:
+                        cell.setView(image: UIImage(), title: "Komisyon", detail: "0.00001325 BTC")
+                    default:
+                        break
+                    }
+                    
+                }
+                
+                return cell
             
-            switch indexPath.row {
                 
-            case 1:
-                cell.setView(image: UIImage(named: "sendericon")!, title: "Gönderici", detail: transaction!.sender!)
-            case 2:
-                cell.setView(image: UIImage(named: "receiveicon")!, title: "Alıcı", detail: transaction!.recipient!)
-            case 3:
-                cell.setView(image: UIImage(named: "transactionTime")!, title: "İşlem Zamanı", detail: transaction!.timestamp!)
-            case 4:
-                    cell.setView(image: UIImage(), title: "İşlem", detail: transaction!.attachment ?? "##" )
-                let tapped = MyTapGesture.init(target: self, action: #selector(handleTap))
-                    tapped.qrAttachment = transaction!.attachment ?? "##"
-                cell.addGestureRecognizer(tapped)
-                
-                
-            case 5:
-                cell.setView(image: UIImage(), title: "Komisyon", detail: "0.00001325 BTC")
-            default:
-                break
             }
-            
-            return cell
-        }
+            }
+        return UITableViewCell()
     }
-    
     
 }

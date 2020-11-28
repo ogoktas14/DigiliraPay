@@ -42,14 +42,14 @@
                                 </constraints>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Coy-yY-i8g">
-                                <rect key="frame" x="0.0" y="137" width="414" height="607"/>
+                                <rect key="frame" x="0.0" y="137" width="414" height="566"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="guv-uw-pms">
-                                <rect key="frame" x="146.33333333333334" y="739.66666666666663" width="121.33333333333334" height="27.333333333333371"/>
+                                <rect key="frame" x="146.33333333333334" y="698.66666666666663" width="121.33333333333334" height="27.333333333333371"/>
                             </pageControl>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="am5-Ed-hkq">
-                                <rect key="frame" x="60" y="792.33333333333337" width="294" height="51"/>
+                                <rect key="frame" x="60" y="751.33333333333337" width="294" height="51"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hadi Başlayalım" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rrG-DE-6ga">
                                         <rect key="frame" x="68.666666666666657" y="14" width="157" height="23"/>
@@ -66,7 +66,7 @@
                                 </constraints>
                             </view>
                             <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hesabımı İçeri Aktar" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZJS-5x-J1Z">
-                                <rect key="frame" x="130" y="853.33333333333337" width="154" height="11.666666666666629"/>
+                                <rect key="frame" x="130" y="812.33333333333337" width="154" height="52.666666666666629"/>
                                 <fontDescription key="fontDescription" name="Montserrat-Medium" family="Montserrat" pointSize="15"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -86,7 +86,7 @@
                             <constraint firstItem="am5-Ed-hkq" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="60" id="SUR-Ba-8Sr"/>
                             <constraint firstItem="ZJS-5x-J1Z" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="WE9-k6-v22"/>
                             <constraint firstItem="Coy-yY-i8g" firstAttribute="top" secondItem="CP1-6H-PbS" secondAttribute="bottom" constant="17" id="hcs-do-3Cx"/>
-                            <constraint firstAttribute="bottom" secondItem="guv-uw-pms" secondAttribute="bottom" constant="129" id="j8h-2O-kgz"/>
+                            <constraint firstAttribute="bottom" secondItem="guv-uw-pms" secondAttribute="bottom" constant="170" id="j8h-2O-kgz"/>
                             <constraint firstItem="ZJS-5x-J1Z" firstAttribute="top" secondItem="am5-Ed-hkq" secondAttribute="bottom" constant="10" id="kG8-S7-P0K"/>
                             <constraint firstItem="CP1-6H-PbS" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="31" id="mCS-KE-jvV"/>
                             <constraint firstItem="am5-Ed-hkq" firstAttribute="top" secondItem="Coy-yY-i8g" secondAttribute="bottom" constant="48.333333333333371" id="mdC-nZ-QfR"/>
@@ -571,7 +571,7 @@
 scan, text, view, shape, pool, chapter </string>
                                 <color key="textColor" systemColor="labelColor"/>
                                 <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="17"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
                             </textView>
                             <label opaque="NO" userInteractionEnabled="NO" alpha="0.84999999999999998" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="249" text="kullanarak hesabını içeri aktar." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FgH-Eh-C0B">
                                 <rect key="frame" x="16" y="428.33333333333331" width="382" height="27"/>
@@ -637,7 +637,7 @@ scan, text, view, shape, pool, chapter </string>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="d5S-nY-SlF"/>
+        <segue reference="oyz-da-CHm"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="account" width="20" height="20"/>

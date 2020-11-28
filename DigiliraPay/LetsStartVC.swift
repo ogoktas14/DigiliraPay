@@ -27,14 +27,55 @@ class LetsStartVC: UIViewController {
     let BC = Blockchain()
     
     private func initial() {
-        self.digiliraPay.onLogin2 = { user, status in
+        
+        digiliraPay.onError = { res, sts in
             DispatchQueue.main.async {
-                self.BC.checkSmart(address: user.wallet)
-             }
+                
+                switch sts {
+                
+                case 503:
+                    let alert = UIAlertController(title: "Bir Hata Oluştu", message: "Şu anda hizmet veremiyoruz. Lütfen daha sonra yeniden deneyin.", preferredStyle: .alert)
+                    
+                    alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
+                        exit(1)
+                    }))
+                    self.present(alert, animated: true)
+                    
+                    break;
+                case 400, 404:
+                    
+                    let alert = UIAlertController(title: "Kullanıcı Bulunamadı", message: "Cüzdanınızı içeri aktararak başka bir cihazda açtıysanız bu cihazdan giriş yapamazsınız. Böyle bir işlem yapmadıysanız anahtar kelimelerinizi kullanarak cüzdanınızı yeniden tanımlayabilirsiniz.", preferredStyle: .alert)
+                    
+                    alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
+                    
+                    }))
+                    self.present(alert, animated: true)
+                    
+                    break
+                    
+                default:
+                    
+                    let alert = UIAlertController(title: "Bir Hata Oluştu..", message: "Maalesef şu an işleminizi gerçekleştiremiyoruz. Lütfen birazdan tekrar deneyin.", preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
+                        exit(1)
+                    }))
+                    self.present(alert, animated: true, completion: nil)
+                    break
+                    
+                }
+            }
         }
         
+        self.digiliraPay.onLogin2 = { user, status in
+            DispatchQueue.main.async {
+                if let sts = status {
+                    if sts == 200 {
+                        self.BC.checkSmart(address: user.wallet)
+                    }
+                }
+             }
+        }
         self.digiliraPay.login2()
-  
     }
     
     override func viewDidLoad() {

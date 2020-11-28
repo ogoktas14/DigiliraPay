@@ -17,7 +17,7 @@ import LocalAuthentication
 
 class digiliraPayApi: NSObject {
     private var isCertificatePinning: Bool = true
-
+    
     var token:String?
     
     let jsonEncoder = JSONEncoder()
@@ -28,7 +28,7 @@ class digiliraPayApi: NSObject {
     var onTicker: ((_ result: String)->())?
     var onLogin2: ((_ result: digilira.auth, _ statusCode: Int?)->())?
     var onMember: ((_ result: Bool, _ data: digilira.externalTransaction?)->())?
-     
+    
     var crud = centralRequest()
     
     func request(rURL: String, JSON: Data? = nil,
@@ -63,12 +63,12 @@ class digiliraPayApi: NSObject {
             let httpResponse = response as? HTTPURLResponse
             if error != nil {
                 
-//                print("error: \(error!.localizedDescription): \(error!)")
+                //                print("error: \(error!.localizedDescription): \(error!)")
                 self.onError!("error: \(error!.localizedDescription): \(error!)", 0)
                 
             } else if data != nil {
-  
-                 guard let dataResponse = data,
+                
+                guard let dataResponse = data,
                       error == nil else {
                     print(error?.localizedDescription ?? "Response Error")
                     return }
@@ -83,10 +83,10 @@ class digiliraPayApi: NSObject {
                     returnCompletion([:], httpResponse?.statusCode)
                 }
             }
-      
+            
         }
         task2.resume()
-      
+        
     }
     
     func decodeDefaults<T>(forKey: Data, conformance: T.Type, setNil: Bool = false ) -> T? where T: Decodable  {
@@ -98,7 +98,7 @@ class digiliraPayApi: NSObject {
             return nil
         }
     }
-
+    
     func touchID(reason: String) {
         
         let context = LAContext()
@@ -156,13 +156,13 @@ class digiliraPayApi: NSObject {
         self.isCertificatePinning = true
         
         let task2 = session2.dataTask(with: request) { (data, response, error) in
-
+            
             if error != nil {
-//                print("error: \(error!.localizedDescription): \(error!)")
+                //                print("error: \(error!.localizedDescription): \(error!)")
                 self.onError!("error: \(error!.localizedDescription): \(error!)", 0)
-
+                
             } else if data != nil {
-  
+                
                 do {
                     let json = try JSONSerialization.jsonObject(with: data!) as! Dictionary<String, AnyObject>
                     DispatchQueue.main.async { // Correct
@@ -224,10 +224,10 @@ class digiliraPayApi: NSObject {
                 }
                 
             }
-      
+            
         }
         task2.resume()
-           
+        
     }
     
     func updateUser(user: Data?) {
@@ -253,7 +253,7 @@ class digiliraPayApi: NSObject {
         }
         
         request2(rURL: digilira.api.url + digilira.api.updateScript, JSON: data.data, METHOD: digilira.requestMethod.post, AUTH: true)
-         
+        
     }
     
     func getSymbolTicker(symbol:String) {
@@ -269,7 +269,7 @@ class digiliraPayApi: NSObject {
         request2(rURL: "https://api.binance.com/api/v3/ticker/price?symbol=" + symbol, METHOD: digilira.requestMethod.get)
         
     }
-     
+    
     func request2(rURL: String, JSON: Data? = nil, PARAMS: String = "", METHOD: String, AUTH: Bool = false) {
         
         var request = URLRequest(url: URL(string: rURL)!)
@@ -289,7 +289,7 @@ class digiliraPayApi: NSObject {
             let tokenString = "Bearer " + auth().token
             request.setValue(tokenString, forHTTPHeaderField: "Authorization")
         }
-   
+        
         let session2 = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
         
         self.isCertificatePinning = true
@@ -297,11 +297,11 @@ class digiliraPayApi: NSObject {
         let task2 = session2.dataTask(with: request) { (data, response, error) in
             let httpResponse = response as? HTTPURLResponse
             if error != nil {
-                self.onError!("SSL PINNING MISMATCH", 503)
+                //self.onError!("SSL PINNING MISMATCH", 503)
                 
             } else if data != nil {
-  
-                 guard let dataResponse = data,
+                
+                guard let dataResponse = data,
                       error == nil else {
                     print(error?.localizedDescription ?? "Response Error")
                     return }
@@ -315,18 +315,18 @@ class digiliraPayApi: NSObject {
                     self.onResponse!([:], httpResponse?.statusCode)
                 }
             }
-      
+            
         }
         task2.resume()
-   
+        
         
         
     }
-     
+    
     func isLoggedIn() -> Bool {
         return false
     }
-     
+    
     func setOdemeAliniyor(JSON : Data?) {
         if let json = try! JSONSerialization.jsonObject(with: JSON!, options: []) as? [String: Any] {
             // try to read out a string array
@@ -504,9 +504,9 @@ class digiliraPayApi: NSObject {
             }
         }
         request2(rURL: digilira.api.url + digilira.api.isOurMember, JSON: data, METHOD: digilira.requestMethod.post, AUTH: true)
-         
+        
     }
-     
+    
     func auth() -> digilira.auth {
         let loginCredits = secretKeys.LocksmithLoad(forKey: "authenticate", conformance: digilira.auth.self)
         return loginCredits!
@@ -526,6 +526,11 @@ class digiliraPayApi: NSObject {
     func login2() {
         let loginCredits = secretKeys.LocksmithLoad(forKey: "sensitive", conformance: digilira.login.self)
         
+        if loginCredits == nil {
+            sleep(3)
+            login2()
+        }
+        
         if let json = encode2(jsonData: loginCredits) {
             
             crud.onResponse = { [self] res, sts in
@@ -537,13 +542,19 @@ class digiliraPayApi: NSObject {
                     break;
                     
                 case 400, 404:
-                    onError!("Kullanıcı Bulunamadı", sts)
                     do {
                         try Locksmith.deleteDataForUserAccount(userAccount: "sensitive")
+                    } catch  {
+                        print("error")
+                    }
+                    
+                    do {
                         try Locksmith.deleteDataForUserAccount(userAccount: "authenticate")
                     } catch  {
                         print("error")
                     }
+                    onError!("Kullanıcı Bulunamadı", sts)
+                    
                     break;
                     
                 case 200:                    
@@ -568,7 +579,7 @@ class digiliraPayApi: NSObject {
                                 }
                                 
                             }
-
+                            
                         }
                     }
                     break;
@@ -579,7 +590,7 @@ class digiliraPayApi: NSObject {
                 }
                 
             }
-
+            
             crud.onError = { [self] res, sts in
                 sleep(10)
                 login2()
@@ -589,7 +600,7 @@ class digiliraPayApi: NSObject {
         }
     }
     
- 
+    
     
 }
 
@@ -760,10 +771,10 @@ class OpenUrlManager {
         }
         
     }
-     
+    
     
 }
- 
+
 extension digiliraPayApi: URLSessionDelegate {
     
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
@@ -774,7 +785,7 @@ extension digiliraPayApi: URLSessionDelegate {
         }
         
         if self.isCertificatePinning {
-             
+            
             let certificate = SecTrustGetCertificateAtIndex(serverTrust, 0)
             // SSL Policies for domain name check
             let policy = NSMutableArray()
@@ -807,7 +818,7 @@ class Utility {
     
     class func checkDeviceLockState(completion: @escaping (DeviceLockState) -> Void) {
         
-       DispatchQueue.main.async {
+        DispatchQueue.main.async {
             if UIApplication.shared.isProtectedDataAvailable {
                 completion(.unlocked)
             } else {
@@ -845,45 +856,46 @@ class secretKeys: NSObject {
     }
     
     class func LocksmithLoad<T>(forKey: String, conformance: T.Type, setNil: Bool = false) -> T? where T: Decodable  {
-         
         if let dictionary = Locksmith.loadDataForUserAccount(userAccount: forKey) {
-            
-            let jsonData = try! JSONSerialization.data(withJSONObject: dictionary, options: [])
-            
-            do{
-                let structData = try JSONDecoder().decode(conformance, from: jsonData)
-                return structData
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: dictionary, options: [])
+                do{
+                    let structData = try JSONDecoder().decode(conformance, from: jsonData)
+                    return structData
+                } catch let parsingError {
+                    print("Error", parsingError)
+                    return nil
+                }
                 
-            } catch let parsingError {
-                print("Error", parsingError)
+            } catch {
+                print("Error")
                 return nil
             }
         }
         return nil
     }
     
-    
     class func LocksmithSave(forKey: String, data: Data, setNil: Bool = false) -> Bool {
-                 
+        
         if Locksmith.loadDataForUserAccount(userAccount: forKey) != nil {
             do{
                 try Locksmith.deleteDataForUserAccount(userAccount: String(forKey))
             } catch let parsingError {
                 print("Error", parsingError)
-                return false
             }
         }
-            do{
-                let jsonResponse = try JSONSerialization.jsonObject(with: data) as! Dictionary<String, AnyObject>
-                try Locksmith.saveData(data: jsonResponse, forUserAccount: String(forKey))
-                return true
-            } catch let parsingError {
-                print("Error", parsingError)
-                return false
-            }
+        
+        do{
+            let jsonResponse = try JSONSerialization.jsonObject(with: data) as! Dictionary<String, AnyObject>
+            try Locksmith.saveData(data: jsonResponse, forUserAccount: String(forKey))
+            return true
+        } catch let parsingError {
+            print("Error", parsingError)
+            return false
+        }
         
     }
-
+    
 }
 
 
@@ -933,7 +945,7 @@ class centralRequest: NSObject {
                               error == nil else {
                             self.onError!(error!.localizedDescription, httpResponse.statusCode)
                             return }
-
+                        
                         self.onResponse!(dataResponse, httpResponse.statusCode)
                     }
                 }
@@ -943,7 +955,7 @@ class centralRequest: NSObject {
     }
     
 }
-    
+
 
 extension centralRequest: URLSessionDelegate {
     
@@ -956,7 +968,7 @@ extension centralRequest: URLSessionDelegate {
         }
         
         if self.isCertificatePinning {
-             
+            
             let certificate = SecTrustGetCertificateAtIndex(serverTrust, 0)
             // SSL Policies for domain name check
             let policy = NSMutableArray()

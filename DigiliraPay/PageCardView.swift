@@ -22,16 +22,18 @@ class PageCardView: UIView {
     
     var balanceCardView = BalanceCard()
     let generator = UINotificationFeedbackGenerator()
-
+    
     weak var delegate: PageCardViewDeleGate?
     var Filtered: [digilira.DigiliraPayBalance] = []
     let digiliraPay = digiliraPayApi()
     let BC = Blockchain()
-
+    
+    var shoppingCart: [digilira.shoppingCart] = []
+    
     var Ticker: binance.BinanceMarketInfo = []
     let binanceAPI = binance()
     var ticker: digilira.ticker?
-
+    
     var Order: digilira.order?
     var currentPage: Int = 0
     
@@ -56,7 +58,7 @@ class PageCardView: UIView {
     
     
     override func awakeFromNib() {
- 
+        
         
         setShad(view: totalPrice)
         setShad(view: products)
@@ -77,7 +79,7 @@ class PageCardView: UIView {
         
         leftSwipe.direction = .left
         rightSwipe.direction = .right
-
+        
         scrollAreaView.addGestureRecognizer(leftSwipe)
         scrollAreaView.addGestureRecognizer(rightSwipe)
         
@@ -114,18 +116,18 @@ class PageCardView: UIView {
                 shake()
             }
         }
-
+        
         if sender.direction == .left
         {
             if pageControl.currentPage < Filtered.count - 1 {
-                    pageControl.currentPage += 1
-                    currentPage += 1
-                    changePage(pageControl)
+                pageControl.currentPage += 1
+                currentPage += 1
+                changePage(pageControl)
                 generator.notificationOccurred(.success)
-                } else {
-                    shake()
-                    generator.notificationOccurred(.error)
-                }
+            } else {
+                shake()
+                generator.notificationOccurred(.error)
+            }
         }
     }
     
@@ -166,26 +168,26 @@ class PageCardView: UIView {
             
             object.layer.insertSublayer(btnGradient, at: 0)
         }
-
+        
         object.layer.masksToBounds = true
         object.layer.cornerRadius = 20
-
+        
     }
     
     func setCoinCard(scrollViewSize: UIView, layer: CGFloat, coin:digilira.DigiliraPayBalance) -> UIView {
         balanceCardView = UIView().loadNib(name: "BalanceCard") as! BalanceCard
         let ticker = digiliraPay.ticker(ticker: Ticker)
-  
+        
         if let order = Order {
             if let fiyat = order.totalPrice {
                 let (amount, asset, tlfiyat) = digiliraPay.ratePrice(price: fiyat, asset: coin.tokenName, symbol: ticker)
-                 
+                
                 balanceCardView.setView(desc: coin.tokenName,
                                         tl: MainScreen.df2so(tlfiyat),
                                         amount: MainScreen.int2so(coin.availableBalance),
                                         price: MainScreen.int2so(Int64(amount)),
                                         symbol: coin.tokenName)
-
+                
                 
                 if coin.availableBalance >= (Int64(amount)) {
                     Order?.asset = asset
@@ -220,7 +222,7 @@ class PageCardView: UIView {
         let color1 = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0) /* #000000 */
         let color2 = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1.0) /* #333333 */
         gradient.colors = [color1.cgColor, color2.cgColor]
-
+        
         balanceCardView.layer.insertSublayer(gradient, at: 0)
         
         return balanceCardView
@@ -229,7 +231,7 @@ class PageCardView: UIView {
     
     func setTableView()
     {
-         
+        
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.frame = CGRect(x: 0,
                                  y: 0,
@@ -240,7 +242,7 @@ class PageCardView: UIView {
         tableView.dataSource = self
         
         products.addSubview(tableView)
-         
+        
         if Filtered.count != 0 { 
             if Filtered.count >= currentPage {
                 scrollAreaView.addSubview(setCoinCard(scrollViewSize: scrollAreaView, layer: 0, coin: Filtered[currentPage]))
@@ -248,84 +250,41 @@ class PageCardView: UIView {
         } else {
             payButton.isHidden = true
         }
-
+        
         
         
     }
     
 }
-
-
-extension PageCardView: UIScrollViewDelegate
-{
-    func setScrollView()
-    {
-//        onBoardingScrollView.translatesAutoresizingMaskIntoConstraints = false
-//        onBoardingScrollView.delegate = self
-//        onBoardingScrollView.frame = CGRect(x: 0,
-//                                            y: 0,
-//                                            width: scrollAreaView.frame.width,
-//                                            height: scrollAreaView.frame.height)
-//
-//        scrollAreaView.addSubview(onBoardingScrollView)
-//
-//        balanceCardView = UIView().loadNib(name: "BalanceCard") as! BalanceCard
-//
-//        onBoardingScrollView.addSubview(setCoinCard(scrollViewSize: scrollAreaView, layer: 0))
-//        onBoardingScrollView.addSubview(setCoinCard(scrollViewSize: scrollAreaView, layer: 1))
-//        onBoardingScrollView.addSubview(setCoinCard(scrollViewSize: scrollAreaView, layer: 2))
-//
-//        onBoardingScrollView.contentSize = CGSize(width: scrollAreaView.frame.width * 3,
-//                                                  height: scrollAreaView.frame.height)
-//
-//
-//        onBoardingScrollView.showsVerticalScrollIndicator = false
-//        onBoardingScrollView.showsHorizontalScrollIndicator = false
-//        onBoardingScrollView.isPagingEnabled = true
-//
-//        onBoardingScrollView.translatesAutoresizingMaskIntoConstraints = false
-//
-//
-//
-
-
-
-    }
-
-    func scrollViewDidScroll(_ scrollView: UIScrollView)
-    {
-        switch scrollView.contentOffset.x
-        {
-        case 0:
-            pageControl.currentPage = 0
-        case scrollView.frame.width:
-            pageControl.currentPage = 1
-        case scrollView.frame.width * 2:
-            pageControl.currentPage = 2
-        default:
-            break
-        }
-    }
-}
-
 
 extension PageCardView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let order = Order {
             if let products = order.products {
-                if  order.order_shipping != nil {
-                    return products.count + 1
+                for product in products {
+                    if let productName = product.order_pname {
+                        if let productPrice = product.order_price {
+                            shoppingCart.append(digilira.shoppingCart.init(label: productName, price: productPrice, mode: 1))
+                            
+                        }
+                    }
                 }
-                return products.count
+                
+                if  let kargo = order.order_shipping {
+                    shoppingCart.append(digilira.shoppingCart.init(label: "Kargo Ücreti", price: kargo, mode: 1))
+                }
+                
+                if  let total = order.totalPrice {
+                    shoppingCart.append(digilira.shoppingCart.init(label: "Toplam", price: total, mode: 2))
+                }
             }
         }
         
-        
-        return 0
+        return shoppingCart.count
     }
     
     @objc func handleTap(recognizer: MyTapGesture) {
-       
+        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -335,25 +294,20 @@ extension PageCardView: UITableViewDelegate, UITableViewDataSource {
             
             tapped.floatValue = indexPath[1]
             cell.addGestureRecognizer(tapped)
-              
-            if let order = Order {
-                if let products = order.products {
-                    if indexPath[1] > products.count - 1 {
-                        if let shipping = order.order_shipping {
-                            cell.prodName.text = "Kargo Ücreti"
-                            cell.prodPrice.text = "₺" + MainScreen.df2so(shipping)
-                        }
-                    } else {
-                        let product = products[indexPath[1]]
-                        
-                        cell.prodName.text = product.order_pname
-                        if let fiyat = product.order_price {
-                            cell.prodPrice.text = "₺" + MainScreen.df2so(fiyat)
-                    }
- 
-                    }
-
-                }
+            
+            cell.prodName.text = shoppingCart[indexPath[1]].label
+            cell.prodPrice.text = "₺" + MainScreen.df2so(shoppingCart[indexPath[1]].price)
+            
+            
+            switch shoppingCart[indexPath[1]].mode {
+            case 2:
+                cell.BGView.backgroundColor = .systemGreen
+                break
+            case -1:
+                cell.discountView.isHidden = false
+                break
+            default:
+                cell.BGView.backgroundColor = .clear
             }
             return cell
             
