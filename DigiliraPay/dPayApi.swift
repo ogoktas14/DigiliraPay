@@ -402,23 +402,40 @@ class digiliraPayApi: NSObject {
         return res
     }
     
-    func ratePrice(price: Double, asset: String, symbol: digilira.ticker) -> (Double, String) {
+    func ratePrice(price: Double, asset: String, symbol: digilira.ticker) -> (Double, String, Double) {
         let digits: Double = 100000000
         switch asset {
         case digilira.bitcoin.tokenName:
-            let result = price / (symbol.btcUSDPrice! * symbol.usdTLPrice!)
-            return (Double(round(digits * result)), digilira.bitcoin.token)
+            
+            if let tl = symbol.usdTLPrice {
+                if let btc = symbol.btcUSDPrice {
+                    let tick = (btc * tl)
+                    let result = price / tick
+                    return (Double(round(digits * result)), digilira.bitcoin.token, tick)
+                }
+            }
         case digilira.ethereum.tokenName:
-            let result = price / (symbol.ethUSDPrice! * symbol.usdTLPrice!)
-            return (Double(round(digits * result)), digilira.ethereum.token)
+            if let tl = symbol.usdTLPrice {
+                if let eth = symbol.ethUSDPrice {
+                    let tick = (eth * tl)
+                    let result = price / tick
+                    return (Double(round(digits * result)), digilira.ethereum.token, tick)
+                }
+            }
         case digilira.waves.tokenName:
-            let result = price / (symbol.wavesUSDPrice! * symbol.usdTLPrice!)
-            return (Double(round(digits * result)), digilira.waves.token)
+            if let tl = symbol.usdTLPrice {
+                if let waves = symbol.wavesUSDPrice {
+                    let tick = (waves * tl)
+                    let result = price / tick
+                    return (Double(round(digits * result)), digilira.waves.token, tick)
+                }
+            }
         case digilira.charity.tokenName:
-            return (price * 100000000, digilira.charity.token)
+            return (price * 100000000, digilira.charity.token, 1)
         default:
-            return (0.0, "TL")
+            return (0.0, "TL", 0)
         }
+        return (0.0, "TL", 0)
     }
     
     func exchange(amount: Int64, network: String, assetId:String, symbol:digilira.ticker) -> Double {
@@ -523,6 +540,7 @@ class digiliraPayApi: NSObject {
                     onError!("Kullanıcı Bulunamadı", sts)
                     do {
                         try Locksmith.deleteDataForUserAccount(userAccount: "sensitive")
+                        try Locksmith.deleteDataForUserAccount(userAccount: "authenticate")
                     } catch  {
                         print("error")
                     }

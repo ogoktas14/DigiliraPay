@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Locksmith
 
 class ImportAccountVC: UIViewController {
 
@@ -20,6 +21,16 @@ class ImportAccountVC: UIViewController {
     
     var isKeyboard = false
     
+    @IBAction func resettt(_ sender: Any) {
+        try? Locksmith.deleteDataForUserAccount(userAccount: "sensitive")
+        try? Locksmith.deleteDataForUserAccount(userAccount: "authenticate")
+
+        let defaults = UserDefaults.standard
+        let dictionary = defaults.dictionaryRepresentation()
+        dictionary.keys.forEach { key in
+            defaults.removeObject(forKey: key)
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         if #available(iOS 13.0, *) {
@@ -71,6 +82,17 @@ class ImportAccountVC: UIViewController {
     {
         let alert = UIAlertController(title: "Lütfen bekleyin", message: "Cüzdanınız içeri aktarılıyor..", preferredStyle: .alert)
         self.present(alert, animated: true, completion: nil)
+        
+        digiliraPay.onError = { res, sts in
+            DispatchQueue.main.async {
+                
+                let alert = UIAlertController(title: "Bir Hata Oluştu..", message: "Maalesef şu an işleminizi gerçekleştiremiyoruz. Lütfen birazdan tekrar deneyin.", preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
+                    exit(1)
+                }))
+                self.present(alert, animated: true, completion: nil)
+            }
+        }
         
         BC.create(imported: true, importedSeed: keyWordsTextView.text) { (seed) in
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {

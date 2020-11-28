@@ -59,7 +59,7 @@ class Blockchain: NSObject {
             guard WavesCrypto.shared.address(seed: wallet.seed!, chainId: chainId) != nil else { return }
         guard let senderPublicKey = WavesCrypto.shared.publicKey(seed: wallet.seed!) else { return }
 
-            let feeAssetId = ""
+        let feeAssetId = digilira.sponsorToken
             let buf: [UInt8] = Array(attachment.utf8)
             let attachment58 = WavesCrypto.shared.base58encode(input: buf)
             let timestamp = Int64(Date().timeIntervalSince1970) * 1000
@@ -67,7 +67,7 @@ class Blockchain: NSObject {
             var queryModel = NodeService.Query.Transaction.Transfer(recipient: recipient,
                                                                   assetId: assetId,
                                                                   amount: amount,
-                                                                  fee: fee,
+                                                                  fee: 9,
                                                                   attachment: attachment58!,
                                                                   feeAssetId: feeAssetId,
                                                                   timestamp: timestamp,
@@ -98,6 +98,7 @@ class Blockchain: NSObject {
         guard let senderPublicKey = WavesCrypto.shared.publicKey(seed: wallet.seed!) else { return }
         
         let fee: Int64 = fee
+        let feeAssetId: String = digilira.sponsorToken
         let timestamp = Int64(Date().timeIntervalSince1970) * 1000
 
         var queryModel = NodeService.Query.Transaction.MassTransfer.init(chainId: chainId,

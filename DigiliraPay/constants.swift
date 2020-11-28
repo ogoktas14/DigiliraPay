@@ -89,6 +89,10 @@ struct digilira {
          var network: String
     }
     
+    static var sponsorToken = "7GnHzTaDe3YbDiCD9rueHiSfPB7hdanPpN4Ab79fJGtD"
+    static var sponsorTokenFee:Int64 = 9
+    static var sponsorTokenFeeMass:Int64 = 1100000
+    
     static var bitcoin = coin.init(token: "FjTB2DdymTfpYbCCdcFwoRbHQnEhQD11CUm6nAF7P1UD",
                             symbol: "BTC",
                             tokenName: "Bitcoin",

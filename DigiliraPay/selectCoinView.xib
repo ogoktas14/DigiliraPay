@@ -37,14 +37,11 @@
                     <rect key="frame" x="0.0" y="148" width="414" height="714"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3X7-xZ-FQT">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="300"/>
+                            <rect key="frame" x="0.0" y="100" width="414" height="571"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="300" id="XSz-Mi-tkM"/>
-                            </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w4j-tr-BKP">
-                            <rect key="frame" x="0.0" y="320" width="414" height="100"/>
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="100"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="100" id="Lbd-oM-CSZ"/>
@@ -54,12 +51,13 @@
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="3X7-xZ-FQT" firstAttribute="trailing" secondItem="xxU-AY-NbD" secondAttribute="trailing" id="4QP-FW-YJV"/>
-                        <constraint firstItem="3X7-xZ-FQT" firstAttribute="top" secondItem="xxU-AY-NbD" secondAttribute="top" id="6QK-ox-GJ2"/>
+                        <constraint firstItem="3X7-xZ-FQT" firstAttribute="top" secondItem="w4j-tr-BKP" secondAttribute="bottom" id="6QK-ox-GJ2"/>
                         <constraint firstItem="w4j-tr-BKP" firstAttribute="trailing" secondItem="xxU-AY-NbD" secondAttribute="trailing" id="AsA-mD-Qaf"/>
-                        <constraint firstItem="w4j-tr-BKP" firstAttribute="top" secondItem="3X7-xZ-FQT" secondAttribute="bottom" constant="20" id="BIp-id-9qq"/>
-                        <constraint firstAttribute="bottom" secondItem="w4j-tr-BKP" secondAttribute="bottom" constant="20" id="Ih0-Pe-2Cc"/>
+                        <constraint firstItem="w4j-tr-BKP" firstAttribute="top" secondItem="xxU-AY-NbD" secondAttribute="top" id="BIp-id-9qq"/>
                         <constraint firstItem="3X7-xZ-FQT" firstAttribute="leading" secondItem="xxU-AY-NbD" secondAttribute="leading" id="OGW-bW-DPa"/>
+                        <constraint firstAttribute="bottom" secondItem="3X7-xZ-FQT" secondAttribute="bottom" id="Yuk-S2-IfW"/>
                         <constraint firstItem="w4j-tr-BKP" firstAttribute="leading" secondItem="xxU-AY-NbD" secondAttribute="leading" id="qBu-AL-Dvi"/>
+                        <constraint firstItem="3X7-xZ-FQT" firstAttribute="height" secondItem="xxU-AY-NbD" secondAttribute="height" multiplier="0.8" id="rFI-SJ-MDf"/>
                         <constraint firstItem="3X7-xZ-FQT" firstAttribute="width" secondItem="xxU-AY-NbD" secondAttribute="width" id="zO6-oX-9Fg"/>
                     </constraints>
                 </scrollView>

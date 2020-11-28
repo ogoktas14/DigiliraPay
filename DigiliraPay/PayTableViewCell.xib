@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="0.0" focusStyle="custom" rowHeight="67" id="peH-Wf-gb3" customClass="PayTableViewCell" customModule="DigiliraPAY" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="378" height="67"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="peH-Wf-gb3" id="eUw-qi-Sb7">
+                <rect key="frame" x="0.0" y="0.0" width="378" height="67"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hFG-hZ-8lP">
+                        <rect key="frame" x="0.0" y="0.0" width="378" height="40"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Semaver" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aXv-E5-Y25">
+                                <rect key="frame" x="20" y="7" width="73" height="26"/>
+                                <fontDescription key="fontDescription" name="Avenir-Light" family="Avenir" pointSize="19"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="₺129.90" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wUk-6N-Ykj">
+                                <rect key="frame" x="289" y="7" width="69" height="26"/>
+                                <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="19"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="aXv-E5-Y25" firstAttribute="centerY" secondItem="hFG-hZ-8lP" secondAttribute="centerY" id="36b-Z3-Tev"/>
+                            <constraint firstAttribute="trailing" secondItem="wUk-6N-Ykj" secondAttribute="trailing" constant="20" id="LSy-Fm-PGO"/>
+                            <constraint firstItem="wUk-6N-Ykj" firstAttribute="centerY" secondItem="aXv-E5-Y25" secondAttribute="centerY" id="U1g-ID-Lhp"/>
+                            <constraint firstItem="aXv-E5-Y25" firstAttribute="leading" secondItem="hFG-hZ-8lP" secondAttribute="leading" constant="20" id="g2u-fL-4Cc"/>
+                            <constraint firstAttribute="height" constant="40" id="qgV-pX-igy"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="hFG-hZ-8lP" firstAttribute="top" secondItem="eUw-qi-Sb7" secondAttribute="top" id="0ZQ-Du-lOf"/>
+                    <constraint firstAttribute="bottom" secondItem="hFG-hZ-8lP" secondAttribute="bottom" id="8ke-x1-JcC"/>
+                    <constraint firstItem="hFG-hZ-8lP" firstAttribute="leading" secondItem="eUw-qi-Sb7" secondAttribute="leading" id="PCx-k0-duZ"/>
+                    <constraint firstAttribute="trailing" secondItem="hFG-hZ-8lP" secondAttribute="trailing" id="toR-YE-Kud"/>
+                </constraints>
+            </tableViewCellContentView>
+            <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+            <connections>
+                <outlet property="BGView" destination="hFG-hZ-8lP" id="YDw-FB-mge"/>
+                <outlet property="prodName" destination="aXv-E5-Y25" id="lM1-Aa-5ui"/>
+                <outlet property="prodPrice" destination="wUk-6N-Ykj" id="lvI-Oi-5eN"/>
+            </connections>
+            <point key="canvasLocation" x="-437.68115942028987" y="29.129464285714285"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

@@ -46,7 +46,7 @@ class WalletOperationButtonSView: UIView {
             recipient: "",
             assetId: "",
             amount: 0,
-            fee: 900000,
+            fee: digilira.sponsorTokenFee,
             fiat: 0,
             attachment: "",
             network: "")

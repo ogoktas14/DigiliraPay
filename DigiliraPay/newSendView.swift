@@ -103,7 +103,7 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
                                                recipient: (data?.wallet)!,
                                                assetId: data?.assetId!,
                                                amount: data?.amount!,
-                                               fee: 900000,
+                                               fee: digilira.sponsorTokenFee,
                                                fiat: self.price * 100000000,
                                                attachment: data?.message,
                                                network: data?.network!,

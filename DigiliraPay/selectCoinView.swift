@@ -142,8 +142,8 @@ extension selectCoinView: UITableViewDataSource {
     @objc func handleTap(recognizer: MyTapGesture) {
         if let price = Order?.totalPrice {
             if let ticky = ticker  {
-                let (amount, asset) = digiliraPay.ratePrice(price: price, asset: recognizer.assetName, symbol: ticky)
-                print(amount, asset)
+                let (amount, asset, tick) = digiliraPay.ratePrice(price: price, asset: recognizer.assetName, symbol: ticky)
+                print(tick)
                 let balance = Filtered[recognizer.floatValue].availableBalance
                 self.Order?.asset = asset
                 if balance < (Int64(amount)) {

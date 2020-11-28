@@ -28,3 +28,9 @@ protocol SelectCoinViewDelegate: class {
     func dismissNewSend(params: digilira.order)
     func selectCoin(params: String)
 }
+
+protocol PageCardViewDeleGate: class {
+    func cancel1(id: String)
+    func dismissNewSend1(params: digilira.order)
+    func selectCoin1(params: String)
+}

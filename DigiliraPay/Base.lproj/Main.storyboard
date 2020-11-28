@@ -578,6 +578,14 @@ scan, text, view, shape, pool, chapter </string>
                                 <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="22"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jah-iO-WX1">
+                                <rect key="frame" x="46" y="82" width="71" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Reset App"/>
+                                <connections>
+                                    <action selector="resettt:" destination="5w0-24-Llf" eventType="touchUpInside" id="FEk-1x-7Ay"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="FRw-ng-cso"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -629,7 +637,7 @@ scan, text, view, shape, pool, chapter </string>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="oyz-da-CHm"/>
+        <segue reference="d5S-nY-SlF"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="account" width="20" height="20"/>

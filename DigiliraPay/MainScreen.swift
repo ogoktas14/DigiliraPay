@@ -58,6 +58,7 @@ class MainScreen: UIViewController {
     let imagePicker = UIImagePickerController()
     var newSendMoneyView = newSendView()
     var selectCoin = selectCoinView()
+    var pageCardView = PageCardView()
     var bitexenAPIView = BitexenAPIView()
 
     var tapProfileMenuGesture = UITapGestureRecognizer()
@@ -495,6 +496,18 @@ class MainScreen: UIViewController {
             return numberFormatter.string(from: price as NSNumber)!
         }
     
+    static func int2so(_ price: Int64, digits: Int = 8) -> String{
+            let double = Double(price) / Double(100000000)
+            let numberFormatter = NumberFormatter()
+            numberFormatter.groupingSeparator = "."
+            numberFormatter.groupingSize = 3
+            numberFormatter.usesGroupingSeparator = true
+            numberFormatter.decimalSeparator = ","
+            numberFormatter.numberStyle = .decimal
+            numberFormatter.maximumFractionDigits = digits
+            return numberFormatter.string(from: double as NSNumber)!
+        }
+    
     func setHeaderTotal() {
         headerTotal.text = "₺" + MainScreen.df2so(totalBalance)
     }
@@ -583,7 +596,18 @@ class MainScreen: UIViewController {
             break
         default:
             digiliraPay.onGetOrder = { res in
-                self.goSelectCoinView(ORDER: res)
+                //self.goSelectCoinView(ORDER: res)
+                let odeme = digilira.odemeStatus.init(
+                    id: res._id,
+                    status: "1",
+                    name: self.kullanici.firstName,
+                    surname: self.kullanici.lastName
+                )
+                
+                self.digiliraPay.setOdemeAliniyor(JSON: try? self.digiliraPay.jsonEncoder.encode(odeme))
+                
+                self.goPageCardView(ORDER: res)
+
                 //self.sendQR(ORDER: res)
                 
             }
@@ -1746,7 +1770,7 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
                     
                     switch params.destination {
                     case digilira.transactionDestination.domestic:
-                        BC.sendTransaction2(recipient: params.recipient!, fee: 900000, amount: params.amount!, assetId: params.assetId!, attachment: params.attachment!, wallet:wallet)
+                        BC.sendTransaction2(recipient: params.recipient!, fee: digilira.sponsorTokenFee, amount: params.amount!, assetId: params.assetId!, attachment: params.attachment!, wallet:wallet)
                         break
                     case digilira.transactionDestination.foreign:
                         print(params)
@@ -2071,6 +2095,39 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
     }
     
     
+    func goPageCardView(ORDER: digilira.order) {
+        
+        pageCardView = UIView().loadNib(name: "PageCardView") as! PageCardView
+        pageCardView.frame.origin.y = self.view.frame.height
+        pageCardView.frame = CGRect(x: 0,
+                                        y: 0,
+                                        width: view.frame.width,
+                                        height: view.frame.height)
+        pageCardView.delegate = self
+        pageCardView.Filtered = self.Filtered
+        pageCardView.Ticker = Ticker
+        pageCardView.Order = ORDER
+
+        for subView in sendWithQRView.subviews
+        { subView.removeFromSuperview() }
+        
+        menuXib.isHidden = true
+        
+        sendWithQRView.addSubview(pageCardView)
+
+//        pageCardView.setScrollView()
+//        pageCardView.setTableView()
+        sendWithQRView.isHidden = false
+        sendWithQRView.translatesAutoresizingMaskIntoConstraints = true
+        
+        UIView.animate(withDuration: 0.3)
+        {
+            self.sendWithQRView.frame.origin.y = 0
+            self.sendWithQRView.alpha = 1
+        }
+        
+    }
+    
     
     func goSelectCoinView(ORDER: digilira.order) {
         
@@ -2277,7 +2334,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
                                            recipient: (data?.wallet)!,
                                            assetId: data?.assetId!,
                                            amount: data?.amount!,
-                                           fee: 900000,
+                                           fee: digilira.sponsorTokenFee,
                                            fiat: exchange,
                                            attachment: data?.message,
                                            network: data?.network!,
@@ -2326,7 +2383,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
                                 recipient: ORDER.wallet,
                                 assetId: ORDER.asset!,
                                 amount: ORDER.rate,
-                                fee: 900000,
+                                fee: digilira.sponsorTokenFee,
                                 fiat: ORDER.totalPrice!,
                                 attachment: ORDER._id,
                                 network: digilira.transactionDestination.domestic,
@@ -2573,6 +2630,64 @@ extension Notification.Name {
     static let orderClick = Notification.Name("orderClick")
 }
 
+
+extension MainScreen: PageCardViewDeleGate
+{
+    func cancel1(id: String) {
+        fetch()
+        isNewSendScreen = false
+        menuXib.isHidden = false
+        
+        UIView.animate(withDuration: 0.3) {
+            self.sendWithQRView.frame.origin.y = self.view.frame.height
+        }
+        for subView in self.sendWithQRView.subviews
+        { subView.removeFromSuperview() }
+        
+        let odeme = digilira.odemeStatus.init(
+            id: id,
+            status: "5"
+        )
+        
+        self.digiliraPay.setOdemeAliniyor(JSON: try? self.digiliraPay.jsonEncoder.encode(odeme))
+        
+    }
+    func dismissNewSend1(params: digilira.order) {
+        fetch()
+        isNewSendScreen = false
+        menuXib.isHidden = false
+        
+        UIView.animate(withDuration: 0.3) {
+            self.sendWithQRView.frame.origin.y = self.view.frame.height
+        }
+        for subView in self.sendWithQRView.subviews
+        { subView.removeFromSuperview() }
+         
+        let data = SendTrx.init(merchant: params.merchant,
+                                recipient: params.wallet,
+                                assetId: params.asset!,
+                                amount: params.rate,
+                                fee: digilira.sponsorTokenFee,
+                                fiat: params.totalPrice!,
+                                attachment: params._id,
+                                network: digilira.transactionDestination.domestic,
+                                destination: digilira.transactionDestination.domestic,
+                                products: params.products
+        )
+        
+        sendCoinNew(params: data)
+        
+        
+        
+        
+    }
+    
+    func selectCoin1(params: String) {
+        print(params)
+    }
+     
+}
+
 extension MainScreen: SelectCoinViewDelegate
 {
     func cancel() {
@@ -2604,9 +2719,7 @@ extension MainScreen: SelectCoinViewDelegate
     func selectCoin(params: String) {
         print(params)
     }
-    
-    
-    
+     
 }
 
 extension MainScreen: NewCoinSendDelegate
@@ -2638,14 +2751,14 @@ extension MainScreen: NewCoinSendDelegate
                     self.dismissNewSend()
                     switch params.destination {
                     case digilira.transactionDestination.domestic:
-                        BC.sendTransaction2(recipient: params.recipient!, fee: 900000, amount: params.amount!, assetId: params.assetId!, attachment: params.attachment!, wallet:wallet)
+                        BC.sendTransaction2(recipient: params.recipient!, fee: digilira.sponsorTokenFee, amount: params.amount!, assetId: params.assetId!, attachment: params.attachment!, wallet:wallet)
                         break
                     case digilira.transactionDestination.foreign:
-                        BC.massTransferTx(recipient: params.recipient!, fee: 1100000, amount: params.amount!, assetId: params.assetId!, attachment: "", wallet: wallet)
+                        BC.massTransferTx(recipient: params.recipient!, fee: digilira.sponsorTokenFeeMass, amount: params.amount!, assetId: params.assetId!, attachment: "", wallet: wallet)
                         print(params)
                         break
                     case digilira.transactionDestination.interwallets:
-                        BC.massTransferTx(recipient: params.recipient!, fee: 1100000, amount: params.amount!, assetId: params.assetId!, attachment: "", wallet: wallet)
+                        BC.massTransferTx(recipient: params.recipient!, fee: digilira.sponsorTokenFeeMass, amount: params.amount!, assetId: params.assetId!, attachment: "", wallet: wallet)
                         print(params)
                         break
                     default:
