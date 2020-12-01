@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -22,9 +23,6 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="QRViewBG" translatesAutoresizingMaskIntoConstraints="NO" id="KOr-Vk-BMF">
-                    <rect key="frame" x="0.0" y="-33" width="414" height="962"/>
-                </imageView>
                 <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4lF-sD-jAI">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                     <subviews>
@@ -32,10 +30,10 @@
                             <rect key="frame" x="20" y="408" width="374" height="51.5"/>
                             <string key="text">Yukarıda gösterildiği gibi kimliğinizin ön yüzü gözükecek biçimde boş bir kağıda günün tarihini ve DigiliraPAY yazarak yükleyin.</string>
                             <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="14"/>
-                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="seviye1Profile" translatesAutoresizingMaskIntoConstraints="NO" id="Ilo-9b-jWu">
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="verifyProfilePhoto" translatesAutoresizingMaskIntoConstraints="NO" id="Ilo-9b-jWu">
                             <rect key="frame" x="57" y="84" width="300" height="268"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="Ilo-9b-jWu" secondAttribute="height" multiplier="75:67" id="Cml-fl-vZb"/>
@@ -44,20 +42,20 @@
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Son bir adım kaldı." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="51j-fS-zfW">
                             <rect key="frame" x="20" y="370" width="374" height="27"/>
                             <fontDescription key="fontDescription" name="Montserrat-ExtraBold" family="Montserrat" pointSize="22"/>
-                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vb0-36-fEt">
                             <rect key="frame" x="84" y="478.5" width="246.5" height="50"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Kamerayı Aç" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p0x-DB-tGQ">
-                                    <rect key="frame" x="73" y="15.5" width="101" height="19"/>
+                                    <rect key="frame" x="73" y="16" width="101" height="18.5"/>
                                     <fontDescription key="fontDescription" name="Montserrat-ExtraBold" family="Montserrat" pointSize="15"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                             </subviews>
-                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             <constraints>
                                 <constraint firstItem="p0x-DB-tGQ" firstAttribute="centerY" secondItem="Vb0-36-fEt" secondAttribute="centerY" id="8Ue-FE-8nw"/>
                                 <constraint firstItem="p0x-DB-tGQ" firstAttribute="centerX" secondItem="Vb0-36-fEt" secondAttribute="centerX" id="Ehn-Rm-MeB"/>
@@ -68,7 +66,7 @@
                             <rect key="frame" x="84" y="538" width="246.5" height="50"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Galeriden Seç" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ukS-oz-Stl">
-                                    <rect key="frame" x="68.5" y="15.5" width="110" height="19"/>
+                                    <rect key="frame" x="68.5" y="16" width="110" height="18.5"/>
                                     <fontDescription key="fontDescription" name="Montserrat-ExtraBold" family="Montserrat" pointSize="15"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
@@ -167,38 +165,38 @@
                         <constraint firstAttribute="trailing" secondItem="uD3-VF-tiL" secondAttribute="trailing" constant="84.5" id="qgj-5H-cCv"/>
                     </constraints>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0tg-px-P7b">
+                <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0tg-px-P7b">
                     <rect key="frame" x="0.0" y="100" width="414" height="796"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Kripto paralarınızı arkadaşlarınıza gönderebilir ve alışverişlerinizde kullanabilirsiniz" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9UF-hz-N8B">
-                            <rect key="frame" x="20" y="404" width="374" height="34.5"/>
-                            <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="14"/>
-                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            <rect key="frame" x="20" y="411.5" width="374" height="78"/>
+                            <fontDescription key="fontDescription" name="Avenir-Light" family="Avenir" pointSize="19"/>
+                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Onaylı Profil" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9r7-3w-QIi">
-                            <rect key="frame" x="20" y="361" width="374" height="27"/>
-                            <fontDescription key="fontDescription" name="Montserrat-ExtraBold" family="Montserrat" pointSize="22"/>
-                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            <rect key="frame" x="20" y="361" width="374" height="34.5"/>
+                            <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="25"/>
+                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jMt-PU-gwi">
-                            <rect key="frame" x="83" y="498.5" width="246.5" height="50"/>
-                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jMt-PU-gwi" customClass="smallButton" customModule="DigiliraPAY" customModuleProvider="target">
+                            <rect key="frame" x="83" y="549.5" width="246.5" height="50"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="jMt-PU-gwi" secondAttribute="height" multiplier="123:25" id="0dN-JX-Orq"/>
                             </constraints>
                         </view>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Anasayfaya Dön" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dhl-l7-LXK">
-                            <rect key="frame" x="83" y="498.5" width="246.5" height="50"/>
-                            <fontDescription key="fontDescription" name="Montserrat-ExtraBold" family="Montserrat" pointSize="15"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tamam" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dhl-l7-LXK">
+                            <rect key="frame" x="83" y="549.5" width="246.5" height="50"/>
+                            <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="17"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ek2-tZ-a8U">
                             <rect key="frame" x="64" y="102" width="286" height="236"/>
                             <subviews>
-                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="verifiedProfile" translatesAutoresizingMaskIntoConstraints="NO" id="Bhj-7U-CbD">
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="TransactionPopupSucces" translatesAutoresizingMaskIntoConstraints="NO" id="Bhj-7U-CbD">
                                     <rect key="frame" x="0.0" y="0.0" width="286" height="236"/>
                                 </imageView>
                             </subviews>
@@ -234,18 +232,15 @@
                     </constraints>
                 </view>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="KOr-Vk-BMF" secondAttribute="bottom" constant="-33" id="1HM-wN-vuS"/>
                 <constraint firstAttribute="bottom" secondItem="enl-88-icO" secondAttribute="bottom" id="5IU-q0-E4b"/>
                 <constraint firstItem="enl-88-icO" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="KDl-lX-3Tc"/>
                 <constraint firstItem="0tg-px-P7b" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="OQe-sd-gAj"/>
-                <constraint firstItem="KOr-Vk-BMF" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="PMy-Bu-Ad0"/>
                 <constraint firstAttribute="bottom" secondItem="0tg-px-P7b" secondAttribute="bottom" id="WSx-Ar-qIq"/>
                 <constraint firstItem="4lF-sD-jAI" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="a2L-T2-H2N"/>
-                <constraint firstItem="KOr-Vk-BMF" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="-33" id="lTz-8A-YOF"/>
                 <constraint firstItem="enl-88-icO" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="lYd-MM-anw"/>
-                <constraint firstItem="KOr-Vk-BMF" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="oP3-BV-Xf5"/>
                 <constraint firstItem="0tg-px-P7b" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="100" id="tGm-rQ-bXW"/>
                 <constraint firstItem="enl-88-icO" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="uJt-Ii-1NL"/>
                 <constraint firstItem="4lF-sD-jAI" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="uZr-FL-cOr"/>
@@ -253,7 +248,6 @@
                 <constraint firstItem="4lF-sD-jAI" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="yfD-vl-9iF"/>
                 <constraint firstAttribute="bottom" secondItem="4lF-sD-jAI" secondAttribute="bottom" id="zxT-vF-Ugw"/>
             </constraints>
-            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>
                 <outlet property="FinishedView" destination="enl-88-icO" id="a3d-04-I7f"/>
                 <outlet property="cameraButtonView" destination="Vb0-36-fEt" id="Tef-bi-aNe"/>
@@ -267,9 +261,10 @@
         </view>
     </objects>
     <resources>
-        <image name="QRViewBG" width="414" height="896"/>
         <image name="TransactionPopupSucces" width="264" height="263"/>
-        <image name="seviye1Profile" width="431" height="427"/>
-        <image name="verifiedProfile" width="604" height="690"/>
+        <image name="verifyProfilePhoto" width="592" height="568"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>

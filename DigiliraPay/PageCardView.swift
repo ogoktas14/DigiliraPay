@@ -27,6 +27,7 @@ class PageCardView: UIView {
     var Filtered: [digilira.DigiliraPayBalance] = []
     let digiliraPay = digiliraPayApi()
     let BC = Blockchain()
+    var direction: UISwipeGestureRecognizer.Direction?
     
     var shoppingCart: [digilira.shoppingCart] = []
     
@@ -44,6 +45,27 @@ class PageCardView: UIView {
     
     func setBalanceView(index:Int) {
         if Filtered.count >= currentPage {
+            UIView.animate(withDuration: 0.5,
+              animations: {
+                var orgX = self.scrollAreaView.frame.width
+                
+                if let d = self.direction {
+                    switch d {
+                    case UISwipeGestureRecognizer.Direction.right:
+                        orgX = 1 - self.scrollAreaView.frame.width
+                        break
+                    default:
+                        break
+                    }
+                }
+                
+                self.scrollAreaView.subviews[self.scrollAreaView.subviews.count - 1].frame.origin.x = 1 - orgX
+                self.scrollAreaView.subviews[self.scrollAreaView.subviews.count - 1].alpha = 0
+              }, completion: {finished in
+                self.scrollAreaView.subviews[0].removeFromSuperview()
+              }
+            )
+ 
             scrollAreaView.addSubview(setCoinCard(scrollViewSize: scrollAreaView, layer: 0, coin: Filtered[currentPage]))
         }
         
@@ -53,12 +75,14 @@ class PageCardView: UIView {
         // Do any additional setup after loading the view, typically from a nib.
         pageControl.numberOfPages = Filtered.count
         pageControl.addTarget(self, action: #selector(changePage(_:)), for: .allTouchEvents)
+        shoppingCart = []
         setTableView()
     }
     
     
     override func awakeFromNib() {
         
+
         
         setShad(view: totalPrice)
         setShad(view: products)
@@ -104,8 +128,10 @@ class PageCardView: UIView {
     
     @objc func handleSwipes(_ sender: UISwipeGestureRecognizer)
     {
+        direction = sender.direction
         if sender.direction == .right
         {
+            
             if pageControl.currentPage > 0 {
                 pageControl.currentPage -= 1
                 currentPage -= 1
@@ -210,10 +236,23 @@ class PageCardView: UIView {
             }
         }
         
-        balanceCardView.frame = CGRect(x: 0,
+        var orgX = scrollViewSize.frame.width
+        
+        if let d = direction {
+            switch d {
+            case UISwipeGestureRecognizer.Direction.right:
+                orgX = 1 - scrollViewSize.frame.width
+                break
+            default:
+                break
+            }
+        }
+        
+        balanceCardView.frame = CGRect(x: orgX,
                                        y: 0,
                                        width: scrollViewSize.frame.width,
                                        height: scrollViewSize.frame.height)
+
         
         let gradient = CAGradientLayer()
         gradient.frame = balanceCardView.bounds
@@ -222,8 +261,16 @@ class PageCardView: UIView {
         let color1 = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0) /* #000000 */
         let color2 = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1.0) /* #333333 */
         gradient.colors = [color1.cgColor, color2.cgColor]
-        
+        gradient.cornerRadius = 10
+
         balanceCardView.layer.insertSublayer(gradient, at: 0)
+        balanceCardView.layer.cornerRadius = 10
+        
+        UIView.animate(withDuration: 0.5)
+        {
+            self.balanceCardView.frame.origin.x = 0
+            self.balanceCardView.alpha = 1
+        }
         
         return balanceCardView
         
@@ -234,7 +281,7 @@ class PageCardView: UIView {
         
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.frame = CGRect(x: 0,
-                                 y: 0,
+                                 y: tableView.frame.height,
                                  width: products.frame.width,
                                  height: products.frame.height)
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
@@ -242,6 +289,12 @@ class PageCardView: UIView {
         tableView.dataSource = self
         
         products.addSubview(tableView)
+        
+        UIView.animate(withDuration: 0.7)
+        {
+            self.products.frame.origin.y = 0
+            self.products.alpha = 1
+        }
         
         if Filtered.count != 0 { 
             if Filtered.count >= currentPage {
@@ -259,6 +312,7 @@ class PageCardView: UIView {
 
 extension PageCardView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        shoppingCart = []
         if let order = Order {
             if let products = order.products {
                 for product in products {
@@ -279,7 +333,6 @@ extension PageCardView: UITableViewDelegate, UITableViewDataSource {
                 }
             }
         }
-        
         return shoppingCart.count
     }
     

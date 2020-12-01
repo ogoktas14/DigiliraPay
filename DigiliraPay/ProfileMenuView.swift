@@ -22,20 +22,20 @@ class ProfileMenuView: UIView {
     @IBOutlet weak var securityLabel: UILabel!
     @IBOutlet weak var securityPinLabel: UILabel!
     @IBOutlet weak var languageLabel: UILabel!
-    
-    @IBOutlet weak var termsofUseAlertImage: UIImageView!
-    @IBOutlet weak var userTextAlertImage: UIImageView!
+     
     @IBOutlet weak var bitexenAPI: UIView!
-    @IBOutlet weak var languageENView: UIView!
-    @IBOutlet weak var languageTRView: UIView!
-    @IBOutlet weak var languageENLabel: UILabel!
-    @IBOutlet weak var languageTRLabel: UILabel!
     
     @IBOutlet weak var verifyProfileView: UIView!
     @IBOutlet weak var termsofUseView: UIView!
     @IBOutlet weak var legalTextView: UIView!
     @IBOutlet weak var pinView: UIView!
     @IBOutlet weak var seedView: UIView!
+     
+    @IBOutlet weak var profileWarning: UIImageView!
+    @IBOutlet weak var seedBackupWarning: UIImageView!
+    @IBOutlet weak var legalViewWarning: UIImageView!
+    @IBOutlet weak var termsViewWarning: UIImageView!
+    @IBOutlet weak var pinWarning: UIImageView! 
     
     var currentLanguage: Languages = .TR
     var changeLanguageforEN = UITapGestureRecognizer()
@@ -66,32 +66,11 @@ class ProfileMenuView: UIView {
         
         let showBitexenGesture = UITapGestureRecognizer(target: self, action: #selector(openBitexenAPI))
         bitexenAPI.addGestureRecognizer(showBitexenGesture)
-        
-        
-        biometricSecurityToggle.onTintColor = UIColor(red:0.73, green:0.73, blue:0.73, alpha:1.0)
-        biometricColor()
-//
-//        if currentLanguage == .EN
-//        {
-//            languageENLabel.font = UIFont(name: "Montserrat-ExtraBold", size: 12)
-//            languageTRLabel.font = UIFont(name: "Montserrat", size: 12)
-//        }
-//        else if currentLanguage == .TR
-//        {
-//            languageTRLabel.font = UIFont(name: "Montserrat-ExtraBold", size: 12)
-//            languageENLabel.font = UIFont(name: "Montserrat", size: 12)
-//        }
-        
-//        changeLanguageforEN = UITapGestureRecognizer(target: self, action: #selector(changeLanguage))
-//        changeLanguageforTR = UITapGestureRecognizer(target: self, action: #selector(changeLanguage))
-//
-//        languageENView.addGestureRecognizer(changeLanguageforEN)
-//        languageTRView.addGestureRecognizer(changeLanguageforTR)
-        
+         
+  
         if let isSecure = UserDefaults.standard.value(forKey: "isSecure") as? Bool
         {
             biometricSecurityToggle.isOn = isSecure
-            biometricColor()
         }
     }
     
@@ -125,33 +104,18 @@ class ProfileMenuView: UIView {
     
     @IBAction func biometricSecuritySwitch(_ sender: Any)
     {
-        biometricColor()
         UserDefaults.standard.setValue(biometricSecurityToggle.isOn, forKey: "isSecure")
     }
     
-    func biometricColor()
-    {
-        if biometricSecurityToggle.isOn
-        {
-            biometricSecurityToggle.thumbTintColor = UIColor(red:0.40, green:0.64, blue:1.00, alpha:1.0)
-        }
-        else
-        {
-            biometricSecurityToggle.thumbTintColor = UIColor(red:0.73, green:0.73, blue:0.73, alpha:1.0)
-        }
-    }
+ 
     @objc func changeLanguage()
     {
         if currentLanguage == .EN
         {
-            languageENLabel.font = UIFont(name: "Montserrat", size: 12)
-            languageTRLabel.font = UIFont(name: "Montserrat-ExtraBold", size: 12)
             currentLanguage = .TR
         }
         else if currentLanguage == .TR
         {
-            languageTRLabel.font = UIFont(name: "Montserrat", size: 12)
-            languageENLabel.font = UIFont(name: "Montserrat-ExtraBold", size: 12)
             currentLanguage = .EN
         }
     }

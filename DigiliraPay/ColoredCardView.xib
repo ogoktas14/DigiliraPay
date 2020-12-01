@@ -20,7 +20,7 @@
                         <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.40000000000000002" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Zds-GX-gv9">
                             <rect key="frame" x="0.0" y="0.0" width="355" height="236.5"/>
                         </imageView>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4001 **** **** 4246" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s5j-p2-PxI">
+                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4001 **** **** 4246" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s5j-p2-PxI">
                             <rect key="frame" x="10" y="126" width="315" height="30.5"/>
                             <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="22"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

@@ -128,7 +128,6 @@
 		93534031253B093B00FFEA4D /* shareQRVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93534030253B093B00FFEA4D /* shareQRVC.swift */; };
 		93534036253C4F2C00FFEA4D /* newSendView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93534035253C4F2C00FFEA4D /* newSendView.xib */; };
 		93534039253C528600FFEA4D /* newSendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93534038253C528600FFEA4D /* newSendView.swift */; };
-		9353403E253EFC9800FFEA4D /* testView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9353403D253EFC9700FFEA4D /* testView.xib */; };
 		93534F1425483A4F0000329F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93534F1325483A4F0000329F /* ViewController.swift */; };
 		93534F1825496A950000329F /* bitexenApiView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93534F1725496A950000329F /* bitexenApiView.xib */; };
 		93534F1B2549851A0000329F /* BitexenAPIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93534F1A2549851A0000329F /* BitexenAPIView.swift */; };
@@ -281,7 +280,6 @@
 		93534030253B093B00FFEA4D /* shareQRVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = shareQRVC.swift; sourceTree = "<group>"; };
 		93534035253C4F2C00FFEA4D /* newSendView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = newSendView.xib; sourceTree = "<group>"; };
 		93534038253C528600FFEA4D /* newSendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newSendView.swift; sourceTree = "<group>"; };
-		9353403D253EFC9700FFEA4D /* testView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = testView.xib; sourceTree = "<group>"; };
 		93534F1325483A4F0000329F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		93534F1725496A950000329F /* bitexenApiView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = bitexenApiView.xib; sourceTree = "<group>"; };
 		93534F1A2549851A0000329F /* BitexenAPIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitexenAPIView.swift; sourceTree = "<group>"; };
@@ -433,6 +431,7 @@
 		882B9B6A22FEFAF300D6E7B6 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				93D3FF74257613860088CC9E /* unused */,
 				882B9B6622FEFAA500D6E7B6 /* OnBoardingView.xib */,
 				0023C0FA2517C92B0042B50C /* Main.storyboard */,
 				882AAB0D22FC96DE004CDAA6 /* LaunchScreen.storyboard */,
@@ -448,9 +447,6 @@
 				88CA936F231A4750008F894B /* TransactionDetailView.xib */,
 				88CA9376231A488A008F894B /* TransactionHistoryDetailCellHeader.xib */,
 				88CA937A231A48A0008F894B /* TransactionHistoryDetailCellDeatils.xib */,
-				88CA9384231AFD2A008F894B /* CoinSendView.xib */,
-				88CA938C231BD0A3008F894B /* ProfileSettingsView.xib */,
-				00C592B123A556AA0036A346 /* TransactionDetailPopup.xib */,
 				88309EB1231E73C600F96C05 /* TransactionPopup.xib */,
 				88309EB7231E7FC600F96C05 /* QRView.xib */,
 				88309EBF231FD36000F96C05 /* VerifyAccountView.xib */,
@@ -463,7 +459,6 @@
 				9381D2B025357B38007DEE7E /* DepositeMoneyView.xib */,
 				93534035253C4F2C00FFEA4D /* newSendView.xib */,
 				9339084725591D350005B64A /* selectCoinView.xib */,
-				9353403D253EFC9700FFEA4D /* testView.xib */,
 				93534F1725496A950000329F /* bitexenApiView.xib */,
 				93757C27256E3EAC0066A7B9 /* PageCardView.xib */,
 				93757C2D256E55AF0066A7B9 /* BalanceCard.xib */,
@@ -573,6 +568,16 @@
 				93390894255AB1760005B64A /* wavesnodes.com.cer */,
 			);
 			name = SSLPinning;
+			sourceTree = "<group>";
+		};
+		93D3FF74257613860088CC9E /* unused */ = {
+			isa = PBXGroup;
+			children = (
+				00C592B123A556AA0036A346 /* TransactionDetailPopup.xib */,
+				88CA938C231BD0A3008F894B /* ProfileSettingsView.xib */,
+				88CA9384231AFD2A008F894B /* CoinSendView.xib */,
+			);
+			path = unused;
 			sourceTree = "<group>";
 		};
 		9D9CFF69165CF1FB51D08BF6 /* Pods */ = {
@@ -687,7 +692,6 @@
 				93757C28256E3EAD0066A7B9 /* PageCardView.xib in Resources */,
 				88CA937C231A48A0008F894B /* TransactionHistoryDetailCellDeatils.xib in Resources */,
 				882AAB4022FCAAEE004CDAA6 /* Montserrat-BlackItalic.otf in Resources */,
-				9353403E253EFC9800FFEA4D /* testView.xib in Resources */,
 				882AAB5022FCAAEE004CDAA6 /* Montserrat-Medium.otf in Resources */,
 				88F3F957230FD92600D81F2B /* LetsStartWordView.xib in Resources */,
 				88CA938D231BD0A3008F894B /* ProfileSettingsView.xib in Resources */,
@@ -984,8 +988,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 53.1;
+				CURRENT_PROJECT_VERSION = 54;
 				DEVELOPMENT_TEAM = 5TJACH7D4X;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1008,8 +1013,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPayRelease.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 53.1;
+				CURRENT_PROJECT_VERSION = 54;
 				DEVELOPMENT_TEAM = 5TJACH7D4X;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (

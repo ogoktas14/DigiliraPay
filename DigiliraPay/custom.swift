@@ -50,14 +50,20 @@ class smallButton: UIButton {
     }
     
     func initializeLabel() {
-        
-        let radius = CGFloat(10)
-        
-        self.backgroundColor = UIColor.red
-        
-        self.layer.masksToBounds = false
-        self.layer.cornerRadius = radius
-        
+        self.setTitleColor(.white, for: .normal)
+
+        self.layer.cornerRadius = self.frame.height / 2
+        let letsGoGradient = CAGradientLayer()
+        letsGoGradient.colors = [
+            UIColor(red: 0.24, green: 0.54, blue: 1, alpha: 1).cgColor,
+            UIColor(red: 0, green: 0.4, blue: 1, alpha: 1).cgColor
+        ]
+        letsGoGradient.frame = self.bounds
+        letsGoGradient.startPoint = CGPoint(x: 0.17355118936567193, y: 1.2736177884615385)
+        letsGoGradient.endPoint = CGPoint(x: 0.8794163945895522, y: -0.8311899038461539)
+        letsGoGradient.cornerRadius = self.frame.height / 2
+        layer.insertSublayer(letsGoGradient, at: 0)
+ 
         
     }
     
@@ -105,8 +111,82 @@ class MyLabel: UIView {
     
 }
 
+class GradientView: UIView {
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setupView()
+    }
+
+    private func setupView() {
+        autoresizingMask = [.flexibleWidth, .flexibleHeight]
+
+        guard let theLayer = self.layer as? CAGradientLayer else {
+            return;
+        }
+        let gradientColor1 = UIColor(red: 1, green: 1, blue: 1, alpha: 1.0).cgColor
+        let gradientColor2 = UIColor(red: 1, green: 1, blue: 0.9961, alpha: 1.0).cgColor
+        
+        theLayer.colors = [gradientColor1, gradientColor2]
+        theLayer.locations = [0.0, 1.0]
+        theLayer.frame = self.bounds
+        
+        layer.shadowColor = UIColor.gray.cgColor
+        layer.shadowRadius = 2.0
+        layer.shadowOpacity = 0.5
+        layer.shadowOffset = CGSize(width: 1, height: 1)
+        layer.masksToBounds = false
+    }
+
+    override class var layerClass: AnyClass {
+        return CAGradientLayer.self
+    }
+}
+
+class TextViewDP: UITextField {
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setupView()
+    }
+
+    private func setupView() {
+        autoresizingMask = [.flexibleWidth, .flexibleHeight]
+
+        guard let theLayer = self.layer as? CAGradientLayer else {
+            return;
+        }
+        let gradientColor1 = UIColor(red: 1, green: 1, blue: 1, alpha: 1.0).cgColor
+        let gradientColor2 = UIColor(red: 1, green: 1, blue: 0.9961, alpha: 1.0).cgColor
+        
+        theLayer.colors = [gradientColor1, gradientColor2]
+        theLayer.locations = [0.0, 1.0]
+        theLayer.frame = self.bounds
+        
+        layer.shadowColor = UIColor.gray.cgColor
+        layer.shadowRadius = 2.0
+        layer.shadowOpacity = 0.5
+        layer.shadowOffset = CGSize(width: 1, height: 1)
+        layer.masksToBounds = false
+    }
+
+    override class var layerClass: AnyClass {
+        return CAGradientLayer.self
+    }
+}
 
 class digiliraView: UIView {
+    let btnGradient = CAGradientLayer()
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -119,28 +199,24 @@ class digiliraView: UIView {
     }
     
     func initializeLabel() {
-        
+        autoresizingMask = [.flexibleWidth, .flexibleHeight]
         let gradientColor1 = UIColor(red:0.57, green:0.18, blue:0.42, alpha:1.0).cgColor
         let gradientColor2 = UIColor(red:0.88, green:0.08, blue:0.16, alpha:1.0).cgColor
-        
-        let btnGradient = CAGradientLayer()
-        btnGradient.frame = self.bounds
+         
+        layer.shadowColor = UIColor.gray.cgColor
+        layer.shadowRadius = 2.0
+        layer.shadowOpacity = 0.5
+        layer.shadowOffset = CGSize(width: 1, height: 1)
+        layer.masksToBounds = false
+
+        btnGradient.frame = layer.bounds
+        btnGradient.masksToBounds = true
+
         btnGradient.colors = [gradientColor1, gradientColor2]
-        
-        
-        btnGradient.startPoint = CGPoint(x: 0.0, y: 1.0)
-        btnGradient.endPoint = CGPoint(x: 1.0, y: 0.0)
+        self.translatesAutoresizingMaskIntoConstraints = false
+        btnGradient.locations = [0.0, 1.0]
         
         self.layer.insertSublayer(btnGradient, at: 0)
-        
-        
-        
-        self.layer.shadowColor = UIColor.gray.cgColor
-        self.layer.shadowRadius = 2.0
-        self.layer.shadowOpacity = 0.5
-        self.layer.shadowOffset = CGSize(width: 1, height: 1)
-        self.layer.masksToBounds = false
-
         
     }
     

@@ -8,9 +8,9 @@
 
 import UIKit
 
-class VerifyAccountView: UIView, UITextFieldDelegate
+class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
 {
-    @IBOutlet weak var infoTitle: UILabel!
+    
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var descLabel: UILabel!
     
@@ -30,6 +30,16 @@ class VerifyAccountView: UIView, UITextFieldDelegate
     @IBOutlet weak var tcText: UITextField!
     @IBOutlet weak var telText: UITextField!
     @IBOutlet weak var mailText: UITextField!
+    @IBOutlet weak var dogum: UIDatePicker!
+    
+    
+    @IBOutlet weak var onayImage: UIImageView!
+    @IBOutlet weak var infoTitle: UILabel!
+    
+    var isVerified:Bool = false
+    var isExit: Bool = false
+    
+    var dogumTarihi: Date?
  
     let digiliraPay = digiliraPayApi()
     var onUpdate: ((_ result: [String:Any])->())?
@@ -37,28 +47,27 @@ class VerifyAccountView: UIView, UITextFieldDelegate
     override func didMoveToSuperview() {
         do {
             let user = try secretKeys.userData()
-            switch user.status {
-            case 0:
-               nameText.text = user.firstName
-               surnameText.text = user.lastName
-                tcText.text = user.tcno
-               telText.text = user.tel
-               mailText.text = user.mail
-                break
-            case 1:
+    
                nameText.text = user.firstName
                surnameText.text = user.lastName
                tcText.text = user.tcno
                telText.text = user.tel
                mailText.text = user.mail
                 
-                nameText.isEnabled = false
-                surnameText.isEnabled = false
-                tcText.isEnabled = false
-                break
-            default:
-                break
-            }
+                if let dogumTarihi = user.dogum {
+                    let isoDateFormatter = ISO8601DateFormatter()
+                    isoDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+                    isoDateFormatter.formatOptions = [
+                        .withFullDate,
+                        .withFullTime,
+                        .withDashSeparatorInDate,
+                        .withFractionalSeconds]
+                    
+                    if let date1 = isoDateFormatter.date(from:dogumTarihi) {
+                        dogum.setDate(date1, animated: true)
+                    }
+                }
+                 
         }catch{
             
         }
@@ -66,10 +75,115 @@ class VerifyAccountView: UIView, UITextFieldDelegate
     
     
     @IBAction func btnExit(_ sender: Any) {
+        isExit = true
         goHome()
     }
     
-    
+    private func exampleSoapRequest(tc: String, ad: String, soyad: String, dogum: String) {
+        let url = URL(string: digilira.tcDoguralma)!
+        let bodyData = """
+<?xml version="1.0" encoding="utf-8"?>
+        <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+          <soap:Body>
+            <TCKimlikNoDogrula xmlns="http://tckimlik.nvi.gov.tr/WS">
+              <TCKimlikNo>
+""" + tc + """
+</TCKimlikNo>
+              <Ad>
+""" + ad + """
+</Ad>
+              <Soyad>
+""" + soyad + """
+</Soyad>
+              <DogumYili>
+""" + dogum + """
+</DogumYili>
+            </TCKimlikNoDogrula>
+          </soap:Body>
+        </soap:Envelope>
+"""
+        let request = NSMutableURLRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBody = bodyData.data(using: .utf8)
+        request.addValue("text/xml; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        request.addValue("SOAPAction", forHTTPHeaderField: digilira.soapAction)
+
+        let task = URLSession.shared
+            .dataTask(with: request as URLRequest,
+                      completionHandler: { data, response, error in
+                        guard let dataResponse = data,
+                              error == nil else {
+                            return }
+                        let dataString = NSString(data: dataResponse, encoding: String.Encoding.utf8.rawValue)
+                                  print(dataString!)
+                        
+                        let parser = XMLParser(data: dataResponse)
+                        parser.delegate = self
+                        parser.parse()
+  
+            })
+        task.resume()
+    }
+
+    func parser(_ parser: XMLParser, foundCharacters string: String) {
+        
+        DispatchQueue.main.async { [self] in
+        var sts = 0
+            if string == "true" {
+                sts = 1 
+                onayImage.image = UIImage(named: "TransactionPopupSucces")
+                infoTitle.text = "Profiliniz onaylanmıştır."
+                isVerified = true
+            }else {
+                
+                onayImage.image = UIImage(named: "forbidden")
+                infoTitle.text = "Girdiğiniz bilgiler kontrol ederek yeniden deneyin."
+                isVerified = false
+            }
+        
+        finishedView.translatesAutoresizingMaskIntoConstraints = true
+        finishedView.frame.origin.y = self.frame.height
+        
+        UIView.animate(withDuration: 0.3) {
+            self.enterInfoView.frame.origin.y = self.self.frame.height
+            self.finishedView.frame.origin.y = 0
+            self.finishedView.alpha = 1
+        }
+        
+        
+        digiliraPay.onUpdate = { res in
+
+            self.digiliraPay.onLogin2 = { user, status in
+                //self.delegate?.dismissVErifyAccountView()
+                
+            }
+            
+            self.digiliraPay.login2()
+        }
+        
+        //let b64 = digiliraPay.convertImageToBase64String(img: UIImage(named: "test.jpg")!)
+ 
+            delegate?.dismissKeyboard()
+ 
+            let user = digilira.exUser.init(
+                firstName: nameText.text,
+                lastName: surnameText.text,
+                tcno: tcText.text,
+                dogum: dogum.date.description,
+                tel: telText.text,
+                mail: mailText.text,
+                status: sts
+            )
+            
+            let encoder = JSONEncoder()
+            let data = try? encoder.encode(user)
+            
+            digiliraPay.updateUser(user: data)
+        
+
+        }
+    }
+
     
     func validateEmail(enteredEmail:String) -> Bool {
 
@@ -92,26 +206,6 @@ class VerifyAccountView: UIView, UITextFieldDelegate
     
     override func awakeFromNib()
     {
-        let gradient = CAGradientLayer()
-        gradient.colors = [UIColor.black.cgColor, UIColor(red:0.30, green:0.30, blue:0.30, alpha:1.0).cgColor]
-        gradient.startPoint = CGPoint(x: 0.0, y: 0.0)
-        gradient.endPoint = CGPoint(x: 1.0, y: 0.0)
-        gradient.frame = galleryButtonView.bounds
-        galleryButtonView.layer.addSublayer(gradient)
-        
-        sendAndContiuneView.clipsToBounds = true
-        sendAndContiuneView.layer.cornerRadius = 6
-        
-        galleryButtonView.clipsToBounds = true
-        galleryButtonView.layer.cornerRadius = 6
-        
-        cameraButtonView.clipsToBounds = true
-        cameraButtonView.layer.cornerRadius = 6
-        
-        goHomeView.layer.addSublayer(gradient)
-        goHomeView.clipsToBounds = true
-        goHomeView.layer.cornerRadius = 6
-        
         let sendAndContiuneGesture = UITapGestureRecognizer(target: self, action: #selector(sendAndContiune))
         
         let openCameraGesture = UITapGestureRecognizer(target: self, action: #selector(openCamera))
@@ -152,7 +246,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        textField.textColor = .white
+        textField.textColor = .black
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -175,34 +269,29 @@ class VerifyAccountView: UIView, UITextFieldDelegate
         return true
     }
     
+    @IBAction func datePickerChanged(sender: UIDatePicker) {
+
+       print("print \(sender.date)")
+
+        let dateFormatter = DateFormatter()
+       dateFormatter.dateFormat = "MMM dd, YYYY"
+        let somedateString = dateFormatter.string(from: sender.date)
+       print(somedateString)  // "somedateString" is your string date
+   }
+    
     func KYC() {
-        digiliraPay.onUpdate = { res in
-
-            self.digiliraPay.onLogin2 = { user, status in
-                self.delegate?.dismissVErifyAccountView()
+        
+        if let ad = nameText.text {
+            if let soyad = surnameText.text {
+                if let tc = tcText.text {
+                let date = dogum.date
+                let calendar = Calendar.current
+                let year = calendar.component(.year, from: date)
+                    exampleSoapRequest(tc:tc, ad:ad, soyad: soyad, dogum: year.description)
+                }
             }
-            
-            self.digiliraPay.login2()
         }
-        
-        let b64 = digiliraPay.convertImageToBase64String(img: UIImage(named: "test.jpg")!)
-
-        delegate?.dismissKeyboard()
- 
-        let user = digilira.exUser.init(
-            firstName: nameText.text,
-            lastName: surnameText.text,
-            tcno: tcText.text,
-            tel: telText.text,
-            mail: mailText.text, 
-            status: 1,
-            id1: b64
-        )
-        
-        let encoder = JSONEncoder()
-        let data = try? encoder.encode(user)
-        
-        digiliraPay.updateUser(user: data)
+         
     }
     
     @objc func sendAndContiune()
@@ -234,16 +323,18 @@ class VerifyAccountView: UIView, UITextFieldDelegate
         
         enterInfoView.translatesAutoresizingMaskIntoConstraints = true
         sendIDPhotoView.translatesAutoresizingMaskIntoConstraints = true
-        
-        
+         
         sendIDPhotoView.frame.origin.y = self.frame.height
         
         
-        UIView.animate(withDuration: 0.3) {
-            self.enterInfoView.frame.origin.y = self.self.frame.height
-            self.sendIDPhotoView.frame.origin.y = 0
-            self.sendIDPhotoView.alpha = 1
-        }
+//        UIView.animate(withDuration: 0.3) {
+//            self.enterInfoView.frame.origin.y = self.self.frame.height
+//            self.sendIDPhotoView.frame.origin.y = 0
+//            self.sendIDPhotoView.alpha = 1
+//        }
+        KYC()
+        
+
     }
     
     @objc func openCamera()
@@ -274,6 +365,21 @@ class VerifyAccountView: UIView, UITextFieldDelegate
     
     @objc func goHome()
     {
-        delegate?.dismissVErifyAccountView()
+        if isExit {
+            delegate?.dismissVErifyAccountView()
+            return
+        }
+        if isVerified {
+            delegate?.dismissVErifyAccountView()
+        } else {
+            finishedView.translatesAutoresizingMaskIntoConstraints = true
+            finishedView.frame.origin.y = self.frame.height
+            
+            UIView.animate(withDuration: 0.3) {
+                self.enterInfoView.frame.origin.y = 0
+                self.enterInfoView.alpha = 1
+                self.finishedView.alpha = 0
+            }
+        }
     }
 }

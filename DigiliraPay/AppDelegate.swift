@@ -8,7 +8,6 @@
 
 import UIKit
 import LocalAuthentication
-import IQKeyboardManagerSwift
 import WavesSDK
 import UserNotifications
 
@@ -34,10 +33,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                                        matcher: []),
                                 enviroment: .init(server: .testNet, timestampServerDiff: 0))
    
-                IQKeyboardManager.shared.enable = true
-                IQKeyboardManager.shared.overrideKeyboardAppearance = true
-                IQKeyboardManager.shared.keyboardAppearance = .light
-                IQKeyboardManager.shared.shouldResignOnTouchOutside = true
+//                IQKeyboardManager.shared.enable = true
+//                IQKeyboardManager.shared.overrideKeyboardAppearance = true
+//                IQKeyboardManager.shared.keyboardAppearance = .light
+//                IQKeyboardManager.shared.shouldResignOnTouchOutside = true
 
     
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) {

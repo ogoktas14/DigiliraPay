@@ -151,6 +151,8 @@ extension TransactionDetailView: UITableViewDelegate, UITableViewDataSource
                     case 3:
                         cell.setView(image: UIImage(named: "transactionTime")!, title: "İşlem Zamanı", detail: t.timestamp!)
                     case 4:
+                        let pasteboard = UIPasteboard.general
+                        pasteboard.string = t.recipient!
                             cell.setView(image: UIImage(), title: "İşlem", detail: t.attachment ?? "##" )
                         let tapped = MyTapGesture.init(target: self, action: #selector(handleTap))
                             tapped.qrAttachment = t.attachment ?? "##"

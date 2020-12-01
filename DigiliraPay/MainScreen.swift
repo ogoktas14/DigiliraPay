@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import IQKeyboardManagerSwift
+//import IQKeyboardManagerSwift
 
 import WavesSDK
 import WavesSDKCrypto
@@ -141,16 +141,22 @@ class MainScreen: UIViewController {
             let v = digilira.legalView.version
             if (versionLegal < v) {
                 alertWarning(title: digilira.messages.newLegalViewTitle, message: digilira.messages.newLegalViewMessage)
+                profileMenuView.legalViewWarning.isHidden = false
                 showLegalText()
+                return
             }
+            profileMenuView.legalViewWarning.isHidden = true
         }
         
         if let versionTerms = UserDefaults.standard.value(forKey: "isTermsOfUse") as? Int {
             let v = digilira.termsOfUse.version
             if (versionTerms < v) {
                 alertWarning(title: digilira.messages.newTermsOfUseTitle, message: digilira.messages.newTermsOfUseMessage)
+                profileMenuView.termsViewWarning.isHidden = false
                 showTermsofUse()
+                return
             }
+            profileMenuView.termsViewWarning.isHidden = true
         }
     }
     
@@ -425,7 +431,7 @@ class MainScreen: UIViewController {
         
         if #available(iOS 13.0, *), traitCollection.userInterfaceStyle == .dark{
             
-            IQKeyboardManager.shared.keyboardAppearance = .dark
+//            IQKeyboardManager.shared.keyboardAppearance = .dark
             mainView.backgroundColor = UIColor.black
         }
         
@@ -507,6 +513,12 @@ class MainScreen: UIViewController {
             numberFormatter.maximumFractionDigits = digits
             return numberFormatter.string(from: double as NSNumber)!
         }
+    
+    static func decimal2Int64(_ price: Double, digits: Int = 8) -> Int64{
+        let double = Int64(Double(price) * Double(truncating: pow(10,digits) as NSNumber))
+            return double
+        }
+    
     
     func setHeaderTotal() {
         headerTotal.text = "₺" + MainScreen.df2so(totalBalance)
@@ -684,7 +696,9 @@ class MainScreen: UIViewController {
     
     @objc func dismissKeyboard() {
         //Causes the view (or one of its embedded text fields) to resign the first responder status.
-        view.endEditing(true)
+        DispatchQueue.main.async {
+            self.view.endEditing(true)
+        }
     }
     
     
@@ -802,14 +816,15 @@ class MainScreen: UIViewController {
         
         tapCloseProfileMenuGesture.isEnabled = false
         
-        profileViewXib = UIView().loadNib(name: "ProfileMenuview") as! ProfileMenuView
-        profileViewXib.delegate = self
-        profileViewXib.frame = CGRect(x: 0,
-                                      y: 0,
-                                      width: profileView.frame.width,
-                                      height: profileView.frame.height)
-        profileView.addSubview(profileViewXib)
+//        profileViewXib = UIView().loadNib(name: "ProfileMenuview") as! ProfileMenuView
+//        profileViewXib.delegate = self
+//        profileViewXib.frame = CGRect(x: 0,
+//                                      y: 0,
+//                                      width: profileView.frame.width,
+//                                      height: profileView.frame.height)
+//        profileView.addSubview(profileViewXib)
         
+
         let tapProfileMenuViewGesture = UITapGestureRecognizer(target: self, action: #selector(tapProfileMenuView))
         menuView.addGestureRecognizer(tapProfileMenuViewGesture)
         
@@ -901,6 +916,14 @@ class MainScreen: UIViewController {
                                        y: 0,
                                        width: contentView.frame.width,
                                        height: contentView.frame.height)
+        
+        if kullanici.pincode != "-1" {
+            profileMenuView.pinWarning.isHidden = true
+        }
+         
+        if kullanici.status != 0 {
+            profileMenuView.profileWarning.isHidden = true
+        }
         
         profileMenuView.layer.zPosition = 1
         profileMenuView.delegate = self
@@ -1763,7 +1786,6 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
             openPinView()
         }else {
             
-            
             BC.onSensitive = { [self] wallet, err in
                 switch err {
                 case "ok":
@@ -1776,7 +1798,7 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
                         print(params)
                         break
                     case digilira.transactionDestination.interwallets:
-                        BC.massTransferTx(recipient: params.recipient!, fee: 1100000, amount: params.amount!, assetId: params.assetId!, attachment: "", wallet: wallet)
+                        BC.massTransferTx(recipient: params.recipient!, fee: digilira.sponsorTokenFee, amount: params.amount!, assetId: params.assetId!, attachment: "", wallet: wallet)
                         print(params)
                         break
                     default:
@@ -2507,7 +2529,9 @@ extension MainScreen: VerifyAccountDelegate
 {
     func dismissVErifyAccountView() // profil doğrulama sayfasının kapatılması
     {
-        
+        if kullanici.status != 0 {
+            profileMenuView.profileWarning.isHidden = true
+        }
         if QR.address != nil {
             UserDefaults.standard.set(nil, forKey: "QRARRAY2")
             getOrder(address: self.QR)
@@ -2520,6 +2544,9 @@ extension MainScreen: VerifyAccountDelegate
         } catch {
             print("")
         }
+        
+        for subView in sendWithQRView.subviews
+        { subView.removeFromSuperview() }
         
         DispatchQueue.main.async { [self] in
             UIView.animate(withDuration: 0.3) {
@@ -2925,7 +2952,10 @@ extension MainScreen: PinViewDelegate
             DispatchQueue.main.async {
                 
                 let alert = UIAlertController(title: "Pin Kodu Güncellendi", message: "Pin kodunuzu unutmayın, cüzdanınızı başka bir cihaza aktarırken ihtiyacınız olacaktır.", preferredStyle: UIAlertController.Style.alert)
-                alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
+                alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: { [self] _ in 
+                    profileMenuView.pinWarning.isHidden = true
+                }))
+                
                 
                 self.present(alert, animated: true, completion: nil)
 

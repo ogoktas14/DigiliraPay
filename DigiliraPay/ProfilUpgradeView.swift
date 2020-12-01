@@ -25,25 +25,16 @@ class ProfilUpgradeView: UIView {
             FinishedView.alpha = 0
             verifiedPRofileView.alpha = 1
             sendInfoView.alpha = 0
-            
-            let gradient = CAGradientLayer()
-            gradient.colors = [UIColor.black.cgColor, UIColor(red:0.30, green:0.30, blue:0.30, alpha:1.0).cgColor]
-            gradient.startPoint = CGPoint(x: 0.0, y: 0.0)
-            gradient.endPoint = CGPoint(x: 1.0, y: 0.0)
-            gradient.frame = galleryButtonView.bounds
-            galleryButtonView.layer.addSublayer(gradient)
-            
+             
             galleryButtonView.clipsToBounds = true
             galleryButtonView.layer.cornerRadius = 6
             
             cameraButtonView.clipsToBounds = true
             cameraButtonView.layer.cornerRadius = 6
-            
-            goHomeView.layer.addSublayer(gradient)
+             
             goHomeView.clipsToBounds = true
             goHomeView.layer.cornerRadius = 6
-            
-            verifiedGoHomeView.layer.addSublayer(gradient)
+             
             verifiedGoHomeView.clipsToBounds = true
             verifiedGoHomeView.layer.cornerRadius = 6
             

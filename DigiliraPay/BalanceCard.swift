@@ -28,9 +28,7 @@ class BalanceCard: UIView {
         paidCoin.text = symbol
     }
     
-    override class func awakeFromNib() {
-
-
+    override class func awakeFromNib() { 
     }
     
 }

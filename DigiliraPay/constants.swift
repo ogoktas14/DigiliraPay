@@ -36,6 +36,26 @@ struct digilira {
     
     struct node {
         static let url = "https://nodes-testnet.wavesnodes.com"
+        static let apiUrl = "https://api-testnet.waves.exchange"
+        static let getToken = "/v1/oauth2/token"
+        static let getDeposit = "/v1/deposit/addresses/"
+        static let getWithdraw = "/v1/withdraw/addresses/"
+        static let BTC = "BTC"
+        static let ETH = "ETH"
+        static let LTC = "LTC"
+        static let client_id = "waves.exchange"
+        static let scope = "general"
+        static let grant_type_password = "password"
+        static let grant_type_refresh = "refresh_token"
+        static let chain_id = "T"
+    }
+    
+    struct authTokenWaves: Codable {
+        var grant_type: String = "password"
+        var scope: String = "scope"
+        var username: String
+        var password: String
+        var client_id: String = "waves.exchange"
     }
     
     struct sslPinning {
@@ -56,6 +76,9 @@ struct digilira {
         var apiSet: Bool = false
         var bg: String?
     }
+    
+    static let tcDoguralma = "https://tckimlik.nvi.gov.tr/Service/KPSPublic.asmx?op=TCKimlikNoDogrula&wsdl"
+    static let soapAction = "http://tckimlik.nvi.gov.tr/WS/TCKimlikNoDogrula"
     
     struct bexURL {
         static let baseUrl = "https://www.bitexen.com"
@@ -91,7 +114,7 @@ struct digilira {
     
     static var sponsorToken = "7GnHzTaDe3YbDiCD9rueHiSfPB7hdanPpN4Ab79fJGtD"
     static var sponsorTokenFee:Int64 = 9
-    static var sponsorTokenFeeMass:Int64 = 1100000
+    static var sponsorTokenFeeMass:Int64 = 9
     
     static var bitcoin = coin.init(token: "FjTB2DdymTfpYbCCdcFwoRbHQnEhQD11CUm6nAF7P1UD",
                             symbol: "BTC",
@@ -148,7 +171,7 @@ struct digilira {
     struct termsOfUse {
         static let title = "Kullanım Sözleşmesi"
         static let text = "Yaygın inancın tersine, Lorem Ipsum rastgele sözcüklerden oluşmaz. Kökleri M.Ö. 45 tarihinden bu yana klasik Latin edebiyatına kadar uzanan 2000 yıllık bir geçmişi vardır. Virginia'daki Hampden-Sydney College'dan Latince profesörü Richard McClintock, bir Lorem Ipsum pasajında geçen ve anlaşılması en güç sözcüklerden biri olan 'consectetur' sözcüğünün klasik edebiyattaki örneklerini incelediğinde kesin bir kaynağa ulaşmıştır. Lorm Ipsum, Çiçero tarafından M.Ö. 45 tarihinde kaleme alınan 'de Finibus Bonorum et Malorum' (İyi ve Kötünün Uç Sınırları) eserinin 1.10.32 ve 1.10.33 sayılı bölümlerinden gelmektedir. Bu kitap, ahlak kuramı üzerine bir tezdir ve Rönesans döneminde çok popüler olmuştur. Lorem Ipsum pasajının ilk satırı olan 'Lorem ipsum dolor sit amet' 1.10.32 sayılı bölümdeki bir satırdan gelmektedir. 1500'lerden beri kullanılmakta olan standard Lorem Ipsum metinleri ilgilenenler için yeniden üretilmiştir. Çiçero tarafından yazılan 1.10.32 ve 1.10.33 bölümleri de 1914 H. Rackham çevirisinden alınan İngilizce sürümleri eşliğinde özgün biçiminden yeniden üretilmiştir.-"
-        static let version = 8
+        static let version = 10
     }
     
     struct terms: Encodable {
@@ -212,6 +235,7 @@ struct digilira {
         var firstName: String?
         var lastName: String?
         var tcno: String?
+        var dogum: String?
         var tel: String?
         var mail: String?
         var btcAddress: String?
@@ -219,7 +243,7 @@ struct digilira {
         var ltcAddress: String?
         var wallet: String?
         var token: String?
-        var status: Int64?
+        var status: Int?
         var pincode: Int32?
         var imported: Bool?
         var id1: String?
@@ -261,13 +285,14 @@ struct digilira {
         let apnToken, id, username, wallet: String
         let firstName, lastName, ltcAddress, btcAddress, ethAddress, tcno, tel, mail: String?
         let createdDate: String
+        let dogum: String?
         let v: Int?
         let token: String
 
         enum CodingKeys: String, CodingKey {
             case userRole, status, pincode, imported, apnToken
             case id = "_id"
-            case username, lastName, firstName, wallet, btcAddress, ethAddress, ltcAddress, createdDate, tcno, tel, mail
+            case username, lastName, firstName, wallet, btcAddress, ethAddress, ltcAddress, createdDate, dogum, tcno, tel, mail
             case v = "__v"
             case token
         }

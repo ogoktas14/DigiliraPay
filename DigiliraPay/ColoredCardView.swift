@@ -48,22 +48,17 @@ class ColoredCardView: CardView {
     
     override var presented: Bool { didSet { presentedDidUpdate() } }
     
-    func randomColor() -> UIColor{
-        let red = CGFloat(drand48())
-        let green = CGFloat(drand48())
-        let blue = CGFloat(drand48())
-        return UIColor(red: red, green: green, blue: blue, alpha: 1.0)
-    }
     
     func presentedDidUpdate() {
                 
         if presented {
             cardNumber.isUserInteractionEnabled = true
-
+            cardNumber.isHidden = false
             remarks.isHidden = false
             remarks.sizeToFit()
         } else {
             cardNumber.isUserInteractionEnabled = false
+            cardNumber.isHidden = true
 
             remarks.isHidden = true
         }
