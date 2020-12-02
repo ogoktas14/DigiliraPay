@@ -18,6 +18,8 @@ class BitexenAPIView: UIView {
     @IBOutlet weak var textApiPassphrase: UITextField!
     @IBOutlet weak var textUsername: UITextField!
     @IBOutlet weak var labelError: UILabel!
+    
+    @IBOutlet weak var saveView: UIView!
 
     weak var delegate: BitexenAPIDelegate?
 
@@ -45,10 +47,15 @@ class BitexenAPIView: UIView {
                 self.textUsername.text = loadedAPI?.username ?? ""
             }
         }
-        
-        
-        bitexenSign.onBitexenError = { res, sts in
-            
+
+        let tapOkGesture = UITapGestureRecognizer(target: self, action: #selector(saveAPI))
+        saveView.addGestureRecognizer(tapOkGesture)
+        saveView.isUserInteractionEnabled = true
+
+        bitexenSign.onBitexenError = { [self] res, sts in
+           
+            saveView.alpha = 1
+            saveView.isUserInteractionEnabled = true
             
             self.shake()
             self.labelError.isHidden = false
@@ -62,11 +69,10 @@ class BitexenAPIView: UIView {
         
     }
     
-    @IBAction func btnSave(_ sender: Any) {
-        saveAPI() 
-    }
-    
-    func saveAPI() {
+    @objc func saveAPI() {
+        
+        saveView.alpha = 0.4
+        saveView.isUserInteractionEnabled = false
         
         var res = bex.bitexenAPICred.init(apiKey: textApiKey.text!,
                                                apiSecret: textApiSecret.text!,
@@ -76,6 +82,10 @@ class BitexenAPIView: UIView {
         
         
         bitexenSign.onBitexenBalance = { [self] _, statusCode in
+            
+            saveView.alpha = 1
+            saveView.isUserInteractionEnabled = true
+            
             if statusCode == 200 {  
                 self.labelError.isHidden = true
                 

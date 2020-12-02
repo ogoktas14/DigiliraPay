@@ -73,22 +73,30 @@
                                             <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="20"/>
                                             <textInputTraits key="textInputTraits" textContentType="one-time-code"/>
                                         </textField>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9mN-R4-2a8">
-                                            <rect key="frame" x="0.0" y="240" width="374" height="40"/>
-                                            <color key="backgroundColor" systemColor="systemBlueColor"/>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iHX-1A-8MZ" customClass="BlueGradientView" customModule="DigiliraPAY" customModuleProvider="target">
+                                            <rect key="frame" x="37.5" y="240" width="299" height="51.5"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Kaydet" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0gJ-wb-ay2">
+                                                    <rect key="frame" x="0.0" y="0.0" width="299" height="51.5"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" secondItem="0gJ-wb-ay2" secondAttribute="height" multiplier="29:5" id="vz5-jv-aki"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="17"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" systemColor="systemYellowColor"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="40" id="lnX-vF-8Qi"/>
+                                                <constraint firstItem="0gJ-wb-ay2" firstAttribute="leading" secondItem="iHX-1A-8MZ" secondAttribute="leading" id="3K3-6i-UeF"/>
+                                                <constraint firstAttribute="trailing" secondItem="0gJ-wb-ay2" secondAttribute="trailing" id="LhB-Mz-hS1"/>
+                                                <constraint firstItem="0gJ-wb-ay2" firstAttribute="top" secondItem="iHX-1A-8MZ" secondAttribute="top" id="Q1Q-6u-vh9"/>
+                                                <constraint firstAttribute="bottom" secondItem="0gJ-wb-ay2" secondAttribute="bottom" id="Tzp-O3-YNc"/>
+                                                <constraint firstAttribute="width" secondItem="iHX-1A-8MZ" secondAttribute="height" multiplier="29:5" id="uKI-LD-1a5"/>
                                             </constraints>
-                                            <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="20"/>
-                                            <state key="normal" title="KAYDET">
-                                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            </state>
-                                            <connections>
-                                                <action selector="btnSave:" destination="iN0-l3-epB" eventType="touchUpInside" id="8vv-v2-K14"/>
-                                            </connections>
-                                        </button>
+                                        </view>
                                         <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="hata" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rkI-cN-pEI">
-                                            <rect key="frame" x="20" y="300" width="334" height="100"/>
+                                            <rect key="frame" x="20" y="311.5" width="334" height="100"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="100" id="srq-MR-cDV"/>
                                             </constraints>
@@ -102,19 +110,19 @@
                                         <constraint firstItem="Vxe-1E-twr" firstAttribute="leading" secondItem="Rp7-K7-xbO" secondAttribute="leading" id="0Nm-dv-Fdr"/>
                                         <constraint firstAttribute="trailing" secondItem="43e-6C-kop" secondAttribute="trailing" id="7cd-cV-VRK"/>
                                         <constraint firstItem="rkI-cN-pEI" firstAttribute="leading" secondItem="Rp7-K7-xbO" secondAttribute="leading" constant="20" id="7pp-sV-vJs"/>
+                                        <constraint firstItem="iHX-1A-8MZ" firstAttribute="width" secondItem="Rp7-K7-xbO" secondAttribute="width" multiplier="0.8" id="8Bo-72-6tz"/>
                                         <constraint firstItem="WJA-ku-iCa" firstAttribute="leading" secondItem="Rp7-K7-xbO" secondAttribute="leading" id="CM1-Bq-VI6"/>
                                         <constraint firstItem="43e-6C-kop" firstAttribute="top" secondItem="Vxe-1E-twr" secondAttribute="bottom" constant="20" id="HRJ-yX-V8r"/>
-                                        <constraint firstItem="9mN-R4-2a8" firstAttribute="leading" secondItem="Rp7-K7-xbO" secondAttribute="leading" id="HsR-DW-ca8"/>
-                                        <constraint firstItem="rkI-cN-pEI" firstAttribute="top" secondItem="9mN-R4-2a8" secondAttribute="bottom" constant="20" id="KwK-Vt-Uf0"/>
+                                        <constraint firstItem="iHX-1A-8MZ" firstAttribute="top" secondItem="aTD-sl-drz" secondAttribute="bottom" constant="20" id="I1w-NH-Sy0"/>
+                                        <constraint firstItem="rkI-cN-pEI" firstAttribute="top" secondItem="iHX-1A-8MZ" secondAttribute="bottom" constant="20" id="KwK-Vt-Uf0"/>
                                         <constraint firstAttribute="trailing" secondItem="aTD-sl-drz" secondAttribute="trailing" id="S6m-tk-MVs"/>
                                         <constraint firstItem="43e-6C-kop" firstAttribute="leading" secondItem="Rp7-K7-xbO" secondAttribute="leading" id="Uln-gL-j1t"/>
                                         <constraint firstAttribute="trailing" secondItem="Vxe-1E-twr" secondAttribute="trailing" id="XVD-3b-BXy"/>
-                                        <constraint firstAttribute="trailing" secondItem="9mN-R4-2a8" secondAttribute="trailing" id="ZpY-TY-AIw"/>
+                                        <constraint firstItem="iHX-1A-8MZ" firstAttribute="centerX" secondItem="aTD-sl-drz" secondAttribute="centerX" id="gGE-ZM-vBG"/>
                                         <constraint firstItem="aTD-sl-drz" firstAttribute="top" secondItem="WJA-ku-iCa" secondAttribute="bottom" constant="20" id="gWq-kC-Ara"/>
                                         <constraint firstAttribute="trailing" secondItem="WJA-ku-iCa" secondAttribute="trailing" id="kUo-Kk-Caa"/>
                                         <constraint firstItem="Vxe-1E-twr" firstAttribute="top" secondItem="Rp7-K7-xbO" secondAttribute="top" id="te6-23-9zd"/>
                                         <constraint firstItem="aTD-sl-drz" firstAttribute="leading" secondItem="Rp7-K7-xbO" secondAttribute="leading" id="uJx-p2-gZK"/>
-                                        <constraint firstItem="9mN-R4-2a8" firstAttribute="top" secondItem="aTD-sl-drz" secondAttribute="bottom" constant="20" id="ucd-se-FyC"/>
                                         <constraint firstItem="WJA-ku-iCa" firstAttribute="top" secondItem="43e-6C-kop" secondAttribute="bottom" constant="20" id="zTf-hl-o0N"/>
                                         <constraint firstAttribute="trailing" secondItem="rkI-cN-pEI" secondAttribute="trailing" constant="20" id="zaK-og-ZD8"/>
                                     </constraints>
@@ -155,6 +163,7 @@
             </constraints>
             <connections>
                 <outlet property="labelError" destination="rkI-cN-pEI" id="9I2-QT-RKv"/>
+                <outlet property="saveView" destination="iHX-1A-8MZ" id="K3g-53-Uro"/>
                 <outlet property="textApiKey" destination="Vxe-1E-twr" id="Lnq-PE-iEk"/>
                 <outlet property="textApiPassphrase" destination="WJA-ku-iCa" id="gar-Bg-7WK"/>
                 <outlet property="textApiSecret" destination="43e-6C-kop" id="SLP-h2-uxX"/>
@@ -168,11 +177,11 @@
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
-        <systemColor name="systemBlueColor">
-            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
         <systemColor name="systemRedColor">
             <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemYellowColor">
+            <color red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

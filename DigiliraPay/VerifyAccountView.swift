@@ -32,6 +32,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     @IBOutlet weak var mailText: UITextField!
     @IBOutlet weak var dogum: UIDatePicker!
     
+    @IBOutlet weak var understand: UISwitch!
     
     @IBOutlet weak var onayImage: UIImageView!
     @IBOutlet weak var infoTitle: UILabel!
@@ -73,6 +74,17 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
         }
     }
     
+    @IBAction func yesIKnow(_ sender: Any) {
+        if let tick = sender as? UISwitch {
+            if tick.isOn {
+                sendAndContiuneView.alpha = 1
+                sendAndContiuneView.isUserInteractionEnabled = true
+            } else {
+                sendAndContiuneView.alpha = 0.4
+                sendAndContiuneView.isUserInteractionEnabled = false
+            }
+        }
+    }
     
     @IBAction func btnExit(_ sender: Any) {
         isExit = true
@@ -133,12 +145,23 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
                 sts = 1 
                 onayImage.image = UIImage(named: "TransactionPopupSucces")
                 infoTitle.text = "Profiliniz onaylanmıştır."
+                 
+                goHomeView.isUserInteractionEnabled = true
+                goHomeView.alpha = 1
+                
                 isVerified = true
             }else {
                 
                 onayImage.image = UIImage(named: "forbidden")
                 infoTitle.text = "Girdiğiniz bilgiler kontrol ederek yeniden deneyin."
                 isVerified = false
+                
+                understand.isEnabled = true
+                sendAndContiuneView.isUserInteractionEnabled = true
+                sendAndContiuneView.alpha = 1
+                
+                goHomeView.isUserInteractionEnabled = true
+                goHomeView.alpha = 1
             }
         
         finishedView.translatesAutoresizingMaskIntoConstraints = true
@@ -296,6 +319,10 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     
     @objc func sendAndContiune()
     {
+        understand.isEnabled = false
+        sendAndContiuneView.isUserInteractionEnabled = false
+        sendAndContiuneView.alpha = 0.4
+        
         let emailVal = validateEmail(enteredEmail: mailText.text!)
         let tcVal = validate(value: tcText.text!)
         
@@ -365,6 +392,9 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     
     @objc func goHome()
     {
+        goHomeView.isUserInteractionEnabled = false
+        goHomeView.alpha = 0.4
+        
         if isExit {
             delegate?.dismissVErifyAccountView()
             return

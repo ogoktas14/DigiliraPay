@@ -26,18 +26,7 @@ class ProfilUpgradeView: UIView {
             verifiedPRofileView.alpha = 1
             sendInfoView.alpha = 0
              
-            galleryButtonView.clipsToBounds = true
-            galleryButtonView.layer.cornerRadius = 6
-            
-            cameraButtonView.clipsToBounds = true
-            cameraButtonView.layer.cornerRadius = 6
              
-            goHomeView.clipsToBounds = true
-            goHomeView.layer.cornerRadius = 6
-             
-            verifiedGoHomeView.clipsToBounds = true
-            verifiedGoHomeView.layer.cornerRadius = 6
-            
             let openCameraGesture = UITapGestureRecognizer(target: self, action: #selector(openCamera))
             
             let openGalleryGesture = UITapGestureRecognizer(target: self, action: #selector(openGallery))

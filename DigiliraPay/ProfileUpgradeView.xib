@@ -180,15 +180,18 @@
                             <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jMt-PU-gwi" customClass="smallButton" customModule="DigiliraPAY" customModuleProvider="target">
-                            <rect key="frame" x="83" y="549.5" width="246.5" height="50"/>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jMt-PU-gwi" customClass="BlueGradientView" customModule="DigiliraPAY" customModuleProvider="target">
+                            <rect key="frame" x="62" y="549.5" width="290" height="50"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
-                                <constraint firstAttribute="width" secondItem="jMt-PU-gwi" secondAttribute="height" multiplier="123:25" id="0dN-JX-Orq"/>
+                                <constraint firstAttribute="width" secondItem="jMt-PU-gwi" secondAttribute="height" multiplier="29:5" id="38L-Ks-wSl"/>
                             </constraints>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tamam" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dhl-l7-LXK">
-                            <rect key="frame" x="83" y="549.5" width="246.5" height="50"/>
+                            <rect key="frame" x="62" y="549.5" width="290" height="50"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="Dhl-l7-LXK" secondAttribute="height" multiplier="29:5" id="bKO-C5-lLB"/>
+                            </constraints>
                             <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="17"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -217,15 +220,15 @@
                         <constraint firstItem="Dhl-l7-LXK" firstAttribute="top" secondItem="jMt-PU-gwi" secondAttribute="top" id="EI9-QS-6X4"/>
                         <constraint firstItem="Ek2-tZ-a8U" firstAttribute="centerX" secondItem="0tg-px-P7b" secondAttribute="centerX" id="Ijt-gP-86o"/>
                         <constraint firstItem="Ek2-tZ-a8U" firstAttribute="leading" secondItem="0tg-px-P7b" secondAttribute="leading" constant="64" id="IrF-ts-qKh"/>
-                        <constraint firstAttribute="trailing" secondItem="jMt-PU-gwi" secondAttribute="trailing" constant="84.5" id="K6U-5m-y14"/>
                         <constraint firstItem="jMt-PU-gwi" firstAttribute="top" secondItem="9UF-hz-N8B" secondAttribute="bottom" constant="60" id="OZZ-Se-qy5"/>
                         <constraint firstItem="9r7-3w-QIi" firstAttribute="leading" secondItem="0tg-px-P7b" secondAttribute="leading" constant="20" id="Sk4-gC-Ygg"/>
-                        <constraint firstItem="jMt-PU-gwi" firstAttribute="leading" secondItem="0tg-px-P7b" secondAttribute="leading" constant="83" id="YIf-ld-O9t"/>
+                        <constraint firstItem="jMt-PU-gwi" firstAttribute="centerX" secondItem="0tg-px-P7b" secondAttribute="centerX" id="YIf-ld-O9t"/>
                         <constraint firstItem="Dhl-l7-LXK" firstAttribute="trailing" secondItem="jMt-PU-gwi" secondAttribute="trailing" id="bDF-JL-9es"/>
                         <constraint firstItem="9r7-3w-QIi" firstAttribute="top" secondItem="Ek2-tZ-a8U" secondAttribute="bottom" constant="23" id="e2D-PO-3Hr"/>
                         <constraint firstItem="9UF-hz-N8B" firstAttribute="trailing" secondItem="9r7-3w-QIi" secondAttribute="trailing" id="fwP-gR-jpL"/>
                         <constraint firstItem="Dhl-l7-LXK" firstAttribute="leading" secondItem="jMt-PU-gwi" secondAttribute="leading" id="g7r-GK-REC"/>
                         <constraint firstAttribute="trailing" secondItem="9r7-3w-QIi" secondAttribute="trailing" constant="20" id="iSc-Qa-gVr"/>
+                        <constraint firstItem="jMt-PU-gwi" firstAttribute="width" secondItem="0tg-px-P7b" secondAttribute="width" multiplier="0.7" id="lnK-Og-cRX"/>
                         <constraint firstAttribute="trailing" secondItem="Ek2-tZ-a8U" secondAttribute="trailing" constant="64" id="m9h-Yk-8gV"/>
                         <constraint firstItem="9UF-hz-N8B" firstAttribute="leading" secondItem="9r7-3w-QIi" secondAttribute="leading" id="svX-xQ-Zgv"/>
                         <constraint firstItem="Ek2-tZ-a8U" firstAttribute="centerY" secondItem="0tg-px-P7b" secondAttribute="centerY" constant="-178" id="zZX-L6-QTm"/>
