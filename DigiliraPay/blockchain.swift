@@ -94,7 +94,8 @@ class Blockchain: NSObject {
     private let wavesCrypto: WavesCrypto = WavesCrypto()
     
     let digiliraPay = digiliraPayApi()
-    
+    let throwEngine = ErrorHandling()
+
     func arrayWithSize(_ s: String) -> [UInt8] {
         let b: [UInt8] = Array(s.utf8)
         return toByteArray(Int16(b.count)) + b
@@ -105,7 +106,7 @@ class Blockchain: NSObject {
     var onTransferTransaction: ((_ result: NodeService.DTO.Transaction)->())?
     var onVerified: ((_ result: [String : AnyObject])->())?
     var onSensitive: ((_ result: digilira.wallet, _ err: String)->())?
-    var onError: ((_ result: String)->())?
+    var onError: ((_ result: Error)->())?
     var onPinSuccess: ((_ result: Bool)->())?
     var onSmartAvailable: ((_ result: Bool)->())?
     
@@ -128,8 +129,8 @@ class Blockchain: NSObject {
     
     func sendTransaction2(recipient: String, fee: Int64, amount:Int64, assetId:String, attachment:String, wallet:digilira.wallet) {
         guard let chainId = WavesSDK.shared.enviroment.chainId else { return }
-        guard WavesCrypto.shared.address(seed: wallet.seed!, chainId: chainId) != nil else { return }
-        guard let senderPublicKey = WavesCrypto.shared.publicKey(seed: wallet.seed!) else { return }
+        guard WavesCrypto.shared.address(seed: wallet.seed, chainId: chainId) != nil else { return }
+        guard let senderPublicKey = WavesCrypto.shared.publicKey(seed: wallet.seed) else { return }
         guard wallet.seed != "" else { return }
         
         let feeAssetId = digilira.sponsorToken
@@ -154,7 +155,7 @@ class Blockchain: NSObject {
         
         
         // sign transfer transaction using seed
-        queryModel.sign(seed: wallet.seed!)
+        queryModel.sign(seed: wallet.seed)
         
         let send = NodeService.Query.Transaction.transfer(queryModel)
         
@@ -168,7 +169,7 @@ class Blockchain: NSObject {
             }, onError: { (error ) -> Void in
                 
                 if let s = error as? NetworkError{
-                    self.onError!(s.errorType)
+                    self.onError!(s)
                 }
                 
             })
@@ -275,8 +276,8 @@ class Blockchain: NSObject {
 
     func createWithdrawRequest(token: WavesToken, address: String, currency: String, amount: Int64) {
         
-        self.onError = { error in
-            print(error)
+        self.onError = { [self] error in
+            throwEngine.evaluateError(error: error)
         }
         
         self.onSensitive = { wallet, error in
@@ -411,7 +412,7 @@ class Blockchain: NSObject {
             
             if error != nil {
                 //                print("error: \(error!.localizedDescription): \(error!)")
-                self.onError!(error!.localizedDescription)
+                self.onError!(error!)
                 
             } else if data != nil {
                 
@@ -440,19 +441,23 @@ class Blockchain: NSObject {
     
     
     
-    func returnAsset (assetId: String) -> String {
+    func returnAsset (assetId: String) throws -> digilira.coin {
         
         switch assetId {
         case digilira.bitcoin.token:
-            return digilira.bitcoin.tokenName
+            return digilira.bitcoin
         case digilira.ethereum.token:
-            return digilira.ethereum.tokenName
+            return digilira.ethereum
         case digilira.waves.token:
-            return digilira.waves.tokenName
+            return digilira.waves
         case digilira.charity.token:
-            return digilira.charity.tokenName
+            return digilira.charity
+        case digilira.tether.token:
+            return digilira.tether
+        case digilira.sponsorToken:
+            throw digilira.NAError.sponsorToken
         default:
-            return ""
+            throw digilira.NAError.notListedToken
         }
         
     }
@@ -464,37 +469,43 @@ class Blockchain: NSObject {
     }
     
     func smartD(initial: Bool) {
-        let wallet = getSeed()
         
-        guard let chainId = WavesSDK.shared.enviroment.chainId else { return }
-        guard let senderPublicKey = WavesCrypto.shared.publicKey(seed: wallet.seed!) else { return }
-        
-        let fee: Int64 = 1400000
-        let timestamp = Int64(Date().timeIntervalSince1970) * 1000
-        
-        var queryModel = NodeService.Query.Transaction.SetScript.init(chainId: chainId,
-                                                                      fee: fee,
-                                                                      timestamp: timestamp,
-                                                                      senderPublicKey: senderPublicKey,
-                                                                      script: digilira.smartAccount.script)
-        
-        queryModel.sign(seed: wallet.seed!)
-        let send = NodeService.Query.Transaction.setScript(queryModel)
-        
-        if initial {
-            WavesSDK.shared.services
-                .nodeServices
-                .transactionNodeService
-                .transactions(query: send)
-                .subscribe(onNext: {(tx) in
-                    print(tx) // Do something on success, now we have wavesBalance.balance in satoshi in Long
-                }, onError: {(error) in
-                    print(error)
-                })
-        } else {
-            digiliraPay.updateSmartAcountScript(data: send)
+        do {
+            
+            let wallet = try getSeed()
+            
+            guard let chainId = WavesSDK.shared.enviroment.chainId else { return }
+            guard let senderPublicKey = WavesCrypto.shared.publicKey(seed: wallet.seed) else { return }
+            
+            let fee: Int64 = 1400000
+            let timestamp = Int64(Date().timeIntervalSince1970) * 1000
+            
+            var queryModel = NodeService.Query.Transaction.SetScript.init(chainId: chainId,
+                                                                          fee: fee,
+                                                                          timestamp: timestamp,
+                                                                          senderPublicKey: senderPublicKey,
+                                                                          script: digilira.smartAccount.script)
+            
+            queryModel.sign(seed: wallet.seed)
+            let send = NodeService.Query.Transaction.setScript(queryModel)
+            
+            if initial {
+                WavesSDK.shared.services
+                    .nodeServices
+                    .transactionNodeService
+                    .transactions(query: send)
+                    .subscribe(onNext: {(tx) in
+                        print(tx) // Do something on success, now we have wavesBalance.balance in satoshi in Long
+                    }, onError: {(error) in
+                        self.throwEngine.evaluateError(error: error)
+                    })
+            } else {
+                digiliraPay.updateSmartAcountScript(data: send)
+            }
+        } catch {
+            print (error)
         }
-        
+         
     }
     
     func checkBalance(account: NodeService.DTO.AddressScriptInfo) {
@@ -522,18 +533,28 @@ class Blockchain: NSObject {
     }
     
     
-    func checkTransactions (address: String, returnCompletion: @escaping ([NodeService.DTO.Transaction]?) -> () ) {
+    func checkTransactions (address: String, returnCompletion: @escaping ([NodeService.DTO.Transaction]) -> () ) {
         WavesSDK.shared.services.nodeServices.transactionNodeService
             .transactions(by: address, offset: 0, limit: 100)
             .observeOn(MainScheduler.asyncInstance)
             .subscribe({(history) in
-                returnCompletion(history.element?.transactions)
+                if let h = history.element {
+                    returnCompletion(h.transactions)
+                }
             })
             .disposed(by: disposeBag)
     }
     
     func checkSmart(address: String) {
-        wavesApi(seed: self.getSeed().seed!)
+        
+        do {
+            let seed = try getSeed()
+            wavesApi(seed: seed.seed)
+        } catch {
+            print(error)
+        }
+        
+        
         WavesSDK.shared.services
             .nodeServices
             .addressesNodeService
@@ -551,14 +572,28 @@ class Blockchain: NSObject {
     func getSensitive(pin:Bool) {
         
         if pin {
-            self.onSensitive!(getSeed(), "ok")
-            return
+            do {
+                let seed = try getSeed()
+                self.onSensitive!(seed, "ok")
+                return
+            } catch {
+                print(error)
+            }
         }
         
         
         digiliraPay.onTouchID = { res, err in
             if res == true {
-                self.onSensitive!(self.getSeed(), "ok")
+                                
+                do {
+                    let seed = try self.getSeed()
+                    self.onSensitive!(seed, "ok")
+                    return
+                } catch {
+                    print(error)
+                }
+                
+                
             } else {
                 self.onSensitive!(digilira.wallet.init(seed: ""), err)
             }
@@ -568,17 +603,26 @@ class Blockchain: NSObject {
         
     }
     
-    private func getSeed() -> digilira.wallet {
-        var seed = digilira.wallet.init(seed: "")
-        if let loginCredits = secretKeys.LocksmithLoad(forKey: "sensitive", conformance: digilira.login.self) {
-            seed.seed = loginCredits.seed
+    private func getSeed() throws -> digilira.wallet {
+        do {
+            let seed = try secretKeys.LocksmithLoad(forKey: "sensitive", conformance: digilira.login.self)
+            let r = digilira.wallet.init(seed: seed.seed)
+            return r
+        } catch {
+            throw digilira.NAError.seed404
         }
-        return seed
     }
     
     func checkIfUser() -> Bool {
-        if getSeed().seed == "" {return false}
-        return true
+        do {
+            let seed = try getSeed()
+            if seed.seed == "" {
+                return false
+            }
+                return true
+        } catch {
+            return false
+        }
     }
     
     func create (imported: Bool = false, importedSeed: String = "", returnCompletion: @escaping (String) -> () ) {

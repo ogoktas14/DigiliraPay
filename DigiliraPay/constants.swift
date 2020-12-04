@@ -109,6 +109,7 @@ struct digilira {
          var token: String
          var symbol: String
          var tokenName: String
+         var decimal: Int
          var network: String
     }
     
@@ -119,25 +120,33 @@ struct digilira {
     static var bitcoin = coin.init(token: "FjTB2DdymTfpYbCCdcFwoRbHQnEhQD11CUm6nAF7P1UD",
                             symbol: "BTC",
                             tokenName: "Bitcoin",
+                            decimal: 8,
                             network: "bitcoin")
     
     static var ethereum = coin.init(token: "LVf3qaCtb9tieS1bHD8gg5XjWvqpBm5TaDxeSVcqPwn",
                             symbol: "ETH",
                             tokenName: "Ethereum",
+                            decimal: 8,
                             network: "ethereum")
      
     static var waves = coin.init(token: "HGoEZAsEQpbA3DJyV9J3X1JCTTBuwUB6PE19g1kUYXsH",
                             symbol: "WAVES",
                             tokenName: "Waves",
+                            decimal: 8,
                             network: "waves")
     
     static var charity = coin.init(token: "2CrDXATWpvrriHHr1cVpQM65CaP3m7MJ425xz3tn9zMr",
                             symbol: "KZY",
                             tokenName: "Kızılay Token",
+                            decimal: 8,
                             network: "waves")
-     
-    static let networks = [bitcoin, ethereum, waves, charity]
-    static let networksDescription = ["Bitcoin", "Ethereum", "Waves", "Kızılay Token"]
+    static var tether = coin.init(token: "5Sh9KghfkZyhjwuodovDhB6PghDUGBHiAPZ4MkrPgKtX", symbol: "USD",
+                                  tokenName: "Tether USDT",
+                                  decimal: 6,
+                                  network: "waves")
+    
+    static let networks = [bitcoin, ethereum, waves, charity, tether]
+    static let networksDescription = ["Bitcoin", "Ethereum", "Waves", "Kızılay Token", "Tether"]
 
     struct transactionDestination {
         static let domestic = "domestic"
@@ -299,7 +308,7 @@ struct digilira {
     }
     
     struct wallet: Encodable {
-        var seed: String?
+        var seed: String
     }
     
     struct product: Encodable {
@@ -323,8 +332,32 @@ struct digilira {
         let tokenName:String
         let tokenSymbol: String
         let availableBalance: Int64
+        let decimal: Int
         let balance: Int64
         let tlExchange: Double
+    }
+    
+    enum NAError: Error {
+        case emptyAuth
+        case emptyPassword
+        case sponsorToken
+        case notListedToken
+        case E_500
+        case E_501
+        case E_502
+        case E_503
+        case E_400
+        case E_401
+        case E_402
+        case E_403
+        case E_404
+        case user404
+        case seed404
+        case tokenNotFound
+        case parsingError
+        case keychainSaveError
+        
+        
     }
     
     struct refund: Encodable {

@@ -40,7 +40,7 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     let digiliraPay = digiliraPayApi()
     var ticker: digilira.ticker?
  
-    public var selectedCoinX: digilira.coin = digilira.coin.init(token: "", symbol: "", tokenName: "", network: "")
+    public var selectedCoinX: digilira.coin?
 
     override func awakeFromNib()
     {
@@ -85,10 +85,12 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     override func willMove(toSuperview newSuperview: UIView?) {
-        switchCurrency.setTitle(selectedCoinX.symbol, forSegmentAt: 1)
-        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
-        swipeRight.direction = .right
-        self.addGestureRecognizer(swipeRight)
+        if let coin = selectedCoinX {
+            switchCurrency.setTitle(coin.symbol, forSegmentAt: 1)
+            let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
+            swipeRight.direction = .right
+            self.addGestureRecognizer(swipeRight)
+        }
     }
     
     @objc func copyToClipboard() {
@@ -168,8 +170,8 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     func setAdress()  {
         do {
             let user = try secretKeys.userData()
-            
-            switch selectedCoinX.network {
+            if let coin = selectedCoinX {
+            switch coin.network {
             case digilira.bitcoin.network:
                 coinPrice = (ticker?.btcUSDPrice)! * (ticker?.usdTLPrice)!
                 address = user.btcAddress
@@ -179,7 +181,7 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
                 address = user.ethAddress
                 break
             case digilira.waves.network:
-                switch selectedCoinX.tokenName {
+                switch coin.tokenName {
                 case digilira.waves.tokenName:
                     coinPrice = (ticker?.wavesUSDPrice)! * (ticker?.usdTLPrice)!
                     address = user.wallet
@@ -201,6 +203,7 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
                 coinPrice = 0
                 break
             }
+            }
         } catch {
             
         }
@@ -218,28 +221,31 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
             textAmount.text = "0"
         }
         
-        let image = generateQRCode(from: selectedCoinX.network, network: selectedCoinX.network, address: address!, amount: textAmount.text!, assetId: assetId)
+        if let coin = selectedCoinX {
+        let image = generateQRCode(from: coin.network, network: coin.network, address: address!, amount: textAmount.text!, assetId: assetId)
         qrImage.image = image
         textAmount.text = ""
         setPlaceHolderText()
 //        adresTextView.text = address
         adresBtn.setTitle(address, for: .normal)
-        switchCurrency.setTitle(selectedCoinX.symbol, forSegmentAt: 1)
+        switchCurrency.setTitle(coin.symbol, forSegmentAt: 1)
         switchCurrency.setTitle("₺", forSegmentAt: 0)
         textAmount.isEnabled = true
         switchCurrency.isEnabled = true
-        adressInfoLabel.text = selectedCoinX.tokenName + " Yatır"
+        adressInfoLabel.text = coin.tokenName + " Yatır"
         shareButtonView.isHidden = false
         copyIcon.isHidden = false
         
         calcPrice(text: textAmount.text!)
+        }
     }
     
     
     func calcPrice(text: String) {
+        if let coin = selectedCoinX {
         if text == "" {
             switchCurrency.setTitle("₺", forSegmentAt: 0)
-            switchCurrency.setTitle(selectedCoinX.symbol, forSegmentAt: 1)
+            switchCurrency.setTitle(coin.symbol, forSegmentAt: 1)
             return
         }
         if switchCurrency.selectedSegmentIndex == 0 { //₺
@@ -247,18 +253,19 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
             price =  amount! / (coinPrice!)
  
             switchCurrency.setTitle(String(format: "%.2f", amount!) + " ₺", forSegmentAt: 0)
-            switchCurrency.setTitle(String(format: "%.8f", price!) + " " + selectedCoinX.symbol, forSegmentAt: 1)
+            switchCurrency.setTitle(String(format: "%.8f", price!) + " " + coin.symbol, forSegmentAt: 1)
         }
         
         if switchCurrency.selectedSegmentIndex == 1 { //token
             price = Double.init(text)!
             amount = (coinPrice!) * price!
             switchCurrency.setTitle(String(format: "%.2f", amount!) + " ₺", forSegmentAt: 0)
-            switchCurrency.setTitle(String(format: "%.8f", price!) + " " + selectedCoinX.symbol, forSegmentAt: 1)
+            switchCurrency.setTitle(String(format: "%.8f", price!) + " " + coin.symbol, forSegmentAt: 1)
         }
         
-        let image = generateQRCode(from: selectedCoinX.network, network: selectedCoinX.network, address: address!, amount: String(price!), assetId: assetId)
+        let image = generateQRCode(from: coin.network, network: coin.network, address: address!, amount: String(price!), assetId: assetId)
         qrImage.image = image
+        }
     }
        
     
@@ -289,35 +296,33 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
             print("Not found")
         }
         
-        
         if  textField.text!.count > maxLength {
             if textField.text!.last != "." {
                 textField.text!.removeLast()
             }
-
             return
-            
         }
 
-        
-        guard Float.init(textField.text!) != nil else {
-            textField.text = ""
-            switchCurrency.setTitle("₺", forSegmentAt: 0)
-            switchCurrency.setTitle(selectedCoinX.symbol, forSegmentAt: 1)
-            return
+            if let coin = selectedCoinX {
+                guard Float.init(textField.text!) != nil else {
+                    textField.text = ""
+                    switchCurrency.setTitle("₺", forSegmentAt: 0)
+                    switchCurrency.setTitle(coin.symbol, forSegmentAt: 1)
+                    return
+                    
+                }
             
-        }
 
-        if textField.text == "" {
-            switchCurrency.setTitle("₺", forSegmentAt: 0)
-            switchCurrency.setTitle(selectedCoinX.symbol, forSegmentAt: 1)
-            return}
-        
-        usdPrice = ticker?.usdTLPrice
-        
- 
-        calcPrice(text: textField.text!)
-  
+                if textField.text == "" {
+                    switchCurrency.setTitle("₺", forSegmentAt: 0)
+                    switchCurrency.setTitle(coin.symbol, forSegmentAt: 1)
+                    return}
+                
+                usdPrice = ticker?.usdTLPrice
+                
+         
+                calcPrice(text: textField.text!)
+            }
         
         
     }
@@ -328,6 +333,8 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     
     func setPlaceHolderText() {
         let isAmount = textAmount.text
+        
+        if let coin = selectedCoinX {
         switch switchCurrency.selectedSegmentIndex
         {
         case 0:
@@ -338,20 +345,23 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
             }
         case 1:
             if isAmount == "" {
-                textAmount.placeholder = "Miktar (" + selectedCoinX.symbol + ")"
+                textAmount.placeholder = "Miktar (" + coin.symbol + ")"
             }else {
                 textAmount.text = String(format: "%.8f", price!)
             }
         default:
             break;
         }
+        }
     }
     override func didMoveToSuperview() {
         
+        if let coin = selectedCoinX {
         //adressLabel.text = address
-        if selectedCoinX.network == "" {return}
-        let image = generateQRCode(from: selectedCoinX.network, network: selectedCoinX.network, address: address!, amount: textAmount.text!, assetId: assetId)
+        if coin.network == "" {return}
+        let image = generateQRCode(from: coin.network, network: coin.network, address: address!, amount: textAmount.text!, assetId: assetId)
         qrImage.image = image
+        }
     }
 
     @IBAction func shareButton(_ sender: Any)

@@ -17,7 +17,7 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     
     var pickerData: [digilira.coin] = [digilira.coin]()
     let thePicker = UIPickerView()
-
+    
     @IBOutlet weak var coinView: UIView!
     @IBOutlet weak var siparis: UIView!
     @IBOutlet weak var coinLbl: UILabel!
@@ -30,7 +30,7 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     @IBOutlet weak var recipientText: UITextField!
     @IBOutlet weak var btnSend: UIButton!
     @IBOutlet weak var adresBtn: UIButton!
-
+    
     var transaction: SendTrx?
     private var amount: Double = 0.0
     private var price: Double = 0.0
@@ -38,42 +38,48 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     private var usdPrice: Double?
     var ticker: digilira.ticker?
     private var decimal: Bool = false
-
+    
     public var address: String?
-     
-    private var selectedCoinX: digilira.coin = digilira.coin.init(token: "", symbol: "", tokenName: "", network: "")
+    
+    private var selectedCoinX: digilira.coin?
     private var selectedIndex: Int = 0
     
     let digiliraPay = digiliraPayApi()
-
+    
     @IBAction func sendMoneyButton(_ sender: Any) {
         var isMissing = false
-
+        
         let isAmount = amount
         if isAmount == 0.0 || isAmount == 0 {
             textAmount.attributedPlaceholder = NSAttributedString(string: textAmount.placeholder!, attributes: [NSAttributedString.Key.foregroundColor : UIColor.red])
             textAmount.textColor = .red
             isMissing = true
         }
-                
+        
         if recipientText.text == "" {
             recipientText.attributedPlaceholder = NSAttributedString(string: recipientText.placeholder!, attributes: [NSAttributedString.Key.foregroundColor : UIColor.red])
             isMissing = true
         }
         
-        if selectedCoinX.network == "" {
-            adresBtn.setTitleColor(.red, for: .normal)
-            isMissing = true
-        }
-        
-        if transaction?.destination == digilira.transactionDestination.foreign {
-            if !checkAddress(network: selectedCoinX.network, address: recipientText.text!) {
-                recipientText.textColor = .red
+        if let coin = selectedCoinX {
+            if coin.network == "" {
+                adresBtn.setTitleColor(.red, for: .normal)
                 isMissing = true
             }
         }
         
-
+        if let transaction = transaction {
+            if transaction.destination == digilira.transactionDestination.foreign {
+                if let coin = selectedCoinX {
+                    if !checkAddress(network: coin.network, address: recipientText.text!) {
+                        recipientText.textColor = .red
+                        isMissing = true
+                    }
+                }
+            }
+        }
+        
+        
         if isMissing {
             shake()
             return
@@ -84,55 +90,56 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
             transaction?.destination = digilira.transactionDestination.domestic
         }
         
-        if !transaction!.memberCheck {
-            if !checkAddress(network: selectedCoinX.network, address: recipientText.text!) {
-                recipientText.textColor = .red
-                isMissing = true
-            }
-            
-            let external = digilira.externalTransaction.init(network: selectedCoinX.network,
-                                                             address: recipientText.text,
-                                                             amount: Int64(isAmount * 100000000),
-                                                             assetId: selectedCoinX.token)
-            
-            digiliraPay.onMember = { res, data in
-                DispatchQueue.main.async {
-                    switch res {
-                    case true:
-                        let trx = SendTrx.init(merchant: data?.owner!,
-                                               recipient: (data?.wallet)!,
-                                               assetId: data?.assetId!,
-                                               amount: data?.amount!,
-                                               fee: digilira.sponsorTokenFee,
-                                               fiat: self.price * 100000000,
-                                               attachment: data?.message,
-                                               network: data?.network!,
-                                               destination: data?.destination!,
-                                               massWallet: data?.wallet,
-                                               memberCheck: true
-                        )
-                        
-                 
-                        self.delegate?.sendCoinNew(params: trx)
-                    default:
-                        return
+        if let coin = selectedCoinX {
+            let double = Double(truncating: pow(10,coin.decimal) as NSNumber)
+            if !transaction!.memberCheck {
+                if !checkAddress(network: coin.network, address: recipientText.text!) {
+                    recipientText.textColor = .red
+                    isMissing = true
+                }
+                
+                let external = digilira.externalTransaction.init(network: coin.network,
+                                                                 address: recipientText.text,
+                                                                 amount: Int64(isAmount * double),
+                                                                 assetId: coin.token)
+                
+                digiliraPay.onMember = { res, data in
+                    DispatchQueue.main.async {
+                        switch res {
+                        case true:
+                            let trx = SendTrx.init(merchant: data?.owner!,
+                                                   recipient: (data?.wallet)!,
+                                                   assetId: data?.assetId!,
+                                                   amount: data?.amount!,
+                                                   fee: digilira.sponsorTokenFee,
+                                                   fiat: self.price * double,
+                                                   attachment: data?.message,
+                                                   network: data?.network!,
+                                                   destination: data?.destination!,
+                                                   massWallet: data?.wallet,
+                                                   memberCheck: true
+                            )
+                            
+                            
+                            self.delegate?.sendCoinNew(params: trx)
+                        default:
+                            return
+                        }
                     }
+                    
+                    
+                    
                 }
                 
                 
+                digiliraPay.isOurMember(external: external)
                 
+            }else {
+                transaction?.amount = Int64(isAmount * double)
+                delegate?.sendCoinNew(params: transaction!)
             }
-            
-            
-            digiliraPay.isOurMember(external: external)
-
-        }else {
-            transaction?.amount = Int64(isAmount * 100000000)
-            delegate?.sendCoinNew(params: transaction!)
+             
         }
-         
-        
-
     }
     
     func checkAddress(network: String, address: String) -> Bool {
@@ -162,7 +169,7 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         }
         return result
     }
-     
+    
     func shakeScreen() {
         let animation = CABasicAnimation(keyPath: "position")
         animation.duration = 0.07
@@ -188,7 +195,7 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         } else {
             decimal = false
         }
-         
+        
         let needle: Character = "."
         if let idx = str!.firstIndex(of: needle) {
             let pos = str!.distance(from: str!.startIndex, to: idx)
@@ -208,25 +215,29 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
             }
             return
         }
-        guard Float.init(textField.text!) != nil else {
-            textField.text = ""
-            coinSwitch.setTitle("₺", forSegmentAt: 0)
-            coinSwitch.setTitle(selectedCoinX.symbol, forSegmentAt: 1)
-            return
+        
+        
+        if let coin = selectedCoinX {
+            guard Float.init(textField.text!) != nil else {
+                textField.text = ""
+                coinSwitch.setTitle("₺", forSegmentAt: 0)
+                coinSwitch.setTitle(coin.symbol, forSegmentAt: 1)
+                return
+            }
+            
+            if textField.text == "" {
+                coinSwitch.setTitle("₺", forSegmentAt: 0)
+                coinSwitch.setTitle(coin.symbol, forSegmentAt: 1)
+                return}
+            setCoinPrice()
+            calcPrice(text: textField.text!)
         }
-
-        if textField.text == "" {
-            coinSwitch.setTitle("₺", forSegmentAt: 0)
-            coinSwitch.setTitle(selectedCoinX.symbol, forSegmentAt: 1)
-            return}
-        setCoinPrice()
-        calcPrice(text: textField.text!)
- 
+        
     }
     func setQR (params: SendTrx) {
         
         if params.products != nil {
-
+            
             for (index, item) in params.products!.enumerated() {
                 setCustomCell(view1: siparis, rowIndex: index, info: item.order_pname!, price: item.order_price!)
             }
@@ -237,7 +248,7 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
             for subView in siparis.subviews
             { subView.removeFromSuperview() }
         }
- 
+        
         if params.destination == digilira.transactionDestination.foreign {
             adresBtn.isEnabled = true
             recipientText.isEnabled = true
@@ -271,48 +282,49 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
             default:
                 return
                     setCoinPrice()
-        }
+            }
         default:
             return
         }
         
-        amount = (Double(params.amount!) / Double(100000000))
-        price = Double(params.fiat!)
         
-        adresBtn.setTitleColor(.black, for: .normal)
-        recipientText.textColor = .black
-        textAmount.textColor = .black
-
-        recipientText.text = params.merchant
-        coinSwitch.setTitle(price.description + " ₺", forSegmentAt: 0)
-        coinSwitch.setTitle(amount.description + " " + selectedCoinX.symbol, forSegmentAt: 1)
-        adresBtn.setTitle(selectedCoinX.tokenName, for: .normal)
-//        coinTextField.text = selectedCoinX.tokenName
-        
-        setPlaceHolderText()
- 
-        if params.destination == digilira.transactionDestination.interwallets {
-//            coinTextField.isEnabled = false
-            adresBtn.isEnabled = false
-            recipientText.isEnabled = false
-        }
-        if params.destination == digilira.transactionDestination.domestic {
-//            coinTextField.isEnabled = false
-            adresBtn.isEnabled = false
-            recipientText.isEnabled = false
-            textAmount.isEnabled = false
-        }
-        btnSend.isEnabled = true
-        btnSend.backgroundColor = .systemBlue
-
-        if params.destination == digilira.transactionDestination.foreign {
-            let isValid = checkAddress(network: selectedCoinX.network, address: params.merchant!)
-            if !isValid {
-                recipientText.textColor = .red
-                btnSend.backgroundColor = .red
-                btnSend.isEnabled = false
+        if let coin = selectedCoinX {
+            let double = Double(truncating: pow(10,coin.decimal) as NSNumber)
+            amount = (Double(params.amount!) / double)
+            price = Double(params.fiat!)
+            
+            adresBtn.setTitleColor(.black, for: .normal)
+            recipientText.textColor = .black
+            textAmount.textColor = .black
+            
+            recipientText.text = params.merchant
+            coinSwitch.setTitle(price.description + " ₺", forSegmentAt: 0)
+            coinSwitch.setTitle(amount.description + " " + coin.symbol, forSegmentAt: 1)
+            adresBtn.setTitle(coin.tokenName, for: .normal)
+            
+            setPlaceHolderText()
+            
+            if params.destination == digilira.transactionDestination.interwallets {
+                adresBtn.isEnabled = false
+                recipientText.isEnabled = false
             }
-
+            if params.destination == digilira.transactionDestination.domestic {
+                adresBtn.isEnabled = false
+                recipientText.isEnabled = false
+                textAmount.isEnabled = false
+            }
+            btnSend.isEnabled = true
+            btnSend.backgroundColor = .systemBlue
+            
+            if params.destination == digilira.transactionDestination.foreign {
+                let isValid = checkAddress(network: coin.network, address: params.merchant!)
+                if !isValid {
+                    recipientText.textColor = .red
+                    btnSend.backgroundColor = .red
+                    btnSend.isEnabled = false
+                }
+                
+            }
         }
     }
     
@@ -333,7 +345,7 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         let label = UILabel(frame: CGRect(x: view1.frame.origin.x, y: (height1 * 2 + 10) * CGFloat(rowIndex) , width: width, height: height1))
         let priceLbl = UILabel(frame: CGRect(x: view1.frame.origin.x, y: label.frame.maxY, width: width, height: height1))
         let solidLine = UIView(frame: CGRect(x: view1.frame.origin.x, y: priceLbl.frame.maxY, width: width, height: 2))
-
+        
         solidLine.backgroundColor = .lightGray
         
         label.textAlignment = .left
@@ -341,8 +353,8 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         
         priceLbl.textAlignment = .left
         priceLbl.text = String(price) + " ₺"
-
-
+        
+        
         label.backgroundColor = .white
         //To set the font Dynamic
         label.font = UIFont(name: "Avenir", size: 20.0)
@@ -354,38 +366,40 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         
         view1.frame.size.height = solidLine.frame.maxY
         view1.frame.size.width = width
-
+        
     }
-
+    
     
     func calcPrice(text: String) {
-        if text == "" {
-            coinSwitch.setTitle("₺", forSegmentAt: 0)
-            coinSwitch.setTitle(selectedCoinX.symbol, forSegmentAt: 1)
-            return
-        }
-        if coinSwitch.selectedSegmentIndex == 0 { //₺
-            price = Double.init(text)!
-            amount =  price / (coinPrice!)
- 
-            coinSwitch.setTitle(String(format: "%.2f", price) + " ₺", forSegmentAt: 0)
-            coinSwitch.setTitle(String(format: "%.8f", amount) + " " + selectedCoinX.symbol, forSegmentAt: 1)
-            commissionLabel.text = "Transfer ücreti: " + String(format: "%.2f", (price * 0.005)) + " ₺"
-        }
-        
-        if coinSwitch.selectedSegmentIndex == 1 { //token
-            amount = Double.init(text)!
-            price = (coinPrice!) * amount
+        if let coin = selectedCoinX {
+            if text == "" {
+                coinSwitch.setTitle("₺", forSegmentAt: 0)
+                coinSwitch.setTitle(coin.symbol, forSegmentAt: 1)
+                return
+            }
+            if coinSwitch.selectedSegmentIndex == 0 { //₺
+                price = Double.init(text)!
+                amount =  price / (coinPrice!)
+                
+                coinSwitch.setTitle(String(format: "%.2f", price) + " ₺", forSegmentAt: 0)
+                coinSwitch.setTitle(String(format: "%.8f", amount) + " " + coin.symbol, forSegmentAt: 1)
+                commissionLabel.text = "Transfer ücreti: " + String(format: "%.2f", (price * 0.005)) + " ₺"
+            }
             
-            coinSwitch.setTitle(String(format: "%.2f", price) + " ₺", forSegmentAt: 0)
-            coinSwitch.setTitle(String(format: "%.8f", amount) + " " + selectedCoinX.symbol, forSegmentAt: 1)
-            commissionLabel.text = "Transfer ücreti: " + String(format: "%.8f", (amount * 0.005))  + " " + selectedCoinX.symbol
+            if coinSwitch.selectedSegmentIndex == 1 { //token
+                amount = Double.init(text)!
+                price = (coinPrice!) * amount
+                
+                coinSwitch.setTitle(String(format: "%.2f", price) + " ₺", forSegmentAt: 0)
+                coinSwitch.setTitle(String(format: "%.8f", amount) + " " + coin.symbol, forSegmentAt: 1)
+                commissionLabel.text = "Transfer ücreti: " + String(format: "%.8f", (amount * 0.005))  + " " + coin.symbol
+            }
         }
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         adresBtn.setTitle(pickerData[0].tokenName, for: .normal)
-//        coinTextField.text = pickerData[0].tokenName
+        //        coinTextField.text = pickerData[0].tokenName
         selectedCoinX = pickerData[0]
         setCoinPrice()
         return 1 // number of session
@@ -399,12 +413,12 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         selectedCoinX = pickerData[row]
         selectedIndex = row
         setCoinPrice()
-
+        
         return pickerData[row].tokenName // dropdown item
     }
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         adresBtn.setTitle(pickerData[row].tokenName, for: .normal)
-//        coinTextField.text = pickerData[row].tokenName
+        //        coinTextField.text = pickerData[row].tokenName
         selectedCoinX = pickerData[row]
         selectedIndex = row
         setCoinPrice()
@@ -430,10 +444,10 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         picker.contentMode = .center
         picker.frame = CGRect.init(x: 0.0, y: UIScreen.main.bounds.size.height - 300, width: UIScreen.main.bounds.size.width, height: 300)
         picker.selectRow(selectedIndex, inComponent: 0, animated: true)
-
+        
         self.addSubview(picker)
         
-
+        
         toolBar = UIToolbar.init(frame: CGRect.init(x: 0.0, y: UIScreen.main.bounds.size.height - 300, width: UIScreen.main.bounds.size.width, height: 50))
         toolBar.barStyle = .default
         toolBar.items = [UIBarButtonItem.init(title: "Tamam", style: .done, target: self, action: #selector(onDoneButtonTapped))]
@@ -441,18 +455,19 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     @objc func onDoneButtonTapped() {
-        
-        if !checkAddress(network: selectedCoinX.network, address: recipientText.text!) {
-            recipientText.textColor = .red
+        if let coin = selectedCoinX {
+            if !checkAddress(network: coin.network, address: recipientText.text!) {
+                recipientText.textColor = .red
+                
+            } else {
+                btnSend.backgroundColor = .systemBlue
+                btnSend.isEnabled = true
+            }
             
-        } else {
-            btnSend.backgroundColor = .systemBlue
-            btnSend.isEnabled = true
+            isPicker = false
+            toolBar.removeFromSuperview()
+            picker.removeFromSuperview()
         }
-        
-        isPicker = false
-        toolBar.removeFromSuperview()
-        picker.removeFromSuperview()
     }
     
     @IBAction func amounTap(_ sender: Any) {
@@ -467,23 +482,23 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         delegate?.dismissNewSend()
     }
     
-
+    
     override func awakeFromNib()
     {
         coinSwitch.selectedSegmentIndex = 1
-
+        
         pickerData = digilira.networks
         
         recipientText?.addDoneCancelToolbar()
         textAmount?.addDoneCancelToolbar()
         textAmount.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
-
+        
         btnSend.layer.cornerRadius = 20
         coinSwitch.selectedSegmentIndex = 1
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(getQR))
         fetchQR.isUserInteractionEnabled = true
         fetchQR.addGestureRecognizer(tap)
-
+        
         siparis.translatesAutoresizingMaskIntoConstraints = true;
         
         
@@ -496,37 +511,40 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     func setCoinPrice () {
-        if transaction?.amount != nil {
-            commissionLabel.text = "Transfer ücreti: " + String(    Double   ((transaction?.amount)! * 5 / 1000)  / 100000000   )
-        }
-        
-        switch selectedCoinX.network {
-        case digilira.bitcoin.network:
-            coinPrice = (ticker?.btcUSDPrice)! * (ticker?.usdTLPrice)!
-            break
-        case digilira.ethereum.network:
-            coinPrice = (ticker?.ethUSDPrice)! * (ticker?.usdTLPrice)!
-            break
-        case digilira.waves.network:
-            switch selectedCoinX.tokenName {
-            case digilira.waves.tokenName:
-                coinPrice = (ticker?.wavesUSDPrice)! * (ticker?.usdTLPrice)!
+        if let coin = selectedCoinX {
+            let double = Double(truncating: pow(10,coin.decimal) as NSNumber)
+            if transaction?.amount != nil {
+                commissionLabel.text = "Transfer ücreti: " + String(    Double   ((transaction?.amount)! * 5 / 1000)  / double)
+            }
+            
+            switch coin.network {
+            case digilira.bitcoin.network:
+                coinPrice = (ticker?.btcUSDPrice)! * (ticker?.usdTLPrice)!
                 break
-            case digilira.charity.tokenName:
-                coinPrice = 1
-            break
+            case digilira.ethereum.network:
+                coinPrice = (ticker?.ethUSDPrice)! * (ticker?.usdTLPrice)!
+                break
+            case digilira.waves.network:
+                switch coin.tokenName {
+                case digilira.waves.tokenName:
+                    coinPrice = (ticker?.wavesUSDPrice)! * (ticker?.usdTLPrice)!
+                    break
+                case digilira.charity.tokenName:
+                    coinPrice = 1
+                    break
+                default:
+                    coinPrice = 0
+                }
+                break
+            case "digilira":
+                coinPrice = 0
+                break
             default:
                 coinPrice = 0
+                break
             }
-            break
-        case "digilira":
-            coinPrice = 0
-            break
-        default:
-            coinPrice = 0
-            break
+            calcPrice(text: textAmount.text!)
         }
-        calcPrice(text: textAmount.text!)
     }
     
     override func didMoveToSuperview() {
@@ -546,74 +564,77 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     
     func setPlaceHolderText() {
         
-        switch coinSwitch.selectedSegmentIndex
-        {
-        case 0:
- 
-            if price == 0.0 {
-                textAmount.placeholder = "Miktar (₺)"
-            } else {
-                textAmount.text = String(format: "%.2f", price)
+        if let coin = selectedCoinX {
+            switch coinSwitch.selectedSegmentIndex
+            {
+            case 0:
+                
+                if price == 0.0 {
+                    textAmount.placeholder = "Miktar (₺)"
+                } else {
+                    textAmount.text = String(format: "%.2f", price)
+                }
+            case 1:
+                if amount == 0.0 {
+                    textAmount.placeholder = "Miktar (" + coin.symbol + ")"
+                }else {
+                    textAmount.text = String(format: "%.8f", amount)
+                }
+            default:
+                break;
             }
-        case 1:
-            if amount == 0.0 {
-                textAmount.placeholder = "Miktar (" + selectedCoinX.symbol + ")"
-            }else {
-                textAmount.text = String(format: "%.8f", amount)
-            }
-        default:
-            break;
+            coinSwitch.setTitle(String(format: "%.2f", price) + " ₺", forSegmentAt: 0)
+            coinSwitch.setTitle(String(format: "%.8f", amount) + " " + coin.symbol, forSegmentAt: 1)
+            
         }
-        coinSwitch.setTitle(String(format: "%.2f", price) + " ₺", forSegmentAt: 0)
-        coinSwitch.setTitle(String(format: "%.8f", amount) + " " + selectedCoinX.symbol, forSegmentAt: 1)
-        
     }
     
-
+    
     
     @objc func action1() {
-          self.endEditing(true)
+        self.endEditing(true)
     }
     
     
- 
+    
 }
 
 
 extension UITextField {
-
-enum PaddingSpace {
-    case left(CGFloat)
-    case right(CGFloat)
-    case equalSpacing(CGFloat)
-}
-
-func addPadding(padding: PaddingSpace) {
-
-    self.leftViewMode = .always
-    self.layer.masksToBounds = true
-
-    switch padding {
-
-    case .left(let spacing):
-        let leftPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: spacing, height: self.frame.height))
-        self.leftView = leftPaddingView
+    
+    enum PaddingSpace {
+        case left(CGFloat)
+        case right(CGFloat)
+        case equalSpacing(CGFloat)
+    }
+    
+    func addPadding(padding: PaddingSpace) {
+        
         self.leftViewMode = .always
-
-    case .right(let spacing):
-        let rightPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: spacing, height: self.frame.height))
-        self.rightView = rightPaddingView
-        self.rightViewMode = .always
-
-    case .equalSpacing(let spacing):
-        let equalPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: spacing, height: self.frame.height))
-        // left
-        self.leftView = equalPaddingView
-        self.leftViewMode = .always
-        // right
-        self.rightView = equalPaddingView
-        self.rightViewMode = .always
+        self.layer.masksToBounds = true
+        
+        switch padding {
+        
+        case .left(let spacing):
+            let leftPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: spacing, height: self.frame.height))
+            self.leftView = leftPaddingView
+            self.leftViewMode = .always
+            
+        case .right(let spacing):
+            let rightPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: spacing, height: self.frame.height))
+            self.rightView = rightPaddingView
+            self.rightViewMode = .always
+            
+        case .equalSpacing(let spacing):
+            let equalPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: spacing, height: self.frame.height))
+            // left
+            self.leftView = equalPaddingView
+            self.leftViewMode = .always
+            // right
+            self.rightView = equalPaddingView
+            self.rightViewMode = .always
+        }
     }
 }
-}
+
 

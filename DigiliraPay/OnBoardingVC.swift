@@ -95,6 +95,7 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
             }
         }
         
+        
         if BC.checkIfUser() {
             
             digiliraPay.onLogin2 = {user, status in

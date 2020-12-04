@@ -30,7 +30,8 @@ class WalletView: UIView {
     private let refreshControl = UIRefreshControl()
 
     var frameValue = CGRect()
-    
+    var throwEngine = ErrorHandling()
+
     let BC = Blockchain()
     var trxs:[digilira.transfer] = []
 
@@ -76,8 +77,8 @@ class WalletView: UIView {
 
         self.trxs.removeAll()
         BC.checkTransactions(address: self.kullanici.wallet){ (data) in
-            DispatchQueue.main.async {
-                data?.forEach { trx in
+            DispatchQueue.main.async { [self] in
+                data.forEach { trx in
                     
                     let dateWaves = (978307200 + (trx["timestamp"] as! Int)) * 1000
                     
@@ -95,33 +96,42 @@ class WalletView: UIView {
                                 attachment = self.BC.base58(data: (trx["attachment"] as? String)!)
                             }
                             
-                            let asset = self.BC.returnAsset(assetId: trx["assetId"] as! String)
-                            
-                            var isOK = false
-                            if coin == "" {
-                                isOK = true
+                            do {
+                                let asset = try self.BC.returnAsset(assetId: trx["assetId"] as! String)
+                                
+                                
+                                var isOK = false
+                                if coin == "" {
+                                    isOK = true
+                                }
+                                
+                                if asset.tokenName == coin {
+                                    isOK = true
+                                }
+                                
+                                
+                                if isOK {
+                                    self.trxs.append (digilira.transfer.init(type: trx["type"] as? Int64,
+                                                                             id: trx["id"] as? String,
+                                                                             sender: trx["sender"] as? String,
+                                                                             senderPublicKey: trx["senderPublicKey"] as? String,
+                                                                             fee: trx["fee"] as! Int64,
+                                                                             timestamp: strDate,
+                                                                             version: trx["version"] as? Int,
+                                                                             height: trx["height"] as? Int64,
+                                                                             recipient: trx["recipient"] as? String,
+                                                                             amount: (trx["amount"] as! Int64),
+                                                                             assetId: asset.token,
+                                                                             attachment: attachment
+                                    ))
+                                    
+                                }
+                            } catch  {
+                                throwEngine.evaluateError(error: error)
                             }
                             
-                            if asset == coin {
-                                isOK = true
-                            }
+
                             
-                            
-                            if isOK {
-                                self.trxs.append (digilira.transfer.init(type: trx["type"] as? Int64,
-                                                                         id: trx["id"] as? String,
-                                                                         sender: trx["sender"] as? String,
-                                                                         senderPublicKey: trx["senderPublicKey"] as? String,
-                                                                         fee: trx["fee"] as! Int64,
-                                                                         timestamp: strDate,
-                                                                         version: trx["version"] as? Int,
-                                                                         height: trx["height"] as? Int64,
-                                                                         recipient: trx["recipient"] as? String,
-                                                                         amount: (trx["amount"] as! Int64),
-                                                                         assetId: asset,
-                                                                         attachment: attachment
-                                ))
-                            }
                         }
                     }
         
@@ -131,31 +141,40 @@ class WalletView: UIView {
                                 attachment = self.BC.base58(data: (trx["attachment"] as? String)!)
                             }
                             
-                            let asset = self.BC.returnAsset(assetId: trx["assetId"] as! String)
-                            
-                            var isOK = false
-                            if coin == "" {
-                                isOK = true
+                            do {
+                            let asset = try self.BC.returnAsset(assetId: trx["assetId"] as! String)
+                                
+                                var isOK = false
+                                if coin == "" {
+                                    isOK = true
+                                }
+                                
+                                if asset.tokenName == coin {
+                                    isOK = true
+                                }
+                                if isOK == true {
+                                    self.trxs.append (digilira.transfer.init(type: trx["type"] as? Int64,
+                                                                             id: trx["id"] as? String,
+                                                                             sender: trx["sender"] as? String,
+                                                                             senderPublicKey: trx["senderPublicKey"] as? String,
+                                                                             fee: trx["fee"] as! Int64,
+                                                                             timestamp: strDate,
+                                                                             version: trx["version"] as? Int,
+                                                                             height: trx["height"] as? Int64,
+                                                                             recipient: "not",
+                                                                             amount: (trx["totalAmount"] as! Int64),
+                                                                             assetId: asset.token,
+                                                                             attachment: attachment
+                                    ))
+                                }
+                                
+                                
+                            } catch  {
+                                
                             }
                             
-                            if asset == coin {
-                                isOK = true
-                            }
-                            if isOK == true {
-                                self.trxs.append (digilira.transfer.init(type: trx["type"] as? Int64,
-                                                                         id: trx["id"] as? String,
-                                                                         sender: trx["sender"] as? String,
-                                                                         senderPublicKey: trx["senderPublicKey"] as? String,
-                                                                         fee: trx["fee"] as! Int64,
-                                                                         timestamp: strDate,
-                                                                         version: trx["version"] as? Int,
-                                                                         height: trx["height"] as? Int64,
-                                                                         recipient: "not",
-                                                                         amount: (trx["totalAmount"] as! Int64),
-                                                                         assetId: asset,
-                                                                         attachment: attachment
-                                ))
-                            }
+                            
+ 
                         }
                     }
                 }
@@ -224,16 +243,27 @@ extension WalletView: UITableViewDelegate, UITableViewDataSource
         if trxs.count == 0 {
             return cell
         }
-        cell.operationAmount.text = (Double(trxs[indexPath[1]].amount) / Double(100000000)).description
-        cell.operationTitle.text = trxs[indexPath[1]].assetId
-        cell.operationDate.text = trxs[indexPath[1]].timestamp!
-         
-        if (trxs[indexPath[1]].recipient == kullanici.wallet) {cell.operationImage.image = UIImage(named: "tReceive48")}
-        if (trxs[indexPath[1]].sender == kullanici.wallet) {cell.operationImage.image = UIImage(named: "tSend48")}
         
-        let tapped = MyTapGesture.init(target: self, action: #selector(handleTap))
-        tapped.floatValue = indexPath[1]
-        cell.addGestureRecognizer(tapped)
+        if let assetId = trxs[indexPath[1]].assetId  {
+            do {
+                let coin = try BC.returnAsset(assetId: assetId)
+                let double = Double(truncating: pow(10,coin.decimal) as NSNumber)
+                cell.operationAmount.text = (Double(trxs[indexPath[1]].amount) / double).description
+                cell.operationTitle.text = coin.tokenName
+                cell.operationDate.text = trxs[indexPath[1]].timestamp!
+                 
+                if (trxs[indexPath[1]].recipient == kullanici.wallet) {cell.operationImage.image = UIImage(named: "tReceive48")}
+                if (trxs[indexPath[1]].sender == kullanici.wallet) {cell.operationImage.image = UIImage(named: "tSend48")}
+                
+                let tapped = MyTapGesture.init(target: self, action: #selector(handleTap))
+                tapped.floatValue = indexPath[1]
+                cell.addGestureRecognizer(tapped)
+            } catch {
+                throwEngine.evaluateError(error: error)
+            }
+        }
+
+        
         return cell
     }
     

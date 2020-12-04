@@ -206,33 +206,38 @@ class PageCardView: UIView {
         
         if let order = Order {
             if let fiyat = order.totalPrice {
-                let (amount, asset, tlfiyat) = digiliraPay.ratePrice(price: fiyat, asset: coin.tokenName, symbol: ticker)
-                
-                balanceCardView.setView(desc: coin.tokenName,
-                                        tl: MainScreen.df2so(tlfiyat),
-                                        amount: MainScreen.int2so(coin.availableBalance),
-                                        price: MainScreen.int2so(Int64(amount)),
-                                        symbol: coin.tokenName)
-                
-                
-                if coin.availableBalance >= (Int64(amount)) {
-                    Order?.asset = asset
-                    Order?.rate = (Int64(amount))
-                    payButton.isHidden = false
-                } else {
-                    balanceCardView.willPaidCoin.textColor = .systemPink
-                    balanceCardView.paidCoin.textColor = .systemPink
-                    balanceCardView.balanceCoin.textColor = .systemPink
-                    payButton.isHidden = true
+                do {
+                    let (amount, asset, tlfiyat) = try digiliraPay.ratePrice(price: fiyat, asset: coin.tokenName, symbol: ticker, digits: coin.decimal)
+                    
+                    balanceCardView.setView(desc: coin.tokenName,
+                                            tl: MainScreen.df2so(tlfiyat),
+                                            amount: MainScreen.int2so(coin.availableBalance, digits: coin.decimal),
+                                            price: MainScreen.int2so(Int64(amount), digits: coin.decimal),
+                                            symbol: coin.tokenName)
+                    
+                    
+                    if coin.availableBalance >= (Int64(amount)) {
+                        Order?.asset = asset
+                        Order?.rate = (Int64(amount))
+                        payButton.isHidden = false
+                    } else {
+                        balanceCardView.willPaidCoin.textColor = .systemPink
+                        balanceCardView.paidCoin.textColor = .systemPink
+                        balanceCardView.balanceCoin.textColor = .systemPink
+                        payButton.isHidden = true
+                    }
+                    
+                    if (asset == "TL") {
+                        balanceCardView.willPaidCoin.textColor = .systemPink
+                        balanceCardView.paidCoin.textColor = .systemPink
+                        balanceCardView.balanceCoin.textColor = .systemPink
+                        payButton.isHidden = true
+                        shake()
+                    }
+                } catch  {
+                    print(error)
                 }
-                
-                if (asset == "TL") {
-                    balanceCardView.willPaidCoin.textColor = .systemPink
-                    balanceCardView.paidCoin.textColor = .systemPink 
-                    balanceCardView.balanceCoin.textColor = .systemPink
-                    payButton.isHidden = true
-                    shake()
-                }
+
             }
         }
         

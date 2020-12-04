@@ -145,6 +145,7 @@
 		9381D2B425358B99007DEE7E /* DepositeMoneyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9381D2B325358B99007DEE7E /* DepositeMoneyView.swift */; };
 		93B7A11B252F0D8000C89E66 /* PaymentCategories.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93B7A11A252F0D8000C89E66 /* PaymentCategories.xib */; };
 		93B7A11E252F0F0A00C89E66 /* PaymentCategories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93B7A11D252F0F0A00C89E66 /* PaymentCategories.swift */; };
+		93E9D552257A930D00FE19D8 /* ErrorHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E9D551257A930D00FE19D8 /* ErrorHandling.swift */; };
 		93FC66C02562AB4E00E42AAC /* binance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93FC66BF2562AB4E00E42AAC /* binance.swift */; };
 		93FC66C32562ABAB00E42AAC /* binance.com.cer in Resources */ = {isa = PBXBuildFile; fileRef = 93FC66C22562AB9400E42AAC /* binance.com.cer */; };
 /* End PBXBuildFile section */
@@ -297,6 +298,7 @@
 		9381D2B325358B99007DEE7E /* DepositeMoneyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositeMoneyView.swift; sourceTree = "<group>"; };
 		93B7A11A252F0D8000C89E66 /* PaymentCategories.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentCategories.xib; sourceTree = "<group>"; };
 		93B7A11D252F0F0A00C89E66 /* PaymentCategories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCategories.swift; sourceTree = "<group>"; };
+		93E9D551257A930D00FE19D8 /* ErrorHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorHandling.swift; sourceTree = "<group>"; };
 		93FC66BF2562AB4E00E42AAC /* binance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = binance.swift; sourceTree = "<group>"; };
 		93FC66C22562AB9400E42AAC /* binance.com.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = binance.com.cer; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -330,6 +332,7 @@
 				0060807D23795453006FFBD2 /* constants.swift */,
 				93534F1D2549958C0000329F /* bitexenSignature.swift */,
 				93FC66BF2562AB4E00E42AAC /* binance.swift */,
+				93E9D551257A930D00FE19D8 /* ErrorHandling.swift */,
 			);
 			name = blockchain;
 			sourceTree = "<group>";
@@ -792,6 +795,7 @@
 				88CA936A231979CD008F894B /* WalletOperationButtonSView.swift in Sources */,
 				936F25B425323B2E00C5FA85 /* ColoredCardView.swift in Sources */,
 				882AAB0722FC96DD004CDAA6 /* OnBoardingVC.swift in Sources */,
+				93E9D552257A930D00FE19D8 /* ErrorHandling.swift in Sources */,
 				88CA938F231BD0AE008F894B /* ProfileSettingsView.swift in Sources */,
 				9381D2B425358B99007DEE7E /* DepositeMoneyView.swift in Sources */,
 				93534F1425483A4F0000329F /* ViewController.swift in Sources */,

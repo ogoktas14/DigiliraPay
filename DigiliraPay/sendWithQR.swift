@@ -23,6 +23,7 @@ class sendWithQR: UIView {
     var qrverisi:String?
 
     let digiliraPay = digiliraPayApi()
+    let throwEngine = ErrorHandling()
 
  
     private let supportedCodeTypes = [AVMetadataObject.ObjectType.qr]
@@ -81,7 +82,7 @@ class sendWithQR: UIView {
                    
                } catch {
                    // If any error occurs, simply print it out and don't continue any more.
-                   print(error)
+                throwEngine.evaluateError(error: error)
                    return
                }
                qrCodeFrameView = UIView()

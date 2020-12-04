@@ -142,15 +142,22 @@ extension selectCoinView: UITableViewDataSource {
     @objc func handleTap(recognizer: MyTapGesture) {
         if let price = Order?.totalPrice {
             if let ticky = ticker  {
-                let (amount, asset, tick) = digiliraPay.ratePrice(price: price, asset: recognizer.assetName, symbol: ticky)
-                print(tick)
-                let balance = Filtered[recognizer.floatValue].availableBalance
-                self.Order?.asset = asset
-                if balance < (Int64(amount)) {
-                    return
+                
+                do {
+                    let (amount, asset, tick) = try digiliraPay.ratePrice(price: price, asset: recognizer.assetName, symbol: ticky, digits: Filtered[recognizer.floatValue].decimal)
+                    print(tick)
+                    let balance = Filtered[recognizer.floatValue].availableBalance
+                    self.Order?.asset = asset
+                    if balance < (Int64(amount)) {
+                        return
+                    }
+                    self.Order?.rate = (Int64(amount))
+                    delegate?.dismissNewSend(params: Order!)
+                } catch {
+                    print(error)
                 }
-                self.Order?.rate = (Int64(amount))
-                delegate?.dismissNewSend(params: Order!)
+                
+
             }
 
         }
@@ -174,9 +181,10 @@ extension selectCoinView: UITableViewDataSource {
             cell.coinName.text = asset.tokenName
             cell.type.text = "₺" + MainScreen.df2so(asset.tlExchange)
             tapped.assetName = asset.tokenName
-
-            let double = Double(asset.balance) / Double(100000000)
-            cell.coinAmount.text = MainScreen.df2so(double, digits: 8)
+ 
+            let double = MainScreen.int2so(asset.balance, digits: asset.decimal)
+            
+            cell.coinAmount.text = double
             cell.coinCode.text = (asset.tokenSymbol)
  
         }

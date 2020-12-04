@@ -76,6 +76,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     
     @IBAction func yesIKnow(_ sender: Any) {
         if let tick = sender as? UISwitch {
+            delegate?.dismissKeyboard()
             if tick.isOn {
                 sendAndContiuneView.alpha = 1
                 sendAndContiuneView.isUserInteractionEnabled = true
@@ -153,7 +154,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
             }else {
                 
                 onayImage.image = UIImage(named: "forbidden")
-                infoTitle.text = "Girdiğiniz bilgiler kontrol ederek yeniden deneyin."
+                infoTitle.text = "Girdiğiniz bilgiler hatalıdır. Kontrol ederek yeniden deneyin."
                 isVerified = false
                 
                 understand.isEnabled = true
