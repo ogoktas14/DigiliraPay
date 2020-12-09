@@ -43,11 +43,14 @@ class ErrorHandling: NSObject {
     }
     
     func showWarning(message: String) {
-        let window = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
-        let alert = UIAlertController(title: "Bir Hata Oloştu", message:message,
-                                      preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: "Tamam" ,style:UIAlertAction.Style.default,handler: nil))
-        window?.rootViewController?.presentedViewController?.present(alert, animated: true, completion: nil)
+        DispatchQueue.main.async {
+            let window = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
+            let alert = UIAlertController(title: "Bir Hata Oloştu", message:message,
+                                          preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Tamam" ,style:UIAlertAction.Style.default,handler: nil))
+            window?.rootViewController?.presentedViewController?.present(alert, animated: true, completion: nil)
+        }
+
     }
     
     

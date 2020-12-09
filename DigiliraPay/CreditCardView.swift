@@ -22,6 +22,10 @@ class CreditCardView : UIView {
     {
         coinName.text = tokenName
         address.setTitle(wallet, for: .normal)
+        
+        if qr == UIImage.init() {
+            contentView.isHidden = true
+        }
         imageView.image = qr
         adsoyad.text = ad
     }

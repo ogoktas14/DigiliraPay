@@ -371,26 +371,36 @@ class ParaYatirView:UIView {
     
     
     func setCoin() throws -> (digilira.coin, String?, String) {
-         
-        switch Filtered[currentPage].tokenName {
-        case digilira.bitcoin.tokenName:
-            let address = kullanici?.btcAddress
-            return (digilira.bitcoin, address, "NA")
-        case digilira.ethereum.tokenName:
-            let address = kullanici?.ethAddress
-            return (digilira.ethereum, address, "NA")
-        case digilira.waves.tokenName:
-            let address = kullanici?.wallet
-            return (digilira.waves, address, digilira.charity.token)
-        case digilira.charity.tokenName:
-            let address = kullanici?.wallet
-            return (digilira.charity, address, digilira.charity.token)
+        let coin = Filtered[currentPage]
+        
+        switch coin.network {
+        case "waves":
+            
+            switch coin.tokenName {
+            case digilira.bitcoin.tokenName:
+                let address = kullanici?.btcAddress
+                return (digilira.bitcoin, address, "NA")
+            case digilira.ethereum.tokenName:
+                let address = kullanici?.ethAddress
+                return (digilira.ethereum, address, "NA")
+            case digilira.waves.tokenName:
+                let address = kullanici?.wallet
+                return (digilira.waves, address, digilira.charity.token)
+            case digilira.charity.tokenName:
+                let address = kullanici?.wallet
+                return (digilira.charity, address, digilira.charity.token)
+            default:
+                throw digilira.NAError.notListedToken
+            }
+        case "bitexen":
+            let c = digilira.coin.init(token: coin.tokenName, symbol: coin.tokenSymbol, tokenName: coin.tokenName, decimal: coin.decimal, network: coin.network)
+            return (c, coin.tokenSymbol, coin.tokenName)
         default:
             throw digilira.NAError.notListedToken
         }
     }
     
-    func setCoinCard(scrollViewSize: UIView, layer: CGFloat, coin:digilira.DigiliraPayBalance) -> UIView {
+    func setCoinCard(scrollViewSize: UIView, layer: CGFloat, coin:digilira.DigiliraPayBalance) throws -> UIView {
         ccView = UIView().loadNib(name: "CreditCardView") as! CreditCardView
         
         do {
@@ -398,14 +408,23 @@ class ParaYatirView:UIView {
             self.address1 = address
             if let kullanici = kullanici {
                 let name = kullanici.firstName! + " " + kullanici.lastName!
+                switch coin.network {
+                case "bitexen":
+                    ccView.setView(tokenName: coin.tokenName, wallet: address!, qr: UIImage.init(), ad:name)
+                    break
+                case "waves", "ethereum", "bitcoin":
                     if let a = generateQRCode(from: coin.network, network: coin.network, address: address!, amount: "0", assetId: asset) {
                         ccView.setView(tokenName: coin.tokenName, wallet: address!, qr: a, ad:name)
                     }
-                 
+                default:
+                    break
+                }
+ 
             }
  
         } catch  {
             print(error)
+            throw error
         }
 
         var orgX = scrollViewSize.frame.width
@@ -460,7 +479,12 @@ class ParaYatirView:UIView {
               }
             )
  
-            scrollAreaView.addSubview(setCoinCard(scrollViewSize: scrollAreaView, layer: 0, coin: Filtered[currentPage]))
+            do {
+                try scrollAreaView.addSubview(setCoinCard(scrollViewSize: scrollAreaView, layer: 0, coin: Filtered[currentPage]))
+            } catch {
+                print(error)
+            }
+
         }
         
     }
@@ -473,7 +497,13 @@ class ParaYatirView:UIView {
         if Filtered.count == 0 {
             return
         }
-        scrollAreaView.addSubview(setCoinCard(scrollViewSize: scrollAreaView, layer: 0, coin: Filtered[currentPage]))
+        
+        do {
+            try scrollAreaView.addSubview(setCoinCard(scrollViewSize: scrollAreaView, layer: 0, coin: Filtered[currentPage]))
+        } catch {
+            print(error)
+        }
+        
 
         pageControl.numberOfPages = Filtered.count
         pageControl.addTarget(self, action: #selector(changePage(_:)), for: .allTouchEvents)

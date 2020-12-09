@@ -430,44 +430,60 @@ class digiliraPayApi: NSObject {
         return res
     }
     
-    func ratePrice(price: Double, asset: String, symbol: digilira.ticker, digits: Int) throws -> (Double, String, Double) {
+    func ratePrice(price: Double, asset: String, symbol: digilira.ticker, digits: Int, network: String) throws -> (Double, String, Double) {
         let double = Double(truncating: pow(10,digits) as NSNumber)
-        switch asset {
-        case digilira.bitcoin.tokenName:
+        
+        switch network {
+        case "waves":
+            switch asset {
+            case digilira.bitcoin.tokenName:
+                
+                if let tl = symbol.usdTLPrice {
+                    if let btc = symbol.btcUSDPrice {
+                        let tick = (btc * tl)
+                        let result = price / tick
+                        return (Double(round(double * result)), digilira.bitcoin.token, tick)
+                    }
+                }
+            case digilira.ethereum.tokenName:
+                if let tl = symbol.usdTLPrice {
+                    if let eth = symbol.ethUSDPrice {
+                        let tick = (eth * tl)
+                        let result = price / tick
+                        return (Double(round(double * result)), digilira.ethereum.token, tick)
+                    }
+                }
+            case digilira.waves.tokenName:
+                if let tl = symbol.usdTLPrice {
+                    if let waves = symbol.wavesUSDPrice {
+                        let tick = (waves * tl)
+                        let result = price / tick
+                        return (Double(round(double * result)), digilira.waves.token, tick)
+                    }
+                }
+            case digilira.tether.tokenName:
+                if let usdt = symbol.usdTLPrice {
+                    let result = price / usdt
+                        return (Double(round(double * result)), digilira.tether.token, usdt)
+                }
+            case digilira.charity.tokenName:
+                return (price * double, digilira.charity.token, 1)
+            default:
+                throw digilira.NAError.emptyAuth
+            }
             
-            if let tl = symbol.usdTLPrice {
-                if let btc = symbol.btcUSDPrice {
-                    let tick = (btc * tl)
-                    let result = price / tick
-                    return (Double(round(double * result)), digilira.bitcoin.token, tick)
-                }
-            }
-        case digilira.ethereum.tokenName:
-            if let tl = symbol.usdTLPrice {
-                if let eth = symbol.ethUSDPrice {
-                    let tick = (eth * tl)
-                    let result = price / tick
-                    return (Double(round(double * result)), digilira.ethereum.token, tick)
-                }
-            }
-        case digilira.waves.tokenName:
-            if let tl = symbol.usdTLPrice {
-                if let waves = symbol.wavesUSDPrice {
-                    let tick = (waves * tl)
-                    let result = price / tick
-                    return (Double(round(double * result)), digilira.waves.token, tick)
-                }
-            }
-        case digilira.tether.tokenName:
+        case "bitexen":
             if let usdt = symbol.usdTLPrice {
                 let result = price / usdt
-                    return (Double(round(double * result)), digilira.tether.token, usdt) 
+                    return (Double(round(double * result)), digilira.tether.token, usdt)
             }
-        case digilira.charity.tokenName:
-            return (price * double, digilira.charity.token, 1)
+            break
         default:
-            throw digilira.NAError.emptyAuth
+            break
         }
+        
+        
+
         throw digilira.NAError.emptyAuth
     }
     

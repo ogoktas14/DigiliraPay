@@ -66,12 +66,18 @@ class PageCardView: UIView {
               }
             )
  
-            scrollAreaView.addSubview(setCoinCard(scrollViewSize: scrollAreaView, layer: 0, coin: Filtered[currentPage]))
+            do {
+                try scrollAreaView.addSubview(setCoinCard(scrollViewSize: scrollAreaView, layer: 0, coin: Filtered[currentPage]))
+            } catch {
+                print(error)
+            }
+            
         }
         
     }
     
     override func didMoveToSuperview() {
+
         // Do any additional setup after loading the view, typically from a nib.
         pageControl.numberOfPages = Filtered.count
         pageControl.addTarget(self, action: #selector(changePage(_:)), for: .allTouchEvents)
@@ -197,14 +203,14 @@ class PageCardView: UIView {
         
     }
     
-    func setCoinCard(scrollViewSize: UIView, layer: CGFloat, coin:digilira.DigiliraPayBalance) -> UIView {
+    func setCoinCard(scrollViewSize: UIView, layer: CGFloat, coin:digilira.DigiliraPayBalance) throws -> UIView {
         balanceCardView = UIView().loadNib(name: "BalanceCard") as! BalanceCard
         let ticker = digiliraPay.ticker(ticker: Ticker)
         
         if let order = Order {
             if let fiyat = order.totalPrice {
                 do {
-                    let (amount, asset, tlfiyat) = try digiliraPay.ratePrice(price: fiyat, asset: coin.tokenName, symbol: ticker, digits: coin.decimal)
+                    let (amount, asset, tlfiyat) = try digiliraPay.ratePrice(price: fiyat, asset: coin.tokenName, symbol: ticker, digits: coin.decimal, network: coin.network)
                     
                     balanceCardView.setView(desc: coin.tokenName,
                                             tl: MainScreen.df2so(tlfiyat),
@@ -233,6 +239,7 @@ class PageCardView: UIView {
                     }
                 } catch  {
                     print(error)
+                    throw error
                 }
 
             }
@@ -300,7 +307,12 @@ class PageCardView: UIView {
         
         if Filtered.count != 0 { 
             if Filtered.count >= currentPage {
-                scrollAreaView.addSubview(setCoinCard(scrollViewSize: scrollAreaView, layer: 0, coin: Filtered[currentPage]))
+                do {
+                    try scrollAreaView.addSubview(setCoinCard(scrollViewSize: scrollAreaView, layer: 0, coin: Filtered[currentPage]))
+                } catch {
+                    print(error)
+                    
+                } 
             }
         } else {
             payButton.isHidden = true

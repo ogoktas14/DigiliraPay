@@ -117,6 +117,8 @@ struct digilira {
     static var sponsorTokenFee:Int64 = 9
     static var sponsorTokenFeeMass:Int64 = 9
     
+    static var usdt = coin.init(token: "BITEXEN_USDT", symbol: "USDT", tokenName: "USDT", decimal: 1, network: "")
+    
     static var bitcoin = coin.init(token: "FjTB2DdymTfpYbCCdcFwoRbHQnEhQD11CUm6nAF7P1UD",
                             symbol: "BTC",
                             tokenName: "Bitcoin",
@@ -336,7 +338,9 @@ struct digilira {
         let decimal: Int
         let balance: Int64
         let tlExchange: Double
+        let network: String
     }
+ 
     
     enum NAError: Error {
         case emptyAuth

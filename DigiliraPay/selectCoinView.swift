@@ -144,7 +144,7 @@ extension selectCoinView: UITableViewDataSource {
             if let ticky = ticker  {
                 
                 do {
-                    let (amount, asset, tick) = try digiliraPay.ratePrice(price: price, asset: recognizer.assetName, symbol: ticky, digits: Filtered[recognizer.floatValue].decimal)
+                    let (amount, asset, tick) = try digiliraPay.ratePrice(price: price, asset: recognizer.assetName, symbol: ticky, digits: Filtered[recognizer.floatValue].decimal, network: Filtered[recognizer.floatValue].network)
                     print(tick)
                     let balance = Filtered[recognizer.floatValue].availableBalance
                     self.Order?.asset = asset

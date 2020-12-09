@@ -222,7 +222,7 @@ class MainScreen: UIViewController {
                                     availableBalance: Int64(Double(bakiye.value.availableBalance)! * double),
                                     decimal: 8,
                                     balance: Int64(Double(bakiye.value.balance)! * double),
-                                    tlExchange: lastPrice)
+                                    tlExchange: lastPrice, network: "bitexen")
                                 
                                 totalBalance += lastPrice
                                 setHeaderTotal()
@@ -279,7 +279,8 @@ class MainScreen: UIViewController {
                         availableBalance: asset1.balance,
                         decimal: asset.decimal,
                         balance: asset1.balance,
-                        tlExchange: coinPrice)
+                        tlExchange: coinPrice,
+                        network: "waves")
                     
                     totalBalance += coinPrice
                     
@@ -667,17 +668,7 @@ class MainScreen: UIViewController {
             QR = qr
             self.getOrder(address: QR)
         }
-        
-        //        if let savedQR = defaults.object(forKey: "QRARRAY2") as? Data {
-        //            let decoder = JSONDecoder()
-        //            let loadedQR = try? decoder.decode(digilira.QR.self, from: savedQR)
-        //            QR = loadedQR!
-        //            if (self.QR.address != nil) {
-        //                getOrder(address: self.QR)
-        //                self.QR = digilira.QR.init()
-        //                UserDefaults.standard.set(nil, forKey: "QRARRAY2")
-        //            }
-        //        }
+ 
         if (isSuccessView) {
             self.close()
         }
@@ -1090,7 +1081,6 @@ class MainScreen: UIViewController {
         self.QR = digilira.QR.init()
         UserDefaults.standard.set(nil, forKey: "QRARRAY2")
         
-        //profileMenuButton.isHidden = false
         closeCoinSendView()
         dismissLoadView()
         
@@ -2192,8 +2182,12 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         
         sendWithQRView.addSubview(pageCardView)
         
-        //        pageCardView.setScrollView()
-        //        pageCardView.setTableView()
+        if QR.address != nil {
+            UserDefaults.standard.set(nil, forKey: "QRARRAY2")
+            self.QR = digilira.QR.init()
+            
+        }
+        
         sendWithQRView.isHidden = false
         sendWithQRView.translatesAutoresizingMaskIntoConstraints = true
         
