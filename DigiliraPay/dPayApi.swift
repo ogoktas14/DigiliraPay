@@ -105,6 +105,15 @@ class digiliraPayApi: NSObject {
         }
     }
     
+    func alert(title: String, message:String) {
+        let window = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
+
+        let alert = UIAlertController(title: title,message:message,
+                                      preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: digilira.prompt.ok, style:UIAlertAction.Style.default,handler: nil))
+        window?.rootViewController?.presentedViewController?.present(alert, animated: true, completion: nil)
+    }
+    
     func touchID(reason: String) {
         
         let context = LAContext()
@@ -553,6 +562,8 @@ class digiliraPayApi: NSObject {
     }
     
     func login2() {
+        
+
         do {
             let loginCredits = try secretKeys.LocksmithLoad(forKey: "sensitive", conformance: digilira.login.self)
                 
@@ -585,6 +596,20 @@ class digiliraPayApi: NSObject {
                             if secretKeys.LocksmithSave(forKey: "authenticate", data: res) {
                                 do {
                                     let user = try self.decodeDefaults(forKey: res, conformance: digilira.auth.self)
+                                     
+                                    if let latestApp = user.appV {
+                                        if let appVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+                                            if let appV = Double(appVersion) {
+                                                if latestApp > appV {
+                                                    self.onError!(digilira.NAError.updateAPP,0)
+                                                     return
+                                                }
+                                            }
+                                           
+
+                                        }
+                                    }
+                                    
                                     
                                     onLogin2!(user, sts)
                                     DispatchQueue.main.async {
@@ -717,7 +742,7 @@ class OpenUrlManager {
                     amountAssetId[0] = "0"
                 }
                 let double = Double(truncating: pow(10,8) as NSNumber)
-                amount = Int64(Double.init(data[1])! * double)
+                amount = Int64(Double.init(amountAssetId[0])! * double)
                 assetId = amountAssetId[1]
             }
             self.onURL!(digilira.QR.init(network: caption, address: data[0], amount: amount, assetId: assetId))
@@ -878,11 +903,6 @@ class secretKeys: NSObject {
             print("Error", parsingError)
             return nil
         }
-    }
-    
-    enum SecurityError: Error {
-        case emptyAuth
-        case emptyPassword
     }
     
     class func userData() throws -> digilira.auth {

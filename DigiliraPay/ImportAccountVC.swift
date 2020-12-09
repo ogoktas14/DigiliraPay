@@ -91,6 +91,15 @@ class ImportAccountVC: UIViewController {
                 DispatchQueue.main.async {
                     alert.dismiss(animated: true, completion: nil)
                     switch sts {
+                    
+                    case 0:
+                        let alert = UIAlertController(title: "Uygulamanızı Güncelleyin", message: "DigiliraPAY uygulamasını kullanmaya devam edebilmek için lütfen uygulamanızı güncelleyin.", preferredStyle: .alert)
+                        
+                        alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
+                            exit(1)
+                        }))
+                        self.present(alert, animated: true)
+                        break
                     case 503:
                         let alert = UIAlertController(title: "Bir Hata Oluştu", message: "Şu anda hizmet veremiyoruz. Lütfen daha sonra yeniden deneyin.", preferredStyle: .alert)
                         

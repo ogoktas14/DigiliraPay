@@ -17,6 +17,7 @@ import Locksmith
 import Foundation
 import Wallet
 import UserNotifications
+import Photos
 
 public let kNotification = Notification.Name("kNotification")
 
@@ -59,6 +60,7 @@ class MainScreen: UIViewController {
     var newSendMoneyView = newSendView()
     var selectCoin = selectCoinView()
     var pageCardView = PageCardView()
+    var paraYatirView = ParaYatirView()
     var bitexenAPIView = BitexenAPIView()
     
     var tapProfileMenuGesture = UITapGestureRecognizer()
@@ -728,7 +730,7 @@ class MainScreen: UIViewController {
         let lamda = Date()
         let differenceInSeconds = lamda.timeIntervalSince(lastBinanceCheck)
         
-        if differenceInSeconds > 10  {
+        if differenceInSeconds > 5  {
             fetch()
             lastBinanceCheck = lamda
         } else {
@@ -1626,6 +1628,36 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
         
     }
     
+    func showMyFQr() {
+        
+        paraYatirView = UIView().loadNib(name: "ParaYatirView") as! ParaYatirView
+        paraYatirView.frame.origin.y = self.view.frame.height
+        paraYatirView.frame = CGRect(x: 0,
+                                    y: 0,
+                                    width: view.frame.width,
+                                    height: view.frame.height)
+        paraYatirView.delegate = self
+        paraYatirView.Filtered = self.Filtered
+        paraYatirView.Ticker = Ticker
+        
+        for subView in qrView.subviews
+        { subView.removeFromSuperview() }
+        
+        menuXib.isHidden = true
+        
+        qrView.addSubview(paraYatirView)
+         
+        qrView.isHidden = false
+        qrView.translatesAutoresizingMaskIntoConstraints = true
+        
+        UIView.animate(withDuration: 0.3)
+        {
+            self.qrView.frame.origin.y = 0
+            self.qrView.alpha = 1
+        }
+        
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showLoadMoney" {
             if let viewController = segue.destination as? ShareQRVC {
@@ -1682,16 +1714,16 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
             return
         }
         
-        if kullanici.status == 0 {
-            alertError()
-            return
-        }else {
-            performSegue(withIdentifier: "showLoadMoney", sender: nil)
-            
-        }
+//        if kullanici.status == 0 {
+//            alertError()
+//            return
+//        }else {
+//            performSegue(withIdentifier: "showLoadMoney", sender: nil)
+//
+//        }
         
         
-        //showMyQr()
+        showMyFQr()
         
         //        showDepositeMoneyView(mode: 1, source:"PEP Para")
         
@@ -2418,6 +2450,39 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         
     }
     
+    func popup (image: UIImage?) {
+        PHPhotoLibrary.requestAuthorization { status in
+          if status == .authorized {
+            //do things
+            print("ok")
+            if let image = image {
+                if let pngImageData = image.pngData() {
+                    // Write the png image into a filepath and return the filepath in NSURL
+                    if let pngImageURL = pngImageData.dataToFile(fileName:  UUID().uuidString + ".png") {
+                        
+                        // Create the Array which includes the files you want to share
+                        var filesToShare = [Any]()
+
+                        // Add the path of png image to the Array
+                        filesToShare.append(pngImageURL)
+                        
+                        let activityViewController = UIActivityViewController(activityItems:filesToShare, applicationActivities: nil)
+                        if #available(iOS 13.0, *) {
+                            activityViewController.isModalInPresentation = true
+                        } else {
+                            // Fallback on earlier versions
+                        }
+                        self.present(activityViewController, animated: true)
+                    }
+                }
+            }
+          }
+            
+        }
+         
+
+    }
+    
     func sendQR(ORDER: digilira.order) {
         
         do {
@@ -2553,10 +2618,12 @@ extension MainScreen: LoadCoinDelegate
         }
         for subView in self.qrView.subviews
         { subView.removeFromSuperview() }
+    
+        menuXib.isHidden = false
     }
     
     func shareQR(image: UIImage?) {
-        
+        popup(image: image)
     }
     
     func errorHandler(message: String) {
@@ -2967,10 +3034,12 @@ extension MainScreen: PinViewDelegate
         }
         
         UIView.animate(withDuration: 0.3) {
-            self.sendWithQRView.frame.origin.y = self.self.view.frame.height
+            self.sendWithQRView.frame.origin.y = self.view.frame.height
             self.sendWithQRView.alpha = 0
         }
         
+        for subView in self.sendWithQRView.subviews
+        { subView.removeFromSuperview() }
         
         
         

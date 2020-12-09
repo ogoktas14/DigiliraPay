@@ -296,12 +296,13 @@ struct digilira {
         let createdDate: String
         let dogum: String?
         let v: Int?
+        let appV: Double?
         let token: String
 
         enum CodingKeys: String, CodingKey {
             case userRole, status, pincode, imported, apnToken
             case id = "_id"
-            case username, lastName, firstName, wallet, btcAddress, ethAddress, ltcAddress, createdDate, dogum, tcno, tel, mail
+            case username, lastName, firstName, wallet, btcAddress, ethAddress, ltcAddress, createdDate, appV, dogum, tcno, tel, mail
             case v = "__v"
             case token
         }
@@ -356,6 +357,10 @@ struct digilira {
         case tokenNotFound
         case parsingError
         case keychainSaveError
+        case wrongPin
+        case biometricMismatch
+        case userCanceled
+        case updateAPP
         
         
     }

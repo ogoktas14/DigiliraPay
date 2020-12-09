@@ -14,7 +14,7 @@
             <rect key="frame" x="0.0" y="0.0" width="489" height="399"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="A5Y-UD-k6l">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="A5Y-UD-k6l" customClass="BlackNoRadGradientView" customModule="DigiliraPAY" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="0.0" width="489" height="307"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ethereum" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wux-a5-VVI">

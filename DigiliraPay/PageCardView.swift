@@ -80,10 +80,7 @@ class PageCardView: UIView {
     }
     
     
-    override func awakeFromNib() {
-        
-
-        
+    override func awakeFromNib() { 
         setShad(view: totalPrice)
         setShad(view: products)
         setBtn(object: payButton, mode: 1)

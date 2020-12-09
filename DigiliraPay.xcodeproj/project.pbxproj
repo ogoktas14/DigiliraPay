@@ -146,6 +146,10 @@
 		93B7A11B252F0D8000C89E66 /* PaymentCategories.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93B7A11A252F0D8000C89E66 /* PaymentCategories.xib */; };
 		93B7A11E252F0F0A00C89E66 /* PaymentCategories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93B7A11D252F0F0A00C89E66 /* PaymentCategories.swift */; };
 		93E9D552257A930D00FE19D8 /* ErrorHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E9D551257A930D00FE19D8 /* ErrorHandling.swift */; };
+		93F79FD3257E0D48006DC148 /* ParaYatirView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93F79FD2257E0D48006DC148 /* ParaYatirView.xib */; };
+		93F79FD7257E1139006DC148 /* ParaYatirView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F79FD6257E1139006DC148 /* ParaYatirView.swift */; };
+		93F79FDA257E5B4C006DC148 /* CreditCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93F79FD9257E5B4C006DC148 /* CreditCardView.xib */; };
+		93F79FDD257E5CC7006DC148 /* CreditCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F79FDC257E5CC7006DC148 /* CreditCardView.swift */; };
 		93FC66C02562AB4E00E42AAC /* binance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93FC66BF2562AB4E00E42AAC /* binance.swift */; };
 		93FC66C32562ABAB00E42AAC /* binance.com.cer in Resources */ = {isa = PBXBuildFile; fileRef = 93FC66C22562AB9400E42AAC /* binance.com.cer */; };
 /* End PBXBuildFile section */
@@ -299,6 +303,10 @@
 		93B7A11A252F0D8000C89E66 /* PaymentCategories.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentCategories.xib; sourceTree = "<group>"; };
 		93B7A11D252F0F0A00C89E66 /* PaymentCategories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCategories.swift; sourceTree = "<group>"; };
 		93E9D551257A930D00FE19D8 /* ErrorHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorHandling.swift; sourceTree = "<group>"; };
+		93F79FD2257E0D48006DC148 /* ParaYatirView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ParaYatirView.xib; sourceTree = "<group>"; };
+		93F79FD6257E1139006DC148 /* ParaYatirView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParaYatirView.swift; sourceTree = "<group>"; };
+		93F79FD9257E5B4C006DC148 /* CreditCardView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CreditCardView.xib; sourceTree = "<group>"; };
+		93F79FDC257E5CC7006DC148 /* CreditCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditCardView.swift; sourceTree = "<group>"; };
 		93FC66BF2562AB4E00E42AAC /* binance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = binance.swift; sourceTree = "<group>"; };
 		93FC66C22562AB9400E42AAC /* binance.com.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = binance.com.cer; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -441,7 +449,6 @@
 				88F3F956230FD92600D81F2B /* LetsStartWordView.xib */,
 				88BEDFAD23101AC80003C371 /* Verify&StartView.xib */,
 				889F2A2023158BAB00ACD656 /* MenuView.xib */,
-				889F2A2223158C5D00ACD656 /* ProfileMenuview.xib */,
 				880541F92319702B004EE85F /* CoinTableViewCell.xib */,
 				93757C20256D43060066A7B9 /* PayTableViewCell.xib */,
 				88CA93632319792A008F894B /* WalletView.xib */,
@@ -452,9 +459,10 @@
 				88CA937A231A48A0008F894B /* TransactionHistoryDetailCellDeatils.xib */,
 				88309EB1231E73C600F96C05 /* TransactionPopup.xib */,
 				88309EB7231E7FC600F96C05 /* QRView.xib */,
-				88309EBF231FD36000F96C05 /* VerifyAccountView.xib */,
 				88A6BA4623203570002640D6 /* LegalView.xib */,
 				88114F612321602800AB3B5A /* ProfileUpgradeView.xib */,
+				889F2A2223158C5D00ACD656 /* ProfileMenuview.xib */,
+				88309EBF231FD36000F96C05 /* VerifyAccountView.xib */,
 				88114F6523216A8E00AB3B5A /* sendWithQR.xib */,
 				888F26AE233E89B800AB7E4C /* PinView.xib */,
 				93B7A11A252F0D8000C89E66 /* PaymentCategories.xib */,
@@ -465,6 +473,8 @@
 				93534F1725496A950000329F /* bitexenApiView.xib */,
 				93757C27256E3EAC0066A7B9 /* PageCardView.xib */,
 				93757C2D256E55AF0066A7B9 /* BalanceCard.xib */,
+				93F79FD9257E5B4C006DC148 /* CreditCardView.xib */,
+				93F79FD2257E0D48006DC148 /* ParaYatirView.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -508,6 +518,8 @@
 				93534F1A2549851A0000329F /* BitexenAPIView.swift */,
 				93757C2A256E3FDC0066A7B9 /* PageCardView.swift */,
 				93757C30256E560B0066A7B9 /* BalanceCard.swift */,
+				93F79FDC257E5CC7006DC148 /* CreditCardView.swift */,
+				93F79FD6257E1139006DC148 /* ParaYatirView.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -665,6 +677,7 @@
 				882AAB5922FCAAEE004CDAA6 /* Montserrat-ExtraBold.otf in Resources */,
 				93B7A11B252F0D8000C89E66 /* PaymentCategories.xib in Resources */,
 				882AAB5F22FCAAEE004CDAA6 /* Montserrat-Black.otf in Resources */,
+				93F79FD3257E0D48006DC148 /* ParaYatirView.xib in Resources */,
 				882AAB4122FCAAEE004CDAA6 /* SIL Open Font License.txt in Resources */,
 				882AAB5D22FCAAEE004CDAA6 /* MontserratAlternates-Regular.otf in Resources */,
 				882AAB4222FCAAEE004CDAA6 /* MontserratAlternates-Black.otf in Resources */,
@@ -691,6 +704,7 @@
 				93757C21256D43060066A7B9 /* PayTableViewCell.xib in Resources */,
 				9339084825591D350005B64A /* selectCoinView.xib in Resources */,
 				88CA9378231A488A008F894B /* TransactionHistoryDetailCellHeader.xib in Resources */,
+				93F79FDA257E5B4C006DC148 /* CreditCardView.xib in Resources */,
 				88CA9368231979C3008F894B /* WalletOperationButtonSView.xib in Resources */,
 				93757C28256E3EAD0066A7B9 /* PageCardView.xib in Resources */,
 				88CA937C231A48A0008F894B /* TransactionHistoryDetailCellDeatils.xib in Resources */,
@@ -794,6 +808,7 @@
 				885C1662233371C00018D5EF /* LetsStartWordsView.swift in Sources */,
 				88CA936A231979CD008F894B /* WalletOperationButtonSView.swift in Sources */,
 				936F25B425323B2E00C5FA85 /* ColoredCardView.swift in Sources */,
+				93F79FD7257E1139006DC148 /* ParaYatirView.swift in Sources */,
 				882AAB0722FC96DD004CDAA6 /* OnBoardingVC.swift in Sources */,
 				93E9D552257A930D00FE19D8 /* ErrorHandling.swift in Sources */,
 				88CA938F231BD0AE008F894B /* ProfileSettingsView.swift in Sources */,
@@ -812,6 +827,7 @@
 				93FC66C02562AB4E00E42AAC /* binance.swift in Sources */,
 				88CA9389231B9866008F894B /* OperationButtonsDelegate.swift in Sources */,
 				88309EBA231E7FD200F96C05 /* QRView.swift in Sources */,
+				93F79FDD257E5CC7006DC148 /* CreditCardView.swift in Sources */,
 				0060807E23795453006FFBD2 /* constants.swift in Sources */,
 				93757C24256D43A90066A7B9 /* PayTableViewCell.swift in Sources */,
 				88309EC2231FD38200F96C05 /* VerifyAccountView.swift in Sources */,
@@ -992,7 +1008,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 54.1;
+				CURRENT_PROJECT_VERSION = 54.4;
 				DEVELOPMENT_TEAM = 5TJACH7D4X;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;
@@ -1017,7 +1033,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPayRelease.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 54.1;
+				CURRENT_PROJECT_VERSION = 54.4;
 				DEVELOPMENT_TEAM = 5TJACH7D4X;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;

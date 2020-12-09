@@ -264,7 +264,7 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
             
             adresBtn.isEnabled = false
             recipientText.isEnabled = false
-            textAmount.isEnabled = false
+            textAmount.isEnabled = true
             
             switch params.assetId {
             case digilira.bitcoin.token:

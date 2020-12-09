@@ -78,6 +78,7 @@ class WalletView: UIView {
         self.trxs.removeAll()
         BC.checkTransactions(address: self.kullanici.wallet){ (data) in
             DispatchQueue.main.async { [self] in
+                print(trxs.count)
                 data.forEach { trx in
                     
                     let dateWaves = (978307200 + (trx["timestamp"] as! Int)) * 1000
