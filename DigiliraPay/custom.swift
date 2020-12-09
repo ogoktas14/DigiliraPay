@@ -211,7 +211,7 @@ class BlackGradientView: UIView {
 
     private func setupView() {
         autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.layer.cornerRadius = self.frame.height / 2
+        self.layer.cornerRadius = 10
 
         guard let theLayer = self.layer as? CAGradientLayer else {
             return;
@@ -226,7 +226,7 @@ class BlackGradientView: UIView {
         theLayer.colors = [gradientColor1, gradientColor2]
  
         theLayer.frame = self.bounds
-        theLayer.cornerRadius = self.frame.height / 2
+        theLayer.cornerRadius = 10
 
         layer.shadowColor = UIColor.gray.cgColor
         layer.shadowRadius = 2.0

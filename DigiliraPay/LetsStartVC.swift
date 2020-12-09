@@ -353,6 +353,7 @@ extension LetsStartVC: LetsStartSkipDelegate
 {
     func skipTap() {
         atla()
+        UserDefaults.standard.set(false, forKey: "seedRecovery")
     }
     
     func dogrula() {

@@ -150,6 +150,8 @@
 		93F79FD7257E1139006DC148 /* ParaYatirView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F79FD6257E1139006DC148 /* ParaYatirView.swift */; };
 		93F79FDA257E5B4C006DC148 /* CreditCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93F79FD9257E5B4C006DC148 /* CreditCardView.xib */; };
 		93F79FDD257E5CC7006DC148 /* CreditCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F79FDC257E5CC7006DC148 /* CreditCardView.swift */; };
+		93F79FE32580F6EB006DC148 /* HeaderExitView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93F79FE22580F6EA006DC148 /* HeaderExitView.xib */; };
+		93F79FE62580F89D006DC148 /* HeaderExitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F79FE52580F89D006DC148 /* HeaderExitView.swift */; };
 		93FC66C02562AB4E00E42AAC /* binance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93FC66BF2562AB4E00E42AAC /* binance.swift */; };
 		93FC66C32562ABAB00E42AAC /* binance.com.cer in Resources */ = {isa = PBXBuildFile; fileRef = 93FC66C22562AB9400E42AAC /* binance.com.cer */; };
 /* End PBXBuildFile section */
@@ -307,6 +309,8 @@
 		93F79FD6257E1139006DC148 /* ParaYatirView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParaYatirView.swift; sourceTree = "<group>"; };
 		93F79FD9257E5B4C006DC148 /* CreditCardView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CreditCardView.xib; sourceTree = "<group>"; };
 		93F79FDC257E5CC7006DC148 /* CreditCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditCardView.swift; sourceTree = "<group>"; };
+		93F79FE22580F6EA006DC148 /* HeaderExitView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HeaderExitView.xib; sourceTree = "<group>"; };
+		93F79FE52580F89D006DC148 /* HeaderExitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderExitView.swift; sourceTree = "<group>"; };
 		93FC66BF2562AB4E00E42AAC /* binance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = binance.swift; sourceTree = "<group>"; };
 		93FC66C22562AB9400E42AAC /* binance.com.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = binance.com.cer; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -475,6 +479,7 @@
 				93757C2D256E55AF0066A7B9 /* BalanceCard.xib */,
 				93F79FD9257E5B4C006DC148 /* CreditCardView.xib */,
 				93F79FD2257E0D48006DC148 /* ParaYatirView.xib */,
+				93F79FE22580F6EA006DC148 /* HeaderExitView.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -520,6 +525,7 @@
 				93757C30256E560B0066A7B9 /* BalanceCard.swift */,
 				93F79FDC257E5CC7006DC148 /* CreditCardView.swift */,
 				93F79FD6257E1139006DC148 /* ParaYatirView.swift */,
+				93F79FE52580F89D006DC148 /* HeaderExitView.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -714,6 +720,7 @@
 				88CA938D231BD0A3008F894B /* ProfileSettingsView.xib in Resources */,
 				936F25B125323B0300C5FA85 /* ColoredCardView.xib in Resources */,
 				889F2A2123158BAB00ACD656 /* MenuView.xib in Resources */,
+				93F79FE32580F6EB006DC148 /* HeaderExitView.xib in Resources */,
 				882AAB4D22FCAAEE004CDAA6 /* MontserratAlternates-ExtraLightItalic.otf in Resources */,
 				882AAB6022FCAAEE004CDAA6 /* MontserratAlternates-ExtraBoldItalic.otf in Resources */,
 				889F2A2323158C5D00ACD656 /* ProfileMenuview.xib in Resources */,
@@ -809,6 +816,7 @@
 				88CA936A231979CD008F894B /* WalletOperationButtonSView.swift in Sources */,
 				936F25B425323B2E00C5FA85 /* ColoredCardView.swift in Sources */,
 				93F79FD7257E1139006DC148 /* ParaYatirView.swift in Sources */,
+				93F79FE62580F89D006DC148 /* HeaderExitView.swift in Sources */,
 				882AAB0722FC96DD004CDAA6 /* OnBoardingVC.swift in Sources */,
 				93E9D552257A930D00FE19D8 /* ErrorHandling.swift in Sources */,
 				88CA938F231BD0AE008F894B /* ProfileSettingsView.swift in Sources */,
@@ -1008,7 +1016,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 54.4;
+				CURRENT_PROJECT_VERSION = 55;
 				DEVELOPMENT_TEAM = 5TJACH7D4X;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;
@@ -1033,7 +1041,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPayRelease.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 54.4;
+				CURRENT_PROJECT_VERSION = 55;
 				DEVELOPMENT_TEAM = 5TJACH7D4X;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;

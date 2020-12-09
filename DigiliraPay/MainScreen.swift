@@ -52,7 +52,7 @@ class MainScreen: UIViewController {
     var sendMoneyView = CoinSendView()
     var loadMoneyView = QRView()
     var successView = TransactionPopup()
-    var seedView = LetsStartWordsView()
+    var seedView = Verify_StartView()
     var paymentCat = PaymentCat()
     var profileMenuView = ProfileMenuView()
     var depositeMoneyView = DepositeMoneyView()
@@ -62,7 +62,8 @@ class MainScreen: UIViewController {
     var pageCardView = PageCardView()
     var paraYatirView = ParaYatirView()
     var bitexenAPIView = BitexenAPIView()
-    
+    var headerExitView = HeaderExitView()
+
     var tapProfileMenuGesture = UITapGestureRecognizer()
     var tapCloseProfileMenuGesture = UITapGestureRecognizer()
     
@@ -160,6 +161,13 @@ class MainScreen: UIViewController {
                 return
             }
             profileMenuView.termsViewWarning.isHidden = true
+        }
+        
+        if let isVerified = UserDefaults.standard.value(forKey: "seedRecovery") as? Bool {
+            if isVerified {
+                profileMenuView.seedBackupWarning.isHidden = true
+            }
+            
         }
     }
     
@@ -1484,20 +1492,17 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         for view in self.sendWithQRView.subviews
         { view.removeFromSuperview() }
         self.sendWithQRView.translatesAutoresizingMaskIntoConstraints = true
-        
-        let letsStartView4: LetsStartWordsView = UIView().loadNib(name: "LetsStartWordView") as! LetsStartWordsView
-        
+
+        let letsStartView4: Verify_StartView = UIView().loadNib(name: "Verify&StartView") as! Verify_StartView
+
         letsStartView4.delegate = self
-        
-        letsStartView4.setTitles(title: "Anahtar kelimelerini", subTitle: "asla kaybetme!", desc: "Eğer uygulaman silinirse veya cüzdanını başka bir cihaza aktarman gerekirse bu kelimelere ihtiyaç duyacaksın.")
         letsStartView4.frame = CGRect(x: 0,
-                                      y: 100,
+                                      y: 0,
                                       width: self.view.frame.width,
                                       height: self.view.frame.height)
         
         letsStartView4.backgroundColor = UIColor.white
-        letsStartView4.okButtonView.isHidden = false
-        
+
         self.sendWithQRView.addSubview(letsStartView4)
         self.sendWithQRView.isHidden = false
         UIView.animate(withDuration: 0.4) {
@@ -2583,13 +2588,23 @@ extension MainScreen: PaymentCatViewsDelegate {
 }
 
 
-extension MainScreen: seedViewDelegate {
-    func closeSeedView() {
+extension MainScreen: LetsStartSkipDelegate {
+    func skipTap() {
         UIView.animate(withDuration: 0.3) {
             self.sendWithQRView.frame.origin.y = self.self.view.frame.height
             self.sendWithQRView.alpha = 0
         }
     }
+    
+    func dogrula() {
+        UserDefaults.standard.set(true, forKey: "seedRecovery")
+        profileMenuView.seedBackupWarning.isHidden = true
+        UIView.animate(withDuration: 0.3) {
+            self.sendWithQRView.frame.origin.y = self.self.view.frame.height
+            self.sendWithQRView.alpha = 0
+        }
+    }
+  
     
     
 }
