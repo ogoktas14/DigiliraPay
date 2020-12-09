@@ -18,7 +18,8 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     @IBOutlet weak var cameraButtonView: UIView!
     @IBOutlet weak var galleryButtonView: UIView!
     @IBOutlet weak var goHomeView: UIView!
-    
+    @IBOutlet weak var scrollAres: UIScrollView!
+
     @IBOutlet weak var enterInfoView: UIView!
     @IBOutlet weak var sendIDPhotoView: UIView!
     @IBOutlet weak var finishedView: UIView!
@@ -80,6 +81,8 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
             if tick.isOn {
                 sendAndContiuneView.alpha = 1
                 sendAndContiuneView.isUserInteractionEnabled = true
+                let bottomOffset = CGPoint(x: 0, y: scrollAres.contentSize.height - scrollAres.bounds.size.height)
+                scrollAres.setContentOffset(bottomOffset, animated: true)
             } else {
                 sendAndContiuneView.alpha = 0.4
                 sendAndContiuneView.isUserInteractionEnabled = false
@@ -151,6 +154,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
                 goHomeView.alpha = 1
                 
                 isVerified = true
+                delegate?.disableEntry()
             }else {
                 
                 onayImage.image = UIImage(named: "forbidden")
@@ -178,11 +182,11 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
         digiliraPay.onUpdate = { res in
 
             self.digiliraPay.onLogin2 = { user, status in
-                //self.delegate?.dismissVErifyAccountView()
-                
+                delegate?.enableEntry(user:user)
             }
             
             self.digiliraPay.login2()
+            
         }
         
         //let b64 = digiliraPay.convertImageToBase64String(img: UIImage(named: "test.jpg")!)
@@ -346,6 +350,9 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
                                           preferredStyle: UIAlertController.Style.alert)
             alert.addAction(UIAlertAction(title: "OK",style:UIAlertAction.Style.default,handler: nil))
             window?.rootViewController?.presentedViewController?.present(alert, animated: true, completion: nil)
+            understand.isEnabled = true
+            sendAndContiuneView.isUserInteractionEnabled = true
+            sendAndContiuneView.alpha = 1
             return
         }
         

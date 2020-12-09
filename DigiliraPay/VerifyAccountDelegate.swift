@@ -12,4 +12,7 @@ protocol VerifyAccountDelegate: class
 {
     func dismissVErifyAccountView()
     func dismissKeyboard()
+    func removeWarning()
+    func disableEntry()
+    func enableEntry(user:digilira.auth)
 }

@@ -942,7 +942,8 @@ class MainScreen: UIViewController {
         }
         
         if kullanici.status != 0 {
-            profileMenuView.profileWarning.isHidden = true
+            profileMenuView.profileWarning.image = UIImage(named: "checkImg")
+            
         }
         
         profileMenuView.layer.zPosition = 1
@@ -2633,10 +2634,31 @@ extension MainScreen: LoadCoinDelegate
 
 extension MainScreen: VerifyAccountDelegate
 {
+    func removeWarning() {
+    }
+    
+    func disableEntry() {
+        DispatchQueue.main.async {
+            self.profileMenuView.verifyProfileView.alpha = 0.5
+            self.profileMenuView.verifyProfileView.isUserInteractionEnabled = false
+        }
+    }
+    
+    func enableEntry(user:digilira.auth) {
+        DispatchQueue.main.async {
+            self.kullanici = user
+            self.profileMenuView.verifyProfileView.alpha = 1
+            self.profileMenuView.verifyProfileView.isUserInteractionEnabled = true
+            self.profileMenuView.profileWarning.image = UIImage(named: "checkImg")
+        }
+
+
+    }
+    
     func dismissVErifyAccountView() // profil doğrulama sayfasının kapatılması
     {
         if kullanici.status != 0 {
-            profileMenuView.profileWarning.isHidden = true
+            self.profileMenuView.profileWarning.image = UIImage(named: "checkImg")
         }
         if QR.address != nil {
             UserDefaults.standard.set(nil, forKey: "QRARRAY2")

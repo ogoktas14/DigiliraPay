@@ -196,6 +196,15 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
     override func viewDidAppear(_ animated: Bool) {
         setScrollView()
         setLetsGoView()
+        UIView.animate(withDuration: 0.5)
+        {
+            self.onBoardingScrollView.scrollToPage(index: 2)
+        }
+        
+        UIView.animate(withDuration: 1)
+        {
+            self.onBoardingScrollView.scrollToPage(index: 0)
+        }
     }
     
     @objc func onDidReceiveData(_ sender: Notification) {
@@ -283,9 +292,9 @@ extension OnBoardingVC: UIScrollViewDelegate
         
         let onBoardingView1: OnBoardingView = UIView().loadOnBoardingNib()
         onBoardingView1.setView(image: UIImage(named: "onboarding1")!,
-                                titleFirst: "Blokzincir Tabanlı",
+                                titleFirst: "Blokzincir",
                                 titleSecond: "Ödeme Geçidi",
-                                desc: "Digilirapay’e hoşgeldin.\nBlockzincir tabanlı ödeme yöntemimizle tanış.")
+                                desc: "DigiliraPay’e hoşgeldin.\nBlockzincir tabanlı ödeme yöntemimizle tanış.")
         
         onBoardingView1.frame = CGRect(x: 0,
                                        y: 0,
