@@ -16,7 +16,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="ProfileMenuView" customModule="DigiliraPAY" customModuleProvider="target">
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="ProfileMenuView" customModule="DigiliraPay" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="331" height="768"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
@@ -30,7 +30,7 @@
                                 <constraint firstAttribute="height" id="aiR-94-KtZ"/>
                             </constraints>
                         </view>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lmT-cI-9ud" customClass="GradientView" customModule="DigiliraPAY" customModuleProvider="target">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lmT-cI-9ud" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                             <rect key="frame" x="8" y="16" width="283" height="50"/>
                             <subviews>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profileVerifiedIcon" translatesAutoresizingMaskIntoConstraints="NO" id="jkB-dc-xvt">
@@ -66,7 +66,7 @@
                                 <constraint firstItem="7Dk-qX-rBj" firstAttribute="width" secondItem="7Dk-qX-rBj" secondAttribute="height" multiplier="1:1" id="wyh-FO-Uhc"/>
                             </constraints>
                         </view>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ru0-Zf-mBD" customClass="GradientView" customModule="DigiliraPAY" customModuleProvider="target">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ru0-Zf-mBD" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                             <rect key="frame" x="8" y="74" width="283" height="50"/>
                             <subviews>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profileKeywordIcon" translatesAutoresizingMaskIntoConstraints="NO" id="8Vz-x6-TXA">
@@ -100,7 +100,7 @@
                                 <constraint firstItem="8Vz-x6-TXA" firstAttribute="leading" secondItem="ru0-Zf-mBD" secondAttribute="leadingMargin" constant="10" id="yl3-HS-2aF"/>
                             </constraints>
                         </view>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="va4-gy-RL6" customClass="GradientView" customModule="DigiliraPAY" customModuleProvider="target">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="va4-gy-RL6" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                             <rect key="frame" x="8" y="132" width="283" height="50"/>
                             <subviews>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profileTermsofUseIcon" translatesAutoresizingMaskIntoConstraints="NO" id="rUt-FH-br7">
@@ -133,7 +133,7 @@
                                 <constraint firstItem="rUt-FH-br7" firstAttribute="top" secondItem="va4-gy-RL6" secondAttribute="top" constant="10" id="vsO-HP-Umh"/>
                             </constraints>
                         </view>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="05A-4L-2G3" customClass="GradientView" customModule="DigiliraPAY" customModuleProvider="target">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="05A-4L-2G3" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                             <rect key="frame" x="8" y="190" width="283" height="50"/>
                             <subviews>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profileTermsofUseIcon" translatesAutoresizingMaskIntoConstraints="NO" id="zaZ-rp-GTG">
@@ -166,7 +166,7 @@
                                 <constraint firstItem="Z2V-5B-8sc" firstAttribute="leading" secondItem="zaZ-rp-GTG" secondAttribute="trailing" constant="8" id="nmj-gf-iZB"/>
                             </constraints>
                         </view>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r8g-fo-jYj" customClass="GradientView" customModule="DigiliraPAY" customModuleProvider="target">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r8g-fo-jYj" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                             <rect key="frame" x="8" y="248" width="283" height="50"/>
                             <subviews>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="biometricSecurityIcon" translatesAutoresizingMaskIntoConstraints="NO" id="JBY-zc-q9R">
@@ -199,7 +199,7 @@
                                 <constraint firstItem="JBY-zc-q9R" firstAttribute="leading" secondItem="r8g-fo-jYj" secondAttribute="leadingMargin" constant="10" id="rIg-y8-TMd"/>
                             </constraints>
                         </view>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OhJ-XS-vds" customClass="GradientView" customModule="DigiliraPAY" customModuleProvider="target">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OhJ-XS-vds" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                             <rect key="frame" x="8" y="306" width="283" height="50"/>
                             <subviews>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profileSettingsIcon" translatesAutoresizingMaskIntoConstraints="NO" id="AgS-YK-Mnv">
@@ -233,7 +233,7 @@
                                 <constraint firstItem="sa2-Or-jB1" firstAttribute="top" secondItem="OhJ-XS-vds" secondAttribute="top" constant="17" id="xqK-m5-9wB"/>
                             </constraints>
                         </view>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cul-45-rzD" customClass="GradientView" customModule="DigiliraPAY">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cul-45-rzD" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                             <rect key="frame" x="8" y="364" width="283" height="50"/>
                             <subviews>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="languageIcon" translatesAutoresizingMaskIntoConstraints="NO" id="z8n-0p-gxc">
@@ -258,7 +258,7 @@
                                 <constraint firstItem="N0u-cu-xL6" firstAttribute="centerY" secondItem="Cul-45-rzD" secondAttribute="centerY" id="vl2-zS-aCV"/>
                             </constraints>
                         </view>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HIw-I3-O3b" customClass="GradientView" customModule="DigiliraPAY">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HIw-I3-O3b" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                             <rect key="frame" x="8" y="422" width="283" height="50"/>
                             <subviews>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="list.number" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="NJW-f6-bw3">

@@ -3,42 +3,47 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="MenuView" customModule="DigiliraPAY" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="414" height="72"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="MenuView" customModule="DigiliraPay" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="450" height="131"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ixj-nd-Pqk" customClass="GradientView1" customModule="DigiliraPay" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="44" width="450" height="127"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
                 <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="center" spacing="-10" translatesAutoresizingMaskIntoConstraints="NO" id="gvN-Pe-4Ju">
-                    <rect key="frame" x="0.0" y="0.0" width="414" height="72"/>
+                    <rect key="frame" x="0.0" y="44" width="450" height="87"/>
                     <subviews>
                         <imageView clipsSubviews="YES" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="homeSelected" translatesAutoresizingMaskIntoConstraints="NO" id="ldJ-br-6Wy">
-                            <rect key="frame" x="0.0" y="0.0" width="91" height="72"/>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <rect key="frame" x="0.0" y="0.0" width="98" height="87"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </imageView>
                         <imageView clipsSubviews="YES" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="walletNotSelected" translatesAutoresizingMaskIntoConstraints="NO" id="VpY-mq-3QL">
-                            <rect key="frame" x="81" y="0.0" width="90.5" height="72"/>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <rect key="frame" x="88" y="0.0" width="98" height="87"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </imageView>
                         <imageView clipsSubviews="YES" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="qrIcon" translatesAutoresizingMaskIntoConstraints="NO" id="PiC-jw-mIb">
-                            <rect key="frame" x="161.5" y="0.0" width="91" height="72"/>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <rect key="frame" x="176" y="0.0" width="98" height="87"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </imageView>
                         <imageView clipsSubviews="YES" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="kartDeselect" translatesAutoresizingMaskIntoConstraints="NO" id="8Za-vs-IvC">
-                            <rect key="frame" x="242.5" y="0.0" width="90.5" height="72"/>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <rect key="frame" x="264" y="0.0" width="98" height="87"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </imageView>
                         <imageView clipsSubviews="YES" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="settingsNotSelected" translatesAutoresizingMaskIntoConstraints="NO" id="UmK-ei-xMX">
-                            <rect key="frame" x="323" y="0.0" width="91" height="72"/>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <rect key="frame" x="352" y="0.0" width="98" height="87"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </imageView>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="8Za-vs-IvC" firstAttribute="top" secondItem="gvN-Pe-4Ju" secondAttribute="top" id="1bh-xs-lJH"/>
                         <constraint firstItem="PiC-jw-mIb" firstAttribute="top" secondItem="gvN-Pe-4Ju" secondAttribute="top" id="ibQ-Mu-fdm"/>
@@ -47,6 +52,14 @@
                         <constraint firstItem="ldJ-br-6Wy" firstAttribute="top" secondItem="gvN-Pe-4Ju" secondAttribute="top" id="uYv-OP-Sii"/>
                     </constraints>
                 </stackView>
+                <view alpha="0.59999999999999998" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cy3-1c-BJR">
+                    <rect key="frame" x="207.5" y="126" width="35" height="5"/>
+                    <color key="backgroundColor" systemColor="systemBlueColor"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="5" id="Oc0-1Y-f12"/>
+                        <constraint firstAttribute="width" constant="35" id="yMY-t9-fuE"/>
+                    </constraints>
+                </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -54,7 +67,13 @@
                 <constraint firstAttribute="bottom" secondItem="gvN-Pe-4Ju" secondAttribute="bottom" id="1Kx-LL-Nvj"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="gvN-Pe-4Ju" secondAttribute="trailing" id="OMu-eg-Qhg"/>
                 <constraint firstItem="gvN-Pe-4Ju" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="Su0-pE-4dz"/>
-                <constraint firstItem="gvN-Pe-4Ju" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="VIZ-Fa-fxr"/>
+                <constraint firstItem="Cy3-1c-BJR" firstAttribute="centerX" secondItem="PiC-jw-mIb" secondAttribute="centerX" id="XeN-Kl-Cut"/>
+                <constraint firstItem="gvN-Pe-4Ju" firstAttribute="bottom" secondItem="Cy3-1c-BJR" secondAttribute="bottom" id="Y3l-m0-Fnb"/>
+                <constraint firstItem="ixj-nd-Pqk" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="jGY-NG-PRf"/>
+                <constraint firstItem="ixj-nd-Pqk" firstAttribute="bottom" secondItem="iN0-l3-epB" secondAttribute="bottom" constant="40" id="kRs-7c-wMf"/>
+                <constraint firstItem="ixj-nd-Pqk" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="o7r-Ex-8Fg"/>
+                <constraint firstItem="gvN-Pe-4Ju" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="vPR-lq-RkO"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="ixj-nd-Pqk" secondAttribute="trailing" id="xFy-Qf-qSO"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
@@ -63,10 +82,11 @@
                 <outlet property="othersIcon" destination="UmK-ei-xMX" id="bER-RY-l8x"/>
                 <outlet property="paymentsIcon" destination="8Za-vs-IvC" id="nKh-xB-w9a"/>
                 <outlet property="qrIcon" destination="PiC-jw-mIb" id="pzt-BZ-oLQ"/>
+                <outlet property="selectorView" destination="Cy3-1c-BJR" id="SZ8-SI-b9f"/>
                 <outlet property="stackView" destination="gvN-Pe-4Ju" id="Tbj-O5-Zww"/>
                 <outlet property="walletIcon" destination="VpY-mq-3QL" id="hAc-1h-RTL"/>
             </connections>
-            <point key="canvasLocation" x="137.68115942028987" y="152.67857142857142"/>
+            <point key="canvasLocation" x="71.014492753623188" y="-2.34375"/>
         </view>
     </objects>
     <resources>
@@ -75,5 +95,8 @@
         <image name="qrIcon" width="43" height="43"/>
         <image name="settingsNotSelected" width="21" height="21"/>
         <image name="walletNotSelected" width="25" height="22"/>
+        <systemColor name="systemBlueColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
     </resources>
 </document>

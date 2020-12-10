@@ -176,7 +176,7 @@ class MainScreen: UIViewController {
         super.viewDidLoad()
         
         coinTableView.refreshControl = refreshControl
-        
+        menuView.isUserInteractionEnabled = false
         do {
             kullanici = try secretKeys.userData()
         } catch {
@@ -307,6 +307,8 @@ class MainScreen: UIViewController {
                 checkEssentials()
                 isFirstLaunch = false
             }
+            
+            menuView.isUserInteractionEnabled = true
             
             if let qr = decodeDefaults(forKey: "QRARRAY2", conformance: digilira.QR.self, setNil: true) {
                 QR = qr
@@ -835,15 +837,6 @@ class MainScreen: UIViewController {
         
         tapCloseProfileMenuGesture.isEnabled = false
         
-        //        profileViewXib = UIView().loadNib(name: "ProfileMenuview") as! ProfileMenuView
-        //        profileViewXib.delegate = self
-        //        profileViewXib.frame = CGRect(x: 0,
-        //                                      y: 0,
-        //                                      width: profileView.frame.width,
-        //                                      height: profileView.frame.height)
-        //        profileView.addSubview(profileViewXib)
-        
-        
         let tapProfileMenuViewGesture = UITapGestureRecognizer(target: self, action: #selector(tapProfileMenuView))
         menuView.addGestureRecognizer(tapProfileMenuViewGesture)
         
@@ -907,7 +900,6 @@ class MainScreen: UIViewController {
         
         
         walletView.kullanici = self.kullanici
-        //        walletView.coin = "Ethereum"
         
         walletView.layer.zPosition = 0
         
@@ -1231,6 +1223,18 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
                 cell.coinAmount.text = double
                 cell.coinCode.text = (asset.tokenSymbol)
                 
+            }
+            
+            if Filtered.count == 0 {
+                cell.coinIcon.image = UIImage(named: "Bitcoin")
+                cell.coinName.text = "Bitcoin"
+                cell.type.text = "₺" + MainScreen.df2so(0)
+                tapped.assetName = "Bitcoin"
+                
+                let double = MainScreen.int2so(0, digits: 8)
+                
+                cell.coinAmount.text = double
+                cell.coinCode.text = ("BTC")
             }
             
             return cell
@@ -2045,10 +2049,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
             verifyProfileXib.delegate = self
             for subView in qrView.subviews
             { subView.removeFromSuperview() }
-            
-            menuXib.isHidden = true
-            
-            
+ 
             qrView.addSubview(verifyProfileXib)
             qrView.isHidden = false
             qrView.translatesAutoresizingMaskIntoConstraints = true

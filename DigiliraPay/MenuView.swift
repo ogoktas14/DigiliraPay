@@ -41,6 +41,8 @@ class MenuView: UIView {
         paymentsIcon.addGestureRecognizer(paymentTapGesture)
         othersIcon.addGestureRecognizer(settingsTapGesture)
         
+        selectorView.layer.cornerRadius = 3
+        
         
     }
     func setView(mode: ())
@@ -53,6 +55,10 @@ class MenuView: UIView {
         walletIcon.image = UIImage(named: "walletNotSelected")
         paymentsIcon.image = UIImage(named: "kartDeselect")
         othersIcon.image = UIImage(named: "settingsNotSelected")
+        UIView.animate(withDuration: 0.3)
+        {
+            self.selectorView.center.x = self.homeIcon.center.x
+        }
     }
     
     func wallet() {
@@ -61,6 +67,10 @@ class MenuView: UIView {
         self.walletIcon.image = UIImage(named: "walletSelected")
         self.paymentsIcon.image = UIImage(named: "kartDeselect")
         self.othersIcon.image = UIImage(named: "settingsNotSelected")
+        UIView.animate(withDuration: 0.3)
+        {
+            self.selectorView.center.x = self.walletIcon.center.x
+        }
     }
     
     func payments () {
@@ -69,6 +79,10 @@ class MenuView: UIView {
         walletIcon.image = UIImage(named: "walletNotSelected")
         paymentsIcon.image = UIImage(named: "kart")
         othersIcon.image = UIImage(named: "settingsNotSelected")
+        UIView.animate(withDuration: 0.3)
+        {
+            self.selectorView.center.x = self.paymentsIcon.center.x
+        }
     }
     
     func settings() {
@@ -77,15 +91,14 @@ class MenuView: UIView {
         walletIcon.image = UIImage(named: "walletNotSelected")
         paymentsIcon.image = UIImage(named: "kartDeselect")
         othersIcon.image = UIImage(named: "settingsSelected")
+        UIView.animate(withDuration: 0.3)
+        {
+            self.selectorView.center.x = self.othersIcon.center.x
+        }
     }
     @objc func goHome()
     {
-        
         home()
-        
-        
-        
-        
         delegate?.goHomeScreen()
         
     }
@@ -94,7 +107,6 @@ class MenuView: UIView {
     @objc func goWallet()
     {
         wallet()
-        
         delegate?.goWalletScreen(coin: "")
         
         

@@ -41,7 +41,7 @@ class WalletView: UIView {
      
     override func awakeFromNib()
     { 
- 
+        setView()
 
     }
      

@@ -182,7 +182,7 @@
 		88114F6723216A9500AB3B5A /* sendWithQR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sendWithQR.swift; sourceTree = "<group>"; };
 		88114F692321703800AB3B5A /* SendWithQrDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendWithQrDelegate.swift; sourceTree = "<group>"; };
 		8816BE7D233F48A900318309 /* DigiliraPay.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DigiliraPay.entitlements; sourceTree = "<group>"; };
-		882AAAFF22FC96DD004CDAA6 /* DigiliraPAY.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DigiliraPAY.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		882AAAFF22FC96DD004CDAA6 /* DigiliraPay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DigiliraPay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		882AAB0222FC96DD004CDAA6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		882AAB0422FC96DD004CDAA6 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		882AAB0622FC96DD004CDAA6 /* OnBoardingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnBoardingVC.swift; sourceTree = "<group>"; };
@@ -372,7 +372,7 @@
 		882AAB0022FC96DD004CDAA6 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				882AAAFF22FC96DD004CDAA6 /* DigiliraPAY.app */,
+				882AAAFF22FC96DD004CDAA6 /* DigiliraPay.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -630,7 +630,7 @@
 			);
 			name = DigiliraPay;
 			productName = DigiliraPay;
-			productReference = 882AAAFF22FC96DD004CDAA6 /* DigiliraPAY.app */;
+			productReference = 882AAAFF22FC96DD004CDAA6 /* DigiliraPay.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1016,8 +1016,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 55.1;
-				DEVELOPMENT_TEAM = 5TJACH7D4X;
+				CURRENT_PROJECT_VERSION = 56;
+				DEVELOPMENT_TEAM = 3543QJXWHA;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -1026,8 +1026,8 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.digilira.payment;
-				PRODUCT_NAME = DigiliraPAY;
+				PRODUCT_BUNDLE_IDENTIFIER = com.digilirapay.gateway;
+				PRODUCT_NAME = DigiliraPay;
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1041,8 +1041,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPayRelease.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 55.1;
-				DEVELOPMENT_TEAM = 5TJACH7D4X;
+				CURRENT_PROJECT_VERSION = 56;
+				DEVELOPMENT_TEAM = 3543QJXWHA;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -1051,8 +1051,8 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.digilira.payment;
-				PRODUCT_NAME = DigiliraPAY;
+				PRODUCT_BUNDLE_IDENTIFIER = com.digilirapay.gateway;
+				PRODUCT_NAME = DigiliraPay;
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
