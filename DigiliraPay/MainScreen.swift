@@ -35,7 +35,6 @@ class MainScreen: UIViewController {
     @IBOutlet weak var qrView: UIView!
     @IBOutlet weak var accountButton: UIImageView!
     @IBOutlet weak var headerInfoLabel: UILabel!
-    @IBOutlet weak var headerTotal: UILabel!
     @IBOutlet weak var sendMoneyBackButton: UIImageView!
     @IBOutlet weak var sendWithQRView: UIView!
     @IBOutlet weak var bottomView: UIView!
@@ -293,7 +292,6 @@ class MainScreen: UIViewController {
             
             
             self.coinTableView.reloadData()
-            self.headerTotal.fadeTransition(0.4)
             self.setHeaderTotal()
             self.goHomeScreen()
             
@@ -555,7 +553,36 @@ class MainScreen: UIViewController {
     
     
     func setHeaderTotal() {
-        headerTotal.text = "₺" + MainScreen.df2so(totalBalance)
+
+        let walletY = walletOperationView.frame.origin.y
+        
+        walletOperationView.frame.origin.y = 0
+        walletOperationView.alpha = 0
+        let bakiye = MainScreen.df2so(totalBalance)
+        
+        UIView.animate(withDuration: 0.3, animations: { [self] in
+ 
+            walletOperationView.blnx = "₺" + bakiye
+            logoView.isHidden = false
+            
+            walletOperationView.frame.origin.y = walletY
+            walletOperationView.alpha = 1
+        })
+    }
+    
+    func setLogoView() {
+        if logoView.isHidden == false {
+            return
+        }
+        let y = logoView.frame.origin.y
+        logoView.frame.origin.y = 0
+        logoView.alpha = 0
+        UIView.animate(withDuration: 0.3, animations: { [self] in
+                logoView.isHidden = false
+            logoView.frame.origin.y = y
+            logoView.alpha = 1
+           
+        })
     }
     
     func shake() {
@@ -647,7 +674,7 @@ class MainScreen: UIViewController {
                     id: res._id,
                     status: "1",
                     name: self.kullanici.firstName,
-                    surname: self.kullanici.lastName
+                    surname: self.kullanici.lastName 
                 )
                 
                 self.digiliraPay.setOdemeAliniyor(JSON: try? self.digiliraPay.jsonEncoder.encode(odeme))
@@ -817,7 +844,6 @@ class MainScreen: UIViewController {
         loadMenu()
         
         headerView.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
-        headerView.layer.cornerRadius = 5
         headerView.layer.shadowColor = UIColor.black.cgColor
         headerView.layer.shadowOpacity = 0.4
         headerView.layer.shadowOffset = .zero
@@ -885,6 +911,8 @@ class MainScreen: UIViewController {
         coinTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 150, right: 0)
         coinTableView.delegate = self
         coinTableView.dataSource = self
+        coinTableView.separatorColor = .clear
+        coinTableView.tableFooterView = GradientView()
         contentScrollView.addSubview(coinTableView)
         contentScrollView.contentSize.width = contentScrollView.frame.width * CGFloat(contentScrollView.subviews.count)
         
@@ -1182,6 +1210,9 @@ class MainScreen: UIViewController {
 extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ayarları, coinlerin listelenmesinde bu fonksiyonlar kullanılır.
 {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if Filtered.count == 0 {
+            return 3
+        }
         return Filtered.count
     }
     
@@ -1221,27 +1252,31 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
                 let double = MainScreen.int2so(asset.balance, digits: asset.decimal)
                 
                 cell.coinAmount.text = double
-                cell.coinCode.text = (asset.tokenSymbol)
+                //cell.coinCode.text = (asset.tokenSymbol)
                 
             }
             
             if Filtered.count == 0 {
-                cell.coinIcon.image = UIImage(named: "Bitcoin")
-                cell.coinName.text = "Bitcoin"
+                let demoin = digilira.demo[indexPath[1]]
+                cell.coinIcon.image = UIImage(named: demoin)
+                cell.coinName.text = demoin
                 cell.type.text = "₺" + MainScreen.df2so(0)
-                tapped.assetName = "Bitcoin"
+                tapped.assetName = demoin
                 
                 let double = MainScreen.int2so(0, digits: 8)
                 
                 cell.coinAmount.text = double
-                cell.coinCode.text = ("BTC")
+                //cell.coinCode.text = ("BTC")
             }
             
             return cell
             
         }
         else
-        { return UITableViewCell() }
+        {
+            return UITableViewCell()
+            
+        }
     }
 }
 
@@ -1261,9 +1296,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
 {
     func goPayments() {
         menuXib.payments()
-        
-        headerTotal.isHidden = true
-        
+                
         dismissLoadView()
         dismissProfileMenu()
         
@@ -1289,7 +1322,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         
         headerInfoLabel.isHidden = true
         homeAmountLabel.isHidden = true
-        logoView.isHidden = false
+        setLogoView()
         menuXib.isHidden = false
         
         UIView.animate(withDuration: 0.3, animations: { [self] in
@@ -1308,7 +1341,6 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         
         dismissLoadView()
         dismissProfileMenu()
-        headerTotal.isHidden = true
         
         if isShowSendCoinView {
             closeSendView()
@@ -1331,7 +1363,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         }
         headerInfoLabel.isHidden = true
         homeAmountLabel.isHidden = true
-        logoView.isHidden = false
+        setLogoView()
         menuXib.isHidden = false
         
         UIView.animate(withDuration: 0.3, animations: { [self] in
@@ -1368,7 +1400,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
             walletOperationView.frame = CGRect(x: 0,
                                                y: homeAmountLabel.frame.maxY + 10,
                                                width: view.frame.width,
-                                               height: 100)
+                                               height: 70)
             walletOperationView.delegate = self
             walletOperationView.alpha = 1
             
@@ -1390,10 +1422,10 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         
         headerInfoLabel.isHidden = true
         headerInfoLabel.textColor = .black
-        headerTotal.isHidden = false
+        setHeaderTotal()
         homeAmountLabel.isHidden = true
         
-        logoView.isHidden = true
+        
         menuXib.isHidden = false
         
         isHomeScreen = true
@@ -1428,8 +1460,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         {
             isShowWallet = true
             
-            logoView.isHidden = false
-            headerTotal.isHidden = true
+            setLogoView()
             
             isShowSettings = false
             isPayments = false
@@ -1597,7 +1628,9 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
         
     }
     
-    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        .lightContent
+    }
     
     func showMyQr() {
         
@@ -1629,7 +1662,7 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
     }
     
     func showMyFQr() {
-        
+        qrView.frame.origin.y = view.frame.height
         paraYatirView = UIView().loadNib(name: "ParaYatirView") as! ParaYatirView
         paraYatirView.frame.origin.y = self.view.frame.height
         paraYatirView.frame = CGRect(x: 0,
@@ -2623,7 +2656,7 @@ extension MainScreen: LoadCoinDelegate
     {
         isShowLoadCoinView = false
         sendMoneyBackButton.isHidden = true
-        
+        dismissKeyboard()
         UIView.animate(withDuration: 0.3) {
             self.qrView.frame.origin.y = self.view.frame.height
         }
@@ -2676,7 +2709,7 @@ extension MainScreen: VerifyAccountDelegate
             self.QR = digilira.QR.init()
             
         }
-        
+        dismissKeyboard()
         do {
             try self.kullanici = secretKeys.userData()
         } catch {

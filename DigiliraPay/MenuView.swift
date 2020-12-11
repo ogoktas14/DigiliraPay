@@ -50,49 +50,49 @@ class MenuView: UIView {
     }
     
     func home() {
-        
-        homeIcon.image = UIImage(named: "homeSelected")
-        walletIcon.image = UIImage(named: "walletNotSelected")
-        paymentsIcon.image = UIImage(named: "kartDeselect")
-        othersIcon.image = UIImage(named: "settingsNotSelected")
         UIView.animate(withDuration: 0.3)
-        {
+        { [self] in
+        homeIcon.image = UIImage(named: "home")
+        walletIcon.image = UIImage(named: "walletNS")
+        paymentsIcon.image = UIImage(named: "cardNS")
+        othersIcon.image = UIImage(named: "settingsNS")
+
             self.selectorView.center.x = self.homeIcon.center.x
         }
     }
     
     func wallet() {
-        
-        self.homeIcon.image = UIImage(named: "homeNotSelected")
-        self.walletIcon.image = UIImage(named: "walletSelected")
-        self.paymentsIcon.image = UIImage(named: "kartDeselect")
-        self.othersIcon.image = UIImage(named: "settingsNotSelected")
         UIView.animate(withDuration: 0.3)
         {
+        self.homeIcon.image = UIImage(named: "homeNS")
+        self.walletIcon.image = UIImage(named: "wallet")
+        self.paymentsIcon.image = UIImage(named: "cardNS")
+        self.othersIcon.image = UIImage(named: "settingsNS")
+
             self.selectorView.center.x = self.walletIcon.center.x
         }
     }
     
     func payments () {
-        
-        homeIcon.image = UIImage(named: "homeNotSelected")
-        walletIcon.image = UIImage(named: "walletNotSelected")
-        paymentsIcon.image = UIImage(named: "kart")
-        othersIcon.image = UIImage(named: "settingsNotSelected")
         UIView.animate(withDuration: 0.3)
-        {
+        { [self] in
+        homeIcon.image = UIImage(named: "homeNS")
+        walletIcon.image = UIImage(named: "walletNS")
+        paymentsIcon.image = UIImage(named: "card")
+        othersIcon.image = UIImage(named: "settingsNS")
+
             self.selectorView.center.x = self.paymentsIcon.center.x
         }
     }
     
     func settings() {
-        
-        homeIcon.image = UIImage(named: "homeNotSelected")
-        walletIcon.image = UIImage(named: "walletNotSelected")
-        paymentsIcon.image = UIImage(named: "kartDeselect")
-        othersIcon.image = UIImage(named: "settingsSelected")
         UIView.animate(withDuration: 0.3)
-        {
+        { [self] in
+        homeIcon.image = UIImage(named: "homeNS")
+        walletIcon.image = UIImage(named: "walletNS")
+        paymentsIcon.image = UIImage(named: "cardNS")
+        othersIcon.image = UIImage(named: "settings")
+
             self.selectorView.center.x = self.othersIcon.center.x
         }
     }

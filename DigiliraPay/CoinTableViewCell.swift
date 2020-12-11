@@ -13,7 +13,6 @@ class CoinTableViewCell: UITableViewCell {
     @IBOutlet weak var BGView: UIView!
     @IBOutlet weak var coinIcon: UIImageView!
     @IBOutlet weak var coinName: UILabel!
-    @IBOutlet weak var coinCode: UILabel!
     @IBOutlet weak var coinAmount: UILabel!
     @IBOutlet weak var type: UILabel!
     
@@ -40,7 +39,7 @@ class CoinTableViewCell: UITableViewCell {
         BGView.addSubview(shadow1)
         
         coinName.textColor = UIColor(red:0.30, green:0.30, blue:0.30, alpha:1.0)
-        coinCode.textColor = UIColor(red:0.64, green:0.64, blue:0.64, alpha:1.0)
+//        coinCode.textColor = UIColor(red:0.64, green:0.64, blue:0.64, alpha:1.0)
         type.textColor = UIColor(red:0.68, green:0.68, blue:0.68, alpha:1.0)
         coinAmount.textColor = UIColor(red:0.30, green:0.30, blue:0.30, alpha:1.0)
     }
@@ -49,11 +48,10 @@ class CoinTableViewCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         //super.setSelected(selected, animated: animated)
         // Configure the view for the selected state
-        self.backgroundColor = .blue
     }
     
     func updateCell (val:String) {
-        self.coinCode.text = val
+//        self.coinCode.text = val
     }
     
 }

@@ -299,8 +299,8 @@ class BlueGradientView: UIView {
         guard let theLayer = self.layer as? CAGradientLayer else {
             return;
         }
-        let gradientColor1 = UIColor(red: 0.24, green: 0.54, blue: 1, alpha: 1).cgColor
-        let gradientColor2 = UIColor(red: 0, green: 0.4, blue: 1, alpha: 1).cgColor
+        let gradientColor1 = UIColor(red: 0.5882, green: 0.1922, blue: 0.4471, alpha: 1.0).cgColor
+        let gradientColor2 = UIColor(red: 0.8941, green: 0.0941, blue: 0.1686, alpha: 1.0).cgColor
         
         theLayer.startPoint = CGPoint(x: 0.17355118936567193, y: 1.2736177884615385)
         theLayer.endPoint = CGPoint(x: 0.8794163945895522, y: -0.8311899038461539)
@@ -386,6 +386,84 @@ class GradientView1: UIView {
         
         layer.shadowColor = UIColor.gray.cgColor
         layer.shadowRadius = 5.0
+        layer.shadowOpacity = 0.5
+        layer.shadowOffset = CGSize(width: 1, height: 1)
+        layer.masksToBounds = false
+    }
+
+    override class var layerClass: AnyClass {
+        return CAGradientLayer.self
+    }
+}
+
+class HeaderTotalColor: UIView {
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setupView()
+    }
+
+    private func setupView() {
+        autoresizingMask = [.flexibleWidth, .flexibleHeight]
+
+        guard let theLayer = self.layer as? CAGradientLayer else {
+            return;
+        }
+        let gradientColor1 = UIColor(red: 1, green: 1, blue: 1, alpha: 0.4).cgColor
+        let gradientColor2 = UIColor(red: 0.98, green: 0.98, blue: 0.98, alpha: 0.4).cgColor
+        
+        theLayer.colors = [gradientColor1, gradientColor2]
+        theLayer.locations = [0.0, 1.0]
+        theLayer.frame = self.bounds
+        theLayer.cornerRadius = 25
+        
+        layer.shadowColor = UIColor.gray.cgColor
+        layer.shadowRadius = 2.0
+        layer.shadowOpacity = 0.5
+        layer.shadowOffset = CGSize(width: 1, height: 1)
+        layer.masksToBounds = false
+        layer.cornerRadius = 25
+
+    }
+
+    override class var layerClass: AnyClass {
+        return CAGradientLayer.self
+    }
+}
+
+
+class DLGradient: UIView {
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setupView()
+    }
+
+    private func setupView() {
+        autoresizingMask = [.flexibleWidth, .flexibleHeight]
+
+        guard let theLayer = self.layer as? CAGradientLayer else {
+            return;
+        }
+        let gradientColor1 = UIColor(red: 0.5882, green: 0.1922, blue: 0.4471, alpha: 1.0).cgColor
+        let gradientColor2 = UIColor(red: 0.8941, green: 0.0941, blue: 0.1686, alpha: 1.0).cgColor
+        
+        theLayer.colors = [gradientColor1, gradientColor2]
+        theLayer.locations = [0.0, 1.0]
+        theLayer.frame = self.bounds
+        
+        layer.shadowColor = UIColor.gray.cgColor
+        layer.shadowRadius = 2.0
         layer.shadowOpacity = 0.5
         layer.shadowOffset = CGSize(width: 1, height: 1)
         layer.masksToBounds = false

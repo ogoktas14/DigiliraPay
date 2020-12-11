@@ -113,6 +113,8 @@ struct digilira {
          var network: String
     }
     
+    static var demo = ["Bitcoin", "Ethereum", "Waves"]
+    
     static var sponsorToken = "7GnHzTaDe3YbDiCD9rueHiSfPB7hdanPpN4Ab79fJGtD"
     static var sponsorTokenFee:Int64 = 9
     static var sponsorTokenFeeMass:Int64 = 9

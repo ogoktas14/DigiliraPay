@@ -185,7 +185,7 @@ extension selectCoinView: UITableViewDataSource {
             let double = MainScreen.int2so(asset.balance, digits: asset.decimal)
             
             cell.coinAmount.text = double
-            cell.coinCode.text = (asset.tokenSymbol)
+            //cell.coinCode.text = (asset.tokenSymbol)
  
         }
         

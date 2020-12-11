@@ -309,12 +309,14 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     
     func KYC() {
         
-        if let ad = nameText.text {
-            if let soyad = surnameText.text {
+        if var ad = nameText.text {
+            if var soyad = surnameText.text {
+                if ad.last == " " {ad.removeLast()}
+                if soyad.last == " " {soyad.removeLast()}
                 if let tc = tcText.text {
-                let date = dogum.date
-                let calendar = Calendar.current
-                let year = calendar.component(.year, from: date)
+                    let date = dogum.date
+                    let calendar = Calendar.current
+                    let year = calendar.component(.year, from: date)
                     exampleSoapRequest(tc:tc, ad:ad, soyad: soyad, dogum: year.description)
                 }
             }

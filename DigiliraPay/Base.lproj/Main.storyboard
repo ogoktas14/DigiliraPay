@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -26,7 +26,7 @@
         <!--On BoardingVC-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="OnBoard" id="BYZ-38-t0r" customClass="OnBoardingVC" customModule="DigiliraPAY" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="OnBoard" id="BYZ-38-t0r" customClass="OnBoardingVC" customModule="DigiliraPay" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -113,7 +113,7 @@
         <!--Lets StartVC-->
         <scene sceneID="Kqn-7c-2xv">
             <objects>
-                <viewController id="WKR-Mv-gtf" customClass="LetsStartVC" customModule="DigiliraPAY" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="WKR-Mv-gtf" customClass="LetsStartVC" customModule="DigiliraPay" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Znx-3j-cWn">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -245,26 +245,20 @@
         <!--Main Screen-->
         <scene sceneID="8Tj-vp-EHX">
             <objects>
-                <viewController storyboardIdentifier="main1" id="kMp-XD-wqz" customClass="MainScreen" customModule="DigiliraPAY" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="main1" id="kMp-XD-wqz" customClass="MainScreen" customModule="DigiliraPay" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="dz3-oT-DnH">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NQv-rh-oeG">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NQv-rh-oeG" customClass="DLGradient" customModule="DigiliraPay" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="122"/>
                                 <subviews>
-                                    <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="appLogoBlack" translatesAutoresizingMaskIntoConstraints="NO" id="o7h-JJ-hEz">
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="appLogoWhite" translatesAutoresizingMaskIntoConstraints="NO" id="o7h-JJ-hEz">
                                         <rect key="frame" x="125" y="40" width="164" height="69"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="o7h-JJ-hEz" secondAttribute="height" multiplier="157:66" id="Tv0-QZ-Fbe"/>
                                         </constraints>
                                     </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="₺" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oqx-yc-ZeJ">
-                                        <rect key="frame" x="195.66666666666666" y="47" width="23" height="54.666666666666657"/>
-                                        <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="42"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="headerBG" translatesAutoresizingMaskIntoConstraints="NO" id="CiE-pg-yMo">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="87"/>
                                         <constraints>
@@ -287,7 +281,6 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstItem="uLB-Va-OGK" firstAttribute="centerX" secondItem="NQv-rh-oeG" secondAttribute="centerX" id="1TG-OG-AgH"/>
-                                    <constraint firstItem="Oqx-yc-ZeJ" firstAttribute="centerX" secondItem="NQv-rh-oeG" secondAttribute="centerX" id="4Tp-Ny-56u"/>
                                     <constraint firstAttribute="width" secondItem="NQv-rh-oeG" secondAttribute="height" multiplier="16:8" constant="170" id="7sn-NE-0X5"/>
                                     <constraint firstItem="CiE-pg-yMo" firstAttribute="top" secondItem="NQv-rh-oeG" secondAttribute="top" id="8uV-uj-4Zn"/>
                                     <constraint firstAttribute="trailing" secondItem="o7h-JJ-hEz" secondAttribute="trailing" constant="125" id="TU3-R5-oW1"/>
@@ -298,7 +291,6 @@
                                     <constraint firstItem="uLB-Va-OGK" firstAttribute="top" secondItem="VHR-Nh-8mP" secondAttribute="bottom" constant="5" id="s6B-nD-xHn"/>
                                     <constraint firstItem="o7h-JJ-hEz" firstAttribute="leading" secondItem="NQv-rh-oeG" secondAttribute="leading" constant="125" id="u7C-L8-drJ"/>
                                     <constraint firstItem="CiE-pg-yMo" firstAttribute="leading" secondItem="NQv-rh-oeG" secondAttribute="leading" id="uHY-ah-u5V"/>
-                                    <constraint firstItem="Oqx-yc-ZeJ" firstAttribute="centerY" secondItem="o7h-JJ-hEz" secondAttribute="centerY" id="xY1-C8-9fn"/>
                                     <constraint firstItem="VHR-Nh-8mP" firstAttribute="centerX" secondItem="NQv-rh-oeG" secondAttribute="centerX" id="zBH-V5-pqA"/>
                                 </constraints>
                             </view>
@@ -399,7 +391,6 @@
                         <outlet property="bottomView" destination="axH-mU-zpT" id="pgI-jV-grh"/>
                         <outlet property="contentView" destination="TRs-wb-PaP" id="S8f-Wc-g7C"/>
                         <outlet property="headerInfoLabel" destination="VHR-Nh-8mP" id="Qwu-1O-1ue"/>
-                        <outlet property="headerTotal" destination="Oqx-yc-ZeJ" id="bbh-i2-4lI"/>
                         <outlet property="headerView" destination="NQv-rh-oeG" id="Kex-gO-CtE"/>
                         <outlet property="homeAmountLabel" destination="uLB-Va-OGK" id="l7h-CE-gwy"/>
                         <outlet property="logoView" destination="o7h-JJ-hEz" id="fk6-c8-hVe"/>
@@ -420,12 +411,12 @@
                     </connections>
                 </panGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="885.60000000000002" y="855.9220389805098"/>
+            <point key="canvasLocation" x="885.50724637681162" y="855.80357142857144"/>
         </scene>
         <!--ShareQRVC-->
         <scene sceneID="Cuf-My-qvn">
             <objects>
-                <viewController id="ppo-qU-rpA" customClass="ShareQRVC" customModule="DigiliraPAY" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="ppo-qU-rpA" customClass="ShareQRVC" customModule="DigiliraPay" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="E6E-Zg-VOd">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -456,7 +447,7 @@
         <!--Import AccountVC-->
         <scene sceneID="9UF-dz-kkT">
             <objects>
-                <viewController id="5w0-24-Llf" customClass="ImportAccountVC" customModule="DigiliraPAY" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="5w0-24-Llf" customClass="ImportAccountVC" customModule="DigiliraPay" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="taI-Vz-Thl">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

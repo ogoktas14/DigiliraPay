@@ -293,6 +293,7 @@ class PinView: UIView {
             
             goVerify()
             pinAreaView.shake()
+            pinAreaView.isHidden = false
             firstCode.removeAll()
 
             if !isEntryMode && !isUpdateMode  {

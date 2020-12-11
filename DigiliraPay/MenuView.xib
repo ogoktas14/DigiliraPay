@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -22,23 +21,23 @@
                 <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="center" spacing="-10" translatesAutoresizingMaskIntoConstraints="NO" id="gvN-Pe-4Ju">
                     <rect key="frame" x="0.0" y="44" width="450" height="87"/>
                     <subviews>
-                        <imageView clipsSubviews="YES" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="homeSelected" translatesAutoresizingMaskIntoConstraints="NO" id="ldJ-br-6Wy">
+                        <imageView clipsSubviews="YES" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="homeNS" translatesAutoresizingMaskIntoConstraints="NO" id="ldJ-br-6Wy">
                             <rect key="frame" x="0.0" y="0.0" width="98" height="87"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </imageView>
-                        <imageView clipsSubviews="YES" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="walletNotSelected" translatesAutoresizingMaskIntoConstraints="NO" id="VpY-mq-3QL">
+                        <imageView clipsSubviews="YES" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cardNS" translatesAutoresizingMaskIntoConstraints="NO" id="VpY-mq-3QL">
                             <rect key="frame" x="88" y="0.0" width="98" height="87"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </imageView>
-                        <imageView clipsSubviews="YES" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="qrIcon" translatesAutoresizingMaskIntoConstraints="NO" id="PiC-jw-mIb">
-                            <rect key="frame" x="176" y="0.0" width="98" height="87"/>
+                        <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gr-icon" translatesAutoresizingMaskIntoConstraints="NO" id="PiC-jw-mIb">
+                            <rect key="frame" x="176" y="10" width="98" height="67"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </imageView>
-                        <imageView clipsSubviews="YES" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="kartDeselect" translatesAutoresizingMaskIntoConstraints="NO" id="8Za-vs-IvC">
+                        <imageView clipsSubviews="YES" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="walletNS" translatesAutoresizingMaskIntoConstraints="NO" id="8Za-vs-IvC">
                             <rect key="frame" x="264" y="0.0" width="98" height="87"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </imageView>
-                        <imageView clipsSubviews="YES" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="settingsNotSelected" translatesAutoresizingMaskIntoConstraints="NO" id="UmK-ei-xMX">
+                        <imageView clipsSubviews="YES" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="settingsNS" translatesAutoresizingMaskIntoConstraints="NO" id="UmK-ei-xMX">
                             <rect key="frame" x="352" y="0.0" width="98" height="87"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </imageView>
@@ -46,7 +45,7 @@
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="8Za-vs-IvC" firstAttribute="top" secondItem="gvN-Pe-4Ju" secondAttribute="top" id="1bh-xs-lJH"/>
-                        <constraint firstItem="PiC-jw-mIb" firstAttribute="top" secondItem="gvN-Pe-4Ju" secondAttribute="top" id="ibQ-Mu-fdm"/>
+                        <constraint firstItem="PiC-jw-mIb" firstAttribute="top" secondItem="gvN-Pe-4Ju" secondAttribute="top" constant="10" id="ibQ-Mu-fdm"/>
                         <constraint firstItem="VpY-mq-3QL" firstAttribute="top" secondItem="gvN-Pe-4Ju" secondAttribute="top" id="k9E-UI-djb"/>
                         <constraint firstItem="UmK-ei-xMX" firstAttribute="top" secondItem="gvN-Pe-4Ju" secondAttribute="top" id="qxm-8b-p0n"/>
                         <constraint firstItem="ldJ-br-6Wy" firstAttribute="top" secondItem="gvN-Pe-4Ju" secondAttribute="top" id="uYv-OP-Sii"/>
@@ -54,7 +53,7 @@
                 </stackView>
                 <view alpha="0.59999999999999998" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cy3-1c-BJR">
                     <rect key="frame" x="207.5" y="126" width="35" height="5"/>
-                    <color key="backgroundColor" systemColor="systemBlueColor"/>
+                    <color key="backgroundColor" red="0.88235294117647056" green="0.10196078431372549" blue="0.18431372549019609" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="5" id="Oc0-1Y-f12"/>
                         <constraint firstAttribute="width" constant="35" id="yMY-t9-fuE"/>
@@ -90,13 +89,10 @@
         </view>
     </objects>
     <resources>
-        <image name="homeSelected" width="23" height="22"/>
-        <image name="kartDeselect" width="25" height="22"/>
-        <image name="qrIcon" width="43" height="43"/>
-        <image name="settingsNotSelected" width="21" height="21"/>
-        <image name="walletNotSelected" width="25" height="22"/>
-        <systemColor name="systemBlueColor">
-            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
+        <image name="cardNS" width="30" height="30"/>
+        <image name="gr-icon" width="300" height="300"/>
+        <image name="homeNS" width="30" height="30"/>
+        <image name="settingsNS" width="30" height="30"/>
+        <image name="walletNS" width="30" height="30"/>
     </resources>
 </document>
