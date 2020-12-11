@@ -1244,7 +1244,7 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
             if Filtered.count > 0 {
                 
                 let asset = Filtered[indexPath[1]]
-                cell.coinIcon.image = UIImage(named: asset.tokenName)
+                cell.coinIcon.image = UIImage(named: asset.tokenSymbol)
                 cell.coinName.text = asset.tokenName
                 cell.type.text = "₺" + MainScreen.df2so(asset.tlExchange)
                 tapped.assetName = asset.tokenName

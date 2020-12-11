@@ -54,8 +54,8 @@ class Verify_StartView: UIView {
     
     var word: Int8 = 0
     
-    var labelSelectedFont = UIFont(name: "Montserrat-ExtraBold", size: 16)
-    var labelUnselectedFont = UIFont(name: "Montserrat-SemiBold", size: 16)
+    var labelSelectedFont = UIFont(name: "Avenir-Black", size: 16)
+    var labelUnselectedFont = UIFont(name: "Avenir-Heavy", size: 16)
     
     weak var delegate: LetsStartSkipDelegate?
     

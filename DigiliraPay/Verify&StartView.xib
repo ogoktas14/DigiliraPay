@@ -1,47 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="Montserrat-ExtraBold.otf">
-            <string>Montserrat-ExtraBold</string>
-        </array>
-        <array key="Montserrat-Medium.otf">
-            <string>Montserrat-Medium</string>
-        </array>
-        <array key="Montserrat-SemiBold.otf">
-            <string>Montserrat-SemiBold</string>
-        </array>
-    </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="Verify_StartView" customModule="DigiliraPAY" customModuleProvider="target">
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="Verify_StartView" customModule="DigiliraPay" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="399" height="684"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lütfen sırası ile" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GYN-vf-iPt">
-                    <rect key="frame" x="94.000000000000014" y="323.33333333333331" width="211.33333333333337" height="32"/>
-                    <fontDescription key="fontDescription" name="Montserrat-ExtraBold" family="Montserrat" pointSize="26"/>
+                    <rect key="frame" x="107" y="323.33333333333331" width="185" height="35.666666666666686"/>
+                    <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="26"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="anahtar kelimeleri seç" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="esa-FC-xDE">
-                    <rect key="frame" x="68.333333333333343" y="365.33333333333331" width="262.66666666666663" height="28.333333333333314"/>
-                    <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="23"/>
+                    <rect key="frame" x="81.333333333333329" y="369" width="236.66666666666669" height="31.666666666666686"/>
+                    <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="23"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uZO-e8-tcD">
-                    <rect key="frame" x="138" y="478" width="123" height="31"/>
+                    <rect key="frame" x="99.666666666666686" y="497.33333333333326" width="200" height="50"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="15"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="200" id="E5c-bg-ysG"/>
+                        <constraint firstAttribute="height" constant="50" id="OP9-td-sT9"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="17"/>
                     <state key="normal" title="Bu aşamayı atla">
                         <color key="titleColor" systemColor="systemBlueColor"/>
                     </state>
@@ -55,12 +48,12 @@
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="11" translatesAutoresizingMaskIntoConstraints="NO" id="hhA-RI-ljX">
                             <rect key="frame" x="18" y="10" width="323" height="36"/>
                             <subviews>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hwZ-4T-0zq" customClass="GradientView" customModule="DigiliraPAY" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hwZ-4T-0zq" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="0.0" width="100.33333333333333" height="36"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ohx-fu-aHm">
-                                            <rect key="frame" x="26.666666666666668" y="8.0000000000000018" width="46.666666666666657" height="19.666666666666671"/>
-                                            <fontDescription key="fontDescription" name="Montserrat-ExtraBold" family="Montserrat" pointSize="16"/>
+                                            <rect key="frame" x="30.000000000000004" y="7" width="40.333333333333343" height="22"/>
+                                            <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="16"/>
                                             <color key="textColor" systemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -71,15 +64,15 @@
                                         <constraint firstItem="Ohx-fu-aHm" firstAttribute="centerY" secondItem="hwZ-4T-0zq" secondAttribute="centerY" id="ASH-aP-u85"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r22-13-3Ow" customClass="GradientView" customModule="DigiliraPAY" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r22-13-3Ow" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                                     <rect key="frame" x="111.33333333333334" y="0.0" width="100.33333333333334" height="36"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LIe-Pt-2zr">
-                                            <rect key="frame" x="26.999999999999996" y="8.0000000000000018" width="46.666666666666657" height="19.666666666666671"/>
+                                            <rect key="frame" x="30.000000000000004" y="7" width="40.333333333333343" height="22"/>
                                             <accessibility key="accessibilityConfiguration">
                                                 <accessibilityTraits key="traits" staticText="YES" notEnabled="YES"/>
                                             </accessibility>
-                                            <fontDescription key="fontDescription" name="Montserrat-ExtraBold" family="Montserrat" pointSize="16"/>
+                                            <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="16"/>
                                             <color key="textColor" systemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -90,15 +83,15 @@
                                         <constraint firstItem="LIe-Pt-2zr" firstAttribute="centerY" secondItem="r22-13-3Ow" secondAttribute="centerY" id="zfZ-Zu-d07"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="s8X-Jj-3ht" customClass="GradientView" customModule="DigiliraPAY" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="s8X-Jj-3ht" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                                     <rect key="frame" x="222.66666666666671" y="0.0" width="100.33333333333334" height="36"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KHe-11-xgh">
-                                            <rect key="frame" x="26.999999999999996" y="8.0000000000000018" width="46.666666666666657" height="19.666666666666671"/>
+                                            <rect key="frame" x="30.000000000000004" y="7" width="40.333333333333343" height="22"/>
                                             <accessibility key="accessibilityConfiguration">
                                                 <accessibilityTraits key="traits" staticText="YES" notEnabled="YES"/>
                                             </accessibility>
-                                            <fontDescription key="fontDescription" name="Montserrat-ExtraBold" family="Montserrat" pointSize="16"/>
+                                            <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="16"/>
                                             <color key="textColor" systemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -119,15 +112,15 @@
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="11" translatesAutoresizingMaskIntoConstraints="NO" id="R0D-sH-HaQ">
                             <rect key="frame" x="18" y="56" width="323" height="35.666666666666657"/>
                             <subviews>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NqB-5H-DaM" customClass="GradientView" customModule="DigiliraPAY" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NqB-5H-DaM" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="0.0" width="100.33333333333333" height="35.666666666666664"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cNa-pG-xUN">
-                                            <rect key="frame" x="26.666666666666668" y="8.0000000000000018" width="46.666666666666657" height="19.666666666666671"/>
+                                            <rect key="frame" x="30.000000000000004" y="7" width="40.333333333333343" height="22"/>
                                             <accessibility key="accessibilityConfiguration">
                                                 <accessibilityTraits key="traits" staticText="YES" notEnabled="YES"/>
                                             </accessibility>
-                                            <fontDescription key="fontDescription" name="Montserrat-ExtraBold" family="Montserrat" pointSize="16"/>
+                                            <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="16"/>
                                             <color key="textColor" systemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -138,15 +131,15 @@
                                         <constraint firstItem="cNa-pG-xUN" firstAttribute="centerY" secondItem="NqB-5H-DaM" secondAttribute="centerY" id="Wxz-7D-tln"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1LB-yv-hnW" customClass="GradientView" customModule="DigiliraPAY" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1LB-yv-hnW" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                                     <rect key="frame" x="111.33333333333334" y="0.0" width="100.33333333333334" height="35.666666666666664"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Aad-T4-gYZ">
-                                            <rect key="frame" x="26.999999999999996" y="8.0000000000000018" width="46.666666666666657" height="19.666666666666671"/>
+                                            <rect key="frame" x="30.000000000000004" y="7" width="40.333333333333343" height="22"/>
                                             <accessibility key="accessibilityConfiguration">
                                                 <accessibilityTraits key="traits" staticText="YES" notEnabled="YES"/>
                                             </accessibility>
-                                            <fontDescription key="fontDescription" name="Montserrat-ExtraBold" family="Montserrat" pointSize="16"/>
+                                            <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="16"/>
                                             <color key="textColor" systemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -157,15 +150,15 @@
                                         <constraint firstItem="Aad-T4-gYZ" firstAttribute="centerY" secondItem="1LB-yv-hnW" secondAttribute="centerY" id="pa3-yB-TP8"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="20k-gg-Zcc" customClass="GradientView" customModule="DigiliraPAY" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="20k-gg-Zcc" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                                     <rect key="frame" x="222.66666666666671" y="0.0" width="100.33333333333334" height="35.666666666666664"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ac2-Uk-RIs">
-                                            <rect key="frame" x="26.999999999999996" y="8.0000000000000018" width="46.666666666666657" height="19.666666666666671"/>
+                                            <rect key="frame" x="30.000000000000004" y="7" width="40.333333333333343" height="22"/>
                                             <accessibility key="accessibilityConfiguration">
                                                 <accessibilityTraits key="traits" staticText="YES" notEnabled="YES"/>
                                             </accessibility>
-                                            <fontDescription key="fontDescription" name="Montserrat-ExtraBold" family="Montserrat" pointSize="16"/>
+                                            <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="16"/>
                                             <color key="textColor" systemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -186,15 +179,15 @@
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="11" translatesAutoresizingMaskIntoConstraints="NO" id="Ioy-FW-Cz4">
                             <rect key="frame" x="18" y="101.66666666666666" width="323" height="36"/>
                             <subviews>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IOX-pB-H7C" customClass="GradientView" customModule="DigiliraPAY" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IOX-pB-H7C" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="0.0" width="100.33333333333333" height="36"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="THS-mq-H6o">
-                                            <rect key="frame" x="26.666666666666668" y="8.3333333333333446" width="46.666666666666657" height="19.666666666666671"/>
+                                            <rect key="frame" x="30.000000000000004" y="7" width="40.333333333333343" height="22"/>
                                             <accessibility key="accessibilityConfiguration">
                                                 <accessibilityTraits key="traits" staticText="YES" notEnabled="YES"/>
                                             </accessibility>
-                                            <fontDescription key="fontDescription" name="Montserrat-ExtraBold" family="Montserrat" pointSize="16"/>
+                                            <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="16"/>
                                             <color key="textColor" systemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -205,15 +198,15 @@
                                         <constraint firstItem="THS-mq-H6o" firstAttribute="centerX" secondItem="IOX-pB-H7C" secondAttribute="centerX" id="em8-OO-OgJ"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bfN-aq-Lc3" customClass="GradientView" customModule="DigiliraPAY" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bfN-aq-Lc3" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                                     <rect key="frame" x="111.33333333333334" y="0.0" width="100.33333333333334" height="36"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gD2-6q-ryw">
-                                            <rect key="frame" x="26.999999999999996" y="8.3333333333333446" width="46.666666666666657" height="19.666666666666671"/>
+                                            <rect key="frame" x="30.000000000000004" y="7" width="40.333333333333343" height="22"/>
                                             <accessibility key="accessibilityConfiguration">
                                                 <accessibilityTraits key="traits" staticText="YES" notEnabled="YES"/>
                                             </accessibility>
-                                            <fontDescription key="fontDescription" name="Montserrat-ExtraBold" family="Montserrat" pointSize="16"/>
+                                            <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="16"/>
                                             <color key="textColor" systemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -224,15 +217,15 @@
                                         <constraint firstItem="gD2-6q-ryw" firstAttribute="centerX" secondItem="bfN-aq-Lc3" secondAttribute="centerX" id="Qup-yL-70t"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Iy-B1-kxf" customClass="GradientView" customModule="DigiliraPAY" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Iy-B1-kxf" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                                     <rect key="frame" x="222.66666666666671" y="0.0" width="100.33333333333334" height="36"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WBc-zG-Y8V">
-                                            <rect key="frame" x="26.999999999999996" y="8.3333333333333446" width="46.666666666666657" height="19.666666666666671"/>
+                                            <rect key="frame" x="30.000000000000004" y="7" width="40.333333333333343" height="22"/>
                                             <accessibility key="accessibilityConfiguration">
                                                 <accessibilityTraits key="traits" staticText="YES" notEnabled="YES"/>
                                             </accessibility>
-                                            <fontDescription key="fontDescription" name="Montserrat-ExtraBold" family="Montserrat" pointSize="16"/>
+                                            <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="16"/>
                                             <color key="textColor" systemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -253,15 +246,15 @@
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="11" translatesAutoresizingMaskIntoConstraints="NO" id="DVd-xJ-RPD">
                             <rect key="frame" x="18" y="147.66666666666666" width="323" height="36"/>
                             <subviews>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bne-iZ-mI2" customClass="GradientView" customModule="DigiliraPAY" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bne-iZ-mI2" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="0.0" width="100.33333333333333" height="36"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Cw-01-4NW">
-                                            <rect key="frame" x="26.666666666666668" y="8.0000000000000018" width="46.666666666666657" height="19.666666666666671"/>
+                                            <rect key="frame" x="30.000000000000004" y="7" width="40.333333333333343" height="22"/>
                                             <accessibility key="accessibilityConfiguration">
                                                 <accessibilityTraits key="traits" staticText="YES" notEnabled="YES"/>
                                             </accessibility>
-                                            <fontDescription key="fontDescription" name="Montserrat-ExtraBold" family="Montserrat" pointSize="16"/>
+                                            <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="16"/>
                                             <color key="textColor" systemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -272,15 +265,15 @@
                                         <constraint firstItem="1Cw-01-4NW" firstAttribute="centerY" secondItem="Bne-iZ-mI2" secondAttribute="centerY" id="ija-ke-d5N"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="26J-Bs-b15" customClass="GradientView" customModule="DigiliraPAY" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="26J-Bs-b15" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                                     <rect key="frame" x="111.33333333333334" y="0.0" width="100.33333333333334" height="36"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Kz-uw-mvF">
-                                            <rect key="frame" x="26.999999999999996" y="8.0000000000000018" width="46.666666666666657" height="19.666666666666671"/>
+                                            <rect key="frame" x="30.000000000000004" y="7" width="40.333333333333343" height="22"/>
                                             <accessibility key="accessibilityConfiguration">
                                                 <accessibilityTraits key="traits" staticText="YES" notEnabled="YES"/>
                                             </accessibility>
-                                            <fontDescription key="fontDescription" name="Montserrat-ExtraBold" family="Montserrat" pointSize="16"/>
+                                            <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="16"/>
                                             <color key="textColor" systemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -291,15 +284,15 @@
                                         <constraint firstItem="6Kz-uw-mvF" firstAttribute="centerX" secondItem="26J-Bs-b15" secondAttribute="centerX" id="EFh-jg-fvS"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PKE-JM-FFh" customClass="GradientView" customModule="DigiliraPAY" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PKE-JM-FFh" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                                     <rect key="frame" x="222.66666666666671" y="0.0" width="100.33333333333334" height="36"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nlO-Ih-iHC">
-                                            <rect key="frame" x="26.999999999999996" y="8.0000000000000018" width="46.666666666666657" height="19.666666666666671"/>
+                                            <rect key="frame" x="30.000000000000004" y="7" width="40.333333333333343" height="22"/>
                                             <accessibility key="accessibilityConfiguration">
                                                 <accessibilityTraits key="traits" staticText="YES" notEnabled="YES"/>
                                             </accessibility>
-                                            <fontDescription key="fontDescription" name="Montserrat-ExtraBold" family="Montserrat" pointSize="16"/>
+                                            <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="16"/>
                                             <color key="textColor" systemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -320,15 +313,15 @@
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="11" translatesAutoresizingMaskIntoConstraints="NO" id="qyv-UV-Ygi">
                             <rect key="frame" x="18" y="193.66666666666669" width="323" height="36"/>
                             <subviews>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ybo-OP-YGV" customClass="GradientView" customModule="DigiliraPAY" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ybo-OP-YGV" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="0.0" width="100.33333333333333" height="36"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YvK-u5-NQu">
-                                            <rect key="frame" x="26.666666666666668" y="8.0000000000000018" width="46.666666666666657" height="19.666666666666671"/>
+                                            <rect key="frame" x="30.000000000000004" y="7" width="40.333333333333343" height="22"/>
                                             <accessibility key="accessibilityConfiguration">
                                                 <accessibilityTraits key="traits" staticText="YES" notEnabled="YES"/>
                                             </accessibility>
-                                            <fontDescription key="fontDescription" name="Montserrat-ExtraBold" family="Montserrat" pointSize="16"/>
+                                            <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="16"/>
                                             <color key="textColor" systemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -339,15 +332,15 @@
                                         <constraint firstItem="YvK-u5-NQu" firstAttribute="centerX" secondItem="Ybo-OP-YGV" secondAttribute="centerX" id="umK-ux-CmV"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cbf-wu-1Wd" customClass="GradientView" customModule="DigiliraPAY" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cbf-wu-1Wd" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                                     <rect key="frame" x="111.33333333333334" y="0.0" width="100.33333333333334" height="36"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4c6-zQ-rpp">
-                                            <rect key="frame" x="26.999999999999996" y="8.0000000000000018" width="46.666666666666657" height="19.666666666666671"/>
+                                            <rect key="frame" x="30.000000000000004" y="7" width="40.333333333333343" height="22"/>
                                             <accessibility key="accessibilityConfiguration">
                                                 <accessibilityTraits key="traits" staticText="YES" notEnabled="YES"/>
                                             </accessibility>
-                                            <fontDescription key="fontDescription" name="Montserrat-ExtraBold" family="Montserrat" pointSize="16"/>
+                                            <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="16"/>
                                             <color key="textColor" systemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -358,15 +351,15 @@
                                         <constraint firstItem="4c6-zQ-rpp" firstAttribute="centerX" secondItem="Cbf-wu-1Wd" secondAttribute="centerX" id="UDU-Fi-BE1"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="17q-KK-kFz" customClass="GradientView" customModule="DigiliraPAY" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="17q-KK-kFz" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                                     <rect key="frame" x="222.66666666666671" y="0.0" width="100.33333333333334" height="36"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mrp-FQ-IlX">
-                                            <rect key="frame" x="26.999999999999996" y="8.0000000000000018" width="46.666666666666657" height="19.666666666666671"/>
+                                            <rect key="frame" x="30.000000000000004" y="7" width="40.333333333333343" height="22"/>
                                             <accessibility key="accessibilityConfiguration">
                                                 <accessibilityTraits key="traits" staticText="YES" notEnabled="YES"/>
                                             </accessibility>
-                                            <fontDescription key="fontDescription" name="Montserrat-ExtraBold" family="Montserrat" pointSize="16"/>
+                                            <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="16"/>
                                             <color key="textColor" systemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -408,11 +401,11 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WIA-qZ-TLY">
-                    <rect key="frame" x="20" y="403.66666666666669" width="359" height="54.333333333333314"/>
+                    <rect key="frame" x="20" y="410.66666666666669" width="359" height="66.666666666666686"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label Label Label Label Label Label Label Label Label Label Label Label Label Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X9o-DW-T5f">
-                            <rect key="frame" x="10" y="10" width="339" height="34.333333333333336"/>
-                            <fontDescription key="fontDescription" name="Montserrat-Medium" family="Montserrat" pointSize="14"/>
+                            <rect key="frame" x="10" y="9.9999999999999964" width="339" height="46.666666666666657"/>
+                            <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="17"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
