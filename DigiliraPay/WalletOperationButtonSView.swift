@@ -20,7 +20,8 @@ class WalletOperationButtonSView: UIView {
     @IBOutlet weak var balanceText: UILabel!
     
     var blnx:String?
-    
+    let generator = UINotificationFeedbackGenerator()
+
     weak var delegate: OperationButtonsDelegate?
     override func awakeFromNib()
     {
@@ -65,52 +66,43 @@ class WalletOperationButtonSView: UIView {
         
     }
     @objc func sendButton()
-    {
-        let empty = SendTrx.init(
-            merchant: "",
-            recipient: "",
-            assetId: "",
-            amount: 0,
-            fee: digilira.sponsorTokenFee,
-            fiat: 0,
-            attachment: "",
-            network: "")
-        delegate?.send(params: empty)
-        
-        UIView.animateKeyframes(withDuration: 0.4, delay: 0, options: .allowUserInteraction, animations: {
+    { 
+        generator.notificationOccurred(.success)
+        UIView.animateKeyframes(withDuration: 0.1, delay: 0, options: .allowUserInteraction, animations: {
             self.send.alpha = 0
             self.sendLabel.alpha = 0
             self.sendMoneyView.alpha = 0
-            self.send.frame.origin.x = 100
-            self.sendMoneyView.frame.origin.x = 100
         }, completion: { [self]_ in
             self.send.alpha = 1
             self.sendMoneyView.alpha = 1
-            self.send.frame.origin.x = 0
-            self.sendMoneyView.frame.origin.x = 0
+            
+            let empty = SendTrx.init(
+                merchant: "",
+                recipient: "",
+                assetId: "",
+                amount: 0,
+                fee: digilira.sponsorTokenFee,
+                fiat: 0,
+                attachment: "",
+                network: "")
+            self.delegate?.send(params: empty)
         })
 
     }
     @objc func loadButton()
     {
-        
-        let x1 = self.load.frame.origin.x
-        let x2 = self.loadMoneyView.frame.origin.x
-        
-        UIView.animateKeyframes(withDuration: 0.4, delay: 0, options: .allowUserInteraction, animations: {
+        generator.notificationOccurred(.success)
+        UIView.animateKeyframes(withDuration: 0.1, delay: 0, options: .allowUserInteraction, animations: {
             self.load.alpha = 0
             self.loadLabel.alpha = 0
             self.loadMoneyView.alpha = 0
-            self.load.frame.origin.x = -100
-            self.loadMoneyView.frame.origin.x = 0
         }, completion: { [self]_ in
             self.load.alpha = 1
             self.loadMoneyView.alpha = 1
-            self.load.frame.origin.x = x1
-            self.loadMoneyView.frame.origin.x = x2
+            delegate?.load()
         })
         
         
-            delegate?.load()
+
     }
 }

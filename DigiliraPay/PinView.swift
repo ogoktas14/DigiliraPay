@@ -31,7 +31,7 @@ class PinView: UIView {
 
     weak var delegate: PinViewDelegate?
     
-    let enteredColor = UIColor(red:0.40, green:0.64, blue:1.00, alpha:1.0)
+    let enteredColor =  UIColor(red: 0.8941, green: 0.0941, blue: 0.1686, alpha: 1.0)
     let unEnteredColor = UIColor(red:0.90, green:0.84, blue:0.84, alpha:1.0)
     
     var entered = [false, false, false, false]

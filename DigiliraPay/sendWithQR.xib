@@ -1,28 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="Montserrat-ExtraBold.otf">
-            <string>Montserrat-ExtraBold</string>
-        </array>
-        <array key="Montserrat-SemiBold.otf">
-            <string>Montserrat-SemiBold</string>
-        </array>
-    </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="sendWithQR" customModule="DigiliraPAY" customModuleProvider="target">
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="sendWithQR" customModule="DigiliraPay" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sendWithQRBG" translatesAutoresizingMaskIntoConstraints="NO" id="su6-l6-stj">
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="su6-l6-stj">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                 </imageView>
                 <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hti-wC-AgE">
@@ -32,7 +24,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iNh-US-qMx">
-                                <rect key="frame" x="350" y="60" width="25" height="25"/>
+                                <rect key="frame" x="194.66666666666666" y="831" width="25" height="25"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="25" id="8cM-LC-Lnj"/>
                                     <constraint firstAttribute="height" constant="25" id="CA7-Me-zdF"/>
@@ -42,38 +34,38 @@
                                     <action selector="exitButton:" destination="iN0-l3-epB" eventType="touchUpInside" id="iS6-20-Xr3"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yfi-GV-XlY">
-                                <rect key="frame" x="0.0" y="120" width="414" height="80"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yfi-GV-XlY" customClass="DLGradient" customModule="DigiliraPay" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="160"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ödeme yapmak İçİn" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ptg-PQ-tOe">
-                                        <rect key="frame" x="145.66666666666666" y="8" width="122.99999999999997" height="15"/>
-                                        <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="12"/>
-                                        <nil key="textColor"/>
+                                        <rect key="frame" x="129.66666666666669" y="60.000000000000007" width="154.66666666666669" height="23.333333333333336"/>
+                                        <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="QR Kodu Okutun" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z09-uY-nZi">
-                                        <rect key="frame" x="99" y="31" width="216" height="29.666666666666671"/>
-                                        <fontDescription key="fontDescription" name="Montserrat-ExtraBold" family="Montserrat" pointSize="24"/>
-                                        <nil key="textColor"/>
+                                        <rect key="frame" x="110.33333333333333" y="93.333333333333329" width="193.33333333333337" height="33"/>
+                                        <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="24"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="0.69613675460000002" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="ptg-PQ-tOe" firstAttribute="centerX" secondItem="yfi-GV-XlY" secondAttribute="centerX" id="5Rt-xJ-F45"/>
                                     <constraint firstItem="Z09-uY-nZi" firstAttribute="centerX" secondItem="yfi-GV-XlY" secondAttribute="centerX" id="9Ks-Zk-EIh"/>
-                                    <constraint firstAttribute="width" secondItem="yfi-GV-XlY" secondAttribute="height" multiplier="207:40" id="R1x-WJ-dbP"/>
-                                    <constraint firstItem="Z09-uY-nZi" firstAttribute="top" secondItem="ptg-PQ-tOe" secondAttribute="bottom" constant="8" id="Zei-1l-Yot"/>
-                                    <constraint firstItem="ptg-PQ-tOe" firstAttribute="top" secondItem="yfi-GV-XlY" secondAttribute="top" constant="8" id="fam-5N-hBH"/>
+                                    <constraint firstItem="Z09-uY-nZi" firstAttribute="top" secondItem="ptg-PQ-tOe" secondAttribute="bottom" constant="10" id="Zei-1l-Yot"/>
+                                    <constraint firstAttribute="height" constant="160" id="dNW-ng-5uv"/>
+                                    <constraint firstItem="ptg-PQ-tOe" firstAttribute="top" secondItem="yfi-GV-XlY" secondAttribute="top" constant="60" id="fam-5N-hBH"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="yfi-GV-XlY" firstAttribute="top" secondItem="Ckg-12-b3c" secondAttribute="top" constant="120" id="PPl-bI-z42"/>
+                            <constraint firstItem="yfi-GV-XlY" firstAttribute="top" secondItem="Ckg-12-b3c" secondAttribute="top" id="PPl-bI-z42"/>
                             <constraint firstAttribute="trailing" secondItem="yfi-GV-XlY" secondAttribute="trailing" id="PTE-qd-gQy"/>
                             <constraint firstItem="yfi-GV-XlY" firstAttribute="leading" secondItem="Ckg-12-b3c" secondAttribute="leading" id="SAa-BD-wQx"/>
-                            <constraint firstAttribute="trailing" secondItem="iNh-US-qMx" secondAttribute="trailing" constant="39" id="jKQ-Hr-Bre"/>
-                            <constraint firstItem="iNh-US-qMx" firstAttribute="top" secondItem="Ckg-12-b3c" secondAttribute="top" constant="60" id="x1E-35-gKn"/>
+                            <constraint firstAttribute="centerX" secondItem="iNh-US-qMx" secondAttribute="centerX" id="jKQ-Hr-Bre"/>
+                            <constraint firstAttribute="bottom" secondItem="iNh-US-qMx" secondAttribute="bottom" constant="40" id="x1E-35-gKn"/>
                         </constraints>
                     </view>
                     <blurEffect style="regular"/>
@@ -91,11 +83,10 @@
                 <constraint firstItem="hti-wC-AgE" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="qzY-ta-4kd"/>
                 <constraint firstItem="su6-l6-stj" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="ss4-gs-HYm"/>
             </constraints>
-            <point key="canvasLocation" x="136.80000000000001" y="141.67916041979012"/>
+            <point key="canvasLocation" x="136.23188405797103" y="141.29464285714286"/>
         </view>
     </objects>
     <resources>
         <image name="exit" width="44" height="44"/>
-        <image name="sendWithQRBG" width="3936" height="2684"/>
     </resources>
 </document>
