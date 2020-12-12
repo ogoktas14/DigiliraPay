@@ -104,16 +104,7 @@ class digiliraPayApi: NSObject {
             throw parsingError
         }
     }
-    
-    func alert(title: String, message:String) {
-        let window = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
 
-        let alert = UIAlertController(title: title,message:message,
-                                      preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: digilira.prompt.ok, style:UIAlertAction.Style.default,handler: nil))
-        window?.rootViewController?.presentedViewController?.present(alert, animated: true, completion: nil)
-    }
-    
     func touchID(reason: String) {
         
         let context = LAContext()

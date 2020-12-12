@@ -3,7 +3,7 @@
 //  DigiliraPay
 //
 //  Created by Yusuf Özgül on 27.09.2019.
-//  Copyright © 2019 Ilao. All rights reserved.
+//  Copyright © 2019 DigiliraPay. All rights reserved.
 //
 
 import Foundation
@@ -19,7 +19,4 @@ protocol seedViewDelegate: class {
     func closeSeedView()
 }
 
-protocol WarningDelegate: class {
-    func sendMessage()
-}
 

@@ -3,7 +3,7 @@
 //  DigiliraPay
 //
 //  Created by Yusuf Özgül on 4.09.2019.
-//  Copyright © 2019 Ilao. All rights reserved.
+//  Copyright © 2019 DigiliraPay. All rights reserved.
 //
 
 import UIKit
@@ -25,7 +25,8 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     @IBOutlet weak var finishedView: UIView!
     
     weak var delegate: VerifyAccountDelegate?
-    
+    weak var errors: ErrorsDelegate?
+
     @IBOutlet weak var nameText: UITextField!
     @IBOutlet weak var surnameText: UITextField!
     @IBOutlet weak var tcText: UITextField!
@@ -142,11 +143,14 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     }
 
     func parser(_ parser: XMLParser, foundCharacters string: String) {
+
         
         DispatchQueue.main.async { [self] in
         var sts = 0
             if string == "true" {
-                sts = 1 
+                sts = 1
+                sendIDPhotoView.alpha = 0
+                enterInfoView.alpha = 0
                 onayImage.image = UIImage(named: "TransactionPopupSucces")
                 infoTitle.text = "Profiliniz onaylanmıştır."
                  
@@ -155,28 +159,25 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
                 
                 isVerified = true
                 delegate?.disableEntry()
+                
+                finishedView.translatesAutoresizingMaskIntoConstraints = true
+                finishedView.frame.origin.y = self.frame.height
+                
+                UIView.animate(withDuration: 0.3) {
+                    self.enterInfoView.frame.origin.y = self.self.frame.height
+                    self.finishedView.frame.origin.y = 0
+                    self.finishedView.alpha = 1
+                }
+                
             }else {
-                
-                onayImage.image = UIImage(named: "forbidden")
-                infoTitle.text = "Girdiğiniz bilgiler hatalıdır. Kontrol ederek yeniden deneyin."
-                isVerified = false
-                
+                errors?.errorHandler(message: "Girdiğiniz bilgileri kontrol edip tekrar deneyin.", title: "Bir Hata Oluştu")
+
                 understand.isEnabled = true
-                sendAndContiuneView.isUserInteractionEnabled = true
-                sendAndContiuneView.alpha = 1
-                
-                goHomeView.isUserInteractionEnabled = true
-                goHomeView.alpha = 1
+                understand.isOn = false
+
             }
         
-        finishedView.translatesAutoresizingMaskIntoConstraints = true
-        finishedView.frame.origin.y = self.frame.height
-        
-        UIView.animate(withDuration: 0.3) {
-            self.enterInfoView.frame.origin.y = self.self.frame.height
-            self.finishedView.frame.origin.y = 0
-            self.finishedView.alpha = 1
-        }
+
         
         
         digiliraPay.onUpdate = { res in
@@ -350,22 +351,21 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
         }
          
         if error {
-            let window = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
+            DispatchQueue.main.async {
+                
+                self.errors?.errorHandler(message: "Girdiğiniz bilgileri kontrol edip tekrar deneyin.", title: "Bir Hata Oluştu")
+            }
 
-            let alert = UIAlertController(title: "Bilgilerinizi kontrol edin",message:"Hatalı girilen alanlar bulunmaktadır.",
-                                          preferredStyle: UIAlertController.Style.alert)
-            alert.addAction(UIAlertAction(title: "OK",style:UIAlertAction.Style.default,handler: nil))
-            window?.rootViewController?.presentedViewController?.present(alert, animated: true, completion: nil)
             understand.isEnabled = true
             sendAndContiuneView.isUserInteractionEnabled = true
             sendAndContiuneView.alpha = 1
             return
         }
-        
-        enterInfoView.translatesAutoresizingMaskIntoConstraints = true
-        sendIDPhotoView.translatesAutoresizingMaskIntoConstraints = true
-         
-        sendIDPhotoView.frame.origin.y = self.frame.height
+//        
+//        enterInfoView.translatesAutoresizingMaskIntoConstraints = true
+//        sendIDPhotoView.translatesAutoresizingMaskIntoConstraints = true
+//         
+//        sendIDPhotoView.frame.origin.y = self.frame.height
         
         KYC()
         

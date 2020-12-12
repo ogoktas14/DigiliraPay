@@ -3,7 +3,7 @@
 //  DigiliraPay
 //
 //  Created by Yusuf Özgül on 8.08.2019.
-//  Copyright © 2019 Ilao. All rights reserved.
+//  Copyright © 2019 DigiliraPay. All rights reserved.
 //
 
 import UIKit
@@ -14,8 +14,6 @@ import UserNotifications
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    var visualEffectView = UIVisualEffectView()
-    var window: UIWindow?
 
     func applicationDidEnterBackground(_ application: UIApplication) {
 
@@ -33,12 +31,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                                        matcher: []),
                                 enviroment: .init(server: .testNet, timestampServerDiff: 0))
    
-//                IQKeyboardManager.shared.enable = true
-//                IQKeyboardManager.shared.overrideKeyboardAppearance = true
-//                IQKeyboardManager.shared.keyboardAppearance = .light
-//                IQKeyboardManager.shared.shouldResignOnTouchOutside = true
-
-    
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) {
         (granted, error) in
         guard granted else { return }

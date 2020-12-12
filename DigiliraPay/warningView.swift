@@ -3,7 +3,7 @@
 //  DigiliraPay
 //
 //  Created by Hayrettin İletmiş on 12.12.2020.
-//  Copyright © 2020 Ilao. All rights reserved.
+//  Copyright © 2020 DigiliraPay. All rights reserved.
 //
 
 import Foundation
@@ -14,29 +14,48 @@ class WarningView: UIView {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var messageLabel: UILabel!
     
-    weak var delegate: WarningDelegate?
-
+    @IBOutlet weak var ok: UIView!
     @IBOutlet weak var titleView: UIView!
+    @IBOutlet weak var msg: UIView!
 
     var title: String  = "Dikkat"
     var message: String  = "Dikkat"
     
     override func awakeFromNib() {
 
-        titleView.layer.cornerRadius = 25
-        self.frame.origin.y = 0 - self.frame.height
+        self.layer.cornerRadius = 10
+        titleView.layer.cornerRadius = 10
+//        msg.frame.origin.y = 0 - self.frame.height
         
-        UIView.animateKeyframes(withDuration: 0.5, delay: 0, options: .allowUserInteraction, animations: {
-            self.frame.origin.y = 0
+        ok.layer.cornerRadius = 25
+        
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(exitView))
+        ok.isUserInteractionEnabled = true
+        ok.addGestureRecognizer(tap)
+        
+        self.frame.size.width = 0
+        self.frame.size.height = 0
+        
+        msg.alpha = 0
+        UIView.animateKeyframes(withDuration: 0.5, delay: 0, options: .allowUserInteraction, animations: { [self] in
+            msg.alpha = 1
+            
+            self.frame.size.width = 0
+            self.frame.size.height = 0
         }, completion: {_ in
-            UIView.animateKeyframes(withDuration: 0.5, delay: 3, options: .allowUserInteraction, animations: {
-                self.alpha = 0
-                self.frame.origin.y = 0 - self.frame.height
-            }, completion: {_ in
-                self.removeFromSuperview()
-            })
+
         })
         
+    }
+    
+    
+    @objc func exitView() {
+        UIView.animateKeyframes(withDuration: 0.5, delay: 0, animations: { [self] in
+            self.alpha = 0
+        }, completion: { [self]_ in
+            self.removeFromSuperview()
+        })
+
     }
     
     

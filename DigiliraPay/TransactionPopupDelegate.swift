@@ -3,7 +3,7 @@
 //  DigiliraPay
 //
 //  Created by Hayrettin İletmiş on 15.10.2019.
-//  Copyright © 2019 Ilao. All rights reserved.
+//  Copyright © 2019 DigiliraPay. All rights reserved.
 //
 
 import Foundation
@@ -19,9 +19,3 @@ protocol TRXTRXDel: class
     func closeDetail()
 }
 
-
-protocol DepositeMoneyDelegate: class
-{
-    func closeDeposite()
-    func confirmInternalWallet(amount: Float, fiat: Float, network: String, address: String, source: String)
-}

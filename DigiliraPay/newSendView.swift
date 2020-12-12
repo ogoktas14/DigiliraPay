@@ -3,7 +3,7 @@
 //  DigiliraPay
 //
 //  Created by Hayrettin İletmiş on 18.10.2020.
-//  Copyright © 2020 Ilao. All rights reserved.
+//  Copyright © 2020 DigiliraPay. All rights reserved.
 //
 
 import Foundation

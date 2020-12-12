@@ -474,6 +474,46 @@ class DLGradient: UIView {
     }
 }
 
+
+class InfoView: UIView {
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setupView()
+    }
+
+    private func setupView() {
+        autoresizingMask = [.flexibleWidth, .flexibleHeight]
+
+        guard let theLayer = self.layer as? CAGradientLayer else {
+            return;
+        }
+        let gradientColor1 = UIColor(red: 1, green: 1, blue: 1, alpha: 1.0).cgColor
+        let gradientColor2 = UIColor(red: 1, green: 1, blue: 0.9961, alpha: 1.0).cgColor
+        
+        theLayer.colors = [gradientColor1, gradientColor2]
+        theLayer.locations = [0.0, 1.0]
+        theLayer.frame = self.bounds
+        
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowRadius = 5
+        layer.shadowOpacity = 0.5
+        layer.shadowOffset = CGSize(width: 0, height: 0)
+        layer.masksToBounds = false
+        layer.cornerRadius = 10
+
+    }
+
+    override class var layerClass: AnyClass {
+        return CAGradientLayer.self
+    }
+}
+
 class GradientView: UIView {
 
     override init(frame: CGRect) {

@@ -3,7 +3,7 @@
 //  DigiliraPay
 //
 //  Created by Yusuf Özgül on 3.09.2019.
-//  Copyright © 2019 Ilao. All rights reserved.
+//  Copyright © 2019 DigiliraPay. All rights reserved.
 //
 
 import UIKit

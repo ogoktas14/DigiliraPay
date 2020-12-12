@@ -3,7 +3,7 @@
 //  DigiliraPay
 //
 //  Created by Hayrettin İletmiş on 7.12.2020.
-//  Copyright © 2020 Ilao. All rights reserved.
+//  Copyright © 2020 DigiliraPay. All rights reserved.
 //
 
 import Foundation
@@ -113,8 +113,6 @@ class ParaYatirView:UIView {
             self.copyView.alpha = 0
             self.copyView.isUserInteractionEnabled = false
         }, completion: { [self]_ in
-            self.copyView.alpha = 1
-            self.copyView.isUserInteractionEnabled = true
             if address1 == nil {return}
             imgCopy.image = UIImage(named: "checkImg")
             
@@ -126,7 +124,9 @@ class ParaYatirView:UIView {
             pasteboard.string = address1
             
             errors?.errorHandler(message: "Cüzdan adresiniz kopyalandı: " + address1!, title: "Başarılı")
-
+            
+                self.copyView.alpha = 1
+                self.copyView.isUserInteractionEnabled = true
         })
         
         
@@ -138,11 +138,9 @@ class ParaYatirView:UIView {
         
         generator.notificationOccurred(.success)
         UIView.animateKeyframes(withDuration: 0.1, delay: 0, options: .allowUserInteraction, animations: {
-            self.shareView.alpha = 0
+            self.shareView.alpha = 0.4
             self.shareView.isUserInteractionEnabled = false
         }, completion: { [self]_ in
-            self.shareView.alpha = 1
-            self.shareView.isUserInteractionEnabled = true
 
             do {
                 let user = try secretKeys.userData()
@@ -159,6 +157,9 @@ class ParaYatirView:UIView {
             }
             
             
+                self.shareView.alpha = 1
+                self.shareView.isUserInteractionEnabled = true
+            
         })
           
     }
@@ -171,11 +172,10 @@ class ParaYatirView:UIView {
                 generator.notificationOccurred(.success)
                 DispatchQueue.main.async {
                     UIView.animateKeyframes(withDuration: 0.1, delay: 0, options: .allowUserInteraction, animations: {
-                        self.saveView.alpha = 0
+                        self.saveView.alpha = 0.4
                         self.saveView.isUserInteractionEnabled = false
                     }, completion: { [self]_ in
-                        self.saveView.alpha = 1
-                        self.saveView.isUserInteractionEnabled = true
+                        
                         UIImageWriteToSavedPhotosAlbum(takeScreenshot(), self, #selector(saveError), nil)
                     })
                 }
@@ -195,6 +195,9 @@ class ParaYatirView:UIView {
     @objc func saveError(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
         errors?.errorHandler(message: "QR Kodunuz galeriye kaydedildi", title: "Başarılı")
         imgSave.alpha = 1
+        
+            self.saveView.alpha = 1
+            self.saveView.isUserInteractionEnabled = true
     }
     
     func popup (image: UIImage?) {

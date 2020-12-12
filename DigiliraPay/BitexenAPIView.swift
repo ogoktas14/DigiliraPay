@@ -3,7 +3,7 @@
 //  DigiliraPay
 //
 //  Created by Hayrettin İletmiş on 28.10.2020.
-//  Copyright © 2020 Ilao. All rights reserved.
+//  Copyright © 2020 DigiliraPay. All rights reserved.
 //
 
 
@@ -23,8 +23,6 @@ class BitexenAPIView: UIView {
 
     weak var delegate: BitexenAPIDelegate?
     weak var errors: ErrorsDelegate?
-
-    weak var del: WarningDelegate?
 
     let digiliraPay = digiliraPayApi()
     let bitexenSign = bex()
