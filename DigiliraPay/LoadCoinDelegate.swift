@@ -13,7 +13,10 @@ protocol LoadCoinDelegate: class
 {
     func dismissLoadView()
     func shareQR(image: UIImage?)
-    func errorHandler(message: String)
+}
+
+protocol ErrorsDelegate: class {
+    func errorHandler(message: String, title: String)
 }
 
 

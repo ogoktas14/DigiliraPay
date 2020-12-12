@@ -52,10 +52,15 @@ class MenuView: UIView {
     func home() {
         UIView.animate(withDuration: 0.3)
         { [self] in
-        homeIcon.image = UIImage(named: "home")
-        walletIcon.image = UIImage(named: "walletNS")
-        paymentsIcon.image = UIImage(named: "cardNS")
-        othersIcon.image = UIImage(named: "settingsNS")
+            homeIcon.alpha = 1
+            walletIcon.alpha = 0.3
+            paymentsIcon.alpha = 0.3
+            othersIcon.alpha = 0.3
+//
+//        homeIcon.image = UIImage(named: "home")
+//        walletIcon.image = UIImage(named: "walletNS")
+//        paymentsIcon.image = UIImage(named: "cardNS")
+//        othersIcon.image = UIImage(named: "settingsNS")
 
             self.selectorView.center.x = self.homeIcon.center.x
         }
@@ -63,11 +68,18 @@ class MenuView: UIView {
     
     func wallet() {
         UIView.animate(withDuration: 0.3)
-        {
-        self.homeIcon.image = UIImage(named: "homeNS")
-        self.walletIcon.image = UIImage(named: "wallet")
-        self.paymentsIcon.image = UIImage(named: "cardNS")
-        self.othersIcon.image = UIImage(named: "settingsNS")
+        { [self] in
+
+            
+            homeIcon.alpha = 0.3
+                walletIcon.alpha = 1
+                paymentsIcon.alpha = 0.3
+                othersIcon.alpha = 0.3
+            //
+//        self.homeIcon.image = UIImage(named: "homeNS")
+//        self.walletIcon.image = UIImage(named: "wallet")
+//        self.paymentsIcon.image = UIImage(named: "cardNS")
+//        self.othersIcon.image = UIImage(named: "settingsNS")
 
             self.selectorView.center.x = self.walletIcon.center.x
         }
@@ -76,10 +88,15 @@ class MenuView: UIView {
     func payments () {
         UIView.animate(withDuration: 0.3)
         { [self] in
-        homeIcon.image = UIImage(named: "homeNS")
-        walletIcon.image = UIImage(named: "walletNS")
-        paymentsIcon.image = UIImage(named: "card")
-        othersIcon.image = UIImage(named: "settingsNS")
+            
+            homeIcon.alpha = 0.3
+                walletIcon.alpha = 0.3
+                paymentsIcon.alpha = 1
+                othersIcon.alpha = 0.3
+//        homeIcon.image = UIImage(named: "homeNS")
+//        walletIcon.image = UIImage(named: "walletNS")
+//        paymentsIcon.image = UIImage(named: "card")
+//        othersIcon.image = UIImage(named: "settingsNS")
 
             self.selectorView.center.x = self.paymentsIcon.center.x
         }
@@ -88,10 +105,15 @@ class MenuView: UIView {
     func settings() {
         UIView.animate(withDuration: 0.3)
         { [self] in
-        homeIcon.image = UIImage(named: "homeNS")
-        walletIcon.image = UIImage(named: "walletNS")
-        paymentsIcon.image = UIImage(named: "cardNS")
-        othersIcon.image = UIImage(named: "settings")
+            
+            homeIcon.alpha = 0.3
+                walletIcon.alpha = 0.3
+                paymentsIcon.alpha = 0.3
+                othersIcon.alpha = 1
+//        homeIcon.image = UIImage(named: "homeNS")
+//        walletIcon.image = UIImage(named: "walletNS")
+//        paymentsIcon.image = UIImage(named: "cardNS")
+//        othersIcon.image = UIImage(named: "settings")
 
             self.selectorView.center.x = self.othersIcon.center.x
         }

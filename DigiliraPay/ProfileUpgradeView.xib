@@ -176,14 +176,11 @@
                             <rect key="frame" x="62" y="549.5" width="290" height="50"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
-                                <constraint firstAttribute="width" secondItem="jMt-PU-gwi" secondAttribute="height" multiplier="29:5" id="38L-Ks-wSl"/>
+                                <constraint firstAttribute="height" constant="50" id="ef0-bs-9Md"/>
                             </constraints>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tamam" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dhl-l7-LXK">
                             <rect key="frame" x="62" y="549.5" width="290" height="50"/>
-                            <constraints>
-                                <constraint firstAttribute="width" secondItem="Dhl-l7-LXK" secondAttribute="height" multiplier="29:5" id="bKO-C5-lLB"/>
-                            </constraints>
                             <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="17"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>

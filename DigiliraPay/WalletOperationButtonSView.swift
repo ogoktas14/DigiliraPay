@@ -19,12 +19,25 @@ class WalletOperationButtonSView: UIView {
     @IBOutlet weak var balance: UIView!
     @IBOutlet weak var balanceText: UILabel!
     
-    var blnx:String?
     let generator = UINotificationFeedbackGenerator()
+
+    var blnx = "initial value" {
+        didSet { //called when item changes
+            print(blnx)
+        }
+        willSet {
+            print("about to change")
+        }
+    }
 
     weak var delegate: OperationButtonsDelegate?
     override func awakeFromNib()
     {
+        
+        
+    }
+    
+    override func didMoveToSuperview() {
         send.layer.cornerRadius = 25
         load.layer.cornerRadius = 25
         sendMoneyView.layer.cornerRadius = 25
@@ -43,7 +56,7 @@ class WalletOperationButtonSView: UIView {
         
         UIView.animateKeyframes(withDuration: 0.5, delay: 1, options: .allowUserInteraction, animations: {
             self.sendLabel.alpha = 0
-            self.sendMoneyView.backgroundColor = .clear 
+            self.sendMoneyView.backgroundColor = .clear
             self.loadLabel.alpha = 0
             self.loadMoneyView.backgroundColor = .clear
             
@@ -56,15 +69,13 @@ class WalletOperationButtonSView: UIView {
                     sendLabel.textColor = UIColor(red:0.30, green:0.30, blue:0.30, alpha:1.0)
                     loadLabel.textColor = UIColor(red:0.30, green:0.30, blue:0.30, alpha:1.0)
                     balanceText.frame.origin.y = 100
-                    if let bal = blnx {
-                        self.balanceText.text  = bal
-                    }
+                    self.balanceText.text  = blnx
+
                 })
             })
 
-        })
-        
-    }
+        })    }
+    
     @objc func sendButton()
     { 
         generator.notificationOccurred(.success)

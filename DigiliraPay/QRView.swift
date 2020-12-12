@@ -21,7 +21,7 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     @IBOutlet weak var copyAddress: UIView!
     @IBOutlet weak var adresBtn: UIButton!
     
-
+    weak var errors: ErrorsDelegate?
     weak var delegate: LoadCoinDelegate?
     let pasteboard = UIPasteboard.general
     public var address: String?
@@ -394,11 +394,11 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
                     
                 }
             } else {
-                delegate?.errorHandler(message: "İsim bilgisi okunamadı, lütfen yeniden giriş yapın.")
+                errors?.errorHandler(message: "İsim bilgisi okunamadı, lütfen yeniden giriş yapın.", title:"Dikkat")
             }
              
         } catch {
-            delegate?.errorHandler(message: "Kullanıcı bilgileri okunamadı, lütfen yeniden giriş yapın.")
+            errors?.errorHandler(message: "Kullanıcı bilgileri okunamadı, lütfen yeniden giriş yapın.", title:  "Dikkat")
         }
         
         

@@ -22,6 +22,9 @@ class BitexenAPIView: UIView {
     @IBOutlet weak var saveView: UIView!
 
     weak var delegate: BitexenAPIDelegate?
+    weak var errors: ErrorsDelegate?
+
+    weak var del: WarningDelegate?
 
     let digiliraPay = digiliraPayApi()
     let bitexenSign = bex()
@@ -58,11 +61,9 @@ class BitexenAPIView: UIView {
             saveView.isUserInteractionEnabled = true
             
             self.shake()
-            self.labelError.isHidden = false
-            self.labelError.lineBreakMode = .byWordWrapping // notice the 'b' instead of 'B'
-            self.labelError.numberOfLines = 0
-            self.labelError.text = "Girdiğiniz bilgileri kontrol edip tekrar deneyin."
             
+            errors?.errorHandler(message: "Girdiğiniz bilgileri kontrol edip tekrar deneyin.", title: "Bir Hata Oluştu")
+
             
         }
         
@@ -92,14 +93,9 @@ class BitexenAPIView: UIView {
                 
                 res.valid = true
                 save2defaults(forKey: bex.bexApiDefaultKey.key, data: res)
-                let window = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
-
-                let alert = UIAlertController(title: "İşlem Başarılı",message:"API bilgileriniz kaydedildi.",
-                                              preferredStyle: UIAlertController.Style.alert)
-                alert.addAction(UIAlertAction(title: "OK",style:UIAlertAction.Style.default,handler: { action in
-                    self.delegate?.dismissBitexen()
-                }))
-                window?.rootViewController?.presentedViewController?.present(alert, animated: true, completion: nil)
+                
+                errors?.errorHandler(message: "API bilgileriniz kaydedildi.", title: "İşlem Başarılı")
+                
             } 
             
         }

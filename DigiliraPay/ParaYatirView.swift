@@ -24,13 +24,18 @@ class ParaYatirView:UIView {
     @IBOutlet weak var imgCopy: UIImageView!
     @IBOutlet weak var imgSave: UIImageView!
     @IBOutlet weak var imgShare: UIImageView!
+    
+    @IBOutlet weak var saveView: UIView!
+    @IBOutlet weak var shareView: UIView!
+    @IBOutlet weak var copyView: UIView!
 
 
     var ccView = CreditCardView()
     let generator = UINotificationFeedbackGenerator()
     
     weak var delegate: LoadCoinDelegate?
-    
+    weak var errors: ErrorsDelegate?
+
     var Filtered: [digilira.DigiliraPayBalance] = []
     let digiliraPay = digiliraPayApi()
     let BC = Blockchain()
@@ -93,55 +98,106 @@ class ParaYatirView:UIView {
             print (error)
         }
         
+        shareView.layer.cornerRadius = 25
+        copyView.layer.cornerRadius = 25
+        saveView.layer.cornerRadius = 25
+        
+        
         
     }
     
     @objc func copyToClipboard() {
-        if address1 == nil {return}
-        imgCopy.image = UIImage(named: "checkImg")
         
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            self.imgCopy.image = UIImage(named: "copyImg")
+        generator.notificationOccurred(.success)
+        UIView.animateKeyframes(withDuration: 0.1, delay: 0, options: .allowUserInteraction, animations: {
+            self.copyView.alpha = 0
+            self.copyView.isUserInteractionEnabled = false
+        }, completion: { [self]_ in
+            self.copyView.alpha = 1
+            self.copyView.isUserInteractionEnabled = true
+            if address1 == nil {return}
+            imgCopy.image = UIImage(named: "checkImg")
+            
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                self.imgCopy.image = UIImage(named: "copyImg")
 
-        }
-        pasteboard.string = address1
+            }
+            pasteboard.string = address1
+            
+            errors?.errorHandler(message: "Cüzdan adresiniz kopyalandı: " + address1!, title: "Başarılı")
+
+        })
+        
+        
+
     }
     
     @objc func shareButton()
     {
-        do {
-            let user = try secretKeys.userData()
-             
-            if user.firstName != nil {
-                if user.lastName != nil {
-                    popup(image: takeScreenshot())
-                }
-            } else {
-                delegate?.errorHandler(message: "İsim bilgisi okunamadı, lütfen yeniden giriş yapın.")
-            }
-        } catch {
-            delegate?.errorHandler(message: "Kullanıcı bilgileri okunamadı, lütfen yeniden giriş yapın.")
-        }
         
-        
+        generator.notificationOccurred(.success)
+        UIView.animateKeyframes(withDuration: 0.1, delay: 0, options: .allowUserInteraction, animations: {
+            self.shareView.alpha = 0
+            self.shareView.isUserInteractionEnabled = false
+        }, completion: { [self]_ in
+            self.shareView.alpha = 1
+            self.shareView.isUserInteractionEnabled = true
 
+            do {
+                let user = try secretKeys.userData()
+                 
+                if user.firstName != nil {
+                    if user.lastName != nil {
+                        popup(image: takeScreenshot())
+                    }
+                } else {
+                    errors?.errorHandler(message: "İsim bilgisi okunamadı, lütfen yeniden giriş yapın.", title: "Bir Hata Oluştu")
+                }
+            } catch {
+                errors?.errorHandler(message: "Kullanıcı bilgileri okunamadı, lütfen yeniden giriş yapın.", title: "Bir Hata Oluştu")
+            }
+            
+            
+        })
+          
     }
     
     @objc func saveButton()
     {
-        imgSave.alpha = 0.4
-        UIImageWriteToSavedPhotosAlbum(takeScreenshot(), self, #selector(saveError), nil)
+        
+        PHPhotoLibrary.requestAuthorization { [self] status in
+              if status == .authorized {
+                generator.notificationOccurred(.success)
+                DispatchQueue.main.async {
+                    UIView.animateKeyframes(withDuration: 0.1, delay: 0, options: .allowUserInteraction, animations: {
+                        self.saveView.alpha = 0
+                        self.saveView.isUserInteractionEnabled = false
+                    }, completion: { [self]_ in
+                        self.saveView.alpha = 1
+                        self.saveView.isUserInteractionEnabled = true
+                        UIImageWriteToSavedPhotosAlbum(takeScreenshot(), self, #selector(saveError), nil)
+                    })
+                }
+                
+              }
+            
+            }
+        switch PHPhotoLibrary.authorizationStatus() {
+        case .denied:
+            errors?.errorHandler(message: "Ayarlar menüsünden Galeri'ye erişim izni vermeniz gerekmektedir.", title: "Dikkat")
+            break
+        default:
+            break
+        }
     }
     
     @objc func saveError(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
-        digiliraPay.alert(title: "İşlem Başarılı", message: "Galeriye kaydedildi.")
+        errors?.errorHandler(message: "QR Kodunuz galeriye kaydedildi", title: "Başarılı")
         imgSave.alpha = 1
     }
     
     func popup (image: UIImage?) {
-        PHPhotoLibrary.requestAuthorization { status in
-          if status == .authorized {
             //do things
             if let image = image {
                    
@@ -172,9 +228,7 @@ class ParaYatirView:UIView {
                 }
                   
                }
-          }
-            
-        }
+       
          
    
     }

@@ -21,25 +21,29 @@
                 <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="center" spacing="-10" translatesAutoresizingMaskIntoConstraints="NO" id="gvN-Pe-4Ju">
                     <rect key="frame" x="0.0" y="44" width="450" height="87"/>
                     <subviews>
-                        <imageView clipsSubviews="YES" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="homeNS" translatesAutoresizingMaskIntoConstraints="NO" id="ldJ-br-6Wy">
+                        <imageView clipsSubviews="YES" alpha="0.29999999999999999" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="homeNS" translatesAutoresizingMaskIntoConstraints="NO" id="ldJ-br-6Wy">
                             <rect key="frame" x="0.0" y="0.0" width="98" height="87"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </imageView>
-                        <imageView clipsSubviews="YES" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cardNS" translatesAutoresizingMaskIntoConstraints="NO" id="VpY-mq-3QL">
+                        <imageView clipsSubviews="YES" alpha="0.29999999999999999" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="walletNS" translatesAutoresizingMaskIntoConstraints="NO" id="VpY-mq-3QL">
                             <rect key="frame" x="88" y="0.0" width="98" height="87"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </imageView>
                         <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gr-icon" translatesAutoresizingMaskIntoConstraints="NO" id="PiC-jw-mIb">
                             <rect key="frame" x="176" y="10" width="98" height="67"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </imageView>
-                        <imageView clipsSubviews="YES" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="walletNS" translatesAutoresizingMaskIntoConstraints="NO" id="8Za-vs-IvC">
+                        <imageView clipsSubviews="YES" alpha="0.29999999999999999" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cardNS" translatesAutoresizingMaskIntoConstraints="NO" id="8Za-vs-IvC">
                             <rect key="frame" x="264" y="0.0" width="98" height="87"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </imageView>
-                        <imageView clipsSubviews="YES" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="settingsNS" translatesAutoresizingMaskIntoConstraints="NO" id="UmK-ei-xMX">
+                        <imageView clipsSubviews="YES" alpha="0.29999999999999999" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="settingsNS" translatesAutoresizingMaskIntoConstraints="NO" id="UmK-ei-xMX">
                             <rect key="frame" x="352" y="0.0" width="98" height="87"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </imageView>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

@@ -39,10 +39,13 @@ class MainScreen: UIViewController {
     @IBOutlet weak var sendWithQRView: UIView!
     @IBOutlet weak var bottomView: UIView!
     @IBOutlet weak var logoView: UIImageView!
-    
+    @IBOutlet weak var emptyBG: UIImageView!
+
     @IBOutlet var mainView: UIView!
     var profileViewXib: ProfileMenuView = ProfileMenuView()
     
+    var warningView = WarningView()
+
     var contentScrollView = UIScrollView()
     var coinTableView = UITableView()
     var walletOperationView = WalletOperationButtonSView()
@@ -88,6 +91,7 @@ class MainScreen: UIViewController {
     var isBinanceReload = false
     
     var isFetching = false
+    var headerAnimation = false
     
     var lastBitexenCheck: Date = Date()
     var lastBinanceCheck: Date = Date()
@@ -106,7 +110,7 @@ class MainScreen: UIViewController {
     var totalBalance: Double = 0.0
     
     private let refreshControl = UIRefreshControl()
-    
+        
     var isAlive = false
     var isNewPin = false
     var isFirstLaunch = true
@@ -126,6 +130,9 @@ class MainScreen: UIViewController {
     var bexMarketInfo: bex.bexMarketInfo?
     
     var onPinSuccess: ((_ result: Bool)->())?
+    
+    var onMessage: ((_ result: Bool)->())?
+
     
     var headerHeightBuffer: CGFloat?
     var QR:digilira.QR = digilira.QR.init()
@@ -258,7 +265,7 @@ class MainScreen: UIViewController {
                     case "Ethereum":
                         coinPrice = (ticker.ethUSDPrice)! * (ticker.usdTLPrice)! * Double(asset1.balance) / double
                         break
-                    case "Kızılay Token":
+                    case "Kızılay":
                         coinPrice = 1 * Double(asset1.balance) / double
                         break
                     case "Waves":
@@ -292,7 +299,7 @@ class MainScreen: UIViewController {
             
             
             self.coinTableView.reloadData()
-            self.setHeaderTotal()
+            //self.setHeaderTotal()
             self.goHomeScreen()
             
             if isFirstLaunch {
@@ -307,7 +314,7 @@ class MainScreen: UIViewController {
             }
             
             menuView.isUserInteractionEnabled = true
-            
+            emptyBG.isHidden = true
             if let qr = decodeDefaults(forKey: "QRARRAY2", conformance: digilira.QR.self, setNil: true) {
                 QR = qr
                 self.getOrder(address: QR)
@@ -369,78 +376,16 @@ class MainScreen: UIViewController {
         }
         
         digiliraPay.onError = { res, sts in
-            self.throwEngine.evaluateError(error: res)
-            //            DispatchQueue.main.async {
-            //            switch res {
-            //            case "SSL PINNING MISMATCH":
-            //                let alert = UIAlertController(title: "Bir Hata Oluştu..", message: "Maalesef şu anda işleminizi gerçekleştiremiyoruz. Lütfen birazdan tekrar deneyin.", preferredStyle: UIAlertController.Style.alert)
-            //                alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: { _ in
-            //                    exit(1)
-            //                }))
-            //
-            //                self.present(alert, animated: true, completion: nil)
-            //            default:
-            //                print("digilirapayError", res)
-            ////                let alert = UIAlertController(title: "Bir Hata Oluştu..", message: "Maalesef şu anda işleminizi gerçekleştiremiyoruz. Lütfen birazdan tekrar deneyin.", preferredStyle: UIAlertController.Style.alert)
-            ////                alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
-            ////
-            ////                self.present(alert, animated: true, completion: nil)
-            //            }
-            //            }
-            
+            self.throwEngine.evaluateError(error: res)            
         }
         
         BC.onError = { res in
             self.throwEngine.evaluateError(error: res)
-            //            switch res {
-            //            case "Canceled by user.":
-            //                self.closeCoinSendView()
-            //                break
-            //            case "negativeBalance":
-            //                let alert = UIAlertController(title: "Yetersiz Bakiye!", message: "Bu işlemi gerçekleştirebilmek için hesabınızda yeterli miktarda bakiye bulunmamaktadır.", preferredStyle: UIAlertController.Style.alert)
-            //                alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
-            //                self.present(alert, animated: true, completion: nil)
-            //                break
-            //            case "Fallback authentication mechanism selected.":
-            //                self.isTouchIDCanceled = true
-            //                self.openPinView()
-            //                break
-            //            case "The operation couldn’t be completed. (WavesSDK.NetworkError error 0.)":
-            //                let alert = UIAlertController(title: "Bir Hata Oluştu..", message: "Maalesef şu an işleminizi gerçekleştiremiyoruz. Lütfen birazdan tekrar deneyin.", preferredStyle: UIAlertController.Style.alert)
-            //                alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
-            //
-            //                self.present(alert, animated: true, completion: nil)
-            //                self.closeSendView()
-            //                break
-            //            default:
-            //                print("blockchain", res)
-            ////                let alert = UIAlertController(title: "Bir Hata Oluştu..", message: "Maalesef şu anda işleminizi gerçekleştiremiyoruz. Lütfen birazdan tekrar deneyin.", preferredStyle: UIAlertController.Style.alert)
-            ////                alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
-            ////
-            ////                self.present(alert, animated: true, completion: nil)
-            //                break
-            //
-            //            }
-            
         }
         
         
         bitexenSign.onBitexenError = { res, sts in
-            
-            DispatchQueue.main.async {
-                self.shake()
-                
-                let alert = UIAlertController(title: "Bitexen API", message: "Bitexen API bilgileriniz hatalıdır.", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: nil))
-                self.present(alert, animated: true)
-            }
-            
-            print("bitexenError", res)
-            //                let alert = UIAlertController(title: "Bir Hata Oluştu..", message: "Maalesef şu anda işleminizi gerçekleştiremiyoruz. Lütfen birazdan tekrar deneyin.", preferredStyle: UIAlertController.Style.alert)
-            //                alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
-            //
-            //                self.present(alert, animated: true, completion: nil)
-            
+            self.alertWarning(title: "Bitexen API", message: "Bitexen API bilgileriniz hatalıdır.")
         }
         
         refreshControl.attributedTitle = NSAttributedString(string: "Güncellemek için çekiniz..")
@@ -554,6 +499,11 @@ class MainScreen: UIViewController {
     
     func setHeaderTotal() {
 
+        if headerAnimation {
+            return
+        }
+        
+        headerAnimation = true
         let walletY = walletOperationView.frame.origin.y
         
         walletOperationView.frame.origin.y = 0
@@ -567,6 +517,8 @@ class MainScreen: UIViewController {
             
             walletOperationView.frame.origin.y = walletY
             walletOperationView.alpha = 1
+        }, completion: {_ in
+            self.headerAnimation = false
         })
     }
     
@@ -714,18 +666,11 @@ class MainScreen: UIViewController {
     }
     
     @objc func onOrderClicked(_ sender: Notification) {
-        // Do what you need, including updating IBOutlets
-        //        print(sender.userInfo)
-        
-        let alert = UIAlertController(title: "Sipariş detayları", message: "Sipariş detayları için kendinize iyi bakın.", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: nil))
-        self.present(alert, animated: true)
-        
-        
-        
-        
-        
+
+        alertWarning(title: "Sipariş detayları", message: "Sipariş detayları için kendinize iyi bakın.")
+  
     }
+  
     @objc func keyboardWillShow(notification: NSNotification) {
         if !isKeyboard {
             isKeyboard = true
@@ -1323,7 +1268,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         headerInfoLabel.isHidden = true
         homeAmountLabel.isHidden = true
         setLogoView()
-        menuXib.isHidden = false
+        menuView.isHidden = false
         
         UIView.animate(withDuration: 0.3, animations: { [self] in
             self.contentScrollView.contentOffset.x = self.view.frame.width * 2
@@ -1364,7 +1309,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         headerInfoLabel.isHidden = true
         homeAmountLabel.isHidden = true
         setLogoView()
-        menuXib.isHidden = false
+        menuView.isHidden = false
         
         UIView.animate(withDuration: 0.3, animations: { [self] in
             self.contentScrollView.contentOffset.x = self.view.frame.width * 3
@@ -1395,7 +1340,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
             isShowWallet = false
         }
         
-        if !isHomeScreen {
+        self.walletOperationView.removeFromSuperview()
             walletOperationView = UIView().loadNib(name: "WalletOperationButtonSView") as! WalletOperationButtonSView
             walletOperationView.frame = CGRect(x: 0,
                                                y: homeAmountLabel.frame.maxY + 10,
@@ -1409,7 +1354,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
                 self.contentScrollView.contentOffset.x = 0
                 self.headerView.frame.size.height =  self.walletOperationView.frame.maxY
             }
-        }
+        
         
         if !isSuccessView {
             bottomView.isHidden = false
@@ -1426,7 +1371,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         homeAmountLabel.isHidden = true
         
         
-        menuXib.isHidden = false
+        menuView.isHidden = false
         
         isHomeScreen = true
         
@@ -1494,11 +1439,12 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
                                       width: view.frame.width,
                                       height: view.frame.height)
         bitexenAPIView.delegate = self
-        
+        bitexenAPIView.errors = self
+
         for subView in sendWithQRView.subviews
         { subView.removeFromSuperview() }
         
-        menuXib.isHidden = true
+        menuView.isHidden = true
         
         sendWithQRView.addSubview(bitexenAPIView)
         sendWithQRView.isHidden = false
@@ -1612,7 +1558,7 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
         for subView in sendWithQRView.subviews
         { subView.removeFromSuperview() }
         
-        menuXib.isHidden = true
+        menuView.isHidden = true
         
         sendWithQRView.addSubview(newSendMoneyView)
         sendWithQRView.isHidden = false
@@ -1670,13 +1616,15 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
                                     width: view.frame.width,
                                     height: view.frame.height)
         paraYatirView.delegate = self
+        paraYatirView.errors = self
+        
         paraYatirView.Filtered = self.Filtered
         paraYatirView.Ticker = Ticker
         
         for subView in qrView.subviews
         { subView.removeFromSuperview() }
         
-        menuXib.isHidden = true
+        menuView.isHidden = true
         
         qrView.addSubview(paraYatirView)
          
@@ -1784,7 +1732,7 @@ extension MainScreen: TransactionPopupDelegate2 {
         //profileMenuButton.isHidden = false
         
         UIView.animate(withDuration: 1) {
-            self.fetch()
+            
             self.successView.frame.origin.y = (self.contentView.frame.maxY)
             self.successView.alpha = 0
             self.isSuccessView = false
@@ -1889,11 +1837,8 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
                     
                     break
                 case "Canceled by user.":
-                    let alert = UIAlertController(title: "İptal", message: "İşleminiz iptal edilmiştir.", preferredStyle: UIAlertController.Style.alert)
-                    alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
+                    self.alertWarning(title: "Dikkat", message:  "İşleminiz iptal edilmiştir.")
                     
-                    self.present(alert, animated: true, completion: nil)
-                    //self.closeSendView()
                     return
                     
                 case "Fallback authentication mechanism selected.":
@@ -1913,11 +1858,7 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
                     break
                 case false:
                     if isShowSendCoinView {
-                        let alert = UIAlertController(title: "İptal", message: "İşleminiz iptal edilmiştir.", preferredStyle: UIAlertController.Style.alert)
-                        alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
-                        
-                        self.present(alert, animated: true, completion: nil)
-                        //self.closeSendView()
+                        self.alertWarning(title: "Dikkat", message:  "İşleminiz iptal edilmiştir.")
                     }
                     break
                 }
@@ -1985,7 +1926,7 @@ extension MainScreen: BitexenAPIDelegate
         }) { (_) in
             
         }
-        menuXib.isHidden = false
+        menuView.isHidden = false
         dismissKeyboard()
         setPaymentView()
     }
@@ -2106,7 +2047,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
             for subView in qrView.subviews
             { subView.removeFromSuperview() }
             
-            menuXib.isHidden = true
+            menuView.isHidden = true
             
             qrView.addSubview(verifyProfileXib)
             qrView.isHidden = false
@@ -2180,7 +2121,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         for subView in sendWithQRView.subviews
         { subView.removeFromSuperview() }
         
-        menuXib.isHidden = true
+        menuView.isHidden = true
         
         sendWithQRView.addSubview(newSendMoneyView)
         sendWithQRView.isHidden = false
@@ -2212,7 +2153,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         for subView in sendWithQRView.subviews
         { subView.removeFromSuperview() }
         
-        menuXib.isHidden = true
+        menuView.isHidden = true
         
         sendWithQRView.addSubview(pageCardView)
         
@@ -2249,7 +2190,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         for subView in sendWithQRView.subviews
         { subView.removeFromSuperview() }
         
-        menuXib.isHidden = true
+        menuView.isHidden = true
         
         sendWithQRView.addSubview(selectCoin)
         selectCoin.setupTableView()
@@ -2288,7 +2229,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
             print("ÖDEME")
             
             if isSuccessView {
-                
+                self.fetch()
                 walletOperationView.isUserInteractionEnabled = false
                 
                 successView.titleLabel.text = title
@@ -2382,9 +2323,9 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         }
         else
         {
-            let alert  = UIAlertController(title: "Warning", message: "You don't have permission to access gallery.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+            self.shake()
+            self.alertWarning(title: "Dikkat", message: "Galeriy erişim izniniz bulunmamaktadır")
+        
         }
     }
     
@@ -2663,16 +2604,21 @@ extension MainScreen: LoadCoinDelegate
         for subView in self.qrView.subviews
         { subView.removeFromSuperview() }
     
-        menuXib.isHidden = false
+        menuView.isHidden = false
     }
     
     func shareQR(image: UIImage?) {
         popup(image: image)
     }
     
-    func errorHandler(message: String) {
-        alertWarning(title: "Bir Hata Oluştu", message: message)
+}
+
+extension MainScreen: ErrorsDelegate {
+    func errorHandler(message: String, title: String) {
+        alertWarning(title: title, message: message)
+
     }
+     
 }
 
 extension MainScreen: VerifyAccountDelegate
@@ -2724,7 +2670,7 @@ extension MainScreen: VerifyAccountDelegate
                 self.qrView.frame.origin.y = self.view.frame.height
                 self.qrView.alpha = 0
             }
-            menuXib.isHidden = false
+            menuView.isHidden = false
             bottomView.isHidden = false
             isVerifyAccount = false
             
@@ -2792,7 +2738,7 @@ extension MainScreen: SendWithQrDelegate
         UIView.animate(withDuration: 0.3) {
             self.sendWithQRView.frame.origin.y = self.self.view.frame.height
             self.sendWithQRView.alpha = 0
-            self.menuXib.isHidden = false
+            self.menuView.isHidden = false
         }
     }
     
@@ -2808,11 +2754,25 @@ extension MainScreen: SendWithQrDelegate
         self.present(alert, animated: true)
         
     }
-    
+
     func alertWarning (title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: digilira.prompt.ok, style: .default, handler: nil))
-        self.present(alert, animated: true)
+        
+        warningView = UIView().loadNib(name: "warningView") as! WarningView
+        warningView.frame = CGRect(x: 0,
+                                   y: view.frame.height / 2 - 75,
+                                    width: view.frame.width,
+                                    height: 150)
+        
+        warningView.delegate = self
+        warningView.title = title
+        warningView.message = message
+        warningView.setMessage()
+        
+  
+        
+        
+        view.addSubview(warningView)
+        
     }
     
     
@@ -2834,7 +2794,7 @@ extension MainScreen: PageCardViewDeleGate
     func cancel1(id: String) {
         fetch()
         isNewSendScreen = false
-        menuXib.isHidden = false
+        menuView.isHidden = false
         
         UIView.animate(withDuration: 0.3) {
             self.sendWithQRView.frame.origin.y = self.view.frame.height
@@ -2851,9 +2811,9 @@ extension MainScreen: PageCardViewDeleGate
         
     }
     func dismissNewSend1(params: digilira.order) {
-        fetch()
+        //fetch()
         isNewSendScreen = false
-        menuXib.isHidden = false
+        menuView.isHidden = false
         
         UIView.animate(withDuration: 0.3) {
             self.sendWithQRView.frame.origin.y = self.view.frame.height
@@ -2886,12 +2846,18 @@ extension MainScreen: PageCardViewDeleGate
     
 }
 
+extension MainScreen: WarningDelegate {
+    func sendMessage() {
+        return
+    }
+}
+
 extension MainScreen: SelectCoinViewDelegate
 {
     func cancel() {
         fetch()
         isNewSendScreen = false
-        menuXib.isHidden = false
+        menuView.isHidden = false
         
         UIView.animate(withDuration: 0.3) {
             self.sendWithQRView.frame.origin.y = self.view.frame.height
@@ -2903,7 +2869,7 @@ extension MainScreen: SelectCoinViewDelegate
     func dismissNewSend(params: digilira.order) {
         fetch()
         isNewSendScreen = false
-        menuXib.isHidden = false
+        menuView.isHidden = false
         
         UIView.animate(withDuration: 0.3) {
             self.sendWithQRView.frame.origin.y = self.view.frame.height
@@ -2925,7 +2891,7 @@ extension MainScreen: NewCoinSendDelegate
     func dismissNewSend()
     {
         isNewSendScreen = false
-        menuXib.isHidden = false
+        menuView.isHidden = false
         
         UIView.animate(withDuration: 0.3) {
             self.sendWithQRView.frame.origin.y = self.view.frame.height
@@ -2965,10 +2931,9 @@ extension MainScreen: NewCoinSendDelegate
                     
                     break
                 case "Canceled by user.":
-                    let alert = UIAlertController(title: "İptal", message: "İşleminiz iptal edilmiştir.", preferredStyle: UIAlertController.Style.alert)
-                    alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
-                    
-                    self.present(alert, animated: true, completion: nil)
+                    self.shake()
+                    self.alertWarning(title: "Dikkat", message: "İşleminiz iptal edilmiştir.")
+                
                     //self.dismissNewSend()
                     return
                     
@@ -2989,11 +2954,8 @@ extension MainScreen: NewCoinSendDelegate
                     break
                 case false:
                     if isShowSendCoinView {
-                        let alert = UIAlertController(title: "Hatalı Pin Kodu", message: "İşleminiz iptal edilmiştir.", preferredStyle: UIAlertController.Style.alert)
-                        alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
-                        
-                        self.present(alert, animated: true, completion: nil)
-                        //self.closeSendView()
+                        self.shake()
+                        self.alertWarning(title: "Hatalı Pin Kodu", message: "İşleminiz iptal edilmiştir.")
                     }
                     break
                 }
@@ -3041,9 +3003,7 @@ extension MainScreen: PinViewDelegate
                 
                 pinView.isEntryMode = true
             }else {
-                let alert = UIAlertController(title: "Pin Oluşturun", message: "Ödeme yapabilmek ve kripto varlıklarınızı transfer edebilmek için bir pin kodu oluşturmanız gerekmektedir.", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: nil))
-                self.present(alert, animated: true)
+                self.alertWarning(title: "Pin Oluşturun", message: "Ödeme yapabilmek ve kripto varlıklarınızı transfer edebilmek için bir pin kodu oluşturmanız gerekmektedir.")
                 
                 pinView.isInit = true
             }
@@ -3053,9 +3013,7 @@ extension MainScreen: PinViewDelegate
                 pinView.isEntryMode = false
                 pinView.isUpdateMode = true
             }else{
-                let alert = UIAlertController(title: "Pin Oluşturun", message: "Ödeme yapabilmek ve kripto varlıklarınızı transfer edebilmek için bir pin kodu oluşturmanız gerekmektedir.", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: nil))
-                self.present(alert, animated: true)
+                self.alertWarning(title: "Pin Oluşturun", message: "Ödeme yapabilmek ve kripto varlıklarınızı transfer edebilmek için bir pin kodu oluşturmanız gerekmektedir.")
                 
                 pinView.isInit = true
             }
@@ -3123,15 +3081,9 @@ extension MainScreen: PinViewDelegate
         ) { (json, statusCode) in
             
             DispatchQueue.main.async {
+                self.alertWarning(title: "Pin Kodu Güncellendi", message: "Pin kodunuzu unutmayın, cüzdanınızı başka bir cihaza aktarırken ihtiyacınız olacaktır.")
                 
-                let alert = UIAlertController(title: "Pin Kodu Güncellendi", message: "Pin kodunuzu unutmayın, cüzdanınızı başka bir cihaza aktarırken ihtiyacınız olacaktır.", preferredStyle: UIAlertController.Style.alert)
-                alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: { [self] _ in 
-                    profileMenuView.pinWarning.isHidden = true
-                }))
-                
-                
-                self.present(alert, animated: true, completion: nil)
-                
+                self.profileMenuView.pinWarning.isHidden = true
                 self.digiliraPay.onLogin2 = { user, status in
                     DispatchQueue.main.sync {
                         self.kullanici = user

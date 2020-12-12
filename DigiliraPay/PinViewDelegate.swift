@@ -18,3 +18,8 @@ protocol PinViewDelegate: class {
 protocol seedViewDelegate: class {
     func closeSeedView()
 }
+
+protocol WarningDelegate: class {
+    func sendMessage()
+}
+

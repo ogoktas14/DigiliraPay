@@ -24,7 +24,7 @@ class LegalView: UIView {
     override func awakeFromNib()
     {
         confirmView.clipsToBounds = true
-        confirmView.layer.cornerRadius = 6
+
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
         swipeRight.direction = .right
         self.addGestureRecognizer(swipeRight)
@@ -36,6 +36,7 @@ class LegalView: UIView {
     }
     
     @IBAction func resetApp(_ sender: Any) {
+        try? Locksmith.deleteDataForUserAccount(userAccount: "bitexenApi")
         try? Locksmith.deleteDataForUserAccount(userAccount: "sensitive")
         try? Locksmith.deleteDataForUserAccount(userAccount: "authenticate")
 

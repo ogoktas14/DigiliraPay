@@ -16,7 +16,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TcM-xd-ejI">
-                    <rect key="frame" x="16" y="49" width="299" height="706"/>
+                    <rect key="frame" x="16" y="49" width="299" height="669"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RVO-Jg-al1">
                             <rect key="frame" x="8" y="8" width="283" height="0.0"/>
@@ -335,7 +335,7 @@
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="TcM-xd-ejI" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leadingMargin" id="BlB-QD-ZaY"/>
-                <constraint firstItem="TcM-xd-ejI" firstAttribute="bottom" secondItem="vUN-kp-3ea" secondAttribute="bottom" constant="-13" id="Y4s-5Z-nbf"/>
+                <constraint firstItem="TcM-xd-ejI" firstAttribute="bottom" secondItem="vUN-kp-3ea" secondAttribute="bottom" constant="-50" id="Y4s-5Z-nbf"/>
                 <constraint firstItem="TcM-xd-ejI" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="5" id="ZFK-As-IPn"/>
                 <constraint firstItem="TcM-xd-ejI" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailingMargin" id="bvE-ie-sPh"/>
             </constraints>

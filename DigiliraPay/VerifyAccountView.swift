@@ -284,8 +284,13 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
             surnameText.becomeFirstResponder()
         case surnameText:
             tcText.becomeFirstResponder()
+            
+            let bottomOffset = CGPoint(x: 0, y: 120)
+            scrollAres.setContentOffset(bottomOffset, animated: true)
+            
         case tcText:
             telText.becomeFirstResponder()
+            
         case telText:
             mailText.becomeFirstResponder()
         case mailText:
@@ -298,14 +303,13 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     }
     
     @IBAction func datePickerChanged(sender: UIDatePicker) {
-
-       print("print \(sender.date)")
-
         let dateFormatter = DateFormatter()
        dateFormatter.dateFormat = "MMM dd, YYYY"
-        let somedateString = dateFormatter.string(from: sender.date)
-       print(somedateString)  // "somedateString" is your string date
-   }
+        
+        let bottomOffset = CGPoint(x: 0, y: 200)
+        scrollAres.setContentOffset(bottomOffset, animated: true)
+    
+    }
     
     func KYC() {
         
@@ -363,12 +367,6 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
          
         sendIDPhotoView.frame.origin.y = self.frame.height
         
-        
-//        UIView.animate(withDuration: 0.3) {
-//            self.enterInfoView.frame.origin.y = self.self.frame.height
-//            self.sendIDPhotoView.frame.origin.y = 0
-//            self.sendIDPhotoView.alpha = 1
-//        }
         KYC()
         
 
