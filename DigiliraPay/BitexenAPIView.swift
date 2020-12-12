@@ -60,7 +60,7 @@ class BitexenAPIView: UIView {
             
             self.shake()
             
-            errors?.errorHandler(message: "Girdiğiniz bilgileri kontrol edip tekrar deneyin.", title: "Bir Hata Oluştu")
+            errors?.errorHandler(message: "Girdiğiniz bilgileri kontrol edip tekrar deneyin.", title: "Bir Hata Oluştu", error: true)
 
             
         }
@@ -92,7 +92,7 @@ class BitexenAPIView: UIView {
                 res.valid = true
                 save2defaults(forKey: bex.bexApiDefaultKey.key, data: res)
                 
-                errors?.errorHandler(message: "API bilgileriniz kaydedildi.", title: "İşlem Başarılı")
+                errors?.errorHandler(message: "API bilgileriniz kaydedildi.", title: "İşlem Başarılı", error: false)
                 
             } 
             

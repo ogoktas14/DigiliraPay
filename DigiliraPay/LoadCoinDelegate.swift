@@ -16,7 +16,7 @@ protocol LoadCoinDelegate: class
 }
 
 protocol ErrorsDelegate: class {
-    func errorHandler(message: String, title: String)
+    func errorHandler(message: String, title: String, error:Bool)
 }
 
 

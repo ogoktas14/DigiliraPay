@@ -13,21 +13,22 @@ class ProfilUpgradeView: UIView {
     @IBOutlet weak var FinishedView: UIView!
     @IBOutlet weak var verifiedPRofileView: UIView!
     
-    @IBOutlet weak var cameraButtonView: UIView!
     @IBOutlet weak var galleryButtonView: UIView!
     @IBOutlet weak var goHomeView: UIView!
     @IBOutlet weak var verifiedGoHomeView: UIView!
     
     weak var delegate: VerifyAccountDelegate?
      
-        override func awakeFromNib()
+    @IBAction func btnExit(_ sender: Any) {
+        goHome()
+    }
+    override func awakeFromNib()
         {
             FinishedView.alpha = 0
-            verifiedPRofileView.alpha = 1
-            sendInfoView.alpha = 0
+            verifiedPRofileView.alpha = 0
+            sendInfoView.alpha = 1
              
-             
-            let openCameraGesture = UITapGestureRecognizer(target: self, action: #selector(openCamera))
+            galleryButtonView.layer.cornerRadius = 25
             
             let openGalleryGesture = UITapGestureRecognizer(target: self, action: #selector(openGallery))
             
@@ -35,10 +36,6 @@ class ProfilUpgradeView: UIView {
             
             let goHomeGesture1 = UITapGestureRecognizer(target: self, action: #selector(goHome))
 
-            
-            cameraButtonView.addGestureRecognizer(openCameraGesture)
-            cameraButtonView.isUserInteractionEnabled = true
-            
             galleryButtonView.addGestureRecognizer(openGalleryGesture)
             galleryButtonView.isUserInteractionEnabled = true
             

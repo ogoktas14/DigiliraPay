@@ -149,7 +149,7 @@ class MainScreen: UIViewController {
         if let versionLegal = UserDefaults.standard.value(forKey: "isLegalView") as? Int {
             let v = digilira.legalView.version
             if (versionLegal < v) {
-                alertWarning(title: digilira.messages.newLegalViewTitle, message: digilira.messages.newLegalViewMessage)
+                alertWarning(title: digilira.messages.newLegalViewTitle, message: digilira.messages.newLegalViewMessage, error: false)
                 profileMenuView.legalViewWarning.isHidden = false
                 showLegalText()
                 return
@@ -160,7 +160,7 @@ class MainScreen: UIViewController {
         if let versionTerms = UserDefaults.standard.value(forKey: "isTermsOfUse") as? Int {
             let v = digilira.termsOfUse.version
             if (versionTerms < v) {
-                alertWarning(title: digilira.messages.newTermsOfUseTitle, message: digilira.messages.newTermsOfUseMessage)
+                alertWarning(title: digilira.messages.newTermsOfUseTitle, message: digilira.messages.newTermsOfUseMessage, error: false)
                 profileMenuView.termsViewWarning.isHidden = false
                 showTermsofUse()
                 return
@@ -384,7 +384,7 @@ class MainScreen: UIViewController {
         
         
         bitexenSign.onBitexenError = { res, sts in
-            self.alertWarning(title: "Bitexen API", message: "Bitexen API bilgileriniz hatalıdır.")
+            self.alertWarning(title: "Bitexen API", message: "Bitexen API bilgileriniz hatalıdır.", error: true)
         }
         
         refreshControl.attributedTitle = NSAttributedString(string: "Güncellemek için çekiniz..")
@@ -658,7 +658,7 @@ class MainScreen: UIViewController {
     
     @objc func onOrderClicked(_ sender: Notification) {
 
-        alertWarning(title: "Sipariş detayları", message: "Sipariş detayları için kendinize iyi bakın.")
+        alertWarning(title: "Sipariş detayları", message: "Sipariş detayları için kendinize iyi bakın.", error: false)
   
     }
   
@@ -1717,7 +1717,7 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
                     
                     break
                 case "Canceled by user.":
-                    self.alertWarning(title: "Dikkat", message:  "İşleminiz iptal edilmiştir.")
+                    self.alertWarning(title: "Dikkat", message:  "İşleminiz iptal edilmiştir.", error: true)
                     
                     return
                     
@@ -1738,7 +1738,7 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
                     break
                 case false:
                     if isShowSendCoinView {
-                        self.alertWarning(title: "Dikkat", message:  "İşleminiz iptal edilmiştir.")
+                        self.alertWarning(title: "Dikkat", message:  "İşleminiz iptal edilmiştir.", error: true)
                     }
                     break
                 }
@@ -2205,7 +2205,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         else
         {
             self.shake()
-            self.alertWarning(title: "Dikkat", message: "Galeriy erişim izniniz bulunmamaktadır")
+            self.alertWarning(title: "Dikkat", message: "Galeriye erişim izniniz bulunmamaktadır", error: true)
         
         }
     }
@@ -2406,7 +2406,7 @@ extension MainScreen: PaymentCatViewsDelegate {
         case "Bitexen":
             showBitexenView()
         case "Okex":
-            alertWarning(title: "Yapım Aşamasında", message: "OKEX API bağlantısı yapım aşamasındadır.")
+            alertWarning(title: "Yapım Aşamasında", message: "OKEX API bağlantısı yapım aşamasındadır.", error: true)
         default:
             break
         }
@@ -2474,8 +2474,8 @@ extension MainScreen: LoadCoinDelegate
 }
 
 extension MainScreen: ErrorsDelegate {
-    func errorHandler(message: String, title: String) {
-        alertWarning(title: title, message: message)
+    func errorHandler(message: String, title: String, error: Bool) {
+        alertWarning(title: title, message: message, error: error)
 
     }
      
@@ -2617,7 +2617,7 @@ extension MainScreen: SendWithQrDelegate
         
     }
 
-    func alertWarning (title: String, message: String) {
+    func alertWarning (title: String, message: String, error: Bool) {
         DispatchQueue.main.async { [self] in
             
             warningView = UIView().loadNib(name: "warningView") as! WarningView
@@ -2625,7 +2625,7 @@ extension MainScreen: SendWithQrDelegate
                                        y: 0,
                                         width: view.frame.width,
                                         height: view.frame.height)
-            
+            warningView.isError = error
             warningView.title = title
             warningView.message = message
             warningView.setMessage()
@@ -2787,7 +2787,7 @@ extension MainScreen: NewCoinSendDelegate
                     break
                 case "Canceled by user.":
                     self.shake()
-                    self.alertWarning(title: "Dikkat", message: "İşleminiz iptal edilmiştir.")
+                    self.alertWarning(title: "Dikkat", message: "İşleminiz iptal edilmiştir.", error: true)
                 
                     //self.dismissNewSend()
                     return
@@ -2810,7 +2810,7 @@ extension MainScreen: NewCoinSendDelegate
                 case false:
                     if isShowSendCoinView {
                         self.shake()
-                        self.alertWarning(title: "Hatalı Pin Kodu", message: "İşleminiz iptal edilmiştir.")
+                        self.alertWarning(title: "Hatalı Pin Kodu", message: "İşleminiz iptal edilmiştir.", error: true)
                     }
                     break
                 }
@@ -2858,7 +2858,7 @@ extension MainScreen: PinViewDelegate
                 
                 pinView.isEntryMode = true
             }else {
-                self.alertWarning(title: "Pin Oluşturun", message: "Ödeme yapabilmek ve kripto varlıklarınızı transfer edebilmek için bir pin kodu oluşturmanız gerekmektedir.")
+                self.alertWarning(title: "Pin Oluşturun", message: "Ödeme yapabilmek ve kripto varlıklarınızı transfer edebilmek için bir pin kodu oluşturmanız gerekmektedir.", error: false)
                 
                 pinView.isInit = true
             }
@@ -2868,7 +2868,7 @@ extension MainScreen: PinViewDelegate
                 pinView.isEntryMode = false
                 pinView.isUpdateMode = true
             }else{
-                self.alertWarning(title: "Pin Oluşturun", message: "Ödeme yapabilmek ve kripto varlıklarınızı transfer edebilmek için bir pin kodu oluşturmanız gerekmektedir.")
+                self.alertWarning(title: "Pin Oluşturun", message: "Ödeme yapabilmek ve kripto varlıklarınızı transfer edebilmek için bir pin kodu oluşturmanız gerekmektedir.", error: false)
                 
                 pinView.isInit = true
             }
@@ -2936,7 +2936,7 @@ extension MainScreen: PinViewDelegate
         ) { (json, statusCode) in
             
             DispatchQueue.main.async {
-                self.alertWarning(title: "Pin Kodu Güncellendi", message: "Pin kodunuzu unutmayın, cüzdanınızı başka bir cihaza aktarırken ihtiyacınız olacaktır.")
+                self.alertWarning(title: "Pin Kodu Güncellendi", message: "Pin kodunuzu unutmayın, cüzdanınızı başka bir cihaza aktarırken ihtiyacınız olacaktır.", error: false)
                 
                 self.profileMenuView.pinWarning.isHidden = true
                 self.digiliraPay.onLogin2 = { user, status in

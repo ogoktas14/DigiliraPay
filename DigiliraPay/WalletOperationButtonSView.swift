@@ -70,6 +70,7 @@ class WalletOperationButtonSView: UIView {
                     loadLabel.textColor = UIColor(red:0.30, green:0.30, blue:0.30, alpha:1.0)
                     balanceText.frame.origin.y = 100
                     self.balanceText.text  = blnx
+                    self.balanceText.minimumScaleFactor = 0.1
 
                 })
             })

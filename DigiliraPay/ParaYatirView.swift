@@ -123,7 +123,7 @@ class ParaYatirView:UIView {
             }
             pasteboard.string = address1
             
-            errors?.errorHandler(message: "Cüzdan adresiniz kopyalandı: " + address1!, title: "Başarılı")
+            errors?.errorHandler(message: "Cüzdan adresiniz kopyalandı: " + address1!, title: "Başarılı", error: false)
             
                 self.copyView.alpha = 1
                 self.copyView.isUserInteractionEnabled = true
@@ -150,10 +150,10 @@ class ParaYatirView:UIView {
                         popup(image: takeScreenshot())
                     }
                 } else {
-                    errors?.errorHandler(message: "İsim bilgisi okunamadı, lütfen yeniden giriş yapın.", title: "Bir Hata Oluştu")
+                    errors?.errorHandler(message: "İsim bilgisi okunamadı, lütfen yeniden giriş yapın.", title: "Bir Hata Oluştu", error: true)
                 }
             } catch {
-                errors?.errorHandler(message: "Kullanıcı bilgileri okunamadı, lütfen yeniden giriş yapın.", title: "Bir Hata Oluştu")
+                errors?.errorHandler(message: "Kullanıcı bilgileri okunamadı, lütfen yeniden giriş yapın.", title: "Bir Hata Oluştu", error: true)
             }
             
             
@@ -185,7 +185,7 @@ class ParaYatirView:UIView {
             }
         switch PHPhotoLibrary.authorizationStatus() {
         case .denied:
-            errors?.errorHandler(message: "Ayarlar menüsünden Galeri'ye erişim izni vermeniz gerekmektedir.", title: "Dikkat")
+            errors?.errorHandler(message: "Ayarlar menüsünden Galeri'ye erişim izni vermeniz gerekmektedir.", title: "Dikkat", error: true)
             break
         default:
             break
@@ -193,7 +193,7 @@ class ParaYatirView:UIView {
     }
     
     @objc func saveError(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
-        errors?.errorHandler(message: "QR Kodunuz galeriye kaydedildi", title: "Başarılı")
+        errors?.errorHandler(message: "QR Kodunuz galeriye kaydedildi", title: "Başarılı", error: false)
         imgSave.alpha = 1
         
             self.saveView.alpha = 1

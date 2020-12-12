@@ -151,26 +151,33 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
                 sts = 1
                 sendIDPhotoView.alpha = 0
                 enterInfoView.alpha = 0
-                onayImage.image = UIImage(named: "TransactionPopupSucces")
-                infoTitle.text = "Profiliniz onaylanmıştır."
-                 
-                goHomeView.isUserInteractionEnabled = true
-                goHomeView.alpha = 1
+                finishedView.alpha = 0
                 
-                isVerified = true
-                delegate?.disableEntry()
+                errors?.errorHandler(message: "Kimlik bilgileriniz doğrulandı, ancak KYC sürecini tamamlamak için kimliğinizin ön yüzü görünecek biçimde boş bir kağıda günün tarihini ve DigiliraPay yazarak Profil Onayı sayfasına yükleyin.", title: "Profiliniz Güncellendi", error: false)
                 
-                finishedView.translatesAutoresizingMaskIntoConstraints = true
-                finishedView.frame.origin.y = self.frame.height
+//                onayImage.image = UIImage(named: "TransactionPopupSucces")
+//                infoTitle.text = "Profiliniz onaylanmıştır."
+//
+//                goHomeView.isUserInteractionEnabled = true
+//                goHomeView.alpha = 1
+//
+//                isVerified = true
+//                delegate?.disableEntry()
+//
+//                finishedView.translatesAutoresizingMaskIntoConstraints = true
+//                finishedView.frame.origin.y = self.frame.height
                 
-                UIView.animate(withDuration: 0.3) {
-                    self.enterInfoView.frame.origin.y = self.self.frame.height
-                    self.finishedView.frame.origin.y = 0
-                    self.finishedView.alpha = 1
-                }
+//                UIView.animate(withDuration: 0.3) {
+//                    self.enterInfoView.frame.origin.y = self.self.frame.height
+//                    self.finishedView.frame.origin.y = 0
+//                    self.finishedView.alpha = 1
+//                }
+//
+                delegate?.dismissVErifyAccountView()
+
                 
             }else {
-                errors?.errorHandler(message: "Girdiğiniz bilgileri kontrol edip tekrar deneyin.", title: "Bir Hata Oluştu")
+                errors?.errorHandler(message: "Girdiğiniz bilgileri kontrol edip tekrar deneyin.", title: "Bir Hata Oluştu", error: true)
 
                 understand.isEnabled = true
                 understand.isOn = false
@@ -353,7 +360,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
         if error {
             DispatchQueue.main.async {
                 
-                self.errors?.errorHandler(message: "Girdiğiniz bilgileri kontrol edip tekrar deneyin.", title: "Bir Hata Oluştu")
+                self.errors?.errorHandler(message: "Girdiğiniz bilgileri kontrol edip tekrar deneyin.", title: "Bir Hata Oluştu", error: true)
             }
 
             understand.isEnabled = true

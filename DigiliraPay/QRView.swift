@@ -394,11 +394,11 @@ class QRView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
                     
                 }
             } else {
-                errors?.errorHandler(message: "İsim bilgisi okunamadı, lütfen yeniden giriş yapın.", title:"Dikkat")
+                errors?.errorHandler(message: "İsim bilgisi okunamadı, lütfen yeniden giriş yapın.", title:"Dikkat", error: true)
             }
              
         } catch {
-            errors?.errorHandler(message: "Kullanıcı bilgileri okunamadı, lütfen yeniden giriş yapın.", title:  "Dikkat")
+            errors?.errorHandler(message: "Kullanıcı bilgileri okunamadı, lütfen yeniden giriş yapın.", title:  "Dikkat", error: true)
         }
         
         

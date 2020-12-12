@@ -5,7 +5,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -15,13 +14,13 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4lF-sD-jAI">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4lF-sD-jAI">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uce-Y4-i7r">
-                            <rect key="frame" x="20" y="411.5" width="374" height="57.5"/>
-                            <string key="text">Yukarıda gösterildiği gibi kimliğinizin ön yüzü gözükecek biçimde boş bir kağıda günün tarihini ve DigiliraPAY yazarak yükleyin.</string>
-                            <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="14"/>
+                            <rect key="frame" x="40" y="411.5" width="334" height="57.5"/>
+                            <string key="text">Yukarıda gösterildiği gibi kimliğinizin ön yüzü görünecek biçimde boş bir kağıda günün tarihini ve DigiliraPay yazarak yükleyin.</string>
+                            <fontDescription key="fontDescription" name="Avenir-Light" family="Avenir" pointSize="14"/>
                             <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
@@ -37,29 +36,19 @@
                             <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vb0-36-fEt">
-                            <rect key="frame" x="84" y="488" width="246.5" height="50"/>
-                            <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Kamerayı Aç" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p0x-DB-tGQ">
-                                    <rect key="frame" x="79" y="15" width="88.5" height="20.5"/>
-                                    <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="15"/>
-                                    <nil key="textColor"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                            </subviews>
-                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                            <constraints>
-                                <constraint firstItem="p0x-DB-tGQ" firstAttribute="centerY" secondItem="Vb0-36-fEt" secondAttribute="centerY" id="8Ue-FE-8nw"/>
-                                <constraint firstItem="p0x-DB-tGQ" firstAttribute="centerX" secondItem="Vb0-36-fEt" secondAttribute="centerX" id="Ehn-Rm-MeB"/>
-                                <constraint firstAttribute="width" secondItem="Vb0-36-fEt" secondAttribute="height" multiplier="123:25" id="Qy7-xA-TB1"/>
-                            </constraints>
-                        </view>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hOU-g6-x2m">
-                            <rect key="frame" x="84" y="547.5" width="246.5" height="50"/>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bof-ez-ihK">
+                            <rect key="frame" x="10" y="579" width="394" height="30"/>
+                            <state key="normal" title="Bu aşamayı atla"/>
+                            <connections>
+                                <action selector="btnExit:" destination="iN0-l3-epB" eventType="touchUpInside" id="VP4-FF-6hU"/>
+                            </connections>
+                        </button>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hOU-g6-x2m" customClass="DLGradient" customModule="DigiliraPay" customModuleProvider="target">
+                            <rect key="frame" x="62" y="499" width="290" height="50"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Galeriden Seç" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ukS-oz-Stl">
-                                    <rect key="frame" x="74.5" y="15" width="98" height="20.5"/>
-                                    <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="15"/>
+                                    <rect key="frame" x="89.5" y="13.5" width="111" height="23.5"/>
+                                    <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="17"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
                                 </label>
@@ -68,27 +57,26 @@
                             <constraints>
                                 <constraint firstItem="ukS-oz-Stl" firstAttribute="centerX" secondItem="hOU-g6-x2m" secondAttribute="centerX" id="4Lj-RJ-1Rm"/>
                                 <constraint firstItem="ukS-oz-Stl" firstAttribute="centerY" secondItem="hOU-g6-x2m" secondAttribute="centerY" id="YAg-er-Yfx"/>
+                                <constraint firstAttribute="height" constant="50" id="eJJ-uc-1rZ"/>
                             </constraints>
                         </view>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstItem="hOU-g6-x2m" firstAttribute="height" secondItem="Vb0-36-fEt" secondAttribute="height" id="445-1S-dDi"/>
-                        <constraint firstAttribute="trailing" secondItem="Vb0-36-fEt" secondAttribute="trailing" constant="83.5" id="7GG-f8-93z"/>
-                        <constraint firstItem="hOU-g6-x2m" firstAttribute="trailing" secondItem="Vb0-36-fEt" secondAttribute="trailing" id="Axw-og-90v"/>
-                        <constraint firstItem="Vb0-36-fEt" firstAttribute="leading" secondItem="4lF-sD-jAI" secondAttribute="leading" constant="84" id="CCC-HC-2Cu"/>
+                        <constraint firstAttribute="trailing" secondItem="Bof-ez-ihK" secondAttribute="trailing" constant="10" id="1Nw-BG-Ph9"/>
                         <constraint firstItem="51j-fS-zfW" firstAttribute="top" secondItem="Ilo-9b-jWu" secondAttribute="bottom" constant="18" id="KFl-yz-HJr"/>
-                        <constraint firstItem="uce-Y4-i7r" firstAttribute="trailing" secondItem="51j-fS-zfW" secondAttribute="trailing" id="Uom-dp-KFW"/>
+                        <constraint firstItem="Bof-ez-ihK" firstAttribute="top" secondItem="hOU-g6-x2m" secondAttribute="bottom" constant="30" id="OI7-ME-KgM"/>
+                        <constraint firstItem="hOU-g6-x2m" firstAttribute="top" secondItem="uce-Y4-i7r" secondAttribute="bottom" constant="30" id="TLJ-0g-I12"/>
+                        <constraint firstItem="uce-Y4-i7r" firstAttribute="trailing" secondItem="51j-fS-zfW" secondAttribute="trailing" constant="-20" id="Uom-dp-KFW"/>
+                        <constraint firstItem="hOU-g6-x2m" firstAttribute="centerX" secondItem="4lF-sD-jAI" secondAttribute="centerX" id="aoA-pY-LJn"/>
                         <constraint firstItem="uce-Y4-i7r" firstAttribute="top" secondItem="51j-fS-zfW" secondAttribute="bottom" constant="11" id="ccN-zO-L44"/>
+                        <constraint firstItem="Bof-ez-ihK" firstAttribute="leading" secondItem="4lF-sD-jAI" secondAttribute="leading" constant="10" id="eZE-JA-7Rr"/>
                         <constraint firstItem="Ilo-9b-jWu" firstAttribute="leading" secondItem="4lF-sD-jAI" secondAttribute="leading" constant="57" id="gJo-oa-4oU"/>
                         <constraint firstAttribute="trailing" secondItem="51j-fS-zfW" secondAttribute="trailing" constant="20" id="j9X-65-U21"/>
                         <constraint firstItem="51j-fS-zfW" firstAttribute="leading" secondItem="4lF-sD-jAI" secondAttribute="leading" constant="20" id="jVv-ZW-aQe"/>
-                        <constraint firstItem="Vb0-36-fEt" firstAttribute="top" secondItem="uce-Y4-i7r" secondAttribute="bottom" constant="19" id="k9Q-L0-BI1"/>
                         <constraint firstItem="Ilo-9b-jWu" firstAttribute="top" secondItem="4lF-sD-jAI" secondAttribute="top" constant="84" id="maa-He-lum"/>
-                        <constraint firstItem="hOU-g6-x2m" firstAttribute="leading" secondItem="Vb0-36-fEt" secondAttribute="leading" id="orC-8H-eAs"/>
-                        <constraint firstItem="uce-Y4-i7r" firstAttribute="leading" secondItem="51j-fS-zfW" secondAttribute="leading" id="pfa-EJ-flP"/>
+                        <constraint firstItem="uce-Y4-i7r" firstAttribute="leading" secondItem="51j-fS-zfW" secondAttribute="leading" constant="20" id="pfa-EJ-flP"/>
                         <constraint firstAttribute="trailing" secondItem="Ilo-9b-jWu" secondAttribute="trailing" constant="57" id="uvs-c7-6Va"/>
-                        <constraint firstItem="hOU-g6-x2m" firstAttribute="top" secondItem="Vb0-36-fEt" secondAttribute="bottom" constant="9.5" id="xZ1-8t-ExN"/>
                     </constraints>
                 </view>
                 <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="enl-88-icO">
@@ -157,7 +145,7 @@
                         <constraint firstAttribute="trailing" secondItem="uD3-VF-tiL" secondAttribute="trailing" constant="84.5" id="qgj-5H-cCv"/>
                     </constraints>
                 </view>
-                <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0tg-px-P7b">
+                <view alpha="0.0" tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0tg-px-P7b">
                     <rect key="frame" x="0.0" y="100" width="414" height="796"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Kripto paralarınızı arkadaşlarınıza gönderebilir ve alışverişlerinizde kullanabilirsiniz" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9UF-hz-N8B">
@@ -188,7 +176,7 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ek2-tZ-a8U">
                             <rect key="frame" x="64" y="102" width="286" height="236"/>
                             <subviews>
-                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="TransactionPopupSucces" translatesAutoresizingMaskIntoConstraints="NO" id="Bhj-7U-CbD">
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="success" translatesAutoresizingMaskIntoConstraints="NO" id="Bhj-7U-CbD">
                                     <rect key="frame" x="0.0" y="0.0" width="286" height="236"/>
                                 </imageView>
                             </subviews>
@@ -232,6 +220,7 @@
                 <constraint firstItem="0tg-px-P7b" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="OQe-sd-gAj"/>
                 <constraint firstAttribute="bottom" secondItem="0tg-px-P7b" secondAttribute="bottom" id="WSx-Ar-qIq"/>
                 <constraint firstItem="4lF-sD-jAI" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="a2L-T2-H2N"/>
+                <constraint firstItem="hOU-g6-x2m" firstAttribute="width" secondItem="0tg-px-P7b" secondAttribute="width" multiplier="0.7" id="bGp-yc-ope"/>
                 <constraint firstItem="enl-88-icO" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="lYd-MM-anw"/>
                 <constraint firstItem="0tg-px-P7b" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="100" id="tGm-rQ-bXW"/>
                 <constraint firstItem="enl-88-icO" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="uJt-Ii-1NL"/>
@@ -242,7 +231,6 @@
             </constraints>
             <connections>
                 <outlet property="FinishedView" destination="enl-88-icO" id="a3d-04-I7f"/>
-                <outlet property="cameraButtonView" destination="Vb0-36-fEt" id="Tef-bi-aNe"/>
                 <outlet property="galleryButtonView" destination="hOU-g6-x2m" id="KHW-yW-Nb2"/>
                 <outlet property="goHomeView" destination="uD3-VF-tiL" id="v2E-Cu-p80"/>
                 <outlet property="sendInfoView" destination="4lF-sD-jAI" id="sfG-ax-i0B"/>
@@ -254,9 +242,7 @@
     </objects>
     <resources>
         <image name="TransactionPopupSucces" width="264" height="263"/>
+        <image name="success" width="114" height="114"/>
         <image name="verifyProfilePhoto" width="592" height="568"/>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
     </resources>
 </document>

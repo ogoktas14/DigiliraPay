@@ -17,9 +17,11 @@ class WarningView: UIView {
     @IBOutlet weak var ok: UIView!
     @IBOutlet weak var titleView: UIView!
     @IBOutlet weak var msg: UIView!
+    @IBOutlet weak var icon: UIImageView!
 
     var title: String  = "Dikkat"
     var message: String  = "Dikkat"
+    var isError: Bool = true
     
     override func awakeFromNib() {
 
@@ -59,7 +61,11 @@ class WarningView: UIView {
     }
     
     
-    func setMessage() { 
+    func setMessage() {
+        
+        if !isError {
+            icon.image = UIImage(named: "success")
+        }
             titleLabel.text = title
             messageLabel.text = message
     }

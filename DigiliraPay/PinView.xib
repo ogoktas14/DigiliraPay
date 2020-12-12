@@ -17,13 +17,13 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pini Girin" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YwR-9f-mln">
-                    <rect key="frame" x="80" y="114" width="254" height="33"/>
+                    <rect key="frame" x="10" y="84" width="394" height="33"/>
                     <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="24"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VmM-Gn-Ljc">
-                    <rect key="frame" x="117.66666666666669" y="177" width="179" height="25"/>
+                    <rect key="frame" x="117.66666666666669" y="147" width="179" height="25"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="33" translatesAutoresizingMaskIntoConstraints="NO" id="x67-zz-olf">
                             <rect key="frame" x="0.0" y="0.0" width="179" height="25"/>
@@ -348,15 +348,15 @@
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
                 <constraint firstItem="VmM-Gn-Ljc" firstAttribute="top" secondItem="YwR-9f-mln" secondAttribute="bottom" constant="30" id="0zQ-pc-KfF"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="YwR-9f-mln" secondAttribute="trailing" constant="80" id="86i-db-UQ2"/>
-                <constraint firstItem="YwR-9f-mln" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="70" id="J8C-uG-AyZ"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="YwR-9f-mln" secondAttribute="trailing" constant="10" id="86i-db-UQ2"/>
+                <constraint firstItem="YwR-9f-mln" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="40" id="J8C-uG-AyZ"/>
                 <constraint firstItem="6y4-Hf-T5V" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="20" id="PHu-4s-l3j"/>
                 <constraint firstItem="VT8-xU-4Ke" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="40" id="TPn-50-mCV"/>
                 <constraint firstItem="VT8-xU-4Ke" firstAttribute="top" relation="greaterThanOrEqual" secondItem="VmM-Gn-Ljc" secondAttribute="bottom" constant="10" id="b5B-SY-2xb"/>
                 <constraint firstItem="6y4-Hf-T5V" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="bi2-Eq-qnh"/>
                 <constraint firstItem="VmM-Gn-Ljc" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="fzG-zw-6E6"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="VT8-xU-4Ke" secondAttribute="bottom" constant="40" id="pUU-Ui-naO"/>
-                <constraint firstItem="YwR-9f-mln" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="80" id="wvx-O6-aNp"/>
+                <constraint firstItem="YwR-9f-mln" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="10" id="wvx-O6-aNp"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="VT8-xU-4Ke" secondAttribute="trailing" constant="40" id="xP1-xj-xpK"/>
             </constraints>
             <connections>
