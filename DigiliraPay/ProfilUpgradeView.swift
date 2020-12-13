@@ -19,15 +19,15 @@ class ProfilUpgradeView: UIView {
     
     weak var delegate: VerifyAccountDelegate?
      
+    var verifying: Bool = false
+    
     @IBAction func btnExit(_ sender: Any) {
         goHome()
     }
     override func awakeFromNib()
         {
-            FinishedView.alpha = 0
-            verifiedPRofileView.alpha = 0
-            sendInfoView.alpha = 1
-             
+         
+        
             galleryButtonView.layer.cornerRadius = 25
             
             let openGalleryGesture = UITapGestureRecognizer(target: self, action: #selector(openGallery))
@@ -57,16 +57,32 @@ class ProfilUpgradeView: UIView {
                 self.FinishedView.alpha = 1
             }
         }
+    
+    func setSendId() {
+        
+            FinishedView.alpha = 0
+            verifiedPRofileView.alpha = 0
+            sendInfoView.alpha = 1
+    }
+    
+    func setVerifying() {
+        
+            FinishedView.alpha = 1
+            verifiedPRofileView.alpha = 0
+            sendInfoView.alpha = 0
+    }
+    
+    
+    func setVerified() {
+        
+            FinishedView.alpha = 0
+            verifiedPRofileView.alpha = 1
+            sendInfoView.alpha = 0
+    }
         
         @objc func openGallery()
         {
-            FinishedView.translatesAutoresizingMaskIntoConstraints = true
-            FinishedView.frame.origin.y = self.frame.height
-            
-            UIView.animate(withDuration: 0.3) {
-                self.sendInfoView.frame.origin.y = 0
-                self.FinishedView.alpha = 1
-            }
+            delegate?.uploadImage()
         }
         
         @objc func goHome()

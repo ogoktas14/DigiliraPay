@@ -14,5 +14,6 @@ protocol VerifyAccountDelegate: class
     func dismissKeyboard()
     func removeWarning()
     func disableEntry()
+    func uploadImage()
     func enableEntry(user:digilira.auth)
 }

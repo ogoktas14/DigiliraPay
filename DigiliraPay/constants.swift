@@ -310,11 +310,12 @@ struct digilira {
         let v: Int?
         let appV: Double?
         let token: String
+        let id1: String?
 
         enum CodingKeys: String, CodingKey {
             case userRole, status, pincode, imported, apnToken
             case id = "_id"
-            case username, lastName, firstName, wallet, btcAddress, ethAddress, ltcAddress, createdDate, appV, dogum, tcno, tel, mail
+            case username, lastName, firstName, wallet, btcAddress, ethAddress, ltcAddress, createdDate, appV, id1, dogum, tcno, tel, mail
             case v = "__v"
             case token
         }

@@ -114,6 +114,7 @@ class MainScreen: UIViewController {
     var isNewPin = false
     var isFirstLaunch = true
     var isTouchIDCanceled = false
+    var isProfileImageUpload:Bool = false
     
     var walletOperationsViewOrigin = CGPoint(x: 0, y: 0)
     
@@ -1928,6 +1929,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
                                             width: view.frame.width,
                                             height: view.frame.height)
             
+            verifyProfileXib.setSendId()
             verifyProfileXib.delegate = self
             for subView in qrView.subviews
             { subView.removeFromSuperview() }
@@ -1944,6 +1946,14 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
                 self.qrView.frame.origin.y = 0
                 self.qrView.alpha = 1
             }
+        case 2:
+            alertWarning(title: "Profil Onayı", message: "Gönderdiğiniz bilgiler kontrol edilmektedir.", error: false)
+            
+            break
+        case 3:
+            alertWarning(title: "Onaylı Profil", message: "Profiliniz onaylanmıştır. Kripto paralarınızla alışveriş yapabilirsiniz", error: false)
+            
+            break
         default:
             print("ok")
             
@@ -2117,107 +2127,6 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         
     }
     
-    
-    func showSuccess2(mode: Int, transaction: [String : Any])
-    {
-        do {
-            let asset = try BC.returnAsset(assetId: (transaction["assetId"] as?  String)!)
-            let double = Double(truncating: pow(10,asset.decimal) as NSNumber)
-            
-            var amount: String
-            var title: String
-            
-            switch transaction["type"] as? Int {
-            case 11:
-                amount = String ((transaction["totalAmount"] as? Float64)! / double)
-                title = "TRANSFERİNİZ GERÇEKLEŞTİ"
-                
-            default:
-                amount = String ((transaction["amount"] as? Float64)! / double)
-                title = "ÖDEME BAŞARILI"
-                
-            }
-            
-            print("ÖDEME")
-            
-            if isSuccessView {
-                self.fetch()
-                walletOperationView.isUserInteractionEnabled = false
-                
-                successView.titleLabel.text = title
-                successView.remainingAmount.text = amount + " " + asset.tokenName
-                successView.remainingAmountInfoLabel.text = "Gönderildi!"
-                successView.infoLabel.text = ""
-                
-                successView.buttonLabrl.text = "Tamam"
-                
-                successView.remainingAmount.isHidden = false
-                successView.headerImage.isHidden = false
-                successView.headerImage.image = UIImage(named: "sendericon")!
-                successView.buttonView.isHidden = false
-                successView.backgroundColor = UIColor(red: 0.39, green: 0.91, blue: 0.39, alpha: 1.00)
-            }else {
-                
-                walletOperationView.isUserInteractionEnabled = false
-                successView = UIView().loadNib(name: "TransactionPopup") as! TransactionPopup
-                successView.remainingAmountInfoLabel.textColor = UIColor.black
-                
-                successView.frame = CGRect(x: 20,
-                                           y: contentScrollView.frame.maxY,
-                                           width: contentScrollView.frame.width - 40,
-                                           height: contentScrollView.frame.width - 100 )
-                
-                
-                menuView.isHidden = true
-                bottomView.isHidden = true
-                
-                successView.titleLabel.text = "DOĞRULANIYOR"
-                successView.backgroundColor = UIColor.white
-                
-                successView.remainingAmount.text = amount + " " + asset.tokenName
-                successView.remainingAmountInfoLabel.text = "Gönderiliyor.."
-                successView.infoLabel.text = "Transferiniz blokzincire yazılıyor."
-                
-                
-                
-                successView.headerImage.image = UIImage(named: "transactionTime")!
-                successView.headerImage.isHidden = false
-                successView.buttonView.isHidden = true
-                
-                successView.remainingAmount.isHidden = false
-                
-                isSuccessView = true
-                
-                successView.layer.shadowColor = UIColor.black.cgColor
-                successView.layer.shadowOpacity = 0.4
-                successView.layer.shadowOffset = .zero
-                successView.layer.shadowRadius = 3
-                successView.layer.cornerRadius = 20
-                successView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner, .layerMaxXMaxYCorner, .layerMinXMaxYCorner]
-                
-                
-                successView.delegate = self
-                
-                contentScrollView.addSubview(successView)
-                contentScrollView.isHidden = false
-                
-                UIView.animate(withDuration: 0.4) {
-                    self.successView.frame.origin.y = self.contentScrollView.frame.maxY - self.successView.frame.height * 2
-                    self.successView.alpha = 1
-                }
-                
-            }
-        } catch  {
-            
-        }
-        
-        
-        
-        
-        
-    }
-    
-    
     func showTermsofUse()
     {
         showLegal(mode: digilira.terms.init(title: digilira.termsOfUse.title, text: digilira.termsOfUse.text))
@@ -2230,8 +2139,6 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
             imagePicker.allowsEditing = true
             imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary
             self.present(imagePicker, animated: true, completion: nil)
-            
-            
         }
         else
         {
@@ -2401,22 +2308,56 @@ extension MainScreen: UIImagePickerControllerDelegate {
             return 
         }
         
-        if let features = detectQRCode(image), !features.isEmpty{
-            for case let row as CIQRCodeFeature in features{
+        if isProfileImageUpload {
+            isProfileImageUpload = false
+
+            
+        digiliraPay.onUpdate = { res in
+            
+            DispatchQueue.main.async {
                 
-                if (row.messageString != "") {
-                    OpenUrlManager.onURL = { [self] res in
-                        getOrder(address: res)
-                    }
-                    print(row.messageString!)
-                    OpenUrlManager.parseUrlParams(openUrl: URL(string: row.messageString!))
+                self.warningView.removeFromSuperview()
+                self.alertWarning(title: "Bilgileriniz Yüklendi", message: "Gönderdiğiniz bilgiler kontrol edildikten sonra profiliniz güncellenecektir.", error: false)
+           
+            self.digiliraPay.onLogin2 = { user, status in
+                
+                DispatchQueue.main.async {
+                    self.dismissVErifyAccountView()
                 }
-                
-                self.imagePicker.dismiss(animated: true, completion: {
-                    
-                })
+            }
+            
+            self.digiliraPay.login2()
             }
         }
+        
+            alertTransaction(title: "Yükleniyor...", message: "Fotoğrafınız yükleniyor lütfen bekleyin.", verifying: true)
+            let b64 = digiliraPay.convertImageToBase64String(img: image)
+            let user = digilira.exUser.init(
+                status:2,
+                id1: b64
+            )
+            
+            let encoder = JSONEncoder()
+            let data = try? encoder.encode(user)
+            
+            digiliraPay.updateUser(user: data)
+        }else {
+            if let features = detectQRCode(image), !features.isEmpty{
+                for case let row as CIQRCodeFeature in features{
+                    
+                    if (row.messageString != "") {
+                        OpenUrlManager.onURL = { [self] res in
+                            getOrder(address: res)
+                        }
+                        OpenUrlManager.parseUrlParams(openUrl: URL(string: row.messageString!))
+                    }
+                }
+            }
+        }
+        
+       
+        
+        self.imagePicker.dismiss(animated: true, completion: {})
     }
 }
 
@@ -2517,6 +2458,11 @@ extension MainScreen: VerifyAccountDelegate
     func removeWarning() {
     }
     
+    func uploadImage() {
+        isProfileImageUpload = true
+        openGallery()
+    }
+    
     func disableEntry() {
         DispatchQueue.main.async {
             self.profileMenuView.verifyProfileView.alpha = 0.5
@@ -2542,6 +2488,7 @@ extension MainScreen: VerifyAccountDelegate
         if kullanici.status != 0 {
             self.profileMenuView.profileWarning.image = UIImage(named: "checkImg")
         }
+                
         if QR.address != nil {
             UserDefaults.standard.set(nil, forKey: "QRARRAY2")
             getOrder(address: self.QR)
@@ -2552,7 +2499,7 @@ extension MainScreen: VerifyAccountDelegate
         do {
             try self.kullanici = secretKeys.userData()
         } catch {
-            print("")
+            print(error)
         }
         
         for subView in sendWithQRView.subviews

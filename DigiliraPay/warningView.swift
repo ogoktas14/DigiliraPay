@@ -20,6 +20,8 @@ class WarningView: UIView {
     @IBOutlet weak var msg: UIView!
     @IBOutlet weak var icon: UIImageView!
 
+    let generator = UINotificationFeedbackGenerator()
+
     var title: String  = "Dikkat"
     var message: String  = "Dikkat"
     var isError: Bool = true
@@ -66,8 +68,12 @@ class WarningView: UIView {
     func setMessage() {
         if !isError {
             icon.image = UIImage(named: "success")
+            generator.notificationOccurred(.success)
         }
         
+        if isError {
+            generator.notificationOccurred(.error)
+        }
             if isTransaction {
                 ok.isHidden = true
                 icon.image = UIImage(named: "verifying")

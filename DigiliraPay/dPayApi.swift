@@ -770,6 +770,8 @@ class OpenUrlManager {
         var viewController: UIViewController?
         var pickImageCallback : ((UIImage) -> ())?;
         
+        var accountVerifyImage: Bool = false
+        
         override init(){
             super.init()
         }
@@ -819,14 +821,7 @@ class OpenUrlManager {
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
             picker.dismiss(animated: true, completion: nil)
         }
-        //for swift below 4.2
-        //func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        //    picker.dismiss(animated: true, completion: nil)
-        //    let image = info[UIImagePickerControllerOriginalImage] as! UIImage
-        //    pickImageCallback?(image)
-        //}
         
-        // For Swift 4.2+
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             picker.dismiss(animated: true, completion: nil)
             guard let image = info[.originalImage] as? UIImage else {
@@ -838,6 +833,7 @@ class OpenUrlManager {
         
         
         @objc func imagePickerController(_ picker: UIImagePickerController, pickedImage: UIImage?) {
+            print("ok")
         }
         
     }

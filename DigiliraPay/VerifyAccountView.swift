@@ -41,7 +41,6 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     
     var isVerified:Bool = false
     var isExit: Bool = false
-    
     var dogumTarihi: Date?
  
     let digiliraPay = digiliraPayApi()
@@ -154,25 +153,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
                 finishedView.alpha = 0
                 
                 errors?.errorHandler(message: "Kimlik bilgileriniz doğrulandı, ancak KYC sürecini tamamlamak için kimliğinizin ön yüzü görünecek biçimde boş bir kağıda günün tarihini ve DigiliraPay yazarak Profil Onayı sayfasına yükleyin.", title: "Profiliniz Güncellendi", error: false)
-                
-//                onayImage.image = UIImage(named: "TransactionPopupSucces")
-//                infoTitle.text = "Profiliniz onaylanmıştır."
-//
-//                goHomeView.isUserInteractionEnabled = true
-//                goHomeView.alpha = 1
-//
-//                isVerified = true
-//                delegate?.disableEntry()
-//
-//                finishedView.translatesAutoresizingMaskIntoConstraints = true
-//                finishedView.frame.origin.y = self.frame.height
-                
-//                UIView.animate(withDuration: 0.3) {
-//                    self.enterInfoView.frame.origin.y = self.self.frame.height
-//                    self.finishedView.frame.origin.y = 0
-//                    self.finishedView.alpha = 1
-//                }
-//
+
                 delegate?.dismissVErifyAccountView()
 
                 
@@ -183,10 +164,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
                 understand.isOn = false
 
             }
-        
-
-        
-        
+            
         digiliraPay.onUpdate = { res in
 
             self.digiliraPay.onLogin2 = { user, status in
@@ -196,9 +174,6 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
             self.digiliraPay.login2()
             
         }
-        
-        //let b64 = digiliraPay.convertImageToBase64String(img: UIImage(named: "test.jpg")!)
- 
             delegate?.dismissKeyboard()
  
             let user = digilira.exUser.init(
@@ -368,12 +343,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
             sendAndContiuneView.alpha = 1
             return
         }
-//        
-//        enterInfoView.translatesAutoresizingMaskIntoConstraints = true
-//        sendIDPhotoView.translatesAutoresizingMaskIntoConstraints = true
-//         
-//        sendIDPhotoView.frame.origin.y = self.frame.height
-        
+
         KYC()
         
 
@@ -395,6 +365,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     
     @objc func openGallery()
     {
+        delegate?.uploadImage()
         finishedView.translatesAutoresizingMaskIntoConstraints = true
         finishedView.frame.origin.y = self.frame.height
         
