@@ -450,7 +450,7 @@ class ParaYatirView:UIView {
                 throw digilira.NAError.notListedToken
             }
         case "bitexen":
-            let c = digilira.coin.init(token: coin.tokenName, symbol: coin.tokenSymbol, tokenName: coin.tokenName, decimal: coin.decimal, network: coin.network)
+            let c = digilira.coin.init(token: coin.tokenName, symbol: coin.tokenSymbol, tokenName: coin.tokenName, decimal: coin.decimal, network: coin.network, tokenSymbol: coin.tokenSymbol)
             return (c, coin.tokenSymbol, coin.tokenName)
         default:
             throw digilira.NAError.notListedToken

@@ -1147,7 +1147,7 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
 {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if Filtered.count == 0 {
-            return 3
+            return 4
         }
         return Filtered.count
     }
@@ -1194,7 +1194,8 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
             
             if Filtered.count == 0 {
                 let demoin = digilira.demo[indexPath[1]]
-                cell.coinIcon.image = UIImage(named: demoin)
+                let demoCoin = digilira.demoIcon[indexPath[1]]
+                cell.coinIcon.image = UIImage(named: demoCoin)
                 cell.coinName.text = demoin
                 cell.type.text = "₺" + MainScreen.df2so(0)
                 tapped.assetName = demoin
@@ -1371,6 +1372,9 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
     func goWalletScreen(coin: String)
     {
         
+        if isShowWallet {
+            return
+        }
         menuXib.wallet()
         walletView.coin = coin
         walletView.readHistory(coin: coin)
@@ -2086,8 +2090,35 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         
     }
     
+    func showSuccess(mode: Int, transaction: [String : Any]) {
+        do {
+            let asset = try BC.returnAsset(assetId: (transaction["assetId"] as?  String)!)
+            let double = Double(truncating: pow(10,asset.decimal) as NSNumber)
+            
+            let amount:String = String((transaction["amount"] as? Float64)! / double)
+
+            let message = amount + " " + asset.tokenName + " Gönderiliyor."
+            switch mode {
+            case 1:
+                alertTransaction(title: "Doğrulanıyor", message: message, verifying: true)
+                break
+            case 2:
+                fetch()
+                warningView.removeFromSuperview()
+                alertWarning(title: "Ödeme Başarılı", message: "Transferiniz gerçekleşti.", error: false)
+            default:
+                break
+            }
+            
+        } catch  {
+            print(error)
+        }
     
-    func showSuccess(mode: Int, transaction: [String : Any])
+        
+    }
+    
+    
+    func showSuccess2(mode: Int, transaction: [String : Any])
     {
         do {
             let asset = try BC.returnAsset(assetId: (transaction["assetId"] as?  String)!)
@@ -2633,6 +2664,24 @@ extension MainScreen: SendWithQrDelegate
             view.addSubview(warningView)
         }
         
+    }
+    
+    func alertTransaction (title: String, message: String, verifying: Bool) {
+        DispatchQueue.main.async { [self] in
+            
+            warningView = UIView().loadNib(name: "warningView") as! WarningView
+            warningView.frame = CGRect(x: 0,
+                                       y: 0,
+                                        width: view.frame.width,
+                                        height: view.frame.height)
+            
+            warningView.isTransaction = verifying
+            warningView.title = title
+            warningView.message = message
+            warningView.setMessage()
+            
+            view.addSubview(warningView)
+        }
     }
     
     

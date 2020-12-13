@@ -1,32 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="TransactionDetailView" customModule="DigiliraPAY" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="360" height="491"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="TransactionDetailView" customModule="DigiliraPay" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="387" height="491"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hP2-Y4-liu">
-                    <rect key="frame" x="0.0" y="0.0" width="360" height="30"/>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hP2-Y4-liu" customClass="DLGradient" customModule="DigiliraPay" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="0.0" width="387" height="30"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HyB-ds-P8V">
-                            <rect key="frame" x="155" y="11.5" width="50" height="7"/>
-                            <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <rect key="frame" x="168.5" y="11.5" width="50" height="7"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="7" id="HxA-Bm-HLp"/>
                                 <constraint firstAttribute="width" constant="50" id="Xs7-RM-3sf"/>
                             </constraints>
                         </view>
                     </subviews>
-                    <color key="backgroundColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <color key="backgroundColor" systemColor="systemBlueColor"/>
                     <gestureRecognizers/>
                     <constraints>
                         <constraint firstItem="HyB-ds-P8V" firstAttribute="centerX" secondItem="hP2-Y4-liu" secondAttribute="centerX" id="O30-S1-dOq"/>
@@ -38,19 +39,19 @@
                     </connections>
                 </view>
             </subviews>
-            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="hP2-Y4-liu" secondAttribute="trailing" id="3Sr-jn-Uf4"/>
                 <constraint firstItem="hP2-Y4-liu" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="OQ7-Nj-MfA"/>
                 <constraint firstItem="hP2-Y4-liu" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Uly-7e-rZN"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>
                 <outlet property="slideIndicator" destination="HyB-ds-P8V" id="rvk-J6-4cS"/>
                 <outlet property="slideView" destination="hP2-Y4-liu" id="uVK-xR-Xbj"/>
             </connections>
-            <point key="canvasLocation" x="139" y="148"/>
+            <point key="canvasLocation" x="-55.797101449275367" y="113.50446428571428"/>
         </view>
         <panGestureRecognizer minimumNumberOfTouches="1" id="7O5-bD-ncS">
             <connections>
@@ -58,4 +59,12 @@
             </connections>
         </panGestureRecognizer>
     </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemBlueColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
 </document>

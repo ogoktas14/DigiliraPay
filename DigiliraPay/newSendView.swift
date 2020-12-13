@@ -20,6 +20,7 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     
     @IBOutlet weak var coinView: UIView!
     @IBOutlet weak var siparis: UIView!
+    @IBOutlet weak var sendView: UIView!
     @IBOutlet weak var coinLbl: UILabel!
     @IBOutlet weak var coinTextField: UITextField!
     @IBOutlet weak var textAmount: UITextField!
@@ -28,7 +29,6 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     @IBOutlet weak var commissionLabel: UILabel!
     @IBOutlet weak var fetchQR: UIImageView!
     @IBOutlet weak var recipientText: UITextField!
-    @IBOutlet weak var btnSend: UIButton!
     @IBOutlet weak var adresBtn: UIButton!
     
     var transaction: SendTrx?
@@ -46,7 +46,7 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     
     let digiliraPay = digiliraPayApi()
     
-    @IBAction func sendMoneyButton(_ sender: Any) {
+    @objc func sendMoneyButton() {
         var isMissing = false
         
         let isAmount = amount
@@ -313,15 +313,11 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
                 recipientText.isEnabled = false
                 textAmount.isEnabled = false
             }
-            btnSend.isEnabled = true
-            btnSend.backgroundColor = .systemBlue
             
             if params.destination == digilira.transactionDestination.foreign {
                 let isValid = checkAddress(network: coin.network, address: params.merchant!)
                 if !isValid {
                     recipientText.textColor = .red
-                    btnSend.backgroundColor = .red
-                    btnSend.isEnabled = false
                 }
                 
             }
@@ -460,8 +456,7 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
                 recipientText.textColor = .red
                 
             } else {
-                btnSend.backgroundColor = .systemBlue
-                btnSend.isEnabled = true
+                
             }
             
             isPicker = false
@@ -486,14 +481,17 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     override func awakeFromNib()
     {
         coinSwitch.selectedSegmentIndex = 1
-        
+        sendView.layer.cornerRadius = 25
         pickerData = digilira.networks
+        
+        let tapSend: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(sendMoneyButton))
+        sendView.isUserInteractionEnabled = true
+        sendView.addGestureRecognizer(tapSend)
         
         recipientText?.addDoneCancelToolbar()
         textAmount?.addDoneCancelToolbar()
         textAmount.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         
-        btnSend.layer.cornerRadius = 20
         coinSwitch.selectedSegmentIndex = 1
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(getQR))
         fetchQR.isUserInteractionEnabled = true

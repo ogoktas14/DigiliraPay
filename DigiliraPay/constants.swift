@@ -111,43 +111,51 @@ struct digilira {
          var tokenName: String
          var decimal: Int
          var network: String
+        var tokenSymbol: String
     }
     
-    static var demo = ["Bitcoin", "Ethereum", "Waves"]
+    static var demo = ["Bitcoin", "Ethereum", "Waves", "Kızılay"]
+    static var demoIcon = ["D-BTC", "D-ETH", "D-WAVES", "D-Aid"]
     
     static var sponsorToken = "7GnHzTaDe3YbDiCD9rueHiSfPB7hdanPpN4Ab79fJGtD"
     static var sponsorTokenFee:Int64 = 9
     static var sponsorTokenFeeMass:Int64 = 9
     
-    static var usdt = coin.init(token: "BITEXEN_USDT", symbol: "USDT", tokenName: "USDT", decimal: 1, network: "")
+    static var usdt = coin.init(token: "BITEXEN_USDT", symbol: "USDT", tokenName: "USDT", decimal: 1, network: "", tokenSymbol: "")
     
     static var bitcoin = coin.init(token: "FjTB2DdymTfpYbCCdcFwoRbHQnEhQD11CUm6nAF7P1UD",
                             symbol: "BTC",
                             tokenName: "Bitcoin",
                             decimal: 8,
-                            network: "bitcoin")
+                            network: "bitcoin",
+                            tokenSymbol: "D-BTC")
     
     static var ethereum = coin.init(token: "LVf3qaCtb9tieS1bHD8gg5XjWvqpBm5TaDxeSVcqPwn",
                             symbol: "ETH",
                             tokenName: "Ethereum",
                             decimal: 8,
-                            network: "ethereum")
+                            network: "ethereum",
+                            tokenSymbol: "D-ETH")
      
     static var waves = coin.init(token: "HGoEZAsEQpbA3DJyV9J3X1JCTTBuwUB6PE19g1kUYXsH",
                             symbol: "WAVES",
                             tokenName: "Waves",
                             decimal: 8,
-                            network: "waves")
+                            network: "waves",
+                            tokenSymbol: "D-WAVES")
     
     static var charity = coin.init(token: "2CrDXATWpvrriHHr1cVpQM65CaP3m7MJ425xz3tn9zMr",
                             symbol: "KZY",
                             tokenName: "Kızılay",
                             decimal: 8,
-                            network: "waves")
+                            network: "waves",
+                            tokenSymbol: "D-Aid")
+    
     static var tether = coin.init(token: "5Sh9KghfkZyhjwuodovDhB6PghDUGBHiAPZ4MkrPgKtX", symbol: "USD",
                                   tokenName: "Tether USDT",
                                   decimal: 6,
-                                  network: "waves")
+                                  network: "waves",
+                                  tokenSymbol: "Bitexen USDT")
     
     static let networks = [bitcoin, ethereum, waves, charity, tether]
     static let networksDescription = ["Bitcoin", "Ethereum", "Waves", "Kızılay", "Tether"]

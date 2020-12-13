@@ -72,11 +72,21 @@
                                         <constraint firstAttribute="height" constant="70" id="Fjq-G8-FXM"/>
                                     </constraints>
                                 </imageView>
+                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Uygulamadan çıkmayın transferiniz blokzincirde doğrulanıyor." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2UC-qk-maD">
+                                    <rect key="frame" x="20" y="227" width="291" height="46.5"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="17"/>
+                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
                             </subviews>
                             <color key="backgroundColor" systemColor="tertiarySystemGroupedBackgroundColor"/>
                             <constraints>
+                                <constraint firstItem="2UC-qk-maD" firstAttribute="width" secondItem="CJc-Bj-CET" secondAttribute="width" multiplier="0.879154" id="0ub-Nv-NlE"/>
+                                <constraint firstAttribute="bottom" secondItem="2UC-qk-maD" secondAttribute="bottom" constant="50" id="7kS-mF-4eU"/>
                                 <constraint firstItem="tpy-u2-uKm" firstAttribute="top" secondItem="e1b-4K-UTc" secondAttribute="bottom" constant="50" id="CVq-IC-2cr"/>
                                 <constraint firstItem="3Ws-A5-iyX" firstAttribute="centerX" secondItem="trn-xg-O0S" secondAttribute="centerX" id="EN2-ZI-NIU"/>
+                                <constraint firstItem="2UC-qk-maD" firstAttribute="centerX" secondItem="CJc-Bj-CET" secondAttribute="centerX" id="JwH-bY-MXw"/>
                                 <constraint firstItem="lkt-NY-45D" firstAttribute="leading" secondItem="CJc-Bj-CET" secondAttribute="leading" constant="20" id="PNg-mH-l2o"/>
                                 <constraint firstAttribute="trailing" secondItem="lkt-NY-45D" secondAttribute="trailing" constant="20" id="Pih-9P-GVP"/>
                                 <constraint firstItem="lkt-NY-45D" firstAttribute="top" secondItem="CJc-Bj-CET" secondAttribute="top" constant="50" id="Tg7-vP-YLT"/>
@@ -113,6 +123,7 @@
                 <outlet property="ok" destination="tpy-u2-uKm" id="P2T-Fn-vap"/>
                 <outlet property="titleLabel" destination="trn-xg-O0S" id="SoA-MS-UxF"/>
                 <outlet property="titleView" destination="lkt-NY-45D" id="hQ4-XS-Dig"/>
+                <outlet property="warningLabel" destination="2UC-qk-maD" id="lWS-1Y-hff"/>
             </connections>
             <point key="canvasLocation" x="-11.594202898550726" y="-5.3571428571428568"/>
         </view>

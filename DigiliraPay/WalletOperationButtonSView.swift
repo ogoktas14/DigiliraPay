@@ -23,10 +23,8 @@ class WalletOperationButtonSView: UIView {
 
     var blnx = "initial value" {
         didSet { //called when item changes
-            print(blnx)
         }
         willSet {
-            print("about to change")
         }
     }
 

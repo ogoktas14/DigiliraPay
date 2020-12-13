@@ -13,7 +13,8 @@ class WarningView: UIView {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var messageLabel: UILabel!
-    
+    @IBOutlet weak var warningLabel: UILabel!
+
     @IBOutlet weak var ok: UIView!
     @IBOutlet weak var titleView: UIView!
     @IBOutlet weak var msg: UIView!
@@ -22,6 +23,7 @@ class WarningView: UIView {
     var title: String  = "Dikkat"
     var message: String  = "Dikkat"
     var isError: Bool = true
+    var isTransaction: Bool = false
     
     override func awakeFromNib() {
 
@@ -62,10 +64,15 @@ class WarningView: UIView {
     
     
     func setMessage() {
-        
         if !isError {
             icon.image = UIImage(named: "success")
         }
+        
+            if isTransaction {
+                ok.isHidden = true
+                icon.image = UIImage(named: "verifying")
+                warningLabel.isHidden = false
+            }
             titleLabel.text = title
             messageLabel.text = message
     }

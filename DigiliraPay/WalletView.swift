@@ -53,6 +53,9 @@ class WalletView: UIView {
         //slideIndicatorView.backgroundColor = UIColor(red:0.76, green:0.76, blue:0.76, alpha:1.0)
         //slideIndicatorView.layer.cornerRadius = 3
         
+        tableView.showsHorizontalScrollIndicator = false
+        tableView.showsVerticalScrollIndicator = false
+        
         transactionHistory.layer.cornerRadius = 6
         
         transactionHistoryOrigin = transactionHistory.frame.origin
@@ -75,6 +78,7 @@ class WalletView: UIView {
     
     func readHistory (coin: String) {
 
+        tableView.isUserInteractionEnabled = true
         self.trxs.removeAll()
         BC.checkTransactions(address: self.kullanici.wallet){ (data) in
             DispatchQueue.main.async { [self] in
@@ -253,9 +257,11 @@ extension WalletView: UITableViewDelegate, UITableViewDataSource
                 cell.operationTitle.text = coin.tokenName
                 cell.operationDate.text = trxs[indexPath[1]].timestamp!
                  
-                if (trxs[indexPath[1]].recipient == kullanici.wallet) {cell.operationImage.image = UIImage(named: "tReceive48")}
-                if (trxs[indexPath[1]].sender == kullanici.wallet) {cell.operationImage.image = UIImage(named: "tSend48")}
+                if (trxs[indexPath[1]].recipient == kullanici.wallet) {cell.operationImage.image = UIImage(named: "send")}
+                if (trxs[indexPath[1]].sender == kullanici.wallet) {cell.operationImage.image = UIImage(named: "receive")}
                 
+                self.tableView.rowHeight = 60
+
                 let tapped = MyTapGesture.init(target: self, action: #selector(handleTap))
                 tapped.floatValue = indexPath[1]
                 cell.addGestureRecognizer(tapped)
@@ -312,16 +318,18 @@ extension WalletView: UITableViewDelegate, UITableViewDataSource
     
     func showDetail(index: Int)
     {
+        tableView.isUserInteractionEnabled = false
         transactionDetailView = UIView().loadNib(name: "TransactionDetailView") as! TransactionDetailView
 
         //pinView.lbl01.text = trxs[index].id
         transactionDetailView.alpha = 0
 
         transactionDetailView.layer.cornerRadius = 10
-        transactionDetailView.frame = CGRect(x: 0,
-                               y: (self.superview?.frame.maxY)!,
-                               width: tableView.frame.width,
+        transactionDetailView.frame = CGRect(x: tableView.frame.width * 0.05,
+                               y: tableView.frame.height,
+                               width: tableView.frame.width * 0.9,
                                height: tableView.frame.height)
+        
         
         transactionDetailView.delegate = self
         transactionDetailView.transaction = trxs[index]
@@ -329,7 +337,7 @@ extension WalletView: UITableViewDelegate, UITableViewDataSource
         transactionHistory.addSubview(transactionDetailView)
         transactionHistory.isHidden = false
         UIView.animate(withDuration: 0.3) {
-            self.transactionDetailView.frame.origin.y = 0
+            self.transactionDetailView.frame.origin.y =  self.tableView.frame.height * 0.2
             self.transactionDetailView.alpha = 1
         }
         
@@ -339,6 +347,7 @@ extension WalletView: TransactionDetailCloseDelegate
 {
     func close()
     {
+        tableView.isUserInteractionEnabled = true
         UIView.animate(withDuration: 0.3) {
             self.transactionDetailView.frame.origin.y = self.transactionHistory.frame.size.height
             self.tableView.alpha = 1
