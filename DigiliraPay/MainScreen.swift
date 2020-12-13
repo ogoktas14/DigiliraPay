@@ -45,7 +45,7 @@ class MainScreen: UIViewController {
     var profileViewXib: ProfileMenuView = ProfileMenuView()
     
     var warningView = WarningView()
-
+    var orderDetailView = OrderDetailView()
     var contentScrollView = UIScrollView()
     var coinTableView = UITableView()
     var walletOperationView = WalletOperationButtonSView()
@@ -695,7 +695,18 @@ class MainScreen: UIViewController {
     
     @objc func onOrderClicked(_ sender: Notification) {
 
-        alertWarning(title: "Sipariş detayları", message: "Sipariş detayları için kendinize iyi bakın.", error: false)
+        if let ifQR = (sender.userInfo!["qr"]) {
+            
+            digiliraPay.onGetOrder = { res in
+                self.alertOrder(order: res)
+            }
+            digiliraPay.getOrder(PARAMS: ifQR as! String)
+            DispatchQueue.main.async {
+                //self.alertWarning(title: "Sipariş detayları", message:ifQR as! String, error: false)
+
+            }
+        }
+        
   
     }
   
@@ -2189,7 +2200,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
             case 2:
                 fetch()
                 warningView.removeFromSuperview()
-                alertWarning(title: "Ödeme Başarılı", message: "Transferiniz gerçekleşti.", error: false)
+                alertWarning(title: "Transfer Başarılı", message: "Transferiniz gerçekleşti.", error: false)
             default:
                 break
             }
@@ -2684,6 +2695,20 @@ extension MainScreen: SendWithQrDelegate
             warningView.setMessage()
             
             view.addSubview(warningView)
+        }
+        
+    }
+    
+    func alertOrder (order: digilira.order) {
+        DispatchQueue.main.async { [self] in
+            
+            orderDetailView = UIView().loadNib(name: "OrderDetailView") as! OrderDetailView
+            orderDetailView.frame = CGRect(x: 0,
+                                       y: 0,
+                                        width: view.frame.width,
+                                        height: view.frame.height)
+            orderDetailView.order = order
+            view.addSubview(orderDetailView)
         }
         
     }

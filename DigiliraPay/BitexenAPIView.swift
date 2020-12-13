@@ -110,9 +110,13 @@ class BitexenAPIView: UIView {
     
     func save2defaults (forKey: String, data: bex.bitexenAPICred) {
         let encoder = JSONEncoder()
-        if let encoded = try? encoder.encode(data) {
+        do {
+            let encoded = try encoder.encode(data)
             let defaults = UserDefaults.standard
             defaults.set(encoded, forKey: forKey)
+            
+        } catch  {
+            print(error)
         }
     }
     

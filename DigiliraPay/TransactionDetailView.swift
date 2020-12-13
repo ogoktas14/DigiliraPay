@@ -20,7 +20,6 @@ class TransactionDetailView: UIView
     var originValueLast: CGPoint = CGPoint(x: 0, y: 0)
     
     var transaction:digilira.transfer?
-    var kullanici: digilira.auth?
     let digiliraPay = digiliraPayApi()
     let BC = Blockchain()
 
@@ -36,31 +35,7 @@ class TransactionDetailView: UIView
         self.layer.cornerRadius = 10
         
         slideView.layer.cornerRadius = 10
-        
-        digiliraPay.onError = { res, sts in
-            DispatchQueue.main.async {
-                
-                switch sts {
-                default:
-                    
-                    let alert = UIAlertController(title: "Bir Hata Oluştu..", message: "Maalesef şu an işleminizi gerçekleştiremiyoruz. Lütfen birazdan tekrar deneyin.", preferredStyle: UIAlertController.Style.alert)
-                    alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
-                        exit(1)
-                    }))
-                    break
-                    
-                }
-            }
-        }
-        do {
-            kullanici = try secretKeys.userData()
-        } catch {
-            self.digiliraPay.onLogin2 = { user, status in
-                self.kullanici = user
-            }
-            digiliraPay.login2()
-        }
-
+      
     }
 
     override func didMoveToSuperview() {
@@ -177,9 +152,11 @@ extension TransactionDetailView: UITableViewDelegate, UITableViewDataSource
                     case 4:
                         let pasteboard = UIPasteboard.general
                         pasteboard.string = t.recipient!
-                            cell.setView(image: UIImage(named: "verifying")!, title: "İşlem", detail: t.attachment ?? "##" )
+                            cell.setView(image: UIImage(named: "verifying")!, title: "İşlem", detail: t.attachment ?? "-" )
+                        
+                        
                         let tapped = MyTapGesture.init(target: self, action: #selector(handleTap))
-                            tapped.qrAttachment = t.attachment ?? "##"
+                            tapped.qrAttachment = t.attachment ?? "-"
                         cell.addGestureRecognizer(tapped)
                         
                         

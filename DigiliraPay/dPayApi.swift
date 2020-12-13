@@ -583,7 +583,7 @@ class digiliraPayApi: NSObject {
                             onError!(digilira.NAError.E_502, sts)
                             break;
                             
-                        case 400, 404:
+                        case 404:
                             do {
                                 try Locksmith.deleteDataForUserAccount(userAccount: "sensitive")
                             } catch  {

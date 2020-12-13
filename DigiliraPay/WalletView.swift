@@ -49,8 +49,6 @@ class WalletView: UIView {
         headerLabel.textColor = UIColor(red:0.70, green:0.70, blue:0.70, alpha:1.0)
         
         transactionHistory.layer.cornerRadius = 10
-        //slideIndicatorView.backgroundColor = UIColor(red:0.76, green:0.76, blue:0.76, alpha:1.0)
-        //slideIndicatorView.layer.cornerRadius = 3
         
         tableView.showsHorizontalScrollIndicator = false
         tableView.showsVerticalScrollIndicator = false
@@ -301,29 +299,6 @@ extension WalletView: UITableViewDelegate, UITableViewDataSource
         
         print(recognizer.floatValue)
         showDetail(index: recognizer.floatValue)
-    }
-    
-    func showSuccess(index: Int)
-    {
-        transactionDetail = UIView().loadNib(name: "TransactionDetailPopup") as! TRXTRX
-
-        //pinView.lbl01.text = trxs[index].id
-        transactionDetail.alpha = 0
-
-        transactionDetail.layer.cornerRadius = 0
-        transactionDetail.frame = CGRect(x: 0,
-                               y: (self.superview?.frame.maxY)!,
-                               width: tableView.frame.width,
-                               height: tableView.frame.height)
-        
-        transactionDetail.delegate = self
-        
-        transactionHistory.addSubview(transactionDetail)
-        transactionHistory.isHidden = false
-        UIView.animate(withDuration: 0.3) {
-            self.transactionDetail.frame.origin.y = 0
-            self.transactionDetail.alpha = 1
-        }
     }
     
     func showDetail(index: Int)

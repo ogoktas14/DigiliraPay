@@ -50,7 +50,7 @@ class LetsStartVC: UIViewController {
                     self.present(alert, animated: true)
                     
                     break;
-                case 400, 404:
+                case 404:
                     
                     let alert = UIAlertController(title: "Kullanıcı Bulunamadı", message: "Cüzdanınızı içeri aktararak başka bir cihazda açtıysanız bu cihazdan giriş yapamazsınız. Böyle bir işlem yapmadıysanız anahtar kelimelerinizi kullanarak cüzdanınızı yeniden tanımlayabilirsiniz.", preferredStyle: .alert)
                     

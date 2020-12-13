@@ -38,28 +38,31 @@ class ErrorHandling: NSObject {
             alertWarning(title: "Bağlantı Hatası", message: "Blokzincir kaynaklı problemlerden dolayı işleminiz gerçekleşmemiştir.")
             break
         default:
-            alertWarning(title: "Bağlantı Hatası", message: "İnternet bağlantınızın olduğundan emin olup tekrar deneyiniz.")
+            alertWarning(title: "Bir Hata Oluştu", message: "Geçersiz işlem")
             break
         }
     }
     var warningView = WarningView()
 
     func alertWarning (title: String, message: String) {
-        if let window = UIApplication.shared.windows.filter({$0.isKeyWindow}).first {
-          
-            warningView = UIView().loadNib(name: "warningView") as! WarningView
-            warningView.frame = CGRect(x: 0,
-                                       y: 0,
-                                       width: window.frame.width,
-                                       height: window.frame.height)
-            
+        DispatchQueue.main.async { [self] in
+            if let window = UIApplication.shared.windows.filter({$0.isKeyWindow}).first {
+              
+                warningView = UIView().loadNib(name: "warningView") as! WarningView
+                warningView.frame = CGRect(x: 0,
+                                           y: 0,
+                                           width: window.frame.width,
+                                           height: window.frame.height)
+                
 
-            warningView.title = title
-            warningView.message = message
-            warningView.setMessage()
-            
-            window.addSubview(warningView)
+                warningView.title = title
+                warningView.message = message
+                warningView.setMessage()
+                
+                window.addSubview(warningView)
+            }
         }
+
 
         
     }

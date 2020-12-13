@@ -99,7 +99,7 @@ class ImportAccountVC: UIViewController {
                         self.present(alert, animated: true)
                         
                         break;
-                    case 400, 404:
+                    case 404:
                         
                         let alert = UIAlertController(title: "Kullanıcı Bulunamadı", message: "Girdiğiniz anahtar kelimelere ait bir cüzdan hesabı bulunamadı. Girdiğiniz kelimeleri kontrol ederek yeniden deneyin.", preferredStyle: .alert)
                         

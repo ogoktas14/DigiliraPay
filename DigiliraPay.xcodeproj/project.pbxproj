@@ -88,6 +88,8 @@
 		93390886255A76D40005B64A /* cloudflaressl.cer in Resources */ = {isa = PBXBuildFile; fileRef = 93390885255A76CD0005B64A /* cloudflaressl.cer */; };
 		93390895255AB18F0005B64A /* bitexen.com.cer in Resources */ = {isa = PBXBuildFile; fileRef = 93390893255AB1230005B64A /* bitexen.com.cer */; };
 		93390896255AB18F0005B64A /* wavesnodes.com.cer in Resources */ = {isa = PBXBuildFile; fileRef = 93390894255AB1760005B64A /* wavesnodes.com.cer */; };
+		9342427F2586AF7E009D6024 /* OrderDetailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9342427E2586AF7E009D6024 /* OrderDetailView.xib */; };
+		934242822586B1F0009D6024 /* OrderDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934242812586B1F0009D6024 /* OrderDetailView.swift */; };
 		93534031253B093B00FFEA4D /* shareQRVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93534030253B093B00FFEA4D /* shareQRVC.swift */; };
 		93534036253C4F2C00FFEA4D /* newSendView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93534035253C4F2C00FFEA4D /* newSendView.xib */; };
 		93534039253C528600FFEA4D /* newSendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93534038253C528600FFEA4D /* newSendView.swift */; };
@@ -208,6 +210,8 @@
 		93390885255A76CD0005B64A /* cloudflaressl.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = cloudflaressl.cer; sourceTree = "<group>"; };
 		93390893255AB1230005B64A /* bitexen.com.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = bitexen.com.cer; sourceTree = "<group>"; };
 		93390894255AB1760005B64A /* wavesnodes.com.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = wavesnodes.com.cer; sourceTree = "<group>"; };
+		9342427E2586AF7E009D6024 /* OrderDetailView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OrderDetailView.xib; sourceTree = "<group>"; };
+		934242812586B1F0009D6024 /* OrderDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDetailView.swift; sourceTree = "<group>"; };
 		93534030253B093B00FFEA4D /* shareQRVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = shareQRVC.swift; sourceTree = "<group>"; };
 		93534035253C4F2C00FFEA4D /* newSendView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = newSendView.xib; sourceTree = "<group>"; };
 		93534038253C528600FFEA4D /* newSendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newSendView.swift; sourceTree = "<group>"; };
@@ -357,6 +361,7 @@
 				93F79FD2257E0D48006DC148 /* ParaYatirView.xib */,
 				93F79FE22580F6EA006DC148 /* HeaderExitView.xib */,
 				932A59BF2584FA1900B64EA9 /* warningView.xib */,
+				9342427E2586AF7E009D6024 /* OrderDetailView.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -403,6 +408,7 @@
 				93F79FD6257E1139006DC148 /* ParaYatirView.swift */,
 				93F79FE52580F89D006DC148 /* HeaderExitView.swift */,
 				932A59C22584FA6200B64EA9 /* warningView.swift */,
+				934242812586B1F0009D6024 /* OrderDetailView.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -546,6 +552,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9342427F2586AF7E009D6024 /* OrderDetailView.xib in Resources */,
 				93FC66C32562ABAB00E42AAC /* binance.com.cer in Resources */,
 				932A59C02584FA1900B64EA9 /* warningView.xib in Resources */,
 				93390895255AB18F0005B64A /* bitexen.com.cer in Resources */,
@@ -647,6 +654,7 @@
 				88BEDFB023101AD80003C371 /* Verify&StartView.swift in Sources */,
 				88CA9387231AFD3E008F894B /* CoinSendView.swift in Sources */,
 				88A6BA45232020E7002640D6 /* VerifyAccountDelegate.swift in Sources */,
+				934242822586B1F0009D6024 /* OrderDetailView.swift in Sources */,
 				88114F6823216A9500AB3B5A /* sendWithQR.swift in Sources */,
 				885C1662233371C00018D5EF /* LetsStartWordsView.swift in Sources */,
 				88CA936A231979CD008F894B /* WalletOperationButtonSView.swift in Sources */,

@@ -37,7 +37,7 @@ class LegalView: UIView {
     
     @IBAction func resetApp(_ sender: Any) {
         do {
-            try Locksmith.deleteDataForUserAccount(userAccount: "bitexenApi")
+            try Locksmith.deleteDataForUserAccount(userAccount: bex.bexApiDefaultKey.key)
         } catch  {
             print(error)
         }
