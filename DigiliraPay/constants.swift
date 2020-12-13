@@ -114,8 +114,8 @@ struct digilira {
         var tokenSymbol: String
     }
     
-    static var demo = ["Bitcoin", "Ethereum", "Waves", "Kızılay"]
-    static var demoIcon = ["D-BTC", "D-ETH", "D-WAVES", "D-Aid"]
+    static var demo = ["Bitcoin", "Ethereum", "Waves", "Kızılay", "Kızılay"]
+    static var demoIcon = ["D-BTC", "D-ETH", "D-WAVES", "D-Aid", "D-Aid"]
     
     static var sponsorToken = "7GnHzTaDe3YbDiCD9rueHiSfPB7hdanPpN4Ab79fJGtD"
     static var sponsorTokenFee:Int64 = 9

@@ -21,16 +21,6 @@ class ImportAccountVC: UIViewController {
     
     var isKeyboard = false
     
-    @IBAction func resettt(_ sender: Any) {
-        try? Locksmith.deleteDataForUserAccount(userAccount: "sensitive")
-        try? Locksmith.deleteDataForUserAccount(userAccount: "authenticate")
-        
-        let defaults = UserDefaults.standard
-        let dictionary = defaults.dictionaryRepresentation()
-        dictionary.keys.forEach { key in
-            defaults.removeObject(forKey: key)
-        }
-    }
     override func viewDidLoad() {
         super.viewDidLoad()
         if #available(iOS 13.0, *) {

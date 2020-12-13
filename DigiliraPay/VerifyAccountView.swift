@@ -95,6 +95,10 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
         goHome()
     }
     
+    @IBAction func touchBirth(_ sender: Any) {
+        delegate?.dismissKeyboard()
+    }
+    
     private func exampleSoapRequest(tc: String, ad: String, soyad: String, dogum: String) {
         let url = URL(string: digilira.tcDoguralma)!
         let bodyData = """

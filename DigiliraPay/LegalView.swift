@@ -36,9 +36,22 @@ class LegalView: UIView {
     }
     
     @IBAction func resetApp(_ sender: Any) {
-        try? Locksmith.deleteDataForUserAccount(userAccount: "bitexenApi")
-        try? Locksmith.deleteDataForUserAccount(userAccount: "sensitive")
-        try? Locksmith.deleteDataForUserAccount(userAccount: "authenticate")
+        do {
+            try Locksmith.deleteDataForUserAccount(userAccount: "bitexenApi")
+        } catch  {
+            print(error)
+        }
+        do {
+            try Locksmith.deleteDataForUserAccount(userAccount: "sensitive")
+        } catch  {
+            print(error)
+        }
+        do {
+            try Locksmith.deleteDataForUserAccount(userAccount: "authenticate")
+        } catch  {
+            print(error)
+        }
+        
 
         let defaults = UserDefaults.standard
         let dictionary = defaults.dictionaryRepresentation()

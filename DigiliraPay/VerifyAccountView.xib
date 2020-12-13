@@ -235,6 +235,7 @@
                                             <rect key="frame" x="0.0" y="10" width="371" height="142.33333333333334"/>
                                             <connections>
                                                 <action selector="datePickerChangedWithSender:" destination="iN0-l3-epB" eventType="valueChanged" id="guI-iU-RGj"/>
+                                                <action selector="touchBirth:" destination="iN0-l3-epB" eventType="primaryActionTriggered" id="K5u-hd-MSO"/>
                                             </connections>
                                         </datePicker>
                                     </subviews>

@@ -40,12 +40,18 @@ class BitexenAPIView: UIView {
             let defaults = UserDefaults.standard
             if let savedAPI = defaults.object(forKey: bex.bexApiDefaultKey.key) as? Data {
                 let decoder = JSONDecoder()
-                let loadedAPI = try? decoder.decode(bex.bitexenAPICred.self, from: savedAPI)
+                
+                do {
+                    let loadedAPI = try decoder.decode(bex.bitexenAPICred.self, from: savedAPI)
 
-                self.textApiKey.text = loadedAPI?.apiKey ?? ""
-                self.textApiSecret.text = loadedAPI?.apiSecret ?? ""
-                self.textApiPassphrase.text = loadedAPI?.passphrase ?? ""
-                self.textUsername.text = loadedAPI?.username ?? ""
+                    self.textApiKey.text = loadedAPI.apiKey 
+                    self.textApiSecret.text = loadedAPI.apiSecret
+                    self.textApiPassphrase.text = loadedAPI.passphrase
+                    self.textUsername.text = loadedAPI.username
+                } catch {
+                    print(error)
+                }
+
             }
         }
 
@@ -91,7 +97,7 @@ class BitexenAPIView: UIView {
                 
                 res.valid = true
                 save2defaults(forKey: bex.bexApiDefaultKey.key, data: res)
-                
+                delegate?.dismissBitexen()
                 errors?.errorHandler(message: "API bilgileriniz kaydedildi.", title: "İşlem Başarılı", error: false)
                 
             } 

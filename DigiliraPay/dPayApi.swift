@@ -869,7 +869,7 @@ extension digiliraPayApi: URLSessionDelegate {
             //Compare certificates
             if(isServerTrusted && remoteCertificateData.isEqual(to: localCertificateData as Data)){
                 let credential:URLCredential =  URLCredential(trust:serverTrust)
-                print("Certificate pinning is successfully completed")
+
                 completionHandler(.useCredential,credential)
             }
             else{
@@ -1046,7 +1046,7 @@ extension centralRequest: URLSessionDelegate {
             //Compare certificates
             if(isServerTrusted && remoteCertificateData.isEqual(to: localCertificateData as Data)){
                 let credential:URLCredential =  URLCredential(trust:serverTrust)
-                print("Certificate pinning is successfully completed")
+
                 completionHandler(.useCredential,credential)
             }
             else{

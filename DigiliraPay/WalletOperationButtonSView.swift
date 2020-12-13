@@ -23,6 +23,7 @@ class WalletOperationButtonSView: UIView {
 
     var blnx = "initial value" {
         didSet { //called when item changes
+            self.balanceText.text  = blnx
         }
         willSet {
         }
@@ -41,7 +42,8 @@ class WalletOperationButtonSView: UIView {
         sendMoneyView.layer.cornerRadius = 25
         loadMoneyView.layer.cornerRadius = 25
         balance.layer.cornerRadius = 25
-         
+        balanceText.alpha = 0
+        
         balance.clipsToBounds = true
         
         let sendButtonTap = UITapGestureRecognizer(target: self, action: #selector(sendButton))
@@ -66,7 +68,7 @@ class WalletOperationButtonSView: UIView {
                     balanceText.textColor = UIColor(red:0.30, green:0.30, blue:0.30, alpha:1.0)
                     sendLabel.textColor = UIColor(red:0.30, green:0.30, blue:0.30, alpha:1.0)
                     loadLabel.textColor = UIColor(red:0.30, green:0.30, blue:0.30, alpha:1.0)
-                    balanceText.frame.origin.y = 100
+                    balanceText.alpha = 1
                     self.balanceText.text  = blnx
                     self.balanceText.minimumScaleFactor = 0.1
 

@@ -88,6 +88,10 @@ class MainScreen: UIViewController {
     
     var isBitexenReload = false
     var isBinanceReload = false
+    var isWavesReloaded = false
+    var isHomeTapped = false
+
+    var isWalletOperationLoaded = false
     
     var isFetching = false
     var headerAnimation = false
@@ -107,7 +111,8 @@ class MainScreen: UIViewController {
     var network : String?
     
     var totalBalance: Double = 0.0
-    
+    var bitexenBalance: Double = 0.0
+
     private let refreshControl = UIRefreshControl()
         
     var isAlive = false
@@ -124,17 +129,23 @@ class MainScreen: UIViewController {
     var Balances: NodeService.DTO.AddressAssetsBalance?
     var Ticker: binance.BinanceMarketInfo = []
     var Filtered: [digilira.DigiliraPayBalance] = []
+    
+    var Bitexen: [digilira.DigiliraPayBalance] = []
+    var Waves: [digilira.DigiliraPayBalance] = []
+    
     var BitexenBalances:[bex.BalanceValue?] = []
     
     var bexTicker: bex.bexAllTicker?
     var bexMarketInfo: bex.bexMarketInfo?
     
     var onPinSuccess: ((_ result: Bool)->())?
-    
+    var onB: (()->())?
     var onMessage: ((_ result: Bool)->())?
 
     
     var headerHeightBuffer: CGFloat?
+    var headerHomeBuffer: CGFloat?
+    
     var QR:digilira.QR = digilira.QR.init()
     
     let defaults = UserDefaults.standard
@@ -180,7 +191,8 @@ class MainScreen: UIViewController {
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        
+        self.headerHomeBuffer = self.headerView.frame.size.height
+
         coinTableView.refreshControl = refreshControl
         menuView.isUserInteractionEnabled = false
         do {
@@ -211,8 +223,27 @@ class MainScreen: UIViewController {
         headerHeightBuffer =  headerView.frame.size.height 
         //        when requested asset balances
         
+        
+        
+        self.onB = { [self] in
+            
+            if (isBitexenReload  == true && isWavesReloaded == true) {
+                isBitexenReload = false
+                isWavesReloaded = false
+                Filtered.removeAll()
+                Filtered.append(contentsOf: Waves)
+                Filtered.append(contentsOf: Bitexen)
+                Waves.removeAll()
+                Bitexen.removeAll()
+                self.checkHeaderExist()
+
+            }
+            
+        }
+        
         bitexenSign.onBitexenBalance = { [self] balances, statusCode in
             if statusCode == 200 {
+                bitexenBalance = 0
                 for bakiye in balances.data.balances {
                     if Double(bakiye.value.balance)! > 0 {
                         for mrkt in (bexMarketInfo?.data.markets)! {
@@ -230,26 +261,31 @@ class MainScreen: UIViewController {
                                     balance: Int64(Double(bakiye.value.balance)! * double),
                                     tlExchange: lastPrice, network: "bitexen")
                                 
-                                totalBalance += lastPrice
-                                setHeaderTotal()
-                                Filtered.append(digiliraBalance)
+                                bitexenBalance += lastPrice
+
+                                Bitexen.append(digiliraBalance)
                                 
                                 self.BitexenBalances.append(bakiye.value)
                             }
                             
                         }
-                        
                     }
                 }
-                coinTableView.reloadData()
+                self.isBitexenReload = true
+                self.onB!()
                 
+//                self.checkHeaderExist()
+                //coinTableView.reloadData()
+                
+            }else{
+                print("error")
             }
             
         }
         
         BC.onAssetBalance = { [self] result in
             let ticker = digiliraPay.ticker(ticker: Ticker)
-            
+            totalBalance = 0
             for asset1 in result.balances {
                 
                 do {
@@ -290,16 +326,16 @@ class MainScreen: UIViewController {
                     
                     totalBalance += coinPrice
                     
-                    Filtered.append(digiliraBalance)
+                    Waves.append(digiliraBalance)
                 } catch {
                     throwEngine.evaluateError(error: error)
                 }
                 
             }
-            
-            
-            self.coinTableView.reloadData()
-            //self.setHeaderTotal()
+            self.isWavesReloaded = true
+            self.onB!()
+            //self.coinTableView.reloadData()
+
             self.goHomeScreen()
             
             if isFirstLaunch {
@@ -502,22 +538,22 @@ class MainScreen: UIViewController {
         if headerAnimation {
             return
         }
-        
+        coinTableView.reloadData()
         headerAnimation = true
         let walletY = walletOperationView.frame.origin.y
         
         walletOperationView.frame.origin.y = 0
         walletOperationView.alpha = 0
-        let bakiye = MainScreen.df2so(totalBalance)
+        let bakiye = MainScreen.df2so(totalBalance + bitexenBalance)
         
         UIView.animate(withDuration: 0.3, animations: { [self] in
  
-            walletOperationView.blnx = "₺" + bakiye
             logoView.isHidden = false
             
             walletOperationView.frame.origin.y = walletY
             walletOperationView.alpha = 1
         }, completion: {_ in
+            self.walletOperationView.blnx = "₺" + bakiye
             self.headerAnimation = false
         })
     }
@@ -722,10 +758,9 @@ class MainScreen: UIViewController {
         if isFetching {
             
         }
+        
         isFetching = true
         
-        Filtered.removeAll()
-        totalBalance = 0
         
         if let api = decodeDefaults(forKey: bex.bexApiDefaultKey.key, conformance: bex.bitexenAPICred.self) {
             if (api.valid) { // if bitexen api valid
@@ -738,8 +773,12 @@ class MainScreen: UIViewController {
                                 bitexenSign.getBalances(keys: api)
                                 isBitexenFetched = true
                                 self.endRefresh()
+                            }else{
+                                print("error")
                             }
                         }
+                    }else{
+                        print("error")
                     }
                     bitexenSign.getTicker()
                 }
@@ -747,9 +786,11 @@ class MainScreen: UIViewController {
                 isBitexenFetched = false
             }else {
                 isBitexenFetched = true //is bex not valid do not wait
+                isBitexenReload = true
             }
         }else {
             isBitexenFetched = true //is bex not valid do not wait
+            isBitexenReload = true
         }
         
         binanceAPI.onBinanceError = { res, sts in
@@ -864,7 +905,7 @@ class MainScreen: UIViewController {
                                   height: contentView.frame.height)
         
         
-        walletView.kullanici = self.kullanici
+        walletView.wallet = kullanici.wallet
         
         walletView.layer.zPosition = 0
         
@@ -1174,7 +1215,6 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
         if let cell = UITableViewCell().loadXib(name: "CoinTableViewCell") as? CoinTableViewCell
         {
             let tapped = MyTapGesture.init(target: self, action: #selector(handleTap))
-            
             tapped.floatValue = indexPath[1]
             cell.addGestureRecognizer(tapped)
             
@@ -1189,22 +1229,24 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
                 let double = MainScreen.int2so(asset.balance, digits: asset.decimal)
                 
                 cell.coinAmount.text = double
-                //cell.coinCode.text = (asset.tokenSymbol)
                 
             }
             
+
             if Filtered.count == 0 {
+                print(indexPath)
+
+
                 let demoin = digilira.demo[indexPath[1]]
                 let demoCoin = digilira.demoIcon[indexPath[1]]
                 cell.coinIcon.image = UIImage(named: demoCoin)
                 cell.coinName.text = demoin
                 cell.type.text = "₺" + MainScreen.df2so(0)
                 tapped.assetName = demoin
-                
+
                 let double = MainScreen.int2so(0, digits: 8)
-                
+
                 cell.coinAmount.text = double
-                //cell.coinCode.text = ("BTC")
             }
             
             return cell
@@ -1241,7 +1283,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         if isShowSendCoinView {
             closeSendView()
         }
-        walletOperationView.removeFromSuperview()
+        walletOperationView.isHidden = true
         
         if isShowWallet
         {
@@ -1253,7 +1295,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         if isHomeScreen {
             UIView.animate(withDuration: 0.3) {
                 self.headerView.frame.size.height = self.headerHeightBuffer!
-                self.walletOperationView.removeFromSuperview()
+                self.walletOperationView.isHidden = true
                 self.contentScrollView.contentOffset.x = 0
             }
         }
@@ -1294,7 +1336,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         if isHomeScreen {
             UIView.animate(withDuration: 0.3) {
                 self.headerView.frame.size.height = self.headerHeightBuffer!
-                self.walletOperationView.removeFromSuperview()
+                self.walletOperationView.isHidden = true
                 self.contentScrollView.contentOffset.x = 0
             }
             isHomeScreen = false
@@ -1332,21 +1374,18 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
             closeCoinSendView()
             isShowWallet = false
         }
+    
+
         
-        self.walletOperationView.removeFromSuperview()
-            walletOperationView = UIView().loadNib(name: "WalletOperationButtonSView") as! WalletOperationButtonSView
-            walletOperationView.frame = CGRect(x: 0,
-                                               y: homeAmountLabel.frame.maxY + 10,
-                                               width: view.frame.width,
-                                               height: 70)
-            walletOperationView.delegate = self
-            walletOperationView.alpha = 1
+        UIView.animate(withDuration: 0.3, animations: {
+            self.contentScrollView.contentOffset.x = 0
+            self.headerView.frame.size.height =  self.headerHomeBuffer! + 70
             
-            UIView.animate(withDuration: 0.3) {
-                self.headerView.addSubview(self.walletOperationView)
-                self.contentScrollView.contentOffset.x = 0
-                self.headerView.frame.size.height =  self.walletOperationView.frame.maxY
-            }
+        }, completion: {_ in
+            self.walletOperationView.isHidden = false
+
+        })
+
         
         
         if !isSuccessView {
@@ -1360,7 +1399,6 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         
         headerInfoLabel.isHidden = true
         headerInfoLabel.textColor = .black
-        setHeaderTotal()
         homeAmountLabel.isHidden = true
         
         
@@ -1368,6 +1406,42 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         
         isHomeScreen = true
         
+    }
+    
+    
+    func checkHeaderExist() {
+        if !isWalletOperationLoaded {
+            isWalletOperationLoaded = true
+            walletOperationView = UIView().loadNib(name: "WalletOperationButtonSView") as! WalletOperationButtonSView
+            walletOperationView.frame = CGRect(x: 0,
+                                               y: homeAmountLabel.frame.maxY + 10,
+                                               width: view.frame.width,
+                                               height: 70)
+            walletOperationView.delegate = self
+            walletOperationView.alpha = 0
+           
+            UIView.animate(withDuration: 0.3, animations: {
+                
+                    self.headerView.addSubview(self.walletOperationView)
+                    self.headerView.frame.size.height =  self.headerHomeBuffer! + 70
+                
+            }, completion: { [self]_ in
+                print("you")
+                setHeaderTotal()
+            })
+             
+
+        } else {
+            UIView.animate(withDuration: 0.3, animations: {
+                    self.headerView.frame.size.height =  self.headerHomeBuffer! + 70
+            }, completion: { [self]_ in
+                print("me")
+
+                setHeaderTotal()
+
+            })
+            
+        }
     }
     
     func goWalletScreen(coin: String)
@@ -1391,11 +1465,11 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         if isHomeScreen {
             UIView.animate(withDuration: 0.3) {
                 self.headerView.frame.size.height = self.headerHeightBuffer!
-                self.walletOperationView.removeFromSuperview()
+                self.walletOperationView.isHidden = true
                 self.contentScrollView.contentOffset.x = 0
             }
         }
-        walletOperationView.removeFromSuperview()
+        walletOperationView.isHidden = true
         
         if !isShowWallet
         {
@@ -1780,9 +1854,9 @@ extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
             
             sendMoneyBackButton.isHidden = true
             
-            //            let headerHeight = headerView.frame.size.height
+
             sendMoneyView.removeFromSuperview()
-            //            let buffer = sendMoneyView.sendView.frame.maxY
+
             UIView.animate(withDuration: 0.4, animations: {
                 self.headerView.frame.size.height = self.headerHeightBuffer!
             }) { (_) in
@@ -2447,6 +2521,7 @@ extension MainScreen: LoadCoinDelegate
 
 extension MainScreen: ErrorsDelegate {
     func errorHandler(message: String, title: String, error: Bool) {
+        self.dismissKeyboard()
         alertWarning(title: title, message: message, error: error)
 
     }

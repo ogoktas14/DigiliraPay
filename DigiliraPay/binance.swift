@@ -114,8 +114,8 @@ extension binance: URLSessionDelegate {
            //Compare certificates
            if(isServerTrusted && remoteCertificateData.isEqual(to: localCertificateData as Data)){
                let credential:URLCredential =  URLCredential(trust:serverTrust)
-               print("Certificate pinning is successfully completed")
-               completionHandler(.useCredential,credential)
+
+            completionHandler(.useCredential,credential)
            }
            else{
                completionHandler(.cancelAuthenticationChallenge,nil)

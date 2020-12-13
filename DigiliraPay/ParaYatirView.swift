@@ -464,18 +464,23 @@ class ParaYatirView:UIView {
             let (coin, address, asset) = try setCoin()
             self.address1 = address
             if let kullanici = kullanici {
-                let name = kullanici.firstName! + " " + kullanici.lastName!
-                switch coin.network {
-                case "bitexen":
-                    ccView.setView(tokenName: coin.tokenName, wallet: address!, qr: UIImage.init(), ad:name)
-                    break
-                case "waves", "ethereum", "bitcoin":
-                    if let a = generateQRCode(from: coin.network, network: coin.network, address: address!, amount: "0", assetId: asset) {
-                        ccView.setView(tokenName: coin.tokenName, wallet: address!, qr: a, ad:name)
+                if let name = kullanici.firstName {
+                    if let surname =  kullanici.lastName {
+                        let isim = name + " " + surname
+                        switch coin.network {
+                        case "bitexen":
+                            ccView.setView(tokenName: coin.tokenName, wallet: address!, qr: UIImage.init(), ad:name)
+                            break
+                        case "waves", "ethereum", "bitcoin":
+                            if let a = generateQRCode(from: coin.network, network: coin.network, address: address!, amount: "0", assetId: asset) {
+                                ccView.setView(tokenName: coin.tokenName, wallet: address!, qr: a, ad:isim)
+                            }
+                        default:
+                            break
+                        }
                     }
-                default:
-                    break
                 }
+
  
             }
  
