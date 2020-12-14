@@ -18,23 +18,6 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jQz-3f-tjb">
                     <rect key="frame" x="27" y="0.0" width="481.5" height="70"/>
                     <subviews>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wtA-bQ-kB1">
-                            <rect key="frame" x="70" y="0.0" width="341.5" height="50"/>
-                            <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.10000000000000001" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TRr-cK-ZdM">
-                                    <rect key="frame" x="0.0" y="25" width="341.5" height="0.0"/>
-                                    <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="28"/>
-                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                            </subviews>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <constraints>
-                                <constraint firstItem="TRr-cK-ZdM" firstAttribute="centerY" secondItem="wtA-bQ-kB1" secondAttribute="centerY" id="e2q-G6-Omr"/>
-                                <constraint firstAttribute="trailing" secondItem="TRr-cK-ZdM" secondAttribute="trailing" id="na4-3M-mQx"/>
-                                <constraint firstItem="TRr-cK-ZdM" firstAttribute="leading" secondItem="wtA-bQ-kB1" secondAttribute="leading" id="q5F-lk-0u5"/>
-                            </constraints>
-                        </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EYT-Qj-ks1">
                             <rect key="frame" x="0.0" y="0.0" width="216.5" height="50"/>
                             <subviews>
@@ -106,6 +89,23 @@
                                 <constraint firstAttribute="bottom" secondItem="X5d-hh-ukG" secondAttribute="bottom" constant="12" id="kid-kH-o1a"/>
                                 <constraint firstItem="5A0-O5-org" firstAttribute="top" secondItem="nSz-c8-Pvi" secondAttribute="top" id="tsp-qc-snV"/>
                                 <constraint firstItem="SaB-k4-MXP" firstAttribute="centerY" secondItem="nSz-c8-Pvi" secondAttribute="centerY" id="ygP-Z1-91S"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wtA-bQ-kB1">
+                            <rect key="frame" x="70" y="0.0" width="341.5" height="50"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.10000000000000001" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TRr-cK-ZdM">
+                                    <rect key="frame" x="0.0" y="25" width="341.5" height="0.0"/>
+                                    <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="28"/>
+                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstItem="TRr-cK-ZdM" firstAttribute="centerY" secondItem="wtA-bQ-kB1" secondAttribute="centerY" id="e2q-G6-Omr"/>
+                                <constraint firstAttribute="trailing" secondItem="TRr-cK-ZdM" secondAttribute="trailing" id="na4-3M-mQx"/>
+                                <constraint firstItem="TRr-cK-ZdM" firstAttribute="leading" secondItem="wtA-bQ-kB1" secondAttribute="leading" id="q5F-lk-0u5"/>
                             </constraints>
                         </view>
                     </subviews>

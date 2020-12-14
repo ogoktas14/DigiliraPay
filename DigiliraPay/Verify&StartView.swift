@@ -73,8 +73,6 @@ class Verify_StartView: UIView {
                 let fullNameArr : [String] = seed.components(separatedBy: " ")
                 keywordArray = fullNameArr
                 shuffled = fullNameArr.shuffled()
-             
-            
         } catch {
             print (error)
         }

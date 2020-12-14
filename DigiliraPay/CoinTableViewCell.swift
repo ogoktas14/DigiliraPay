@@ -39,7 +39,6 @@ class CoinTableViewCell: UITableViewCell {
         BGView.addSubview(shadow1)
         
         coinName.textColor = UIColor(red:0.30, green:0.30, blue:0.30, alpha:1.0)
-//        coinCode.textColor = UIColor(red:0.64, green:0.64, blue:0.64, alpha:1.0)
         type.textColor = UIColor(red:0.68, green:0.68, blue:0.68, alpha:1.0)
         coinAmount.textColor = UIColor(red:0.30, green:0.30, blue:0.30, alpha:1.0)
     }

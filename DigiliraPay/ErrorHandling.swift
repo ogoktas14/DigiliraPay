@@ -54,7 +54,7 @@ class ErrorHandling: NSObject {
     func alertWarning (title: String, message: String, error: Bool = true) {
         
         
-            orderDetailView.removeFromSuperview()
+        orderDetailView.removeFromSuperview()
         warningView.removeFromSuperview()
           
         
@@ -95,7 +95,7 @@ class ErrorHandling: NSObject {
     func alertOrder (order: digilira.order) {
         DispatchQueue.main.async { [self] in
             
-                orderDetailView.removeFromSuperview()
+            orderDetailView.removeFromSuperview()
             warningView.removeFromSuperview()
               
             orderDetailView = UIView().loadNib(name: "OrderDetailView") as! OrderDetailView

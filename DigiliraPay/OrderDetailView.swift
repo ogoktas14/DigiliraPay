@@ -121,6 +121,7 @@ extension OrderDetailView: UITableViewDelegate, UITableViewDataSource {
                     shoppingCart.append(digilira.shoppingCart.init(label: "Toplam", price: total, mode: 1))
                 }
             }
+            messageLabel.text = order.merchant
         }
         return shoppingCart.count
     }

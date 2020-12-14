@@ -194,6 +194,7 @@ class MainScreen: UIViewController {
         self.headerHomeBuffer = self.headerView.frame.size.height
 
         coinTableView.refreshControl = refreshControl
+        coinTableView.showsVerticalScrollIndicator = false
         menuView.isUserInteractionEnabled = false
         do {
             kullanici = try secretKeys.userData()
@@ -735,6 +736,9 @@ class MainScreen: UIViewController {
     
     
     @objc private func refreshData(_ sender: Any) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [self] in
+            refreshControl.endRefreshing()
+        }
         if isSuccessView {
             refreshControl.endRefreshing() // dogrulama ekraninda guncelleme yapilmasin
             return

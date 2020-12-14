@@ -44,8 +44,15 @@
                                 <constraint firstAttribute="width" constant="70" id="Kva-6H-kNq"/>
                             </constraints>
                         </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nzb-Fk-J5g">
+                            <rect key="frame" x="0.0" y="125" width="331" height="37.5"/>
+                            <color key="backgroundColor" systemColor="tertiarySystemGroupedBackgroundColor"/>
+                            <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="17"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
                         <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="BL8-MG-VKb">
-                            <rect key="frame" x="0.0" y="125" width="331" height="382"/>
+                            <rect key="frame" x="0.0" y="162.5" width="331" height="344.5"/>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         </tableView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zkY-hG-0hc" customClass="DLGradient" customModule="DigiliraPay" customModuleProvider="target">
@@ -75,22 +82,26 @@
                             </constraints>
                         </view>
                     </subviews>
-                    <color key="backgroundColor" systemColor="tertiarySystemGroupedBackgroundColor"/>
+                    <color key="backgroundColor" systemColor="systemOrangeColor"/>
                     <constraints>
                         <constraint firstItem="zkY-hG-0hc" firstAttribute="centerX" secondItem="6Kj-8a-BUk" secondAttribute="centerX" id="27F-hY-6F9"/>
+                        <constraint firstItem="nzb-Fk-J5g" firstAttribute="height" secondItem="JOm-eb-SHZ" secondAttribute="height" multiplier="0.75" id="4Tm-Zi-HzE"/>
                         <constraint firstAttribute="bottom" secondItem="zkY-hG-0hc" secondAttribute="bottom" constant="40" id="Ahm-iU-xqj"/>
                         <constraint firstAttribute="trailing" secondItem="mNj-CA-RmR" secondAttribute="trailing" id="Pj4-jZ-h01"/>
+                        <constraint firstItem="nzb-Fk-J5g" firstAttribute="width" secondItem="6Kj-8a-BUk" secondAttribute="width" id="QUt-sY-et0"/>
                         <constraint firstAttribute="trailing" secondItem="JOm-eb-SHZ" secondAttribute="trailing" constant="20" id="Wid-Db-3kb"/>
+                        <constraint firstItem="nzb-Fk-J5g" firstAttribute="centerX" secondItem="6Kj-8a-BUk" secondAttribute="centerX" id="Z33-We-oiL"/>
                         <constraint firstItem="JOm-eb-SHZ" firstAttribute="top" secondItem="6Kj-8a-BUk" secondAttribute="top" constant="50" id="alC-Kf-hpq"/>
                         <constraint firstItem="BL8-MG-VKb" firstAttribute="leading" secondItem="6Kj-8a-BUk" secondAttribute="leading" id="b07-KY-Irs"/>
                         <constraint firstItem="DX4-5N-XR9" firstAttribute="top" secondItem="BL8-MG-VKb" secondAttribute="bottom" constant="40" id="bhH-ZY-KpI"/>
                         <constraint firstItem="JOm-eb-SHZ" firstAttribute="leading" secondItem="6Kj-8a-BUk" secondAttribute="leading" constant="20" id="c5O-DJ-cen"/>
                         <constraint firstItem="Xxs-Wo-waL" firstAttribute="centerX" secondItem="fk1-fP-v19" secondAttribute="centerX" id="cWn-JO-H1E"/>
-                        <constraint firstItem="BL8-MG-VKb" firstAttribute="top" secondItem="mNj-CA-RmR" secondAttribute="bottom" id="eR9-yd-sxC"/>
+                        <constraint firstItem="BL8-MG-VKb" firstAttribute="top" secondItem="nzb-Fk-J5g" secondAttribute="bottom" id="eR9-yd-sxC"/>
                         <constraint firstItem="Xxs-Wo-waL" firstAttribute="centerY" secondItem="6Kj-8a-BUk" secondAttribute="top" id="jrA-JT-Jhx"/>
                         <constraint firstItem="zkY-hG-0hc" firstAttribute="width" secondItem="6Kj-8a-BUk" secondAttribute="width" multiplier="0.700906" id="ssf-OQ-3uw"/>
                         <constraint firstAttribute="trailing" secondItem="BL8-MG-VKb" secondAttribute="trailing" id="tW4-tx-LMb"/>
                         <constraint firstItem="mNj-CA-RmR" firstAttribute="top" secondItem="JOm-eb-SHZ" secondAttribute="bottom" constant="20" id="udH-FB-6Dj"/>
+                        <constraint firstItem="nzb-Fk-J5g" firstAttribute="top" secondItem="mNj-CA-RmR" secondAttribute="bottom" id="uuh-pp-r2Q"/>
                         <constraint firstItem="mNj-CA-RmR" firstAttribute="leading" secondItem="6Kj-8a-BUk" secondAttribute="leading" id="wsh-Y2-pRQ"/>
                     </constraints>
                 </view>
@@ -104,6 +115,7 @@
                 <constraint firstItem="6Kj-8a-BUk" firstAttribute="centerY" secondItem="3H0-Ah-R8H" secondAttribute="centerY" id="pHJ-Cw-BWE"/>
             </constraints>
             <connections>
+                <outlet property="messageLabel" destination="nzb-Fk-J5g" id="FRA-ws-e54"/>
                 <outlet property="msg" destination="6Kj-8a-BUk" id="bXi-gW-qTf"/>
                 <outlet property="ok" destination="zkY-hG-0hc" id="1Fc-Za-VYP"/>
                 <outlet property="tableView" destination="BL8-MG-VKb" id="w31-YS-pu4"/>
@@ -117,6 +129,9 @@
         <image name="shoppingBag" width="113" height="113"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemOrangeColor">
+            <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemPinkColor">
             <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

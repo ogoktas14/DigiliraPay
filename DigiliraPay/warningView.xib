@@ -42,7 +42,7 @@
                                 </view>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e1b-4K-UTc">
                                     <rect key="frame" x="20" y="150" width="291" height="23.5"/>
-                                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="17"/>
+                                    <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="17"/>
                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
                                 </label>
@@ -73,9 +73,12 @@
                                     </constraints>
                                 </imageView>
                                 <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Uygulamadan çıkmayın işleminiz devam etmektedir." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2UC-qk-maD">
-                                    <rect key="frame" x="20" y="227" width="291" height="46.5"/>
+                                    <rect key="frame" x="49.5" y="223.5" width="232" height="50"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="17"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="50" id="zjl-zH-5eV"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="14"/>
                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
                                 </label>
@@ -86,7 +89,7 @@
                             </subviews>
                             <color key="backgroundColor" systemColor="tertiarySystemGroupedBackgroundColor"/>
                             <constraints>
-                                <constraint firstItem="2UC-qk-maD" firstAttribute="width" secondItem="CJc-Bj-CET" secondAttribute="width" multiplier="0.879154" id="0ub-Nv-NlE"/>
+                                <constraint firstItem="2UC-qk-maD" firstAttribute="width" secondItem="CJc-Bj-CET" secondAttribute="width" multiplier="0.7" id="0ub-Nv-NlE"/>
                                 <constraint firstAttribute="bottom" secondItem="2UC-qk-maD" secondAttribute="bottom" constant="50" id="7kS-mF-4eU"/>
                                 <constraint firstItem="tpy-u2-uKm" firstAttribute="top" secondItem="e1b-4K-UTc" secondAttribute="bottom" constant="50" id="CVq-IC-2cr"/>
                                 <constraint firstItem="3Ws-A5-iyX" firstAttribute="centerX" secondItem="trn-xg-O0S" secondAttribute="centerX" id="EN2-ZI-NIU"/>

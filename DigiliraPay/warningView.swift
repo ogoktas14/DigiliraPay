@@ -65,8 +65,24 @@ class WarningView: UIView {
 
     }
     
+    func incProgress() {
+        
+        if loading.progress > 0.95 {
+            loading.isHidden = true
+            warningLabel.isHidden = true
+            messageLabel.text = "İşleminiz normalden uzun sürüyor. İşlem sonuçlandığında bildirim yapılacaktır."
+            ok.isHidden = false
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                self.loading.progress = self.loading.progress + 0.01
+                self.incProgress()
+        }
+    }
+    
     
     func setMessage() {
+        loading.isHidden = true
         if !isError {
             icon.image = UIImage(named: "success")
             generator.notificationOccurred(.success)
@@ -77,8 +93,18 @@ class WarningView: UIView {
         }
             if isTransaction {
                 ok.isHidden = true
+                loading.isHidden = false
                 icon.image = UIImage(named: "verifying")
                 warningLabel.isHidden = false
+                 
+                incProgress()
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+                   // Excecute after 3 seconds
+                    self.ok.isHidden = false
+                    self.warningLabel.isHidden = true
+                    self.removeFromSuperview()
+                }
             }
             titleLabel.text = title
             messageLabel.text = message

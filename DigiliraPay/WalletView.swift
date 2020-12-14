@@ -71,11 +71,21 @@ class WalletView: UIView {
     }
     
     @objc private func refreshData(_ sender: Any) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [self] in
+            refreshControl.endRefreshing()
+        }
         tableView.isUserInteractionEnabled = false
         readHistory(coin: coin)
     }
     
     func readHistory (coin: String) {
+        
+        transactionDetailView.originValueLast = transactionDetailView.originValue
+        
+        UIView.animate(withDuration: 3) {
+            self.transactionDetailView.frame.origin.y = 100
+        }
+        
         refreshControl.isHidden = true
         //loading.isHidden = false
         tableView.isUserInteractionEnabled = false
