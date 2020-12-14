@@ -497,7 +497,7 @@ class Blockchain: NSObject {
                     .subscribe(onNext: {(tx) in
                         print(tx) // Do something on success, now we have wavesBalance.balance in satoshi in Long
                     }, onError: {(error) in
-                        self.throwEngine.evaluateError(error: error)
+                        self.onError!(error)
                     })
             } else {
                 digiliraPay.updateSmartAcountScript(data: send)
@@ -549,7 +549,7 @@ class Blockchain: NSObject {
         
         do {
             let seed = try getSeed()
-            wavesApi(seed: seed.seed)
+            //wavesApi(seed: seed.seed)
         } catch {
             print(error)
         }

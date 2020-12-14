@@ -11,6 +11,7 @@ import Foundation
 protocol SendWithQrDelegate: class
 {
     func dismissSendWithQr(url: String)
+    func sendWithQRError(error: Error)
 
 }
  

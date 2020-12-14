@@ -225,7 +225,6 @@ class ParaYatirView:UIView {
                             activityViewController.excludedActivityTypes = [ UIActivity.ActivityType.saveToCameraRoll ]
                          self.window?.rootViewController?.presentedViewController?.present(activityViewController, animated: true, completion: nil)
                             
-                            
                         }
                     }
                 }
@@ -235,84 +234,7 @@ class ParaYatirView:UIView {
          
    
     }
-    
-    
-    @objc func textFieldDidChange(_ textField: UITextField) {
-        textField.textColor = .black
-        
-        let str = textField.text
-        let replaced = str!.replacingOccurrences(of: ",", with: ".")
-        textField.text! = replaced
-        
-        var maxLength: Int = 8
-        
-        if replaced.contains(".") {
-            decimal = true
-        } else {
-            decimal = false
-        }
-        
-        let needle: Character = "."
-        if let idx = str!.firstIndex(of: needle) {
-            let pos = str!.distance(from: str!.startIndex, to: idx)
-            maxLength = 9 + pos
-            if pos > 8 {
-                maxLength = 0
-            }
-            
-        }
-        else {
-            print("Not found")
-        }
-        
-        if  textField.text!.count > maxLength {
-            if textField.text!.last != "." {
-                textField.text!.removeLast()
-            }
-            return
-        }
-        
-        let coin = Filtered[currentPage]
 
-            if let d = Double(replaced) {
-                switchCurrency.setTitle("₺", forSegmentAt: 0)
-                switchCurrency.setTitle(coin.tokenSymbol, forSegmentAt: 1)
-                calcPrice(amo: d, coin: coin)
-            }
-
-    }
-    
-    func calcPrice(amo: Double, coin: digilira.DigiliraPayBalance) {
-        _ = digiliraPay.ticker(ticker: Ticker)
-
-        do {
-            
-            if amo == 0.0 {
-                switchCurrency.setTitle("₺", forSegmentAt: 0)
-                switchCurrency.setTitle(coin.tokenSymbol, forSegmentAt: 1)
-                return
-            }
-            if switchCurrency.selectedSegmentIndex == 0 { //₺
-                price = amo
-                amount = amo / coin.tlExchange
-                totalAmountLabel.text = "MİKTAR GİRİNİZ [ ₺ ]"
-                switchCurrency.setTitle(String(format: "%.2f", price) + " ₺", forSegmentAt: 0)
-                switchCurrency.setTitle(String(format: "%.8f", amount) + " " + coin.tokenSymbol, forSegmentAt: 1)
-            }
-            
-            if switchCurrency.selectedSegmentIndex == 1 { //token
-                price = coin.tlExchange * amo
-                amount = amo
-                totalAmountLabel.text = "MİKTAR GİRİNİZ [ " + coin.tokenSymbol + " ]"
-                switchCurrency.setTitle(String(format: "%.2f", price) + " ₺", forSegmentAt: 0)
-                switchCurrency.setTitle(String(format: "%.8f", amount) + " " + coin.tokenSymbol, forSegmentAt: 1)
-            }
-            
-        } catch {
-            print(error)
-        }
-    }
-    
     private func setShad(view: UIView, cornerRad: CGFloat = 0, mask: Bool = false) {
         view.layer.shadowOpacity = 0.2
         view.layer.cornerRadius = cornerRad
@@ -344,9 +266,6 @@ class ParaYatirView:UIView {
             break;
         }
         
-    }
-    @IBAction func indexChanged(sender: UISegmentedControl) {
-        setPlaceHolderText()
     }
     
     @objc func letsGO()

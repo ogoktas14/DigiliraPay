@@ -22,8 +22,11 @@ class TransactionDetailView: UIView
     var transaction:digilira.transfer?
     let digiliraPay = digiliraPayApi()
     let BC = Blockchain()
-
     
+    var fetching: Bool = false
+
+    let generator = UINotificationFeedbackGenerator()
+
     weak var delegate: TransactionDetailCloseDelegate?
     override func awakeFromNib()
     {
@@ -75,8 +78,20 @@ class TransactionDetailView: UIView
  
     
     @objc func handleTap (recognizer: MyTapGesture) {
+        if recognizer.qrAttachment == "-" {
+            generator.notificationOccurred(.error) 
+//            return
+        }
+        if fetching {
+            return
+        }
+        fetching = true
+        generator.notificationOccurred(.success)
+
         let QrDict:[String: String] = ["qr": recognizer.qrAttachment]
         NotificationCenter.default.post(name: .orderClick, object: nil, userInfo: QrDict )
+        fetching = false
+
     }
     
     @IBAction func slideGesture(_ sender: UIPanGestureRecognizer)
@@ -154,9 +169,9 @@ extension TransactionDetailView: UITableViewDelegate, UITableViewDataSource
                         pasteboard.string = t.recipient!
                             cell.setView(image: UIImage(named: "verifying")!, title: "İşlem", detail: t.attachment ?? "-" )
                         
-                        
                         let tapped = MyTapGesture.init(target: self, action: #selector(handleTap))
                             tapped.qrAttachment = t.attachment ?? "-"
+                        
                         cell.addGestureRecognizer(tapped)
                         
                         

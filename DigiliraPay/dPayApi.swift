@@ -233,7 +233,7 @@ class digiliraPayApi: NSObject {
                         self.onGetOrder?(order)
                     }
                 } catch {
-                    throwEngine.evaluateError(error: error)
+                    onError!(error, 400)
                 }
                 
             }

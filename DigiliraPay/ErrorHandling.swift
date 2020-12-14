@@ -10,9 +10,13 @@ import Foundation
 import WavesSDK
 
 class ErrorHandling: NSObject {
-     
+    var win = UIApplication.shared.windows.filter({$0.isKeyWindow}).first
+    var isOn:Bool = false
+    var warningView = WarningView()
+    var orderDetailView = OrderDetailView()
+    
     weak var errors: ErrorsDelegate?
-
+    
     func evaluateError(error: Error) {
         switch error {
         case digilira.NAError.emptyAuth:
@@ -38,32 +42,69 @@ class ErrorHandling: NSObject {
             alertWarning(title: "Bağlantı Hatası", message: "Blokzincir kaynaklı problemlerden dolayı işleminiz gerçekleşmemiştir.")
             break
         default:
-            alertWarning(title: "Bir Hata Oluştu", message: "Geçersiz işlem")
+            DispatchQueue.main.async {
+                
+                self.warningView.removeFromSuperview()
+                self.alertWarning(title: "Bir Hata Oluştu", message: "Geçersiz işlem")
+            }
             break
         }
     }
-    var warningView = WarningView()
-
-    func alertWarning (title: String, message: String) {
+    
+    func alertWarning (title: String, message: String, error: Bool = true) {
+        
+        
+            orderDetailView.removeFromSuperview()
+        warningView.removeFromSuperview()
+          
+        
         DispatchQueue.main.async { [self] in
-            if let window = UIApplication.shared.windows.filter({$0.isKeyWindow}).first {
-              
-                warningView = UIView().loadNib(name: "warningView") as! WarningView
-                warningView.frame = CGRect(x: 0,
-                                           y: 0,
-                                           width: window.frame.width,
-                                           height: window.frame.height)
-                
-
-                warningView.title = title
-                warningView.message = message
-                warningView.setMessage()
-                
-                window.addSubview(warningView)
-            }
+            
+            warningView = UIView().loadNib(name: "warningView") as! WarningView
+            warningView.frame = win!.frame
+            
+            warningView.isError = error
+            warningView.title = title
+            warningView.message = message
+            warningView.setMessage()
+            
+            win?.addSubview(warningView)
+            
         }
+    }
+    
+    func alertTransaction (title: String, message: String, verifying: Bool) {
+        
+        DispatchQueue.main.async { [self] in
+            orderDetailView.removeFromSuperview()
+            warningView.removeFromSuperview()
+            
+            warningView = UIView().loadNib(name: "warningView") as! WarningView
+            warningView.frame = win!.frame
+            
+            warningView.isTransaction = verifying
+            warningView.title = title
+            warningView.message = message
+            warningView.setMessage()
+            
+            win?.addSubview(warningView)
+            
+        }
+    }
+    
+    func alertOrder (order: digilira.order) {
+        DispatchQueue.main.async { [self] in
+            
+                orderDetailView.removeFromSuperview()
+            warningView.removeFromSuperview()
+              
+            orderDetailView = UIView().loadNib(name: "OrderDetailView") as! OrderDetailView
+            orderDetailView.frame = win!.frame
 
+            orderDetailView.order = order
+            win?.addSubview(orderDetailView)
 
+        }
         
     }
 }

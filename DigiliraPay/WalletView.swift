@@ -16,6 +16,7 @@ class WalletView: UIView {
     @IBOutlet weak var slideView: UIView!
     @IBOutlet weak var emptyView: UIView!
     @IBOutlet weak var emptyInfo: UILabel!
+    @IBOutlet weak var loading: UIActivityIndicatorView!
     
     private var customView: UIView!
     
@@ -70,19 +71,20 @@ class WalletView: UIView {
     }
     
     @objc private func refreshData(_ sender: Any) {
+        tableView.isUserInteractionEnabled = false
         readHistory(coin: coin)
     }
     
     func readHistory (coin: String) {
-
-        tableView.isUserInteractionEnabled = true
+        refreshControl.isHidden = true
+        //loading.isHidden = false
+        tableView.isUserInteractionEnabled = false
         self.trxs.removeAll()
         if let walletAddress = wallet {
            
             
             BC.checkTransactions(address: walletAddress){ (data) in
                 DispatchQueue.main.async { [self] in
-                    print(trxs.count)
                     data.forEach { trx in
                         
                         let dateWaves = (978307200 + (trx["timestamp"] as! Int)) * 1000
@@ -186,6 +188,8 @@ class WalletView: UIView {
                     self.tableView.reloadData()
                     self.setTableView()
                     self.refreshControl.endRefreshing()
+                    self.tableView.isUserInteractionEnabled = true
+                    //self.loading.isHidden = true
 
                 }
             }
@@ -289,42 +293,43 @@ extension WalletView: UITableViewDelegate, UITableViewDataSource
         
         UIView.animate(withDuration: 0.3) {
             self.transactionDetailView.frame.origin.y = 0
-            //            self.tableView.alpha = 0.3
         }
     }
     
  
     
     @objc func handleTap(recognizer: MyTapGesture) { // gecmisini sorgula
-        
-        print(recognizer.floatValue)
         showDetail(index: recognizer.floatValue)
     }
     
     func showDetail(index: Int)
     {
-        tableView.isUserInteractionEnabled = false
-        transactionDetailView = UIView().loadNib(name: "TransactionDetailView") as! TransactionDetailView
+        if index <= trxs.count {
+            tableView.isUserInteractionEnabled = false
+            transactionDetailView = UIView().loadNib(name: "TransactionDetailView") as! TransactionDetailView
 
-        //pinView.lbl01.text = trxs[index].id
-        transactionDetailView.alpha = 0
+            transactionDetailView.alpha = 0
 
-        transactionDetailView.layer.cornerRadius = 10
-        transactionDetailView.frame = CGRect(x: tableView.frame.width * 0.05,
-                               y: tableView.frame.height,
-                               width: tableView.frame.width * 0.9,
-                               height: tableView.frame.height)
-        
-        
-        transactionDetailView.delegate = self
-        transactionDetailView.transaction = trxs[index]
-        
-        transactionHistory.addSubview(transactionDetailView)
-        transactionHistory.isHidden = false
-        UIView.animate(withDuration: 0.3) {
-            self.transactionDetailView.frame.origin.y =  self.tableView.frame.height * 0.2
-            self.transactionDetailView.alpha = 1
+            transactionDetailView.layer.cornerRadius = 10
+            transactionDetailView.frame = CGRect(x: tableView.frame.width * 0.05,
+                                   y: tableView.frame.height,
+                                   width: tableView.frame.width * 0.9,
+                                   height: tableView.frame.height)
+            
+            
+            transactionDetailView.delegate = self
+            transactionDetailView.transaction = trxs[index]
+            
+            transactionHistory.addSubview(transactionDetailView)
+            transactionHistory.isHidden = false
+            UIView.animate(withDuration: 0.3) {
+                self.transactionDetailView.frame.origin.y =  self.tableView.frame.height * 0.2
+                self.transactionDetailView.alpha = 1
+            }
+        }else {
+            print("out of index error")
         }
+
         
     }
 }

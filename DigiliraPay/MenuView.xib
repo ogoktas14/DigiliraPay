@@ -55,7 +55,7 @@
                         <constraint firstItem="ldJ-br-6Wy" firstAttribute="top" secondItem="gvN-Pe-4Ju" secondAttribute="top" id="uYv-OP-Sii"/>
                     </constraints>
                 </stackView>
-                <view alpha="0.59999999999999998" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cy3-1c-BJR">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cy3-1c-BJR">
                     <rect key="frame" x="207.5" y="126" width="35" height="5"/>
                     <color key="backgroundColor" red="0.88235294117647056" green="0.10196078431372549" blue="0.18431372549019609" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>

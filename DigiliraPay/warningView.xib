@@ -79,6 +79,10 @@
                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
                                 </label>
+                                <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="RTV-Cd-kYs">
+                                    <rect key="frame" x="99.5" y="292" width="132" height="4"/>
+                                    <color key="progressTintColor" systemColor="systemGreenColor"/>
+                                </progressView>
                             </subviews>
                             <color key="backgroundColor" systemColor="tertiarySystemGroupedBackgroundColor"/>
                             <constraints>
@@ -90,10 +94,13 @@
                                 <constraint firstItem="lkt-NY-45D" firstAttribute="leading" secondItem="CJc-Bj-CET" secondAttribute="leading" constant="20" id="PNg-mH-l2o"/>
                                 <constraint firstAttribute="trailing" secondItem="lkt-NY-45D" secondAttribute="trailing" constant="20" id="Pih-9P-GVP"/>
                                 <constraint firstItem="lkt-NY-45D" firstAttribute="top" secondItem="CJc-Bj-CET" secondAttribute="top" constant="50" id="Tg7-vP-YLT"/>
+                                <constraint firstItem="RTV-Cd-kYs" firstAttribute="top" secondItem="2UC-qk-maD" secondAttribute="bottom" constant="18.5" id="ZB6-rQ-zOR"/>
+                                <constraint firstItem="RTV-Cd-kYs" firstAttribute="width" secondItem="CJc-Bj-CET" secondAttribute="width" multiplier="0.4" id="bHd-Wc-1z6"/>
                                 <constraint firstItem="e1b-4K-UTc" firstAttribute="leading" secondItem="CJc-Bj-CET" secondAttribute="leading" constant="20" id="bsA-22-57Z"/>
                                 <constraint firstItem="tpy-u2-uKm" firstAttribute="width" secondItem="CJc-Bj-CET" secondAttribute="width" multiplier="0.7" id="ef0-vb-4tl"/>
                                 <constraint firstItem="e1b-4K-UTc" firstAttribute="top" secondItem="lkt-NY-45D" secondAttribute="bottom" constant="50" id="hjg-h0-WTy"/>
                                 <constraint firstItem="3Ws-A5-iyX" firstAttribute="centerY" secondItem="CJc-Bj-CET" secondAttribute="top" id="nSe-qz-NzN"/>
+                                <constraint firstItem="RTV-Cd-kYs" firstAttribute="centerX" secondItem="CJc-Bj-CET" secondAttribute="centerX" id="pK6-IQ-jTz"/>
                                 <constraint firstAttribute="bottom" secondItem="tpy-u2-uKm" secondAttribute="bottom" constant="50" id="ppd-5D-6Qg"/>
                                 <constraint firstItem="tpy-u2-uKm" firstAttribute="centerX" secondItem="CJc-Bj-CET" secondAttribute="centerX" id="qzW-uH-Nar"/>
                                 <constraint firstAttribute="trailing" secondItem="e1b-4K-UTc" secondAttribute="trailing" constant="20" id="yAB-p2-Mob"/>
@@ -118,6 +125,7 @@
             </constraints>
             <connections>
                 <outlet property="icon" destination="3Ws-A5-iyX" id="DQE-vs-Apl"/>
+                <outlet property="loading" destination="RTV-Cd-kYs" id="NM2-d0-3Df"/>
                 <outlet property="messageLabel" destination="e1b-4K-UTc" id="71P-Ao-db8"/>
                 <outlet property="msg" destination="CJc-Bj-CET" id="6aT-E9-jq3"/>
                 <outlet property="ok" destination="tpy-u2-uKm" id="P2T-Fn-vap"/>
@@ -130,6 +138,9 @@
     </objects>
     <resources>
         <image name="error" width="114" height="114"/>
+        <systemColor name="systemGreenColor">
+            <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemRedColor">
             <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

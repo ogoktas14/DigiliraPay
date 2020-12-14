@@ -48,6 +48,10 @@
                     <rect key="frame" x="0.0" y="49" width="414" height="747"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
+                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="z5u-Zg-H5M">
+                    <rect key="frame" x="188.5" y="401.5" width="37" height="37"/>
+                    <color key="color" red="1" green="0.1019607843" blue="0.1843137255" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                </activityIndicatorView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -56,11 +60,13 @@
                 <constraint firstItem="ehI-s3-V7r" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="6k1-kg-UvS"/>
                 <constraint firstItem="ehI-s3-V7r" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="9Xo-LS-o7X"/>
                 <constraint firstItem="w0n-Du-ySH" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="20" id="Cyx-73-Oqc"/>
+                <constraint firstItem="z5u-Zg-H5M" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="EWS-jD-ChV"/>
                 <constraint firstItem="gEO-0l-Ce8" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="Pdd-rP-BbR"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="gEO-0l-Ce8" secondAttribute="bottom" id="QR0-vb-JWi"/>
                 <constraint firstItem="w0n-Du-ySH" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="ZLp-1K-2MK"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="gEO-0l-Ce8" secondAttribute="trailing" id="dIF-fw-lsc"/>
                 <constraint firstItem="gEO-0l-Ce8" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="5" id="fMh-17-T3e"/>
+                <constraint firstItem="z5u-Zg-H5M" firstAttribute="centerY" secondItem="vUN-kp-3ea" secondAttribute="centerY" id="r3S-aC-Dg9"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="ehI-s3-V7r" secondAttribute="trailing" id="xiV-jK-vvh"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -68,6 +74,7 @@
                 <outlet property="emptyInfo" destination="s3f-b7-fd6" id="XZr-xr-wXv"/>
                 <outlet property="emptyView" destination="ehI-s3-V7r" id="ka4-q3-DkI"/>
                 <outlet property="headerLabel" destination="w0n-Du-ySH" id="HGz-Mj-w4n"/>
+                <outlet property="loading" destination="z5u-Zg-H5M" id="Fk7-Ok-cyA"/>
                 <outlet property="transactionHistory" destination="gEO-0l-Ce8" id="ten-aV-JVd"/>
             </connections>
             <point key="canvasLocation" x="137.68115942028987" y="150.66964285714286"/>

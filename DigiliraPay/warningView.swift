@@ -14,6 +14,7 @@ class WarningView: UIView {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var warningLabel: UILabel!
+    @IBOutlet weak var loading: UIProgressView!
 
     @IBOutlet weak var ok: UIView!
     @IBOutlet weak var titleView: UIView!

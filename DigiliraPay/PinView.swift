@@ -26,9 +26,10 @@ class PinView: UIView {
     
     @IBOutlet weak var goBackButtonView: UIView!
     
-    let digiliraPay = digiliraPayApi()
-    
+    let generator = UINotificationFeedbackGenerator()
 
+    let digiliraPay = digiliraPayApi()
+     
     weak var delegate: PinViewDelegate?
     
     let enteredColor =  UIColor(red: 0.8941, green: 0.0941, blue: 0.1686, alpha: 1.0)
@@ -103,6 +104,7 @@ class PinView: UIView {
         if (entered[3]) {
             return
         }
+        generator.notificationOccurred(.success)
         if isVerify { firstCode = firstCode + String(number)}
         else { lastCode = lastCode + String(number)}
         if !entered[0]
@@ -188,7 +190,7 @@ class PinView: UIView {
             }
             
         } catch {
-            print("kullanici bilgileri okunamdi")
+            print("kullanici bilgileri okunamadı")
         }
         
     }
@@ -291,6 +293,7 @@ class PinView: UIView {
             
             wrongEntry += 1
             
+            generator.notificationOccurred(.error)
             goVerify()
             pinAreaView.shake()
             pinAreaView.isHidden = false

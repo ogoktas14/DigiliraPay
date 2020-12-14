@@ -23,12 +23,9 @@ class sendWithQR: UIView {
     var qrverisi:String?
 
     let digiliraPay = digiliraPayApi()
-    let throwEngine = ErrorHandling()
 
- 
     private let supportedCodeTypes = [AVMetadataObject.ObjectType.qr]
-    
-    
+     
     weak var delegate: SendWithQrDelegate?
     
     
@@ -38,9 +35,6 @@ class sendWithQR: UIView {
     override func awakeFromNib()
     {
         openCamera()
-
-        
-       
     }
     
     func openCamera() {
@@ -82,7 +76,7 @@ class sendWithQR: UIView {
                    
                } catch {
                    // If any error occurs, simply print it out and don't continue any more.
-                throwEngine.evaluateError(error: error)
+                delegate?.sendWithQRError(error: error)
                    return
                }
                qrCodeFrameView = UIView()
