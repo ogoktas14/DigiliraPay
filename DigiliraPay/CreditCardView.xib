@@ -5,7 +5,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -15,9 +14,15 @@
             <rect key="frame" x="0.0" y="0.0" width="489" height="385"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CB3-mX-Qsb" customClass="BlackNoRadGradientView" customModule="DigiliraPay" customModuleProvider="target">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CB3-mX-Qsb" customClass="DLGradient" customModule="DigiliraPay" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="44" width="489" height="307"/>
                     <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="headerBG" translatesAutoresizingMaskIntoConstraints="NO" id="9uY-9a-Y0O">
+                            <rect key="frame" x="75" y="0.0" width="414" height="120"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="9uY-9a-Y0O" secondAttribute="height" multiplier="69:20" id="G3b-h7-mNC"/>
+                            </constraints>
+                        </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ethereum" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zik-jV-Lii">
                             <rect key="frame" x="20" y="20" width="108.5" height="31.5"/>
                             <fontDescription key="fontDescription" name="AvenirNext-Bold" family="Avenir Next" pointSize="23"/>
@@ -40,7 +45,7 @@
                                 <constraint firstAttribute="trailing" secondItem="sMg-vC-pRh" secondAttribute="trailing" constant="5" id="xuE-Gt-vUy"/>
                             </constraints>
                         </view>
-                        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CIi-Bq-Wl4" customClass="BlueNoRadGradientView" customModule="DigiliraPay" customModuleProvider="target">
+                        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CIi-Bq-Wl4">
                             <rect key="frame" x="0.0" y="277" width="489" height="30"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E9R-oE-fI5">
@@ -56,7 +61,7 @@
                                     </constraints>
                                 </imageView>
                             </subviews>
-                            <color key="backgroundColor" systemColor="systemGreenColor"/>
+                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.40336044520547948" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
                                 <constraint firstItem="E9R-oE-fI5" firstAttribute="top" secondItem="CIi-Bq-Wl4" secondAttribute="top" id="58w-NC-9fD"/>
                                 <constraint firstItem="E9R-oE-fI5" firstAttribute="leading" secondItem="CIi-Bq-Wl4" secondAttribute="leading" constant="20" id="MSP-Ex-D99"/>
@@ -77,12 +82,15 @@
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstAttribute="bottom" secondItem="CIi-Bq-Wl4" secondAttribute="bottom" id="5gY-Ng-qbB"/>
+                        <constraint firstAttribute="trailing" secondItem="9uY-9a-Y0O" secondAttribute="trailing" id="9sI-PJ-3AC"/>
                         <constraint firstItem="zik-jV-Lii" firstAttribute="top" secondItem="CB3-mX-Qsb" secondAttribute="top" constant="20" id="OlI-JM-KW0"/>
                         <constraint firstItem="CIi-Bq-Wl4" firstAttribute="top" secondItem="GkN-9n-NON" secondAttribute="bottom" constant="10" id="RBy-LP-Dov"/>
                         <constraint firstItem="cfj-mT-z36" firstAttribute="height" secondItem="CB3-mX-Qsb" secondAttribute="height" multiplier="0.648208" id="ROd-v2-IAY"/>
                         <constraint firstItem="cfj-mT-z36" firstAttribute="top" secondItem="CB3-mX-Qsb" secondAttribute="top" constant="10" id="X6K-LC-duw"/>
                         <constraint firstAttribute="trailing" secondItem="CIi-Bq-Wl4" secondAttribute="trailing" id="ZNq-j0-pKd"/>
+                        <constraint firstItem="9uY-9a-Y0O" firstAttribute="width" secondItem="CB3-mX-Qsb" secondAttribute="width" multiplier="0.846626" id="aPr-AC-Hft"/>
                         <constraint firstItem="GkN-9n-NON" firstAttribute="leading" secondItem="zik-jV-Lii" secondAttribute="leading" id="fjT-5c-mfc"/>
+                        <constraint firstItem="9uY-9a-Y0O" firstAttribute="top" secondItem="CB3-mX-Qsb" secondAttribute="top" id="iwZ-bJ-8PA"/>
                         <constraint firstAttribute="trailing" secondItem="cfj-mT-z36" secondAttribute="trailing" constant="10" id="mbD-3x-hqj"/>
                         <constraint firstItem="CIi-Bq-Wl4" firstAttribute="leading" secondItem="CB3-mX-Qsb" secondAttribute="leading" id="nlv-nz-wMl"/>
                         <constraint firstItem="zik-jV-Lii" firstAttribute="leading" secondItem="CB3-mX-Qsb" secondAttribute="leading" constant="20" id="p8P-sb-MfA"/>
@@ -113,8 +121,6 @@
     </objects>
     <resources>
         <image name="copyImg" width="18" height="18"/>
-        <systemColor name="systemGreenColor">
-            <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
+        <image name="headerBG" width="414" height="120"/>
     </resources>
 </document>
