@@ -32,7 +32,12 @@ class OrderDetailView: UIView {
     var order:digilira.order?
     
     override func awakeFromNib() {
-
+        if #available(iOS 13.0, *) {
+            overrideUserInterfaceStyle = .light
+        } else {
+            // Fallback on earlier versions
+        }
+        
         self.layer.cornerRadius = 10
         titleView.layer.cornerRadius = 10
         

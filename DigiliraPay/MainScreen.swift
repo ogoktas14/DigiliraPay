@@ -1429,6 +1429,18 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         if isShowWallet {
             return
         }
+        
+        if isHomeScreen {
+            UIView.animate(withDuration: 0.3, animations: {
+                self.headerView.frame.size.height = self.headerHeightBuffer!
+                self.contentScrollView.contentOffset.x = 0
+                self.walletOperationView.isHidden = true
+            }, completion: {_ in
+                
+
+            })
+        }
+        
         menuXib.wallet()
         walletView.coin = coin
         walletView.readHistory(coin: coin)
@@ -1440,15 +1452,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
             closeSendView()
         }
          
-        if isHomeScreen {
-            UIView.animate(withDuration: 0.3, animations: {
-                self.headerView.frame.size.height = self.headerHeightBuffer!
-                self.contentScrollView.contentOffset.x = 0
-            }, completion: {_ in
-                self.walletOperationView.isHidden = true
 
-            })
-        }
         
         if !isShowWallet
         {

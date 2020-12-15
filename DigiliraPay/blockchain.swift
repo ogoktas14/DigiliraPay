@@ -259,6 +259,7 @@ class Blockchain: NSObject {
                     password: timestamp.description + ":" + bs58
                 )
                 wavesApiRequest(auth: params, endpoint:digilira.node.getToken, sender:WavesToken.self){ [self] (token, statusCode) in
+                    
                     wavesApiRequest(auth: nil, endpoint:digilira.node.getDeposit, currency: digilira.node.BTC, token: token.accessToken, sender: DepositeAddresses.self) { (address, statusCode) in
                         print(address.depositAddresses)
                     }
@@ -625,6 +626,50 @@ class Blockchain: NSObject {
         }
     }
     
+    func create4WavesApi(imported: Bool = false, importedSeed: String = "", returnCompletion: @escaping (String) -> () ) {
+        
+        let uuid = NSUUID().uuidString
+        var seed = importedSeed
+        
+        if !imported {
+            seed = wavesCrypto.randomSeed()
+        }
+        
+        if let address = wavesCrypto.address(seed: seed, chainId: digilira.node.chain_id) {
+            
+            wavesApi(seed: seed)
+            let username = NSUUID().uuidString
+            let user = digilira.exUser.init(username: username,
+                                            password: uuid,
+                                            wallet: address,
+                                            imported: imported
+            )
+            
+            
+            digiliraPay.request(rURL: digilira.api.url + "/users/register",
+                                JSON:  try? digiliraPay.jsonEncoder.encode(user),
+                                METHOD: digilira.requestMethod.post
+            ) { (json, statusCode) in
+                DispatchQueue.main.async {
+                    
+                    do {
+                        try Locksmith.saveData(
+                            data: ["password": uuid,
+                                   "seed": seed,
+                                   "username": username
+                            ],
+                            forUserAccount: "sensitive")
+                    }catch {
+                        returnCompletion("TRY AGAIN")
+                    }
+                    returnCompletion(address)
+                }
+            }
+        }
+        
+        
+    }
+    
     func create (imported: Bool = false, importedSeed: String = "", returnCompletion: @escaping (String) -> () ) {
         
         let uuid = NSUUID().uuidString
@@ -664,10 +709,7 @@ class Blockchain: NSObject {
                 }
             }
         }
-        
-        
-        
-        
+         
     }
     
     
