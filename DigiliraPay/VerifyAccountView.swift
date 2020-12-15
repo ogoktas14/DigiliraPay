@@ -19,14 +19,12 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     @IBOutlet weak var galleryButtonView: UIView!
     @IBOutlet weak var goHomeView: UIView!
     @IBOutlet weak var scrollAres: UIScrollView!
-
+    
     @IBOutlet weak var enterInfoView: UIView!
-    @IBOutlet weak var sendIDPhotoView: UIView!
-    @IBOutlet weak var finishedView: UIView!
     
     weak var delegate: VerifyAccountDelegate?
     weak var errors: ErrorsDelegate?
-
+    
     @IBOutlet weak var nameText: UITextField!
     @IBOutlet weak var surnameText: UITextField!
     @IBOutlet weak var tcText: UITextField!
@@ -42,34 +40,33 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     var isVerified:Bool = false
     var isExit: Bool = false
     var dogumTarihi: Date?
- 
+    
     let digiliraPay = digiliraPayApi()
     var onUpdate: ((_ result: [String:Any])->())?
-
+    
     override func didMoveToSuperview() {
         do {
             let user = try secretKeys.userData()
-    
-               nameText.text = user.firstName
-               surnameText.text = user.lastName
-               tcText.text = user.tcno
-               telText.text = user.tel
-               mailText.text = user.mail
+            
+            nameText.text = user.firstName
+            surnameText.text = user.lastName
+            tcText.text = user.tcno
+            telText.text = user.tel
+            mailText.text = user.mail
+            
+            if let dogumTarihi = user.dogum {
+                let isoDateFormatter = ISO8601DateFormatter()
+                isoDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+                isoDateFormatter.formatOptions = [
+                    .withFullDate,
+                    .withFullTime,
+                    .withDashSeparatorInDate,
+                    .withFractionalSeconds]
                 
-                if let dogumTarihi = user.dogum {
-                    let isoDateFormatter = ISO8601DateFormatter()
-                    isoDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-                    isoDateFormatter.formatOptions = [
-                        .withFullDate,
-                        .withFullTime,
-                        .withDashSeparatorInDate,
-                        .withFractionalSeconds]
-                    
-                    if let date1 = isoDateFormatter.date(from:dogumTarihi) {
-                        dogum.setDate(date1, animated: true)
-                    }
+                if let date1 = isoDateFormatter.date(from:dogumTarihi) {
+                    dogum.setDate(date1, animated: true)
                 }
-                 
+            }
         }catch{
             
         }
@@ -127,7 +124,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
         request.httpBody = bodyData.data(using: .utf8)
         request.addValue("text/xml; charset=utf-8", forHTTPHeaderField: "Content-Type")
         request.addValue("SOAPAction", forHTTPHeaderField: digilira.soapAction)
-
+        
         let task = URLSession.shared
             .dataTask(with: request as URLRequest,
                       completionHandler: { data, response, error in
@@ -135,51 +132,42 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
                               error == nil else {
                             return }
                         let dataString = NSString(data: dataResponse, encoding: String.Encoding.utf8.rawValue)
-                                  print(dataString!)
+                        print(dataString!)
                         
                         let parser = XMLParser(data: dataResponse)
                         parser.delegate = self
                         parser.parse()
-  
-            })
+                      })
         task.resume()
     }
-
+    
     func parser(_ parser: XMLParser, foundCharacters string: String) {
-
+        
         
         DispatchQueue.main.async { [self] in
-        var sts = 0
+            var sts = 0
             if string == "true" {
                 sts = 1
-                sendIDPhotoView.alpha = 0
                 enterInfoView.alpha = 0
-                finishedView.alpha = 0
                 
                 errors?.errorHandler(message: "Kimlik bilgileriniz doğrulandı, ancak KYC sürecini tamamlamak için kimliğinizin ön yüzü görünecek biçimde boş bir kağıda günün tarihini ve DigiliraPay yazarak Profil Onayı sayfasına yükleyin.", title: "Profiliniz Güncellendi", error: false)
-
-                delegate?.dismissVErifyAccountView()
-
                 
+                delegate?.dismissVErifyAccountView()
             }else {
                 errors?.errorHandler(message: "Girdiğiniz bilgileri kontrol edip tekrar deneyin.", title: "Bir Hata Oluştu", error: true)
-
                 understand.isEnabled = true
                 understand.isOn = false
-
             }
             
-        digiliraPay.onUpdate = { res in
-
-            self.digiliraPay.onLogin2 = { user, status in
-                delegate?.enableEntry(user:user)
+            digiliraPay.onUpdate = { res in
+                
+                self.digiliraPay.onLogin2 = { user, status in
+                    delegate?.enableEntry(user:user)
+                }
+                self.digiliraPay.login2()
             }
-            
-            self.digiliraPay.login2()
-            
-        }
             delegate?.dismissKeyboard()
- 
+            
             let user = digilira.exUser.init(
                 firstName: nameText.text,
                 lastName: surnameText.text,
@@ -194,24 +182,21 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
             let data = try? encoder.encode(user)
             
             digiliraPay.updateUser(user: data)
-        
-
         }
     }
-
+    
     
     func validateEmail(enteredEmail:String) -> Bool {
-
+        
         let emailFormat = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
         let emailPredicate = NSPredicate(format:"SELF MATCHES %@", emailFormat)
         return emailPredicate.evaluate(with: enteredEmail)
-
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let textFieldText = textField.text,
-            let rangeOfTextToReplace = Range(range, in: textFieldText) else {
-                return false
+              let rangeOfTextToReplace = Range(range, in: textFieldText) else {
+            return false
         }
         let substringToReplace = textFieldText[rangeOfTextToReplace]
         let count = textFieldText.count - substringToReplace.count + string.count
@@ -223,23 +208,8 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     {
         let sendAndContiuneGesture = UITapGestureRecognizer(target: self, action: #selector(sendAndContiune))
         
-        let openCameraGesture = UITapGestureRecognizer(target: self, action: #selector(openCamera))
-        
-        let openGalleryGesture = UITapGestureRecognizer(target: self, action: #selector(openGallery))
-        
-        let goHomeGesture = UITapGestureRecognizer(target: self, action: #selector(goHome))
-        
         sendAndContiuneView.addGestureRecognizer(sendAndContiuneGesture)
         sendAndContiuneView.isUserInteractionEnabled = true
-        
-        cameraButtonView.addGestureRecognizer(openCameraGesture)
-        cameraButtonView.isUserInteractionEnabled = true
-        
-        galleryButtonView.addGestureRecognizer(openGalleryGesture)
-        galleryButtonView.isUserInteractionEnabled = true
-        
-        goHomeView.isUserInteractionEnabled = true
-        goHomeView.addGestureRecognizer(goHomeGesture)
         
         nameText.delegate = self
         surnameText.delegate = self
@@ -248,16 +218,13 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
         telText.delegate = self
         
         mailText.delegate = self
-        
-
-        
     }
     
     func validate(value: String) -> Bool {
-            let tcrgx = "^\\d{11}$"
-            let tcTest = NSPredicate(format: "SELF MATCHES %@", tcrgx)
-            let result = tcTest.evaluate(with: value)
-            return result
+        let tcrgx = "^\\d{11}$"
+        let tcTest = NSPredicate(format: "SELF MATCHES %@", tcrgx)
+        let result = tcTest.evaluate(with: value)
+        return result
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -285,21 +252,18 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
         default:
             delegate?.dismissKeyboard()
         }
- 
         return true
     }
     
     @IBAction func datePickerChanged(sender: UIDatePicker) {
         let dateFormatter = DateFormatter()
-       dateFormatter.dateFormat = "MMM dd, YYYY"
+        dateFormatter.dateFormat = "MMM dd, YYYY"
         
         let bottomOffset = CGPoint(x: 0, y: 200)
         scrollAres.setContentOffset(bottomOffset, animated: true)
-    
     }
     
     func KYC() {
-        
         if var ad = nameText.text {
             if var soyad = surnameText.text {
                 if ad.last == " " {ad.removeLast()}
@@ -312,7 +276,6 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
                 }
             }
         }
-         
     }
     
     @objc func sendAndContiune()
@@ -335,49 +298,19 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
             tcText.textColor = .red
             error = true
         }
-         
+        
         if error {
             DispatchQueue.main.async {
                 
                 self.errors?.errorHandler(message: "Girdiğiniz bilgileri kontrol edip tekrar deneyin.", title: "Bir Hata Oluştu", error: true)
             }
-
+            
             understand.isEnabled = true
             sendAndContiuneView.isUserInteractionEnabled = true
             sendAndContiuneView.alpha = 1
             return
         }
-
         KYC()
-        
-
-    }
-    
-    @objc func openCamera()
-    {
-        KYC()
-        
-        finishedView.translatesAutoresizingMaskIntoConstraints = true
-        finishedView.frame.origin.y = self.frame.height
-        
-        UIView.animate(withDuration: 0.3) {
-            self.sendIDPhotoView.frame.origin.y = self.self.frame.height
-            self.finishedView.frame.origin.y = 0
-            self.finishedView.alpha = 1
-        }
-    }
-    
-    @objc func openGallery()
-    {
-        delegate?.uploadImage()
-        finishedView.translatesAutoresizingMaskIntoConstraints = true
-        finishedView.frame.origin.y = self.frame.height
-        
-        UIView.animate(withDuration: 0.3) {
-            self.enterInfoView.frame.origin.y = self.self.frame.height
-            self.sendIDPhotoView.frame.origin.y = 0
-            self.finishedView.alpha = 1
-        }
     }
     
     @objc func goHome()
@@ -392,13 +325,10 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
         if isVerified {
             delegate?.dismissVErifyAccountView()
         } else {
-            finishedView.translatesAutoresizingMaskIntoConstraints = true
-            finishedView.frame.origin.y = self.frame.height
             
             UIView.animate(withDuration: 0.3) {
                 self.enterInfoView.frame.origin.y = 0
                 self.enterInfoView.alpha = 1
-                self.finishedView.alpha = 0
             }
         }
     }

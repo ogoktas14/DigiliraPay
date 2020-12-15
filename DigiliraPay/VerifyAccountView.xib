@@ -15,147 +15,6 @@
             <rect key="frame" x="0.0" y="0.0" width="428" height="926"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZG5-Ii-d8C">
-                    <rect key="frame" x="0.0" y="0.0" width="428" height="926"/>
-                    <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0mt-SW-y2X">
-                            <rect key="frame" x="20" y="450.33333333333331" width="388" height="73.999999999999943"/>
-                            <string key="text">Yukarıda gösterildiği gibi kimliğinizin ön yüzü gözükecek biçimde boş bir kağıda günün tarihini ve DigiliraPAY yazarak yükleyin.</string>
-                            <fontDescription key="fontDescription" name="Avenir-Light" family="Avenir" pointSize="18"/>
-                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="verifyProfilePhoto" translatesAutoresizingMaskIntoConstraints="NO" id="Vxd-gp-Bk2">
-                            <rect key="frame" x="57" y="84" width="314" height="280.66666666666669"/>
-                            <constraints>
-                                <constraint firstAttribute="width" secondItem="Vxd-gp-Bk2" secondAttribute="height" multiplier="75:67" id="hHC-zh-iVD"/>
-                            </constraints>
-                        </imageView>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Son bir adım kaldı." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Eup-GK-o6m">
-                            <rect key="frame" x="20" y="394.66666666666669" width="388" height="35.666666666666686"/>
-                            <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="26"/>
-                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mtb-ld-ujV" customClass="smallButton" customModule="DigiliraPay" customModuleProvider="target">
-                            <rect key="frame" x="84" y="564.33333333333337" width="260.66666666666669" height="52.666666666666629"/>
-                            <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Galeriden Seç" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NHd-8z-a4I">
-                                    <rect key="frame" x="68.333333333333343" y="13.333333333333258" width="124" height="26"/>
-                                    <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="19"/>
-                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                            </subviews>
-                            <color key="backgroundColor" systemColor="systemOrangeColor"/>
-                            <constraints>
-                                <constraint firstItem="NHd-8z-a4I" firstAttribute="centerX" secondItem="mtb-ld-ujV" secondAttribute="centerX" id="2Bf-Od-blm"/>
-                                <constraint firstItem="NHd-8z-a4I" firstAttribute="centerY" secondItem="mtb-ld-ujV" secondAttribute="centerY" id="UR3-QY-4I1"/>
-                                <constraint firstAttribute="width" secondItem="mtb-ld-ujV" secondAttribute="height" multiplier="123:25" id="WOU-Q1-dq2"/>
-                            </constraints>
-                        </view>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fdz-ha-wt8">
-                            <rect key="frame" x="84" y="657" width="260.66666666666669" height="53"/>
-                            <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Daha Sonra" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7yO-lv-DRQ">
-                                    <rect key="frame" x="79" y="13.666666666666629" width="102.66666666666669" height="26"/>
-                                    <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="19"/>
-                                    <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                            </subviews>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <constraints>
-                                <constraint firstItem="7yO-lv-DRQ" firstAttribute="centerX" secondItem="fdz-ha-wt8" secondAttribute="centerX" id="uBR-Aa-qod"/>
-                                <constraint firstItem="7yO-lv-DRQ" firstAttribute="centerY" secondItem="fdz-ha-wt8" secondAttribute="centerY" id="zwm-uQ-Hk9"/>
-                            </constraints>
-                        </view>
-                    </subviews>
-                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    <constraints>
-                        <constraint firstItem="Eup-GK-o6m" firstAttribute="top" secondItem="Vxd-gp-Bk2" secondAttribute="bottom" constant="30" id="4KI-LL-MIE"/>
-                        <constraint firstItem="Vxd-gp-Bk2" firstAttribute="leading" secondItem="ZG5-Ii-d8C" secondAttribute="leading" constant="57" id="5P9-Gf-eep"/>
-                        <constraint firstItem="fdz-ha-wt8" firstAttribute="height" secondItem="mtb-ld-ujV" secondAttribute="height" id="EjD-r9-sb5"/>
-                        <constraint firstItem="mtb-ld-ujV" firstAttribute="top" secondItem="0mt-SW-y2X" secondAttribute="bottom" constant="40" id="FV5-xV-Q6I"/>
-                        <constraint firstItem="fdz-ha-wt8" firstAttribute="leading" secondItem="mtb-ld-ujV" secondAttribute="leading" id="IwJ-Fs-xuG"/>
-                        <constraint firstItem="fdz-ha-wt8" firstAttribute="trailing" secondItem="mtb-ld-ujV" secondAttribute="trailing" id="J7Y-5j-RMI"/>
-                        <constraint firstItem="0mt-SW-y2X" firstAttribute="leading" secondItem="Eup-GK-o6m" secondAttribute="leading" id="NOh-1n-5BD"/>
-                        <constraint firstItem="mtb-ld-ujV" firstAttribute="leading" secondItem="ZG5-Ii-d8C" secondAttribute="leading" constant="84" id="Nga-wY-4hW"/>
-                        <constraint firstItem="0mt-SW-y2X" firstAttribute="trailing" secondItem="Eup-GK-o6m" secondAttribute="trailing" id="OFi-0q-3Jm"/>
-                        <constraint firstItem="Eup-GK-o6m" firstAttribute="leading" secondItem="ZG5-Ii-d8C" secondAttribute="leading" constant="20" id="gsa-a7-jgO"/>
-                        <constraint firstItem="fdz-ha-wt8" firstAttribute="top" secondItem="mtb-ld-ujV" secondAttribute="bottom" constant="40" id="hWf-0q-vYu"/>
-                        <constraint firstAttribute="trailing" secondItem="Eup-GK-o6m" secondAttribute="trailing" constant="20" id="jbW-ym-mMU"/>
-                        <constraint firstAttribute="trailing" secondItem="mtb-ld-ujV" secondAttribute="trailing" constant="83.5" id="mx6-DR-Iv0"/>
-                        <constraint firstItem="Vxd-gp-Bk2" firstAttribute="top" secondItem="ZG5-Ii-d8C" secondAttribute="top" constant="84" id="nWz-XI-MKg"/>
-                        <constraint firstAttribute="trailing" secondItem="Vxd-gp-Bk2" secondAttribute="trailing" constant="57" id="oYq-qt-yVy"/>
-                        <constraint firstItem="0mt-SW-y2X" firstAttribute="top" secondItem="Eup-GK-o6m" secondAttribute="bottom" constant="20" id="owu-6c-6TD"/>
-                    </constraints>
-                </view>
-                <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ewN-PX-A75">
-                    <rect key="frame" x="0.0" y="0.0" width="428" height="926"/>
-                    <subviews>
-                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="İnceleme tamamlandığında bilgilendirileceksiniz." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yC1-nk-myM">
-                            <rect key="frame" x="20" y="572.33333333333337" width="388" height="52"/>
-                            <fontDescription key="fontDescription" name="Avenir-Light" family="Avenir" pointSize="19"/>
-                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Gönderdiğiniz bilgiler kontrol ediliyor." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rMR-xX-Lhj">
-                            <rect key="frame" x="20" y="487.99999999999994" width="388" height="68.333333333333314"/>
-                            <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="25"/>
-                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fsn-NN-8bJ">
-                            <rect key="frame" x="97" y="214" width="234" height="234"/>
-                            <subviews>
-                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="TransactionPopupSucces" translatesAutoresizingMaskIntoConstraints="NO" id="8fD-0q-KtW">
-                                    <rect key="frame" x="0.0" y="0.0" width="234" height="234"/>
-                                </imageView>
-                            </subviews>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <constraints>
-                                <constraint firstAttribute="bottom" secondItem="8fD-0q-KtW" secondAttribute="bottom" id="D9L-7W-A1c"/>
-                                <constraint firstItem="8fD-0q-KtW" firstAttribute="leading" secondItem="Fsn-NN-8bJ" secondAttribute="leading" id="JQN-ud-LUo"/>
-                                <constraint firstItem="8fD-0q-KtW" firstAttribute="top" secondItem="Fsn-NN-8bJ" secondAttribute="top" id="fIz-vk-hZO"/>
-                                <constraint firstAttribute="width" secondItem="Fsn-NN-8bJ" secondAttribute="height" multiplier="1:1" id="mWp-lH-TkR"/>
-                                <constraint firstAttribute="trailing" secondItem="8fD-0q-KtW" secondAttribute="trailing" id="oFu-vm-GpF"/>
-                            </constraints>
-                        </view>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WQA-l5-uQA" customClass="BlueGradientView" customModule="DigiliraPay" customModuleProvider="target">
-                            <rect key="frame" x="67" y="684.33333333333337" width="294" height="50"/>
-                            <color key="backgroundColor" systemColor="systemBlueColor"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="50" id="UJr-WN-Qda"/>
-                            </constraints>
-                        </view>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tamam" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rv8-tH-5Of">
-                            <rect key="frame" x="67" y="684.33333333333337" width="294" height="50"/>
-                            <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="19"/>
-                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                    </subviews>
-                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    <constraints>
-                        <constraint firstItem="Rv8-tH-5Of" firstAttribute="top" secondItem="WQA-l5-uQA" secondAttribute="top" id="1nV-ny-VeR"/>
-                        <constraint firstItem="yC1-nk-myM" firstAttribute="leading" secondItem="rMR-xX-Lhj" secondAttribute="leading" id="1xH-2W-iBX"/>
-                        <constraint firstAttribute="centerX" secondItem="WQA-l5-uQA" secondAttribute="centerX" id="3DO-n0-VjE"/>
-                        <constraint firstItem="Fsn-NN-8bJ" firstAttribute="centerX" secondItem="ewN-PX-A75" secondAttribute="centerX" id="5Rc-7o-0rF"/>
-                        <constraint firstItem="rMR-xX-Lhj" firstAttribute="top" secondItem="Fsn-NN-8bJ" secondAttribute="bottom" constant="40" id="KJl-wA-JL4"/>
-                        <constraint firstItem="Fsn-NN-8bJ" firstAttribute="centerY" secondItem="ewN-PX-A75" secondAttribute="centerY" constant="-132" id="LrD-kU-bCx"/>
-                        <constraint firstItem="yC1-nk-myM" firstAttribute="trailing" secondItem="rMR-xX-Lhj" secondAttribute="trailing" id="R2e-OY-WXO"/>
-                        <constraint firstItem="WQA-l5-uQA" firstAttribute="top" secondItem="rMR-xX-Lhj" secondAttribute="bottom" constant="128" id="Sct-5n-WZ6"/>
-                        <constraint firstItem="rMR-xX-Lhj" firstAttribute="leading" secondItem="ewN-PX-A75" secondAttribute="leading" constant="20" id="X3c-Rc-50A"/>
-                        <constraint firstItem="yC1-nk-myM" firstAttribute="top" secondItem="rMR-xX-Lhj" secondAttribute="bottom" constant="16" id="Zbl-1a-Hlb"/>
-                        <constraint firstAttribute="trailing" secondItem="rMR-xX-Lhj" secondAttribute="trailing" constant="20" id="b1T-4d-aBd"/>
-                        <constraint firstItem="Rv8-tH-5Of" firstAttribute="leading" secondItem="WQA-l5-uQA" secondAttribute="leading" id="bkI-gM-3bz"/>
-                        <constraint firstItem="Rv8-tH-5Of" firstAttribute="bottom" secondItem="WQA-l5-uQA" secondAttribute="bottom" id="cRH-aJ-C5n"/>
-                        <constraint firstAttribute="trailing" secondItem="Fsn-NN-8bJ" secondAttribute="trailing" constant="97" id="dL8-As-nC9"/>
-                        <constraint firstItem="Rv8-tH-5Of" firstAttribute="trailing" secondItem="WQA-l5-uQA" secondAttribute="trailing" id="eQL-pH-Wfm"/>
-                        <constraint firstItem="Fsn-NN-8bJ" firstAttribute="leading" secondItem="ewN-PX-A75" secondAttribute="leading" constant="97" id="uia-qD-fpE"/>
-                    </constraints>
-                </view>
                 <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zj3-7D-wIQ">
                     <rect key="frame" x="0.0" y="0.0" width="428" height="926"/>
                     <subviews>
@@ -474,36 +333,20 @@
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="JQu-9T-9pP" secondAttribute="trailing" constant="20" id="9Ni-vk-gPn"/>
-                <constraint firstItem="ZG5-Ii-d8C" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="BK3-qP-bLk"/>
-                <constraint firstItem="ZG5-Ii-d8C" firstAttribute="width" secondItem="Zj3-7D-wIQ" secondAttribute="width" id="JjB-0w-GrW"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="ewN-PX-A75" secondAttribute="trailing" id="Skg-2E-Voz"/>
                 <constraint firstAttribute="bottom" secondItem="Zj3-7D-wIQ" secondAttribute="bottom" id="Ulj-O4-Upl"/>
-                <constraint firstItem="ZG5-Ii-d8C" firstAttribute="height" secondItem="Zj3-7D-wIQ" secondAttribute="height" id="WQ6-bv-0iy"/>
                 <constraint firstItem="JQu-9T-9pP" firstAttribute="centerY" secondItem="T6Y-az-2Ae" secondAttribute="centerY" id="Y2Y-Xu-Zga"/>
-                <constraint firstItem="ewN-PX-A75" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="YHC-6a-gez"/>
                 <constraint firstItem="Zj3-7D-wIQ" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="kTl-5Q-hHO"/>
                 <constraint firstItem="Zj3-7D-wIQ" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="mhr-R1-S5r"/>
-                <constraint firstAttribute="bottom" secondItem="ewN-PX-A75" secondAttribute="bottom" id="oDA-Hn-wqX"/>
-                <constraint firstItem="WQA-l5-uQA" firstAttribute="width" secondItem="gZC-Lu-7lZ" secondAttribute="width" multiplier="0.7" id="sLR-vj-7hJ"/>
-                <constraint firstItem="ewN-PX-A75" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="t6N-q3-8zM"/>
                 <constraint firstItem="Zj3-7D-wIQ" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="uLi-mV-Idu"/>
-                <constraint firstItem="ZG5-Ii-d8C" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="xau-ZW-BFw"/>
             </constraints>
             <connections>
-                <outlet property="cameraButtonView" destination="fdz-ha-wt8" id="XiV-d0-bVu"/>
                 <outlet property="descLabel" destination="nGX-1i-TFA" id="Lza-01-zFI"/>
                 <outlet property="dogum" destination="8Ii-Qb-kcS" id="vfs-tK-EWv"/>
                 <outlet property="enterInfoView" destination="Zj3-7D-wIQ" id="SZQ-NV-J52"/>
-                <outlet property="finishedView" destination="ewN-PX-A75" id="Pfh-P4-mY6"/>
-                <outlet property="galleryButtonView" destination="mtb-ld-ujV" id="UnB-1R-3Ee"/>
-                <outlet property="goHomeView" destination="WQA-l5-uQA" id="rqd-R2-NS4"/>
-                <outlet property="infoTitle" destination="rMR-xX-Lhj" id="PZH-Q5-vX7"/>
                 <outlet property="mailText" destination="4Uf-ML-kbQ" id="g9n-7h-pxy"/>
                 <outlet property="nameText" destination="anA-Tm-0CD" id="9m3-E1-KNB"/>
-                <outlet property="onayImage" destination="8fD-0q-KtW" id="nh4-0a-iV9"/>
                 <outlet property="scrollAres" destination="gZC-Lu-7lZ" id="6er-aX-WSb"/>
                 <outlet property="sendAndContiuneView" destination="ZsM-Uo-ije" id="Lbd-3g-Ksf"/>
-                <outlet property="sendIDPhotoView" destination="ZG5-Ii-d8C" id="bWr-fF-238"/>
                 <outlet property="surnameText" destination="Gk1-ac-RfA" id="7Zr-Aa-sRR"/>
                 <outlet property="tcText" destination="g5z-i2-1vs" id="nUA-nk-The"/>
                 <outlet property="telText" destination="EuO-gN-eh3" id="gnc-aO-LyE"/>
@@ -514,20 +357,12 @@
         </view>
     </objects>
     <resources>
-        <image name="TransactionPopupSucces" width="264" height="263"/>
         <image name="exit" width="44" height="44"/>
-        <image name="verifyProfilePhoto" width="592" height="568"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
-        <systemColor name="systemBlueColor">
-            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
         <systemColor name="systemGroupedBackgroundColor">
             <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemOrangeColor">
-            <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemPinkColor">
             <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

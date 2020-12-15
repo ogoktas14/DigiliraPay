@@ -14,8 +14,6 @@ class PaymentCat: WalletView1, ColoredCardViewDelegate {
         delegate?.passData(data: data)
     }
     
-    
-
     @IBOutlet weak var contentView: UIView!
     weak var delegate: PaymentCatViewsDelegate?
     var tableView = UITableView()
@@ -52,9 +50,7 @@ class PaymentCat: WalletView1, ColoredCardViewDelegate {
             
         }
         
-        
         self.reload(cardViews: coloredCardViews)
-        
         self.didUpdatePresentedCardViewBlock = { (_) in
             
         }

@@ -52,8 +52,6 @@ class MainScreen: UIViewController {
     var walletView: WalletView = WalletView()
     var menuXib: MenuView = MenuView()
     var sendMoneyView = CoinSendView()
-    var loadMoneyView = QRView()
-    var successView = TransactionPopup()
     var seedView = Verify_StartView()
     var paymentCat = PaymentCat()
     var profileMenuView = ProfileMenuView()
@@ -678,10 +676,9 @@ class MainScreen: UIViewController {
             QR = qr
             self.getOrder(address: QR)
         }
+        
+        self.throwEngine.warningView.removeFromSuperview()
  
-        if (isSuccessView) {
-            self.close()
-        }
         
         if isVerifyAccount {
             self.dismissVErifyAccountView()
@@ -954,7 +951,7 @@ class MainScreen: UIViewController {
         }
         
         if kullanici.status != 0 {
-            profileMenuView.profileWarning.image = UIImage(named: "checkImg")
+            profileMenuView.profileWarning.image = UIImage(named: "success")
             
         }
         
@@ -993,7 +990,7 @@ class MainScreen: UIViewController {
             cardNumber: "Bitexen Hesabı Ekle",
             remarks: "Bitexen hesabınızı DigiliraPAY'e bağlayarak hesabınızdaki bakiyelerinizi kullanarak alışveriş yapabilirsiniz.",
             apiSet: false,
-            bg: "bexbg"
+            bg: "bitexen_hover-1"
         )
         
         if let api = decodeDefaults(forKey: bex.bexApiDefaultKey.key, conformance: bex.bitexenAPICred.self) {
@@ -1011,11 +1008,13 @@ class MainScreen: UIViewController {
         let okex = digilira.cardData.init(
             org: "Okex",
             bgColor:  UIColor(red: 0.0431, green: 0.1294, blue: 0.3843, alpha: 1.0), /* #0b2162 */
-            logoName: "logo_okex",
+            logoName: "okex-1",
             cardHolder:  "",
             cardNumber: "Okex Hesabı Ekle",
             remarks: "OKEX hesabınıza giriş yapın, Ayarlar bölümünden Erişim Ayarlarını belirleyin.",
-            apiSet: false
+            apiSet: false,
+            
+            bg: "okex_logo"
             
         )
         
@@ -1564,11 +1563,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
     func goQRScreen()
     {
         chooseQRSource()
-    }
-    
-    
-    
-    
+    } 
 }
 
 extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder yükle butonlarının tetiklenmesi ve işlemleri
@@ -1652,35 +1647,6 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
         .lightContent
     }
     
-    func showMyQr() {
-        
-        
-        isShowLoadCoinView = true
-        qrView.frame.origin.y = view.frame.height
-        loadMoneyView = UIView().loadNib(name: "QRView") as! QRView
-        loadMoneyView.frame = qrView.frame
-        loadMoneyView.delegate = self
-        
-        loadMoneyView.address = selectedCoin
-        
-        for subView in qrView.subviews
-        { subView.removeFromSuperview() }
-        
-        qrView.addSubview(loadMoneyView)
-        qrView.isHidden = false
-        qrView.translatesAutoresizingMaskIntoConstraints = true
-        
-        UIView.animate(withDuration: 0.3)
-        {
-            self.qrView.alpha = 1
-            self.qrView.frame.origin.y = 0
-            self.loadMoneyView.frame.origin.y = 0
-            self.sendMoneyBackButton.isHidden = false
-            
-        }
-        
-    }
-    
     func showMyFQr() {
         qrView.frame.origin.y = view.frame.height
         paraYatirView = UIView().loadNib(name: "ParaYatirView") as! ParaYatirView
@@ -1712,62 +1678,15 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
         }
         
     }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showLoadMoney" {
-            if let viewController = segue.destination as? ShareQRVC {
-                viewController.ticker = digiliraPay.ticker(ticker: Ticker)
-                
-            }
-        }
-        
-        
-        
-    }
-    
-    
-    
+
     func load()
     {
         showMyFQr()
     }
-    
-    
-    
-    func alertConfirm (title: String, message: String)-> Void {
-        
-        
-    }
+ 
 }
 
 
-
-extension MainScreen: TransactionPopupDelegate2 {
-    func close() {
-        
-        menuView.isHidden = false
-        isNewSendScreen = false
-        dismissNewSend()
-        
-        //accountButton.isHidden = false
-        //profileMenuButton.isHidden = false
-        
-        UIView.animate(withDuration: 1) {
-            
-            self.successView.frame.origin.y = (self.contentView.frame.maxY)
-            self.successView.alpha = 0
-            self.isSuccessView = false
-            self.bottomView.isHidden = false
-            self.walletOperationView.isUserInteractionEnabled = true
-            
-            for subView in self.qrView.subviews
-            { subView.removeFromSuperview() }
-            
-        }
-        
-    }
-    
-}
 
 
 extension MainScreen: SendCoinDelegate // Wallet ekranı gönderme işlemi
@@ -2398,7 +2317,7 @@ extension MainScreen: UIImagePickerControllerDelegate {
             
             DispatchQueue.main.async {
                 
-                self.warningView.removeFromSuperview()
+                self.throwEngine.warningView.removeFromSuperview()
                 self.throwEngine.alertWarning(title: "Bilgileriniz Yüklendi", message: "Gönderdiğiniz bilgiler kontrol edildikten sonra profiliniz güncellenecektir.", error: false)
            
             self.digiliraPay.onLogin2 = { user, status in
@@ -2413,6 +2332,7 @@ extension MainScreen: UIImagePickerControllerDelegate {
         }
         
             throwEngine.alertTransaction(title: "Yükleniyor...", message: "Fotoğrafınız yükleniyor lütfen bekleyin.", verifying: true)
+            
             let b64 = digiliraPay.convertImageToBase64String(img: image)
             let user = digilira.exUser.init(
                 status:2,
@@ -2559,7 +2479,7 @@ extension MainScreen: VerifyAccountDelegate
             self.profileMenuView.verifyProfileView.alpha = 1
             self.profileMenuView.verifyProfileView.isUserInteractionEnabled = true
             if user.status != 0 {
-                self.profileMenuView.profileWarning.image = UIImage(named: "checkImg")
+                self.profileMenuView.profileWarning.image = UIImage(named: "success")
             }
         }
 
@@ -2569,7 +2489,7 @@ extension MainScreen: VerifyAccountDelegate
     func dismissVErifyAccountView() // profil doğrulama sayfasının kapatılması
     {
         if kullanici.status != 0 {
-            self.profileMenuView.profileWarning.image = UIImage(named: "checkImg")
+            self.profileMenuView.profileWarning.image = UIImage(named: "success")
         }
                 
         if QR.address != nil {

@@ -1,58 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="ColoredCardView" customModule="DigiliraPAY" customModuleProvider="target">
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="ColoredCardView" customModule="DigiliraPay" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OGR-lR-C5v">
                     <rect key="frame" x="10" y="0.0" width="355" height="236.5"/>
                     <subviews>
-                        <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.40000000000000002" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Zds-GX-gv9">
-                            <rect key="frame" x="0.0" y="0.0" width="355" height="236.5"/>
+                        <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.40000000000000002" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bitexen_hover-1" translatesAutoresizingMaskIntoConstraints="NO" id="Zds-GX-gv9">
+                            <rect key="frame" x="-30" y="63" width="300" height="224"/>
                         </imageView>
-                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4001 **** **** 4246" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s5j-p2-PxI">
-                            <rect key="frame" x="10" y="126" width="315" height="30.5"/>
-                            <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="22"/>
-                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <nil key="highlightedColor"/>
-                        </label>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" semanticContentAttribute="forceLeftToRight" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="sQQ-x4-oSq">
+                            <rect key="frame" x="30" y="20" width="142" height="94.5"/>
+                        </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CAN MALAY" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kgB-fs-lRE">
                             <rect key="frame" x="30" y="167.5" width="315" height="29"/>
                             <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="21"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" semanticContentAttribute="forceLeftToRight" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="sQQ-x4-oSq">
-                            <rect key="frame" x="30" y="20" width="142" height="94.5"/>
-                        </imageView>
+                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4001 **** **** 4246" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s5j-p2-PxI">
+                            <rect key="frame" x="10" y="126" width="315" height="30.5"/>
+                            <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="22"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
                     </subviews>
                     <color key="backgroundColor" systemColor="systemTealColor"/>
                     <constraints>
                         <constraint firstItem="sQQ-x4-oSq" firstAttribute="width" secondItem="OGR-lR-C5v" secondAttribute="width" multiplier="0.4" id="0Zp-6V-tCy"/>
+                        <constraint firstItem="Zds-GX-gv9" firstAttribute="top" secondItem="OGR-lR-C5v" secondAttribute="top" constant="63" id="5QD-Wr-bja"/>
                         <constraint firstItem="sQQ-x4-oSq" firstAttribute="height" secondItem="OGR-lR-C5v" secondAttribute="height" multiplier="0.4" id="65o-Ce-vo8"/>
                         <constraint firstAttribute="bottom" secondItem="kgB-fs-lRE" secondAttribute="bottom" constant="40" id="8AV-ns-5wt"/>
                         <constraint firstAttribute="trailing" secondItem="s5j-p2-PxI" secondAttribute="trailing" constant="30" id="EAV-Qr-eFh"/>
                         <constraint firstItem="sQQ-x4-oSq" firstAttribute="top" secondItem="OGR-lR-C5v" secondAttribute="top" constant="20" id="FdB-y5-f2T"/>
-                        <constraint firstItem="Zds-GX-gv9" firstAttribute="leading" secondItem="OGR-lR-C5v" secondAttribute="leading" id="I6D-T0-q63"/>
-                        <constraint firstAttribute="trailing" secondItem="Zds-GX-gv9" secondAttribute="trailing" id="ULG-eJ-96C"/>
+                        <constraint firstItem="Zds-GX-gv9" firstAttribute="height" secondItem="OGR-lR-C5v" secondAttribute="height" multiplier="0.947146" id="PVX-tK-Cus"/>
                         <constraint firstItem="kgB-fs-lRE" firstAttribute="leading" secondItem="OGR-lR-C5v" secondAttribute="leading" constant="30" id="VOl-rJ-WWi"/>
+                        <constraint firstItem="Zds-GX-gv9" firstAttribute="width" secondItem="OGR-lR-C5v" secondAttribute="width" multiplier="0.84507" id="cGr-E2-ron"/>
                         <constraint firstAttribute="width" secondItem="OGR-lR-C5v" secondAttribute="height" multiplier="84:56" id="cQQ-Dl-T29"/>
-                        <constraint firstItem="Zds-GX-gv9" firstAttribute="top" secondItem="OGR-lR-C5v" secondAttribute="top" id="fvI-zd-Li6"/>
                         <constraint firstItem="s5j-p2-PxI" firstAttribute="leading" secondItem="OGR-lR-C5v" secondAttribute="leading" constant="10" id="jbh-Wz-Nm5"/>
                         <constraint firstItem="sQQ-x4-oSq" firstAttribute="leading" secondItem="OGR-lR-C5v" secondAttribute="leading" constant="30" id="lCb-FQ-r4U"/>
                         <constraint firstAttribute="bottom" secondItem="s5j-p2-PxI" secondAttribute="bottom" constant="80" id="o8I-rb-iwg"/>
                         <constraint firstAttribute="trailing" secondItem="kgB-fs-lRE" secondAttribute="trailing" constant="10" id="sib-2C-RA6"/>
-                        <constraint firstAttribute="bottom" secondItem="Zds-GX-gv9" secondAttribute="bottom" id="xXn-ag-FMH"/>
+                        <constraint firstItem="Zds-GX-gv9" firstAttribute="leading" secondItem="OGR-lR-C5v" secondAttribute="leading" constant="-30" id="tYm-At-jKb"/>
                     </constraints>
                 </view>
                 <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oYh-rf-XaK">
@@ -84,6 +84,7 @@
         </view>
     </objects>
     <resources>
+        <image name="bitexen_hover-1" width="99" height="74"/>
         <systemColor name="systemTealColor">
             <color red="0.35294117647058826" green="0.78431372549019607" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

@@ -17,9 +17,7 @@ class PayTableViewCell: UITableViewCell {
     @IBOutlet weak var prodPrice: UILabel!
     @IBOutlet weak var BGView: UIView!
     @IBOutlet weak var discountView: UIView!
- 
-    
-    
+  
     override func awakeFromNib() {
         super.awakeFromNib()
      }

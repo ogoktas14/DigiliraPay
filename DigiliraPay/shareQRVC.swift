@@ -15,7 +15,6 @@ import Photos
 class ShareQRVC: UIViewController {
     
     @IBOutlet weak var mainView: UIView!
-    var loadMoneyView = QRView()
     var sendMoneyView = newSendView()
     
     let pasteboard = UIPasteboard.general
@@ -43,26 +42,9 @@ class ShareQRVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool)
     {
-        shareQRScreen()
+
     }
-    
-    func shareQRScreen() {
-        
-        if let loadMoneyView =  UIView().loadNib(name: "QRView") as? QRView {
-           loadMoneyView.ticker = ticker
-           loadMoneyView.frame = CGRect(x: 0,
-                                        y: 0,
-                                        width: view.frame.width,
-                                        height: view.frame.height)
-           loadMoneyView.delegate = self
-           mainView.addSubview(loadMoneyView)
-           mainView.isHidden = false
-           mainView.translatesAutoresizingMaskIntoConstraints = true
-        }
-         
-        
-    }
-    
+
     func goNewSendView() {
          
         if let sendMoneyView = UIView().loadNib(name: "newSendView") as? newSendView {

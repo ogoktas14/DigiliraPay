@@ -8,13 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		0023C0FC2517C92B0042B50C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0023C0FA2517C92B0042B50C /* Main.storyboard */; };
-		003B35DC23564409004EE63F /* TransactionPopupDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 003B35DB23564409004EE63F /* TransactionPopupDelegate.swift */; };
 		0060807E23795453006FFBD2 /* constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0060807D23795453006FFBD2 /* constants.swift */; };
 		00608083237B404F006FFBD2 /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00608082237B404F006FFBD2 /* LocalAuthentication.framework */; };
 		006B1EE6234CC25B0045B6B4 /* custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 006B1EE5234CC25B0045B6B4 /* custom.swift */; };
 		006B1EE8234CC2720045B6B4 /* dPayApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 006B1EE7234CC2720045B6B4 /* dPayApi.swift */; };
 		0080FAC4234CA0B900B6D636 /* blockchain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0080FAC3234CA0B900B6D636 /* blockchain.swift */; };
-		00C592B223A556AA0036A346 /* TransactionDetailPopup.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00C592B123A556AA0036A346 /* TransactionDetailPopup.xib */; };
 		28AA4F6D6F9B6977B988457B /* Pods_DigiliraPay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B7278F70D172AF69D354796 /* Pods_DigiliraPay.framework */; };
 		880541F62319692D004EE85F /* TableViewCellExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880541F52319692C004EE85F /* TableViewCellExtension.swift */; };
 		880541FA2319702B004EE85F /* CoinTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880541F82319702B004EE85F /* CoinTableViewCell.swift */; };
@@ -32,10 +30,6 @@
 		882AAB0F22FC96DE004CDAA6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 882AAB0D22FC96DE004CDAA6 /* LaunchScreen.storyboard */; };
 		882B9B6722FEFAA500D6E7B6 /* OnBoardingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 882B9B6622FEFAA500D6E7B6 /* OnBoardingView.xib */; };
 		882E99BD232301BB0061C7AC /* LetsStartSkipDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882E99BC232301BB0061C7AC /* LetsStartSkipDelegate.swift */; };
-		88309EB2231E73C600F96C05 /* TransactionPopup.xib in Resources */ = {isa = PBXBuildFile; fileRef = 88309EB1231E73C600F96C05 /* TransactionPopup.xib */; };
-		88309EB4231E73DC00F96C05 /* TransactionPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88309EB3231E73DC00F96C05 /* TransactionPopup.swift */; };
-		88309EB8231E7FC600F96C05 /* QRView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 88309EB7231E7FC600F96C05 /* QRView.xib */; };
-		88309EBA231E7FD200F96C05 /* QRView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88309EB9231E7FD200F96C05 /* QRView.swift */; };
 		88309EBE231FD08500F96C05 /* LoadCoinDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88309EBD231FD08500F96C05 /* LoadCoinDelegate.swift */; };
 		88309EC0231FD36000F96C05 /* VerifyAccountView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 88309EBF231FD36000F96C05 /* VerifyAccountView.xib */; };
 		88309EC2231FD38200F96C05 /* VerifyAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88309EC1231FD38200F96C05 /* VerifyAccountView.swift */; };
@@ -93,7 +87,6 @@
 		93534031253B093B00FFEA4D /* shareQRVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93534030253B093B00FFEA4D /* shareQRVC.swift */; };
 		93534036253C4F2C00FFEA4D /* newSendView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93534035253C4F2C00FFEA4D /* newSendView.xib */; };
 		93534039253C528600FFEA4D /* newSendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93534038253C528600FFEA4D /* newSendView.swift */; };
-		93534F1425483A4F0000329F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93534F1325483A4F0000329F /* ViewController.swift */; };
 		93534F1825496A950000329F /* bitexenApiView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93534F1725496A950000329F /* bitexenApiView.xib */; };
 		93534F1B2549851A0000329F /* BitexenAPIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93534F1A2549851A0000329F /* BitexenAPIView.swift */; };
 		93534F1E2549958C0000329F /* bitexenSignature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93534F1D2549958C0000329F /* bitexenSignature.swift */; };
@@ -124,14 +117,12 @@
 		003B3508234E2299004EE63F /* WavesSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = WavesSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		003B3509234E2299004EE63F /* WavesSDKCrypto.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = WavesSDKCrypto.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		003B350A234E2299004EE63F /* WavesSDKExtensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = WavesSDKExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		003B35DB23564409004EE63F /* TransactionPopupDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionPopupDelegate.swift; sourceTree = "<group>"; };
 		0060807D23795453006FFBD2 /* constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = constants.swift; sourceTree = "<group>"; };
 		00608081237B1573006FFBD2 /* DigiliraPayRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DigiliraPayRelease.entitlements; sourceTree = "<group>"; };
 		00608082237B404F006FFBD2 /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
 		006B1EE5234CC25B0045B6B4 /* custom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = custom.swift; sourceTree = "<group>"; };
 		006B1EE7234CC2720045B6B4 /* dPayApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dPayApi.swift; sourceTree = "<group>"; };
 		0080FAC3234CA0B900B6D636 /* blockchain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = blockchain.swift; sourceTree = "<group>"; };
-		00C592B123A556AA0036A346 /* TransactionDetailPopup.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TransactionDetailPopup.xib; sourceTree = "<group>"; };
 		232267938E12104C73060CF6 /* Pods-DigiliraPay.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DigiliraPay.debug.xcconfig"; path = "Target Support Files/Pods-DigiliraPay/Pods-DigiliraPay.debug.xcconfig"; sourceTree = "<group>"; };
 		6B7278F70D172AF69D354796 /* Pods_DigiliraPay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DigiliraPay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		71F87FB64A359B715E1F208F /* Pods-DigiliraPay.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DigiliraPay.release.xcconfig"; path = "Target Support Files/Pods-DigiliraPay/Pods-DigiliraPay.release.xcconfig"; sourceTree = "<group>"; };
@@ -154,10 +145,6 @@
 		882AAB1022FC96DE004CDAA6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		882B9B6622FEFAA500D6E7B6 /* OnBoardingView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OnBoardingView.xib; sourceTree = "<group>"; };
 		882E99BC232301BB0061C7AC /* LetsStartSkipDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LetsStartSkipDelegate.swift; sourceTree = "<group>"; };
-		88309EB1231E73C600F96C05 /* TransactionPopup.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransactionPopup.xib; sourceTree = "<group>"; };
-		88309EB3231E73DC00F96C05 /* TransactionPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionPopup.swift; sourceTree = "<group>"; };
-		88309EB7231E7FC600F96C05 /* QRView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = QRView.xib; sourceTree = "<group>"; };
-		88309EB9231E7FD200F96C05 /* QRView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRView.swift; sourceTree = "<group>"; };
 		88309EBD231FD08500F96C05 /* LoadCoinDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadCoinDelegate.swift; sourceTree = "<group>"; };
 		88309EBF231FD36000F96C05 /* VerifyAccountView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VerifyAccountView.xib; sourceTree = "<group>"; };
 		88309EC1231FD38200F96C05 /* VerifyAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyAccountView.swift; sourceTree = "<group>"; };
@@ -215,7 +202,6 @@
 		93534030253B093B00FFEA4D /* shareQRVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = shareQRVC.swift; sourceTree = "<group>"; };
 		93534035253C4F2C00FFEA4D /* newSendView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = newSendView.xib; sourceTree = "<group>"; };
 		93534038253C528600FFEA4D /* newSendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newSendView.swift; sourceTree = "<group>"; };
-		93534F1325483A4F0000329F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		93534F1725496A950000329F /* bitexenApiView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = bitexenApiView.xib; sourceTree = "<group>"; };
 		93534F1A2549851A0000329F /* BitexenAPIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitexenAPIView.swift; sourceTree = "<group>"; };
 		93534F1D2549958C0000329F /* bitexenSignature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bitexenSignature.swift; sourceTree = "<group>"; };
@@ -342,8 +328,6 @@
 				88CA936F231A4750008F894B /* TransactionDetailView.xib */,
 				88CA9376231A488A008F894B /* TransactionHistoryDetailCellHeader.xib */,
 				88CA937A231A48A0008F894B /* TransactionHistoryDetailCellDeatils.xib */,
-				88309EB1231E73C600F96C05 /* TransactionPopup.xib */,
-				88309EB7231E7FC600F96C05 /* QRView.xib */,
 				88A6BA4623203570002640D6 /* LegalView.xib */,
 				88114F612321602800AB3B5A /* ProfileUpgradeView.xib */,
 				889F2A2223158C5D00ACD656 /* ProfileMenuview.xib */,
@@ -389,8 +373,6 @@
 				88CA9379231A48A0008F894B /* TransactionHistoryDetailCellDeatils.swift */,
 				88CA9386231AFD3E008F894B /* CoinSendView.swift */,
 				88CA938E231BD0AE008F894B /* ProfileSettingsView.swift */,
-				88309EB3231E73DC00F96C05 /* TransactionPopup.swift */,
-				88309EB9231E7FD200F96C05 /* QRView.swift */,
 				88309EC1231FD38200F96C05 /* VerifyAccountView.swift */,
 				88A6BA4823203580002640D6 /* LegalView.swift */,
 				88114F632321604100AB3B5A /* ProfilUpgradeView.swift */,
@@ -400,7 +382,6 @@
 				936F25B325323B2E00C5FA85 /* ColoredCardView.swift */,
 				93534038253C528600FFEA4D /* newSendView.swift */,
 				9339084A255926450005B64A /* selectCoinView.swift */,
-				93534F1325483A4F0000329F /* ViewController.swift */,
 				93534F1A2549851A0000329F /* BitexenAPIView.swift */,
 				93757C2A256E3FDC0066A7B9 /* PageCardView.swift */,
 				93757C30256E560B0066A7B9 /* BalanceCard.swift */,
@@ -436,7 +417,6 @@
 				88114F692321703800AB3B5A /* SendWithQrDelegate.swift */,
 				882E99BC232301BB0061C7AC /* LetsStartSkipDelegate.swift */,
 				888F26B2233E9DF700AB7E4C /* PinViewDelegate.swift */,
-				003B35DB23564409004EE63F /* TransactionPopupDelegate.swift */,
 			);
 			name = Delegates;
 			sourceTree = "<group>";
@@ -477,7 +457,6 @@
 		93D3FF74257613860088CC9E /* unused */ = {
 			isa = PBXGroup;
 			children = (
-				00C592B123A556AA0036A346 /* TransactionDetailPopup.xib */,
 			);
 			path = unused;
 			sourceTree = "<group>";
@@ -566,7 +545,6 @@
 				93F79FD3257E0D48006DC148 /* ParaYatirView.xib in Resources */,
 				88CA9370231A4750008F894B /* TransactionDetailView.xib in Resources */,
 				882AAB0F22FC96DE004CDAA6 /* LaunchScreen.storyboard in Resources */,
-				88309EB2231E73C600F96C05 /* TransactionPopup.xib in Resources */,
 				88CA936E2319A6C6008F894B /* transactionHistoryCell.xib in Resources */,
 				88F4A1C42312CA56007172A6 /* MockImages.xcassets in Resources */,
 				93534036253C4F2C00FFEA4D /* newSendView.xib in Resources */,
@@ -584,14 +562,12 @@
 				889F2A2123158BAB00ACD656 /* MenuView.xib in Resources */,
 				93F79FE32580F6EB006DC148 /* HeaderExitView.xib in Resources */,
 				889F2A2323158C5D00ACD656 /* ProfileMenuview.xib in Resources */,
-				00C592B223A556AA0036A346 /* TransactionDetailPopup.xib in Resources */,
 				93534F1825496A950000329F /* bitexenApiView.xib in Resources */,
 				0023C0FC2517C92B0042B50C /* Main.storyboard in Resources */,
 				888F26AF233E89B800AB7E4C /* PinView.xib in Resources */,
 				88E03346233CB68400620541 /* Colors.xcassets in Resources */,
 				882AAB0C22FC96DE004CDAA6 /* Assets.xcassets in Resources */,
 				882B9B6722FEFAA500D6E7B6 /* OnBoardingView.xib in Resources */,
-				88309EB8231E7FC600F96C05 /* QRView.xib in Resources */,
 				88A6BA4723203570002640D6 /* LegalView.xib in Resources */,
 				88114F622321602800AB3B5A /* ProfileUpgradeView.xib in Resources */,
 			);
@@ -664,7 +640,6 @@
 				882AAB0722FC96DD004CDAA6 /* OnBoardingVC.swift in Sources */,
 				93E9D552257A930D00FE19D8 /* ErrorHandling.swift in Sources */,
 				88CA938F231BD0AE008F894B /* ProfileSettingsView.swift in Sources */,
-				93534F1425483A4F0000329F /* ViewController.swift in Sources */,
 				88CA938B231B9E1C008F894B /* SendCoinDelegate.swift in Sources */,
 				93B7A11E252F0F0A00C89E66 /* PaymentCategories.swift in Sources */,
 				88F4A1BF2312AF7B007172A6 /* MenuView.swift in Sources */,
@@ -677,12 +652,10 @@
 				93757C31256E560B0066A7B9 /* BalanceCard.swift in Sources */,
 				93FC66C02562AB4E00E42AAC /* binance.swift in Sources */,
 				88CA9389231B9866008F894B /* OperationButtonsDelegate.swift in Sources */,
-				88309EBA231E7FD200F96C05 /* QRView.swift in Sources */,
 				93F79FDD257E5CC7006DC148 /* CreditCardView.swift in Sources */,
 				0060807E23795453006FFBD2 /* constants.swift in Sources */,
 				93757C24256D43A90066A7B9 /* PayTableViewCell.swift in Sources */,
 				88309EC2231FD38200F96C05 /* VerifyAccountView.swift in Sources */,
-				003B35DC23564409004EE63F /* TransactionPopupDelegate.swift in Sources */,
 				88CA9391231CF4AE008F894B /* ProfileMenuDelegate.swift in Sources */,
 				0080FAC4234CA0B900B6D636 /* blockchain.swift in Sources */,
 				93534031253B093B00FFEA4D /* shareQRVC.swift in Sources */,
@@ -703,7 +676,6 @@
 				936F25B725323B3900C5FA85 /* UIViewExtension.swift in Sources */,
 				93534F1E2549958C0000329F /* bitexenSignature.swift in Sources */,
 				93534039253C528600FFEA4D /* newSendView.swift in Sources */,
-				88309EB4231E73DC00F96C05 /* TransactionPopup.swift in Sources */,
 				88A6BA4B232039D7002640D6 /* LegalDelegate.swift in Sources */,
 				88CA9372231A475F008F894B /* TransactionDetailView.swift in Sources */,
 				88CA937B231A48A0008F894B /* TransactionHistoryDetailCellDeatils.swift in Sources */,
@@ -862,7 +834,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 63.1;
+				CURRENT_PROJECT_VERSION = 63.5;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;
@@ -887,7 +859,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPayRelease.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 63.1;
+				CURRENT_PROJECT_VERSION = 63.5;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;

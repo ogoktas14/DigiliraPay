@@ -583,18 +583,12 @@ class newSendView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
             }
             coinSwitch.setTitle(String(format: "%.2f", price) + " ₺", forSegmentAt: 0)
             coinSwitch.setTitle(String(format: "%.8f", amount) + " " + coin.symbol, forSegmentAt: 1)
-            
         }
     }
-    
-    
     
     @objc func action1() {
         self.endEditing(true)
     }
-    
-    
-    
 }
 
 

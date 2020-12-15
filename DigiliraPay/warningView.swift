@@ -72,6 +72,7 @@ class WarningView: UIView {
             warningLabel.isHidden = true
             messageLabel.text = "İşleminiz normalden uzun sürüyor. İşlem sonuçlandığında bildirim yapılacaktır."
             ok.isHidden = false
+            return
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -100,7 +101,6 @@ class WarningView: UIView {
                 incProgress()
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
-                   // Excecute after 3 seconds
                     self.ok.isHidden = false
                     self.warningLabel.isHidden = true
                     self.removeFromSuperview()

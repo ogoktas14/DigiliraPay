@@ -85,8 +85,6 @@ class ColoredCardView: CardView {
                 generator.notificationOccurred(.success)
                 delegate?.passData(data: cardInfo.org)
             }
-        
-        
     }
     
     func setGradientBackground(colorTop: UIColor, colorBottom: UIColor) {

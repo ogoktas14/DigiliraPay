@@ -27,7 +27,7 @@ class WalletView: UIView {
     var transactionHistoryOriginLast: CGPoint = CGPoint(x: 0, y: 0)
     
     var transactionDetailView = TransactionDetailView()
-    var transactionDetail = TRXTRX()
+
     private let refreshControl = UIRefreshControl()
 
     var frameValue = CGRect()
@@ -354,13 +354,4 @@ extension WalletView: TransactionDetailCloseDelegate
         }
     }
 }
-
-extension WalletView: TRXTRXDel {
-    func closeDetail() {
-            UIView.animate(withDuration: 0.3) {
-            self.transactionDetail.frame.origin.y = self.transactionDetail.frame.size.height
-            self.transactionDetail.alpha = 0
-        }
-    }
-  
-}
+ 

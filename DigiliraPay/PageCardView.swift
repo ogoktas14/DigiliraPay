@@ -318,8 +318,6 @@ class PageCardView: UIView {
             payButton.isHidden = true
         }
         
-        
-        
     }
     
 }
