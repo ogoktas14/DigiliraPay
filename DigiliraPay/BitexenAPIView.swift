@@ -17,7 +17,6 @@ class BitexenAPIView: UIView {
     @IBOutlet weak var textApiSecret: UITextField!
     @IBOutlet weak var textApiPassphrase: UITextField!
     @IBOutlet weak var textUsername: UITextField!
-    @IBOutlet weak var labelError: UILabel!
     
     @IBOutlet weak var saveView: UIView!
 
@@ -34,7 +33,6 @@ class BitexenAPIView: UIView {
     
     override func awakeFromNib()
     {
-        labelError.text = "";
         if  digiliraPay.isKeyPresentInUserDefaults(key: bex.bexApiDefaultKey.key) {
                         
             let defaults = UserDefaults.standard
@@ -92,8 +90,6 @@ class BitexenAPIView: UIView {
             saveView.isUserInteractionEnabled = true
             
             if statusCode == 200 {  
-                self.labelError.isHidden = true
-                
                 
                 res.valid = true
                 save2defaults(forKey: bex.bexApiDefaultKey.key, data: res)

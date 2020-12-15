@@ -6,12 +6,20 @@ import Wallet
 class ColoredCardView: CardView {
 
     @IBOutlet weak var contentView: UIView!
+    @IBOutlet weak var v1: UIView!
+    @IBOutlet weak var v2: UIView!
+    @IBOutlet weak var v3: UIView!
+    
+    @IBOutlet weak var l1: UILabel!
+    @IBOutlet weak var l2: UILabel!
+    @IBOutlet weak var l3: UILabel!
     
     @IBOutlet weak var cardNumber: UILabel!
-    @IBOutlet weak var remarks: UILabel!
+    @IBOutlet weak var remarks: UIView!
     @IBOutlet weak var nameSurname: UILabel!
     @IBOutlet weak var logoView: UIImageView!
     @IBOutlet weak var bgView: UIImageView!
+    @IBOutlet weak var scrollView: UIScrollView!
 
     @IBOutlet weak var indexLabel: UILabel!
     weak var delegate: ColoredCardViewDelegate?
@@ -21,7 +29,7 @@ class ColoredCardView: CardView {
     var apiSet: Bool = false
     var cardMode: String = ""
     
-    var cardInfo: digilira.cardData = digilira.cardData.init(org: "", bgColor: .red, logoName: "", cardHolder: "", cardNumber: "1", remarks: "")
+    var cardInfo: digilira.cardData = digilira.cardData.init(org: "", bgColor: .red, logoName: "", cardHolder: "", cardNumber: "1")
     
     var index: Int = 0 {
         didSet {
@@ -54,12 +62,17 @@ class ColoredCardView: CardView {
         if presented {
             cardNumber.isUserInteractionEnabled = true
             cardNumber.isHidden = false
+            scrollView.isScrollEnabled = true
             remarks.isHidden = false
-            remarks.sizeToFit()
         } else {
+            UIView.animate(withDuration: 1, animations: { [self] in
+                            let bottomOffset = CGPoint(x: 0, y: 0)
+                            scrollView.setContentOffset(bottomOffset, animated: true)
+                
+            })
             cardNumber.isUserInteractionEnabled = false
             cardNumber.isHidden = true
-
+            scrollView.isScrollEnabled = false
             remarks.isHidden = true
         }
         
@@ -68,7 +81,23 @@ class ColoredCardView: CardView {
         cardNumber.text = cardInfo.cardNumber
         logoView.image = UIImage(named: cardInfo.logoName)
         cardMode = cardInfo.org
-        remarks.text = cardInfo.remarks
+        
+        v1.isHidden = true
+        v2.isHidden = true
+        v3.isHidden = true
+        
+        if let line1 = cardInfo.line1 {
+            l1.text = line1
+            v1.isHidden = false
+        }
+        if let line2 = cardInfo.line2 {
+            l2.text = line2
+            v2.isHidden = false
+        }
+        if let line3 = cardInfo.line3 {
+            l3.text = line3
+            v3.isHidden = false
+        }
         
         setGradientBackground(colorTop: cardInfo.bgColor, colorBottom: cardInfo.bgColor)
         contentView.addTransitionFade()

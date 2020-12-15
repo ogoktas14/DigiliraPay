@@ -93,10 +93,6 @@ class MenuView: UIView {
                 walletIcon.alpha = 0.3
                 paymentsIcon.alpha = 1
                 othersIcon.alpha = 0.3
-//        homeIcon.image = UIImage(named: "homeNS")
-//        walletIcon.image = UIImage(named: "walletNS")
-//        paymentsIcon.image = UIImage(named: "card")
-//        othersIcon.image = UIImage(named: "settingsNS")
 
             self.selectorView.center.x = self.paymentsIcon.center.x
         }
@@ -107,14 +103,10 @@ class MenuView: UIView {
         { [self] in
             
             homeIcon.alpha = 0.3
-                walletIcon.alpha = 0.3
-                paymentsIcon.alpha = 0.3
-                othersIcon.alpha = 1
-//        homeIcon.image = UIImage(named: "homeNS")
-//        walletIcon.image = UIImage(named: "walletNS")
-//        paymentsIcon.image = UIImage(named: "cardNS")
-//        othersIcon.image = UIImage(named: "settings")
-
+            walletIcon.alpha = 0.3
+            paymentsIcon.alpha = 0.3
+            othersIcon.alpha = 1
+            
             self.selectorView.center.x = self.othersIcon.center.x
         }
     }

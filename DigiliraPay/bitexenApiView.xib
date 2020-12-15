@@ -94,26 +94,15 @@
                                                 <constraint firstAttribute="bottom" secondItem="0gJ-wb-ay2" secondAttribute="bottom" id="Tzp-O3-YNc"/>
                                             </constraints>
                                         </view>
-                                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="hata" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rkI-cN-pEI">
-                                            <rect key="frame" x="20" y="310" width="334" height="100"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="100" id="srq-MR-cDV"/>
-                                            </constraints>
-                                            <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="21"/>
-                                            <color key="textColor" systemColor="systemRedColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
                                     </subviews>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstItem="Vxe-1E-twr" firstAttribute="leading" secondItem="Rp7-K7-xbO" secondAttribute="leading" id="0Nm-dv-Fdr"/>
                                         <constraint firstAttribute="trailing" secondItem="43e-6C-kop" secondAttribute="trailing" id="7cd-cV-VRK"/>
-                                        <constraint firstItem="rkI-cN-pEI" firstAttribute="leading" secondItem="Rp7-K7-xbO" secondAttribute="leading" constant="20" id="7pp-sV-vJs"/>
                                         <constraint firstItem="iHX-1A-8MZ" firstAttribute="width" secondItem="Rp7-K7-xbO" secondAttribute="width" multiplier="0.8" id="8Bo-72-6tz"/>
                                         <constraint firstItem="WJA-ku-iCa" firstAttribute="leading" secondItem="Rp7-K7-xbO" secondAttribute="leading" id="CM1-Bq-VI6"/>
                                         <constraint firstItem="43e-6C-kop" firstAttribute="top" secondItem="Vxe-1E-twr" secondAttribute="bottom" constant="20" id="HRJ-yX-V8r"/>
                                         <constraint firstItem="iHX-1A-8MZ" firstAttribute="top" secondItem="aTD-sl-drz" secondAttribute="bottom" constant="20" id="I1w-NH-Sy0"/>
-                                        <constraint firstItem="rkI-cN-pEI" firstAttribute="top" secondItem="iHX-1A-8MZ" secondAttribute="bottom" constant="20" id="KwK-Vt-Uf0"/>
                                         <constraint firstAttribute="trailing" secondItem="aTD-sl-drz" secondAttribute="trailing" id="S6m-tk-MVs"/>
                                         <constraint firstItem="43e-6C-kop" firstAttribute="leading" secondItem="Rp7-K7-xbO" secondAttribute="leading" id="Uln-gL-j1t"/>
                                         <constraint firstAttribute="trailing" secondItem="Vxe-1E-twr" secondAttribute="trailing" id="XVD-3b-BXy"/>
@@ -123,7 +112,6 @@
                                         <constraint firstItem="Vxe-1E-twr" firstAttribute="top" secondItem="Rp7-K7-xbO" secondAttribute="top" id="te6-23-9zd"/>
                                         <constraint firstItem="aTD-sl-drz" firstAttribute="leading" secondItem="Rp7-K7-xbO" secondAttribute="leading" id="uJx-p2-gZK"/>
                                         <constraint firstItem="WJA-ku-iCa" firstAttribute="top" secondItem="43e-6C-kop" secondAttribute="bottom" constant="20" id="zTf-hl-o0N"/>
-                                        <constraint firstAttribute="trailing" secondItem="rkI-cN-pEI" secondAttribute="trailing" constant="20" id="zaK-og-ZD8"/>
                                     </constraints>
                                 </view>
                             </subviews>
@@ -161,7 +149,6 @@
                 <constraint firstItem="bZA-mT-ggG" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="jDP-ob-kVW"/>
             </constraints>
             <connections>
-                <outlet property="labelError" destination="rkI-cN-pEI" id="9I2-QT-RKv"/>
                 <outlet property="saveView" destination="iHX-1A-8MZ" id="K3g-53-Uro"/>
                 <outlet property="textApiKey" destination="Vxe-1E-twr" id="Lnq-PE-iEk"/>
                 <outlet property="textApiPassphrase" destination="WJA-ku-iCa" id="gar-Bg-7WK"/>
@@ -175,9 +162,6 @@
         <image name="exit" width="44" height="44"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemRedColor">
-            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemYellowColor">
             <color red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

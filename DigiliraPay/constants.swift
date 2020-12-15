@@ -72,7 +72,9 @@ struct digilira {
         var logoName: String
         var cardHolder: String
         var cardNumber: String
-        var remarks: String
+        var line1: String?
+        var line2: String?
+        var line3: String?
         var apiSet: Bool = false
         var bg: String?
     }

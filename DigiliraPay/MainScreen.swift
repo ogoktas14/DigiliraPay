@@ -551,9 +551,13 @@ class MainScreen: UIViewController {
             
             walletOperationView.frame.origin.y = walletY
             walletOperationView.alpha = 1
-        }, completion: {_ in
+        }, completion: { [self]_ in
             self.walletOperationView.blnx = "₺" + bakiye
             self.headerAnimation = false
+                if !isHomeScreen {
+                    self.walletOperationView.isHidden = true
+
+                }
         })
     }
     
@@ -982,16 +986,9 @@ class MainScreen: UIViewController {
     {
         var cards: [digilira.cardData] = []
         
-        var bitexen = digilira.cardData.init(
-            org: "Bitexen",
-            bgColor: UIColor(red: 0.1882, green: 0.2588, blue: 0.3804, alpha: 1.0),
-            logoName: "logo_bitexen",
-            cardHolder:  "",
-            cardNumber: "Bitexen Hesabı Ekle",
-            remarks: "Bitexen hesabınızı DigiliraPAY'e bağlayarak hesabınızdaki bakiyelerinizi kullanarak alışveriş yapabilirsiniz.",
-            apiSet: false,
-            bg: "bitexen_hover-1"
-        )
+        var bitexen = turkish.bitexenCard
+        let kizilay = turkish.kizilayCard
+        let okex = turkish.okexCard
         
         if let api = decodeDefaults(forKey: bex.bexApiDefaultKey.key, conformance: bex.bitexenAPICred.self) {
             bitexen.cardNumber = "Hesap Bilgilerini Düzenle"
@@ -999,38 +996,11 @@ class MainScreen: UIViewController {
                 bitexen.apiSet = true
                 bitexen.cardNumber = "Hesap Aktif"
                 bitexen.cardHolder = getName()
-                bitexen.remarks = "Alışverişlerinizde Bitexen hesabınızdaki bakiyelerinizi kullanabilirsiniz."
             }
         }
         
         cards.append(bitexen)
-        
-        let okex = digilira.cardData.init(
-            org: "Okex",
-            bgColor:  UIColor(red: 0.0431, green: 0.1294, blue: 0.3843, alpha: 1.0), /* #0b2162 */
-            logoName: "okex-1",
-            cardHolder:  "",
-            cardNumber: "Okex Hesabı Ekle",
-            remarks: "OKEX hesabınıza giriş yapın, Ayarlar bölümünden Erişim Ayarlarını belirleyin.",
-            apiSet: false,
-            
-            bg: "okex_logo"
-            
-        )
-        
         cards.append(okex)
-        
-        let kizilay = digilira.cardData.init(
-            org: "Kızılay",
-            bgColor:  UIColor(red: 0.7529, green: 0.0039, blue: 0, alpha: 1.0), /* #c00100 */
-            logoName: "logo_kizilay",
-            cardHolder:  "",
-            cardNumber: "Kızılay",
-            remarks: "Kızılay'a kripto varlıklarınızı kullanarak bağış yapabilirsiniz.",
-            apiSet: false
-            
-        )
-        
         cards.append(kizilay)
         
         if !isFirstLaunch {
@@ -1319,7 +1289,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         UIView.animate(withDuration: 0.3, animations: { [self] in
             self.contentScrollView.contentOffset.x = self.view.frame.width * 2
         }) { (_) in
-            self.walletOperationsViewOrigin = self.walletOperationView.frame.origin
+            self.walletOperationView.isHidden = true
         }
         isShowSettings = false
         isPayments = true
@@ -1328,8 +1298,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
     
     func goSettings() {
         menuXib.settings()
-        
-        
+        walletOperationView.isHidden = true
         dismissLoadView()
         dismissProfileMenu()
         
@@ -1370,7 +1339,13 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
     
     func goHomeScreen()
     {
+        menuXib.isUserInteractionEnabled = false
         menuXib.home()
+
+        if isPayments || isShowSettings {
+            isPayments = false
+            isShowSettings = false
+        }
         
         dismissLoadView()
         dismissProfileMenu()
@@ -1385,38 +1360,32 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
             closeCoinSendView()
             isShowWallet = false
         }
-    
-
-        
+     
         UIView.animate(withDuration: 0.3, animations: {
             self.contentScrollView.contentOffset.x = 0
             self.headerView.frame.size.height =  self.headerHomeBuffer! + 70
             
-        }, completion: {_ in
-            self.walletOperationView.isHidden = false
-
+        }, completion: { [self]_ in
+            if !isPayments && !isShowWallet && !isShowSettings {
+                UIView.animate(withDuration: 1, animations: {
+                     self.walletOperationView.isHidden = false
+                })
+            }
         })
-
-        
-        
+ 
         if !isSuccessView {
             bottomView.isHidden = false
         }
-        
-        if isPayments || isShowSettings {
-            isPayments = false
-            isShowSettings = false
-        }
-        
+         
         headerInfoLabel.isHidden = true
         headerInfoLabel.textColor = .black
         homeAmountLabel.isHidden = true
-        
-        
+         
         menuView.isHidden = false
         
         isHomeScreen = true
-        
+        menuXib.isUserInteractionEnabled = true
+
     }
     
     
@@ -1437,7 +1406,9 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
                     self.headerView.frame.size.height =  self.headerHomeBuffer! + 70
                 
             }, completion: { [self]_ in
-                setHeaderTotal()
+       
+                    setHeaderTotal()
+                
             })
              
 
@@ -1445,8 +1416,9 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
             UIView.animate(withDuration: 0.3, animations: {
                     self.headerView.frame.size.height =  self.headerHomeBuffer! + 70
             }, completion: { [self]_ in
-                setHeaderTotal()
-
+                
+                        setHeaderTotal()
+                    
             })
             
         }
@@ -1454,7 +1426,6 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
     
     func goWalletScreen(coin: String)
     {
-        
         if isShowWallet {
             return
         }
@@ -1468,16 +1439,16 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         if isShowSendCoinView {
             closeSendView()
         }
-        
-        
+         
         if isHomeScreen {
-            UIView.animate(withDuration: 0.3) {
+            UIView.animate(withDuration: 0.3, animations: {
                 self.headerView.frame.size.height = self.headerHeightBuffer!
-                self.walletOperationView.isHidden = true
                 self.contentScrollView.contentOffset.x = 0
-            }
+            }, completion: {_ in
+                self.walletOperationView.isHidden = true
+
+            })
         }
-        walletOperationView.isHidden = true
         
         if !isShowWallet
         {
@@ -1499,6 +1470,8 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
     
     func goSettingsScreen()
     {
+        walletOperationView.isHidden = true
+
         if !isShowSettings
         {
             isShowSettings = true
