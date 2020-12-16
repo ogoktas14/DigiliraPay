@@ -8,7 +8,6 @@
 
 import UIKit
 import LocalAuthentication
-import WavesSDK
 import UserNotifications
 
 @UIApplicationMain
@@ -26,19 +25,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        WavesSDK.initialization(servicesPlugins: .init(data: [],
-                                                       node: [],
-                                                       matcher: []),
-                                enviroment: .init(server: .testNet, timestampServerDiff: 0))
-   
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) {
         (granted, error) in
         guard granted else { return }
         DispatchQueue.main.async {
         UIApplication.shared.registerForRemoteNotifications()
+            
         }
         }
+        
         return true
+
     }
 
     

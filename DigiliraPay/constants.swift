@@ -25,7 +25,7 @@ struct digilira {
     struct api {
         static let sslpin = "https://pay.digilirapay.com/"
         static let url = "https://pay.digilirapay.com/v4"
-        static let url2 = "https://api.digilirapay.com/v4"
+        static let urlMainnet = "https://pay.digilirapay.com/v7"
         static let payment = "/payment/"
         static let paymentStatus = "/payment/status"
         static let userUpdate =  "/users/update/me"
@@ -35,19 +35,28 @@ struct digilira {
     }
     
     struct node {
-        static let url = "https://nodes-testnet.wavesnodes.com"
-        static let apiUrl = "https://api-testnet.waves.exchange"
+        static let url = "https://nodes.wavesnodes.com"
+        static let apiUrl = "https://api.waves.exchange"
+    }
+    
+    struct wavesApiEndpoints {
         static let getToken = "/v1/oauth2/token"
         static let getDeposit = "/v1/deposit/addresses/"
+        static let getCurrencies = "/v1/deposit/currencies"
         static let getWithdraw = "/v1/withdraw/addresses/"
+        static let client_id = "waves.exchange"
         static let BTC = "BTC"
         static let ETH = "ETH"
         static let LTC = "LTC"
-        static let client_id = "waves.exchange"
+        static let USDT = "USDT"
         static let scope = "general"
         static let grant_type_password = "password"
         static let grant_type_refresh = "refresh_token"
-        static let chain_id = "T"
+    }
+    
+    struct nodeTestNet {
+        static let url = "https://nodes-testnet.wavesnodes.com"
+        static let apiUrl = "https://api-testnet.waves.exchange"
     }
     
     struct authTokenWaves: Codable {
@@ -123,7 +132,59 @@ struct digilira {
     static var sponsorTokenFee:Int64 = 9
     static var sponsorTokenFeeMass:Int64 = 9
     
-    static var usdt = coin.init(token: "BITEXEN_USDT", symbol: "USDT", tokenName: "USDT", decimal: 1, network: "", tokenSymbol: "")
+    static var usdt = coin.init(
+        token: "BITEXEN_USDT",
+        symbol: "USDT",
+        tokenName: "USDT",
+        decimal: 1,
+        network: "",
+        tokenSymbol: ""
+    )
+    
+    static var ethereumWaves = coin.init(
+        token: "BrmjyAWT5jjr3Wpsiyivyvg5vDuzoX2s93WgiexXetB3",
+        symbol: "ETH",
+        tokenName: "Ethereum",
+        decimal: 8,
+        network: "ethereum",
+        tokenSymbol: "WETH"
+    )
+    static var bitcoinWaves = coin.init(
+        token: "DWgwcZTMhSvnyYCoWLRUXXSH1RSkzThXLJhww9gwkqdn",
+        symbol: "BTC",
+        tokenName: "Bitcoin",
+        decimal: 8,
+        network: "bitcoin",
+        tokenSymbol: "WBTC"
+    )
+    static var tetherWaves = coin.init(
+        token: "5Sh9KghfkZyhjwuodovDhB6PghDUGBHiAPZ4MkrPgKtX",
+        symbol: "USDT",
+        tokenName: "Tether USD",
+        decimal: 6,
+        network: "ethereum",
+        tokenSymbol: "USDT"
+    )
+    
+    static var litecoinWaves = coin.init(
+        token: "BNdAstuFogzSyN2rY3beJbnBYwYcu7RzTHFjW88g8roK",
+        symbol: "LTC",
+        tokenName: "Litecoin",
+        decimal: 8,
+        network: "litecoin",
+        tokenSymbol: "WLTC"
+    )
+    
+    static var wavesWaves = coin.init(
+        token: "",
+        symbol: "Waves",
+        tokenName: "Waves",
+        decimal: 8,
+        network: "waves",
+        tokenSymbol: "WAVES"
+    )
+    
+    static var gatewayAddress = "3NCpyPuNzUaB7LFS4KBzwzWVnXmjur582oy"
     
     static var bitcoin = coin.init(token: "FjTB2DdymTfpYbCCdcFwoRbHQnEhQD11CUm6nAF7P1UD",
                             symbol: "BTC",
@@ -151,16 +212,10 @@ struct digilira {
                             tokenName: "Kızılay",
                             decimal: 8,
                             network: "waves",
-                            tokenSymbol: "D-Aid")
+                            tokenSymbol: "D-Aid") 
     
-    static var tether = coin.init(token: "5Sh9KghfkZyhjwuodovDhB6PghDUGBHiAPZ4MkrPgKtX", symbol: "USD",
-                                  tokenName: "Tether USDT",
-                                  decimal: 6,
-                                  network: "waves",
-                                  tokenSymbol: "Bitexen USDT")
-    
-    static let networks = [bitcoin, ethereum, waves, charity, tether]
-    static let networksDescription = ["Bitcoin", "Ethereum", "Waves", "Kızılay", "Tether"]
+    static let networks = [bitcoin, ethereum, waves, charity, tetherWaves, ethereumWaves, bitcoinWaves, litecoinWaves]
+    static let networksDescription = ["Bitcoin", "Ethereum", "Waves", "Kızılay", "Tether", "Ethereum", "Bitcoin", "Litecoin"]
 
     struct transactionDestination {
         static let domestic = "domestic"
@@ -264,6 +319,7 @@ struct digilira {
         var btcAddress: String?
         var ethAddress: String?
         var ltcAddress: String?
+        var tetherAddress: String?
         var wallet: String?
         var token: String?
         var status: Int?
@@ -306,7 +362,7 @@ struct digilira {
         let pincode: String
         let imported: Bool
         let apnToken, id, username, wallet: String
-        let firstName, lastName, ltcAddress, btcAddress, ethAddress, tcno, tel, mail: String?
+        let firstName, lastName, ltcAddress, btcAddress, tetherAddress, ethAddress, tcno, tel, mail: String?
         let createdDate: String
         let dogum: String?
         let v: Int?
@@ -317,7 +373,7 @@ struct digilira {
         enum CodingKeys: String, CodingKey {
             case userRole, status, pincode, imported, apnToken
             case id = "_id"
-            case username, lastName, firstName, wallet, btcAddress, ethAddress, ltcAddress, createdDate, appV, id1, dogum, tcno, tel, mail
+            case username, lastName, firstName, wallet, btcAddress, ethAddress, tetherAddress, ltcAddress, createdDate, appV, id1, dogum, tcno, tel, mail
             case v = "__v"
             case token
         }
@@ -378,6 +434,7 @@ struct digilira {
         case biometricMismatch
         case userCanceled
         case updateAPP
+        case noBalance
         
         
     }

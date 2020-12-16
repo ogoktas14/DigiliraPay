@@ -8,6 +8,7 @@
 
 import UIKit
 import UserNotifications
+import WavesSDK
 
 class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDelegate {
     
@@ -171,27 +172,47 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
         performSegue(withIdentifier: "toMainScreen", sender: nil)
     }
     
-    override func viewDidLoad() {
-        
-        initial2()
-        UNUserNotificationCenter.current().delegate = self;
-        
-        super.viewDidLoad()
-        if #available(iOS 13.0, *) {
-            overrideUserInterfaceStyle = .light
-        } else {
-            // Fallback on earlier versions
+    func initialWaves() -> Bool {
+
+        if let environment = UserDefaults.standard.value(forKey: "environment") {
+            if environment as! Bool {
+                WavesSDK.initialization(servicesPlugins: .init(data: [],
+                                                               node: [],
+                                                               matcher: []),
+                                        enviroment: .init(server: .mainNet, timestampServerDiff: 0))
+            return true
+            
+            }
         }
-        let tapLetsGoViewGesture = UITapGestureRecognizer(target: self, action: #selector(letsGO))
-        letsGoView.addGestureRecognizer(tapLetsGoViewGesture)
-        letsGoView.isUserInteractionEnabled = true
         
-        let importGesture = UITapGestureRecognizer(target: self, action: #selector(impoertAccount))
-        importAccountView.addGestureRecognizer(importGesture)
+        WavesSDK.initialization(servicesPlugins: .init(data: [],
+                                                       node: [],
+                                                       matcher: []),
+                                enviroment: .init(server: .testNet, timestampServerDiff: 0))
+        return false
+    }
+    
+    override func viewDidLoad() {
+        if initialWaves() {
+            print("mainnet")
+        }
+            initial2()
+            UNUserNotificationCenter.current().delegate = self;
+            
+            super.viewDidLoad()
+            if #available(iOS 13.0, *) {
+                overrideUserInterfaceStyle = .light
+            } else {
+                // Fallback on earlier versions
+            }
+            let tapLetsGoViewGesture = UITapGestureRecognizer(target: self, action: #selector(letsGO))
+            letsGoView.addGestureRecognizer(tapLetsGoViewGesture)
+            letsGoView.isUserInteractionEnabled = true
+            
+            let importGesture = UITapGestureRecognizer(target: self, action: #selector(impoertAccount))
+            importAccountView.addGestureRecognizer(importGesture)
         
-        
-        
-        
+ 
     }
     override func viewDidAppear(_ animated: Bool) {
         setScrollView()
@@ -262,15 +283,30 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
     func nowLetsGo() {
         let alert = UIAlertController(title: "Lütfen bekleyin", message: "Cüzdanınız oluşturuluyor..", preferredStyle: .alert)
         self.present(alert, animated: true, completion: nil)
-        BC.create(){ (address) in
-            if (address == "TRY AGAIN") {
-                return
+        
+        
+        if initialWaves() {
+            BC.onComplete = { res in
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    alert.dismiss(animated: true, completion: nil)
+                    self.performSegue(withIdentifier: "toLetsStartVC", sender: nil)
+                }
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                alert.dismiss(animated: true, completion: nil)
-                self.performSegue(withIdentifier: "toLetsStartVC", sender: nil)
+            
+            BC.createMainnet()
+        } else {
+            BC.create(){ (address) in
+                if (address == "TRY AGAIN") {
+                    return
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    alert.dismiss(animated: true, completion: nil)
+                    self.performSegue(withIdentifier: "toLetsStartVC", sender: nil)
+                }
             }
         }
+ 
+
     }
     
     @objc func impoertAccount()

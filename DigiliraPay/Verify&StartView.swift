@@ -65,8 +65,16 @@ class Verify_StartView: UIView {
     }
     
     func setView1() {
+        var sensitiveSource = "sensitive"
+        
+        if let environment = UserDefaults.standard.value(forKey: "environment") {
+            if environment as! Bool {
+                sensitiveSource = "sensitiveMainnet"
+            }
+        }
+        
         do {
-            let loginCredits = try secretKeys.LocksmithLoad(forKey: "sensitive", conformance: digilira.login.self)
+            let loginCredits = try secretKeys.LocksmithLoad(forKey: sensitiveSource, conformance: digilira.login.self)
            
                 let seed = loginCredits.seed
             self.seed = seed

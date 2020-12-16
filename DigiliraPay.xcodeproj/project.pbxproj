@@ -85,6 +85,7 @@
 		9342427F2586AF7E009D6024 /* OrderDetailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9342427E2586AF7E009D6024 /* OrderDetailView.xib */; };
 		934242822586B1F0009D6024 /* OrderDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934242812586B1F0009D6024 /* OrderDetailView.swift */; };
 		934F3C4825889950007CFC19 /* string.tr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F3C4725889950007CFC19 /* string.tr.swift */; };
+		934F3C4C2588F627007CFC19 /* mainnet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F3C4B2588F627007CFC19 /* mainnet.swift */; };
 		93534031253B093B00FFEA4D /* shareQRVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93534030253B093B00FFEA4D /* shareQRVC.swift */; };
 		93534036253C4F2C00FFEA4D /* newSendView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93534035253C4F2C00FFEA4D /* newSendView.xib */; };
 		93534039253C528600FFEA4D /* newSendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93534038253C528600FFEA4D /* newSendView.swift */; };
@@ -201,6 +202,7 @@
 		9342427E2586AF7E009D6024 /* OrderDetailView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OrderDetailView.xib; sourceTree = "<group>"; };
 		934242812586B1F0009D6024 /* OrderDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDetailView.swift; sourceTree = "<group>"; };
 		934F3C4725889950007CFC19 /* string.tr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = string.tr.swift; sourceTree = "<group>"; };
+		934F3C4B2588F627007CFC19 /* mainnet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mainnet.swift; sourceTree = "<group>"; };
 		93534030253B093B00FFEA4D /* shareQRVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = shareQRVC.swift; sourceTree = "<group>"; };
 		93534035253C4F2C00FFEA4D /* newSendView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = newSendView.xib; sourceTree = "<group>"; };
 		93534038253C528600FFEA4D /* newSendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newSendView.swift; sourceTree = "<group>"; };
@@ -260,6 +262,7 @@
 				93FC66BF2562AB4E00E42AAC /* binance.swift */,
 				93E9D551257A930D00FE19D8 /* ErrorHandling.swift */,
 				934F3C4725889950007CFC19 /* string.tr.swift */,
+				934F3C4B2588F627007CFC19 /* mainnet.swift */,
 			);
 			name = blockchain;
 			sourceTree = "<group>";
@@ -645,6 +648,7 @@
 				93E9D552257A930D00FE19D8 /* ErrorHandling.swift in Sources */,
 				88CA938F231BD0AE008F894B /* ProfileSettingsView.swift in Sources */,
 				88CA938B231B9E1C008F894B /* SendCoinDelegate.swift in Sources */,
+				934F3C4C2588F627007CFC19 /* mainnet.swift in Sources */,
 				93B7A11E252F0F0A00C89E66 /* PaymentCategories.swift in Sources */,
 				88F4A1BF2312AF7B007172A6 /* MenuView.swift in Sources */,
 				88309EBE231FD08500F96C05 /* LoadCoinDelegate.swift in Sources */,
@@ -838,7 +842,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 64;
+				CURRENT_PROJECT_VERSION = 65;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;
@@ -863,7 +867,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPayRelease.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 64;
+				CURRENT_PROJECT_VERSION = 65;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;

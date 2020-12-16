@@ -41,6 +41,9 @@ class ErrorHandling: NSObject {
         case NetworkError.serverError:
             alertWarning(title: "Bağlantı Hatası", message: "Blokzincir kaynaklı problemlerden dolayı işleminiz gerçekleşmemiştir.")
             break
+        case digilira.NAError.noBalance:
+            alertWarning(title: "Blokzincir Hatası", message: "Blokzincir kaynaklı problemlerden dolayı işleminiz gerçekleşmemiştir. Lütfen daha sonra yeniden deneyin.")
+            break
         default:
             DispatchQueue.main.async {
                 
@@ -105,6 +108,16 @@ class ErrorHandling: NSObject {
             win?.addSubview(orderDetailView)
 
         }
+    }
+    
+    func resetApp () {
+
+        for views in win!.subviews {
+            views.removeFromSuperview()
+        }
         
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "OnBoard")
+        win?.rootViewController = vc
     }
 }

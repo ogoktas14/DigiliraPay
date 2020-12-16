@@ -14,6 +14,7 @@ class ProfileMenuView: UIView {
     @IBOutlet weak var title: UILabel!
     @IBOutlet weak var profileVerifyImage: UIImageView!
     @IBOutlet weak var biometricSecurityToggle: UISwitch!
+    @IBOutlet weak var mainnetTestnet: UISwitch!
     
     @IBOutlet weak var profileVerifyLabel: UILabel!
     @IBOutlet weak var keywordsLabel: UILabel!
@@ -35,8 +36,10 @@ class ProfileMenuView: UIView {
     @IBOutlet weak var seedBackupWarning: UIImageView!
     @IBOutlet weak var legalViewWarning: UIImageView!
     @IBOutlet weak var termsViewWarning: UIImageView!
-    @IBOutlet weak var pinWarning: UIImageView! 
+    @IBOutlet weak var pinWarning: UIImageView!
     
+    let throwEngine = ErrorHandling()
+
     var currentLanguage: Languages = .TR
     var changeLanguageforEN = UITapGestureRecognizer()
     var changeLanguageforTR = UITapGestureRecognizer()
@@ -66,11 +69,16 @@ class ProfileMenuView: UIView {
         
         let showBitexenGesture = UITapGestureRecognizer(target: self, action: #selector(openBitexenAPI))
         bitexenAPI.addGestureRecognizer(showBitexenGesture)
-         
-  
+        
+        
         if let isSecure = UserDefaults.standard.value(forKey: "isSecure") as? Bool
         {
             biometricSecurityToggle.isOn = isSecure
+        }
+        
+        if let isMainnet = UserDefaults.standard.value(forKey: "environment") as? Bool
+        {
+            mainnetTestnet.isOn = isMainnet
         }
     }
     
@@ -105,6 +113,12 @@ class ProfileMenuView: UIView {
     @IBAction func biometricSecuritySwitch(_ sender: Any)
     {
         UserDefaults.standard.setValue(biometricSecurityToggle.isOn, forKey: "isSecure")
+    }
+    
+    @IBAction func mainnetTestnetSwitch(_ sender: Any)
+    {
+        UserDefaults.standard.setValue(mainnetTestnet.isOn, forKey: "environment")
+        throwEngine.resetApp()
     }
     
  

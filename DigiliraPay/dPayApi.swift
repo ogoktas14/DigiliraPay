@@ -148,7 +148,7 @@ class digiliraPayApi: NSObject {
     var onGetOrder: ((_ result: digilira.order)->())?
     
     func getOrder(PARAMS: String) {
-        var request = URLRequest(url: URL(string: digilira.api.url + digilira.api.payment + PARAMS)!)
+        var request = URLRequest(url: URL(string: getApiURL() + digilira.api.payment + PARAMS)!)
         
         request.httpMethod = "GET"
         
@@ -252,7 +252,7 @@ class digiliraPayApi: NSObject {
                 self.onUpdate!(false)
             }
         }
-        request2(rURL: digilira.api.url + digilira.api.userUpdate, JSON: user, METHOD: digilira.requestMethod.put, AUTH: true)
+        request2(rURL: getApiURL() + digilira.api.userUpdate, JSON: user, METHOD: digilira.requestMethod.put, AUTH: true)
     }
     
     func updateSmartAcountScript(data: NodeService.Query.Transaction) {
@@ -265,7 +265,7 @@ class digiliraPayApi: NSObject {
             }
         }
         
-        request2(rURL: digilira.api.url + digilira.api.updateScript, JSON: data.data, METHOD: digilira.requestMethod.post, AUTH: true)
+        request2(rURL: getApiURL() + digilira.api.updateScript, JSON: data.data, METHOD: digilira.requestMethod.post, AUTH: true)
         
     }
     
@@ -357,7 +357,7 @@ class digiliraPayApi: NSObject {
             }
         }
         
-        request(rURL: digilira.api.url + digilira.api.paymentStatus,
+        request(rURL: getApiURL() + digilira.api.paymentStatus,
                 JSON: JSON,
                 METHOD: digilira.requestMethod.post,
                 AUTH: true
@@ -452,10 +452,10 @@ class digiliraPayApi: NSObject {
                         return (Double(round(double * result)), digilira.waves.token, tick)
                     }
                 }
-            case digilira.tether.tokenName:
+            case digilira.tetherWaves.tokenName:
                 if let usdt = symbol.usdTLPrice {
                     let result = price / usdt
-                        return (Double(round(double * result)), digilira.tether.token, usdt)
+                        return (Double(round(double * result)), digilira.tetherWaves.token, usdt)
                 }
             case digilira.charity.tokenName:
                 return (price * double, digilira.charity.token, 1)
@@ -466,7 +466,7 @@ class digiliraPayApi: NSObject {
         case "bitexen":
             if let usdt = symbol.usdTLPrice {
                 let result = price / usdt
-                    return (Double(round(double * result)), digilira.tether.token, usdt)
+                    return (Double(round(double * result)), digilira.tetherWaves.token, usdt)
             }
             break
         default:
@@ -536,19 +536,72 @@ class digiliraPayApi: NSObject {
                 
                 let response = digilira.externalTransaction.init(network: external.network,
                                                                  address: croppedAddress,
-                                                                 owner: "",
-                                                                 wallet: ""
+                                                                 amount: 0,
+                                                                 owner: croppedAddress,
+                                                                 wallet: digilira.gatewayAddress,
+                                                                 assetId: external.assetId,
+                                                                 destination: digilira.transactionDestination.foreign
                 )
                 self.onMember!(false, response)
             }
         }
-        request2(rURL: digilira.api.url + digilira.api.isOurMember, JSON: data, METHOD: digilira.requestMethod.post, AUTH: true)
+        request2(rURL: getApiURL() + digilira.api.isOurMember, JSON: data, METHOD: digilira.requestMethod.post, AUTH: true)
         
     }
     
-    func auth() throws -> digilira.auth {
+    func wipeOut () {
         do {
-            let loginCredits = try secretKeys.LocksmithLoad(forKey: "authenticate", conformance: digilira.auth.self)
+            try Locksmith.deleteDataForUserAccount(userAccount: bex.bexApiDefaultKey.key)
+        } catch  {
+            print(error)
+        }
+        do {
+            try Locksmith.deleteDataForUserAccount(userAccount: "sensitive")
+        } catch  {
+            print(error)
+        }
+        do {
+            try Locksmith.deleteDataForUserAccount(userAccount: "authenticate")
+        } catch  {
+            print(error)
+        }
+        do {
+            try Locksmith.deleteDataForUserAccount(userAccount: "sensitiveMainnet")
+        } catch  {
+            print(error)
+        }
+        do {
+            try Locksmith.deleteDataForUserAccount(userAccount: "authenticateMainnet")
+        } catch  {
+            print(error)
+        }
+        
+        do {
+            try Locksmith.deleteDataForUserAccount(userAccount: "environment")
+        } catch  {
+            print(error)
+        }
+        throwEngine.resetApp()
+
+        let defaults = UserDefaults.standard
+        let dictionary = defaults.dictionaryRepresentation()
+        dictionary.keys.forEach { key in
+            defaults.removeObject(forKey: key)
+        }
+    }
+    
+    func auth() throws -> digilira.auth {
+        
+        var authenticateSource = "authenticate"
+        
+        if let environment = UserDefaults.standard.value(forKey: "environment") {
+            if environment as! Bool {
+                authenticateSource = "authenticateMainnet"
+            }
+        }
+        
+        do {
+            let loginCredits = try secretKeys.LocksmithLoad(forKey: authenticateSource, conformance: digilira.auth.self)
             return loginCredits
         } catch  {
             throw digilira.NAError.tokenNotFound
@@ -568,11 +621,30 @@ class digiliraPayApi: NSObject {
         
     }
     
+    func getApiURL() -> String {
+        if let environment = UserDefaults.standard.value(forKey: "environment") {
+            if environment as! Bool {
+                return digilira.api.urlMainnet
+            }
+        }
+        return digilira.api.url
+    }
+    
     func login2() {
+        
+        var sensitiveSource = "sensitive"
+        var authenticateSource = "authenticate"
+        
+        if let environment = UserDefaults.standard.value(forKey: "environment") {
+            if environment as! Bool {
+                sensitiveSource = "sensitiveMainnet"
+                authenticateSource = "authenticateMainnet"
+            }
+        }
         
 
         do {
-            let loginCredits = try secretKeys.LocksmithLoad(forKey: "sensitive", conformance: digilira.login.self)
+            let loginCredits = try secretKeys.LocksmithLoad(forKey: sensitiveSource, conformance: digilira.login.self)
                 
                 if let json = encode2(jsonData: loginCredits) {
                     crud.onResponse = { [self] res, sts in
@@ -585,13 +657,13 @@ class digiliraPayApi: NSObject {
                             
                         case 404:
                             do {
-                                try Locksmith.deleteDataForUserAccount(userAccount: "sensitive")
+                                try Locksmith.deleteDataForUserAccount(userAccount: sensitiveSource)
                             } catch  {
                                 onError!(digilira.NAError.seed404, sts)
                             }
                             
                             do {
-                                try Locksmith.deleteDataForUserAccount(userAccount: "authenticate")
+                                try Locksmith.deleteDataForUserAccount(userAccount: authenticateSource)
                             } catch  {
                                 onError!(digilira.NAError.user404, sts)
                             }
@@ -600,7 +672,7 @@ class digiliraPayApi: NSObject {
                             break;
                             
                         case 200:
-                            if secretKeys.LocksmithSave(forKey: "authenticate", data: res) {
+                            if secretKeys.LocksmithSave(forKey: authenticateSource, data: res) {
                                 do {
                                     let user = try self.decodeDefaults(forKey: res, conformance: digilira.auth.self)
                                      
@@ -657,7 +729,7 @@ class digiliraPayApi: NSObject {
                         login2()
                     }
                     
-                    crud.request(rURL: digilira.api.url + digilira.api.auth, postData: json, method: digilira.requestMethod.post)
+                    crud.request(rURL: getApiURL() + digilira.api.auth, postData: json, method: digilira.requestMethod.post)
                 }
                 
             
@@ -909,8 +981,16 @@ class secretKeys: NSObject {
     }
     
     class func userData() throws -> digilira.auth {
+        var authenticateSource = "authenticate"
+        
+        if let environment = UserDefaults.standard.value(forKey: "environment") {
+            if environment as! Bool {
+                authenticateSource = "authenticateMainnet"
+            }
+        }
+        
         do {
-            let data = try secretKeys.LocksmithLoad(forKey: "authenticate", conformance: digilira.auth.self)
+            let data = try secretKeys.LocksmithLoad(forKey: authenticateSource, conformance: digilira.auth.self)
             return data
         } catch {
             throw digilira.NAError.emptyAuth

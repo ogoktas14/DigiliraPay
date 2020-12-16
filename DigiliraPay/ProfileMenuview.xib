@@ -264,12 +264,18 @@
                                         <constraint firstAttribute="width" constant="20" id="oqY-n0-irz"/>
                                     </constraints>
                                 </imageView>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ücretler ve Limitler" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JyM-kp-bgg">
-                                    <rect key="frame" x="46" y="13.333333333333313" width="152.66666666666666" height="23.333333333333329"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mainnet" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JyM-kp-bgg">
+                                    <rect key="frame" x="45.999999999999993" y="13.333333333333313" width="65.333333333333314" height="23.333333333333329"/>
                                     <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="17"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
+                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="vYy-Xr-Umz">
+                                    <rect key="frame" x="224" y="9.6666666666666856" width="51" height="31"/>
+                                    <connections>
+                                        <action selector="mainnetTestnetSwitch:" destination="iN0-l3-epB" eventType="valueChanged" id="FeF-at-rCU"/>
+                                    </connections>
+                                </switch>
                             </subviews>
                             <color key="backgroundColor" systemColor="systemGroupedBackgroundColor"/>
                             <constraints>
@@ -278,6 +284,7 @@
                                 <constraint firstItem="NJW-f6-bw3" firstAttribute="leading" secondItem="HIw-I3-O3b" secondAttribute="leadingMargin" constant="10" id="DI3-uq-8ID"/>
                                 <constraint firstItem="JyM-kp-bgg" firstAttribute="leading" secondItem="NJW-f6-bw3" secondAttribute="trailing" constant="8" id="Iua-xb-kZe"/>
                                 <constraint firstItem="NJW-f6-bw3" firstAttribute="top" secondItem="HIw-I3-O3b" secondAttribute="top" constant="10" id="cF8-2D-acf"/>
+                                <constraint firstItem="vYy-Xr-Umz" firstAttribute="centerY" secondItem="HIw-I3-O3b" secondAttribute="centerY" id="eLR-bw-d2B"/>
                             </constraints>
                         </view>
                     </subviews>
@@ -288,6 +295,7 @@
                         <constraint firstItem="q9Q-bB-up9" firstAttribute="centerX" secondItem="U9V-c1-iTg" secondAttribute="centerX" id="4sR-2M-mdB"/>
                         <constraint firstItem="r8g-fo-jYj" firstAttribute="height" secondItem="05A-4L-2G3" secondAttribute="height" id="6iz-bO-45W"/>
                         <constraint firstItem="va4-gy-RL6" firstAttribute="top" secondItem="ru0-Zf-mBD" secondAttribute="bottom" constant="8" id="74v-mP-UWH"/>
+                        <constraint firstItem="vYy-Xr-Umz" firstAttribute="centerX" secondItem="U9V-c1-iTg" secondAttribute="centerX" id="801-32-Ndb"/>
                         <constraint firstItem="r8g-fo-jYj" firstAttribute="leading" secondItem="05A-4L-2G3" secondAttribute="leading" id="9yT-7h-L3e"/>
                         <constraint firstItem="r8g-fo-jYj" firstAttribute="top" secondItem="05A-4L-2G3" secondAttribute="bottom" constant="8" id="CGf-0d-jy6"/>
                         <constraint firstItem="HIw-I3-O3b" firstAttribute="centerX" secondItem="Cul-45-rzD" secondAttribute="centerX" id="Cdl-2G-Sac"/>
@@ -348,6 +356,7 @@
                 <outlet property="languageLabel" destination="N0u-cu-xL6" id="GSr-QI-i1f"/>
                 <outlet property="legalTextView" destination="05A-4L-2G3" id="ssn-p1-aPo"/>
                 <outlet property="legalViewWarning" destination="k8N-0q-L2B" id="ue8-gt-e2c"/>
+                <outlet property="mainnetTestnet" destination="vYy-Xr-Umz" id="Bns-wK-tm5"/>
                 <outlet property="pinView" destination="OhJ-XS-vds" id="xQw-AZ-tau"/>
                 <outlet property="pinWarning" destination="sa2-Or-jB1" id="i0z-Bz-z4x"/>
                 <outlet property="profileVerifyImage" destination="jkB-dc-xvt" id="Ko7-Sg-RKD"/>

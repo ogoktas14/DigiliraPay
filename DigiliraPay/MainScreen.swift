@@ -31,6 +31,7 @@ class MainScreen: UIViewController {
     //@IBOutlet weak var profileMenuButton: UIImageView!
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var homeAmountLabel: UILabel!
+    @IBOutlet weak var serverLabel: UILabel!
     @IBOutlet weak var profileSettingsView: UIView!
     @IBOutlet weak var qrView: UIView!
     @IBOutlet weak var accountButton: UIImageView!
@@ -127,7 +128,7 @@ class MainScreen: UIViewController {
     var Balances: NodeService.DTO.AddressAssetsBalance?
     var Ticker: binance.BinanceMarketInfo = []
     var Filtered: [digilira.DigiliraPayBalance] = []
-    
+        
     var Bitexen: [digilira.DigiliraPayBalance] = []
     var Waves: [digilira.DigiliraPayBalance] = []
     
@@ -194,6 +195,17 @@ class MainScreen: UIViewController {
         coinTableView.refreshControl = refreshControl
         coinTableView.showsVerticalScrollIndicator = false
         menuView.isUserInteractionEnabled = false
+        
+        
+        switch WavesSDK.shared.enviroment.server {
+        case .mainNet:
+            serverLabel.text = "MainNet"
+            break
+        default:
+            serverLabel.text = "TestNet"
+            break
+        }
+        
         do {
             kullanici = try secretKeys.userData()
         } catch {
@@ -283,77 +295,7 @@ class MainScreen: UIViewController {
         }
         
         BC.onAssetBalance = { [self] result in
-            let ticker = digiliraPay.ticker(ticker: Ticker)
-            totalBalance = 0
-            for asset1 in result.balances {
-                
-                do {
-                    let asset = try BC.returnAsset(assetId: asset1.assetId)
-                    
-                    var coinPrice:Double = 0
-                    let double = Double(truncating: pow(10,asset.decimal) as NSNumber)
-                    
-                    switch asset.tokenName {
-                    case "Bitcoin":
-                        coinPrice = (ticker.btcUSDPrice)! * (ticker.usdTLPrice)! * Double(asset1.balance) / double
-                        break
-                    case "Ethereum":
-                        coinPrice = (ticker.ethUSDPrice)! * (ticker.usdTLPrice)! * Double(asset1.balance) / double
-                        break
-                    case "Kızılay":
-                        coinPrice = 1 * Double(asset1.balance) / double
-                        break
-                    case "Waves":
-                        coinPrice = (ticker.wavesUSDPrice)! * (ticker.usdTLPrice)! * Double(asset1.balance) / double
-                        break
-                    case "Tether USDT":
-                        coinPrice = (ticker.usdTLPrice)! * Double(asset1.balance) / double
-                        break
-                    default:
-                        coinPrice = 0
-                        break
-                    }
-                    
-                    let digiliraBalance = digilira.DigiliraPayBalance.init(
-                        tokenName: asset.tokenName,
-                        tokenSymbol: asset1.issueTransaction.name,
-                        availableBalance: asset1.balance,
-                        decimal: asset.decimal,
-                        balance: asset1.balance,
-                        tlExchange: coinPrice,
-                        network: "waves")
-                    
-                    totalBalance += coinPrice
-                    
-                    Waves.append(digiliraBalance)
-                } catch {
-                    throwEngine.evaluateError(error: error)
-                }
-                
-            }
-            self.isWavesReloaded = true
-            self.onB!()
-            //self.coinTableView.reloadData()
-
-            self.goHomeScreen()
-            
-            if isFirstLaunch {
-                self.setTableView()
-                self.setWalletView()
-                self.setPaymentView()
-                self.setSettingsView()
-            }
-            if isFirstLaunch {
-                checkEssentials()
-                isFirstLaunch = false
-            }
-            
-            menuView.isUserInteractionEnabled = true
-            emptyBG.isHidden = true
-            if let qr = decodeDefaults(forKey: "QRARRAY2", conformance: digilira.QR.self, setNil: true) {
-                QR = qr
-                self.getOrder(address: QR)
-            }
+            construct(result: result)
         }
         
         BC.onMassTransaction = { res in
@@ -414,7 +356,10 @@ class MainScreen: UIViewController {
             self.throwEngine.evaluateError(error: res)            
         }
         
-        BC.onError = { res in
+        BC.onError = { [self] res in
+            if isFirstLaunch {
+                loadScreen()
+            }
             self.throwEngine.evaluateError(error: res)
         }
         
@@ -448,6 +393,85 @@ class MainScreen: UIViewController {
         
         view.addGestureRecognizer(tap)
         
+    }
+    
+    func construct(result: NodeService.DTO.AddressAssetsBalance) {
+        let ticker = digiliraPay.ticker(ticker: Ticker)
+        totalBalance = 0
+        for asset1 in result.balances {
+            
+            do {
+                let asset = try BC.returnAsset(assetId: asset1.assetId)
+                
+                var coinPrice:Double = 0
+                let double = Double(truncating: pow(10,asset.decimal) as NSNumber)
+                
+                switch asset.tokenName {
+                case "Bitcoin":
+                    coinPrice = (ticker.btcUSDPrice)! * (ticker.usdTLPrice)! * Double(asset1.balance) / double
+                    break
+                case "Ethereum":
+                    coinPrice = (ticker.ethUSDPrice)! * (ticker.usdTLPrice)! * Double(asset1.balance) / double
+                    break
+                case "Kızılay":
+                    coinPrice = 1 * Double(asset1.balance) / double
+                    break
+                case "Waves":
+                    coinPrice = (ticker.wavesUSDPrice)! * (ticker.usdTLPrice)! * Double(asset1.balance) / double
+                    break
+                case "Tether USDT":
+                    coinPrice = (ticker.usdTLPrice)! * Double(asset1.balance) / double
+                    break
+                default:
+                    coinPrice = 0
+                    break
+                }
+                
+                let digiliraBalance = digilira.DigiliraPayBalance.init(
+                    tokenName: asset.tokenName,
+                    tokenSymbol: asset1.issueTransaction.name,
+                    availableBalance: asset1.balance,
+                    decimal: asset.decimal,
+                    balance: asset1.balance,
+                    tlExchange: coinPrice,
+                    network: "waves")
+                
+                totalBalance += coinPrice
+                
+                Waves.append(digiliraBalance)
+            } catch {
+                throwEngine.evaluateError(error: error)
+            }
+            
+        }
+        
+        loadScreen()
+    }
+    
+    func loadScreen() {
+        self.isWavesReloaded = true
+        self.onB!()
+        //self.coinTableView.reloadData()
+
+        self.goHomeScreen()
+        
+        if isFirstLaunch {
+            self.setTableView()
+            self.setWalletView()
+            self.setPaymentView()
+            self.setSettingsView()
+        }
+        if isFirstLaunch {
+            checkEssentials()
+            isFirstLaunch = false
+        }
+        
+        menuView.isUserInteractionEnabled = true
+        emptyBG.isHidden = true
+        if let qr = decodeDefaults(forKey: "QRARRAY2", conformance: digilira.QR.self, setNil: true) {
+            QR = qr
+            self.getOrder(address: QR)
+        }
     }
     
     func isKeyPresentInUserDefaults(key: String) -> Bool {
@@ -1566,7 +1590,6 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
                                         width: view.frame.width,
                                         height: view.frame.height)
         newSendMoneyView.delegate = self
-        
         newSendMoneyView.recipientText.text = transactionRecipient
         
         if let assetId = params.assetId {
@@ -1634,8 +1657,7 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
                                     height: view.frame.height)
         paraYatirView.delegate = self
         paraYatirView.errors = self
-        
-        paraYatirView.Filtered = self.Filtered
+        paraYatirView.Filtered = BC.returnCoins()
         paraYatirView.Ticker = Ticker
         
         for subView in qrView.subviews
@@ -2163,15 +2185,25 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
                     
                     digiliraPay.onMember = { res, data in
                         DispatchQueue.main.async {
-                            switch res {
-                            case true:
+
+                            var miktar: Int64 = 0
+                            var attach = ""
+                            
+                            if data?.amount != nil {
+                                miktar = data!.amount!
+                            }
+                            
+                            if data?.message != nil {
+                                attach = data!.message
+                            }
+                            
                                 let trx = SendTrx.init(merchant: data?.owner!,
                                                        recipient: (data?.wallet)!,
                                                        assetId: data?.assetId!,
-                                                       amount: data?.amount!,
+                                                       amount: miktar,
                                                        fee: digilira.sponsorTokenFee,
                                                        fiat: exchange,
-                                                       attachment: data?.message,
+                                                       attachment: attach,
                                                        network: data?.network!,
                                                        destination: data?.destination!,
                                                        massWallet: data?.wallet,
@@ -2180,9 +2212,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
                                 
                                 self.send(params: trx)
                                 
-                            default:
-                                return
-                            }
+
                         }
                         
                     }
@@ -2870,7 +2900,7 @@ extension MainScreen: PinViewDelegate
             pincode:code
         )
         
-        digiliraPay.request(  rURL: digilira.api.url + digilira.api.userUpdate,
+        digiliraPay.request(  rURL: digiliraPay.getApiURL() + digilira.api.userUpdate,
                               JSON: try? digiliraPay.jsonEncoder.encode(user),
                               METHOD: digilira.requestMethod.put,
                               AUTH: true

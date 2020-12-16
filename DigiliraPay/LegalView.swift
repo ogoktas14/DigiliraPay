@@ -15,7 +15,7 @@ class LegalView: UIView {
     @IBOutlet weak var contentLabel: UILabel!
     @IBOutlet weak var confirmView: UIView!
     @IBOutlet weak var backView: UIView!
-
+    let throwEngine = ErrorHandling()
     weak var delegate: LegalDelegate?
     var tapOkGesture = UITapGestureRecognizer()
     var m: String?
@@ -43,15 +43,36 @@ class LegalView: UIView {
         }
         do {
             try Locksmith.deleteDataForUserAccount(userAccount: "sensitive")
+            sleep(1)
         } catch  {
             print(error)
         }
         do {
             try Locksmith.deleteDataForUserAccount(userAccount: "authenticate")
+            sleep(1)
+        } catch  {
+            print(error)
+        }
+        do {
+            try Locksmith.deleteDataForUserAccount(userAccount: "sensitiveMainnet")
+            sleep(1)
+        } catch  {
+            print(error)
+        }
+        do {
+            try Locksmith.deleteDataForUserAccount(userAccount: "authenticateMainnet")
+            sleep(1)
         } catch  {
             print(error)
         }
         
+        do {
+            try Locksmith.deleteDataForUserAccount(userAccount: "environment")
+            sleep(1)
+        } catch  {
+            print(error)
+        }
+        throwEngine.resetApp()
 
         let defaults = UserDefaults.standard
         let dictionary = defaults.dictionaryRepresentation()

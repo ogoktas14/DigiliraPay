@@ -36,7 +36,7 @@ class ParaYatirView:UIView {
     weak var delegate: LoadCoinDelegate?
     weak var errors: ErrorsDelegate?
 
-    var Filtered: [digilira.DigiliraPayBalance] = []
+    var Filtered: [digilira.coin] = []
     let digiliraPay = digiliraPayApi()
     let BC = Blockchain()
     
@@ -103,7 +103,14 @@ class ParaYatirView:UIView {
         saveView.layer.cornerRadius = 25
         
         
-        
+        if let user = kullanici {
+            if user.status == 0 {
+                
+                DispatchQueue.main.async { [self] in
+                    self.errors?.errorHandler(message: "Hesabınıza para yükleyebilmek için profil onayı sürecini tamamlamanız gerekmektedir.", title: "Profil Onayı", error: true)
+                }
+            }
+        }
     }
     
     @objc func copyToClipboard() {
@@ -309,7 +316,7 @@ class ParaYatirView:UIView {
                 break
             }
         } catch {
-            
+            print(error)
         }
          
     }
@@ -346,63 +353,56 @@ class ParaYatirView:UIView {
     }
     
     
-    func setCoin() throws -> (digilira.coin, String?, String) {
+    func setCoin() throws -> String? {
         let coin = Filtered[currentPage]
         
-        switch coin.network {
-        case "waves":
-            
-            switch coin.tokenName {
-            case digilira.bitcoin.tokenName:
-                let address = kullanici?.btcAddress
-                return (digilira.bitcoin, address, "NA")
-            case digilira.ethereum.tokenName:
-                let address = kullanici?.ethAddress
-                return (digilira.ethereum, address, "NA")
-            case digilira.waves.tokenName:
-                let address = kullanici?.wallet
-                return (digilira.waves, address, digilira.charity.token)
-            case digilira.charity.tokenName:
-                let address = kullanici?.wallet
-                return (digilira.charity, address, digilira.charity.token)
-            default:
-                throw digilira.NAError.notListedToken
-            }
-        case "bitexen":
-            let c = digilira.coin.init(token: coin.tokenName, symbol: coin.tokenSymbol, tokenName: coin.tokenName, decimal: coin.decimal, network: coin.network, tokenSymbol: coin.tokenSymbol)
-            return (c, coin.tokenSymbol, coin.tokenName)
+        switch coin.tokenName {
+        case digilira.bitcoin.tokenName:
+            let address = kullanici?.btcAddress
+            return address
+        case digilira.ethereum.tokenName:
+            let address = kullanici?.ethAddress
+            return address
+        case digilira.waves.tokenName:
+            let address = kullanici?.wallet
+            return address
+        case digilira.charity.tokenName:
+            let address = kullanici?.wallet
+            return address
+        case digilira.litecoinWaves.tokenName:
+            let address = kullanici?.ltcAddress
+            return address
+        case digilira.tetherWaves.tokenName:
+            let address = kullanici?.tetherAddress
+            return address
+        case digilira.wavesWaves.tokenName:
+            let address = kullanici?.wallet
+            return address
         default:
             throw digilira.NAError.notListedToken
         }
+
     }
     
-    func setCoinCard(scrollViewSize: UIView, layer: CGFloat, coin:digilira.DigiliraPayBalance) throws -> UIView {
+    func setCoinCard(scrollViewSize: UIView, layer: CGFloat, coin:digilira.coin) throws -> UIView {
         ccView = UIView().loadNib(name: "CreditCardView") as! CreditCardView
-        
+        let ad = "Satoshi"
+        let soyad = "Nakamoto"
         do {
-            let (coin, address, asset) = try setCoin()
+            let address = try setCoin()
             self.address1 = address
             if let kullanici = kullanici {
-                if let name = kullanici.firstName {
-                    if let surname =  kullanici.lastName {
-                        let isim = name + " " + surname
-                        switch coin.network {
-                        case "bitexen":
-                            ccView.setView(tokenName: coin.tokenName, wallet: address!, qr: UIImage.init(), ad:name)
-                            break
-                        case "waves", "ethereum", "bitcoin":
-                            if let a = generateQRCode(from: coin.network, network: coin.network, address: address!, amount: "0", assetId: asset) {
-                                ccView.setView(tokenName: coin.tokenName, wallet: address!, qr: a, ad:isim)
-                            }
-                        default:
-                            break
-                        }
-                    }
+                let name = kullanici.firstName ?? ad
+                let surname =  kullanici.lastName ?? soyad
+                let isim = name + " " + surname
+                if let adres = address {
+                    
+                    if let a = generateQRCode(from: coin.network, network: coin.network, address: adres, amount: "0", assetId: coin.token) {
+                        ccView.setView(tokenName: coin.tokenName, wallet: address!, qr: a, ad:isim)
                 }
-
- 
+                }
             }
- 
+            
         } catch  {
             print(error)
             throw error

@@ -263,13 +263,26 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TestNet" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1d1-Pb-7xY" userLabel="I">
+                                        <rect key="frame" x="341" y="64.333333333333329" width="63" height="20"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="20" id="DVG-he-PRG"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstItem="uLB-Va-OGK" firstAttribute="centerX" secondItem="NQv-rh-oeG" secondAttribute="centerX" id="1TG-OG-AgH"/>
                                     <constraint firstAttribute="width" secondItem="NQv-rh-oeG" secondAttribute="height" multiplier="16:8" constant="170" id="7sn-NE-0X5"/>
                                     <constraint firstItem="CiE-pg-yMo" firstAttribute="top" secondItem="NQv-rh-oeG" secondAttribute="top" id="8uV-uj-4Zn"/>
+                                    <constraint firstItem="1d1-Pb-7xY" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="NQv-rh-oeG" secondAttribute="leading" constant="20" symbolic="YES" id="AkG-Of-P1x"/>
+                                    <constraint firstItem="1d1-Pb-7xY" firstAttribute="centerY" secondItem="VHR-Nh-8mP" secondAttribute="centerY" id="MKs-3N-kFI"/>
                                     <constraint firstAttribute="trailing" secondItem="o7h-JJ-hEz" secondAttribute="trailing" constant="125" id="TU3-R5-oW1"/>
+                                    <constraint firstAttribute="trailing" secondItem="1d1-Pb-7xY" secondAttribute="trailing" constant="10" id="Thc-uV-MG2"/>
                                     <constraint firstItem="VHR-Nh-8mP" firstAttribute="centerY" secondItem="o7h-JJ-hEz" secondAttribute="centerY" id="VYi-D5-QRx"/>
                                     <constraint firstAttribute="trailing" secondItem="CiE-pg-yMo" secondAttribute="trailing" id="WjM-VT-5AA"/>
                                     <constraint firstItem="o7h-JJ-hEz" firstAttribute="centerX" secondItem="NQv-rh-oeG" secondAttribute="centerX" id="jMs-sf-dXt"/>
@@ -401,6 +414,7 @@
                         <outlet property="qrView" destination="6DM-zh-s3d" id="eY7-SG-yOw"/>
                         <outlet property="sendMoneyBackButton" destination="xob-X5-xnL" id="9Vc-FA-Zy5"/>
                         <outlet property="sendWithQRView" destination="COd-Ba-SB8" id="Lbg-VS-FMq"/>
+                        <outlet property="serverLabel" destination="1d1-Pb-7xY" id="2D6-SG-7un"/>
                         <segue destination="ppo-qU-rpA" kind="show" identifier="showLoadMoney" id="tPZ-ZS-zRk"/>
                     </connections>
                 </viewController>
@@ -620,7 +634,7 @@ scan, text, view, shape, pool, chapter </string>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="d5S-nY-SlF"/>
+        <segue reference="oyz-da-CHm"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="appLogoBlack" width="157" height="66"/>

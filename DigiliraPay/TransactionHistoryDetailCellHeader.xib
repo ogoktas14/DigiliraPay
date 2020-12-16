@@ -36,7 +36,7 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="grF-kW-PYA">
                         <rect key="frame" x="10" y="12.5" width="50" height="50"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="income" translatesAutoresizingMaskIntoConstraints="NO" id="Cgo-sC-F0I">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="receive" translatesAutoresizingMaskIntoConstraints="NO" id="Cgo-sC-F0I">
                                 <rect key="frame" x="5" y="5" width="40" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="Cgo-sC-F0I" secondAttribute="height" multiplier="1:1" id="oSJ-m1-pYj"/>
@@ -75,6 +75,6 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="income" width="36" height="36"/>
+        <image name="receive" width="384" height="384"/>
     </resources>
 </document>
