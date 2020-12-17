@@ -1593,6 +1593,7 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
         newSendMoneyView.Filtered = self.Filtered
         newSendMoneyView.Coins = BC.returnCoins()
         newSendMoneyView.Ticker = Ticker
+        newSendMoneyView.set()
         
         newSendMoneyView.errors = self
         newSendMoneyView.delegate = self
@@ -1607,20 +1608,12 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
                 }else{
                     newSendMoneyView.textAmount.text = ""
                 }
-                
-//                newSendMoneyView.coinSwitch.setTitle(params.fiat!.description + " ₺", forSegmentAt: 0)
-//                newSendMoneyView.coinSwitch.setTitle((Double(params.amount!) / double).description + " " + params.network!, forSegmentAt: 1)
-                
+
             } catch  {
                 print (error)
             }
         }
         
-        var networkLabel = params.network?.capitalized
-        
-        if networkLabel == "" {
-            networkLabel = "Cüzdan Seçin"
-        }
         
         newSendMoneyView.transaction = params
         if params.destination == digilira.transactionDestination.interwallets {
@@ -2905,7 +2898,7 @@ extension MainScreen: PinViewDelegate
         for subView in self.sendWithQRView.subviews
         { subView.removeFromSuperview() }
         
-        
+        menuView.isHidden = false
         
         
     }

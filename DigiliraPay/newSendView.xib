@@ -117,7 +117,7 @@
                                                         <outletCollection property="gestureRecognizers" destination="P1S-Ul-mqI" appends="YES" id="xJz-Hd-n7U"/>
                                                     </connections>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rqC-Bt-p8D">
+                                                <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rqC-Bt-p8D">
                                                     <rect key="frame" x="5" y="16" width="232" height="32"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
@@ -251,6 +251,7 @@
                 <outlet property="fetchQR" destination="mkC-Zd-RWP" id="LAv-H4-9R4"/>
                 <outlet property="pageControl" destination="8pv-Ot-XC8" id="GaJ-89-6DI"/>
                 <outlet property="pasteLbl" destination="twO-m1-WLQ" id="xcu-wz-nDN"/>
+                <outlet property="recipient" destination="ewN-7G-cHi" id="ekP-Jb-L2F"/>
                 <outlet property="recipientText" destination="rqC-Bt-p8D" id="Woa-p4-yCM"/>
                 <outlet property="scrollAreaView" destination="XNE-IX-HkT" id="bi5-Rp-0wL"/>
                 <outlet property="sendView" destination="lHS-wd-2Uo" id="DUv-B5-y5m"/>

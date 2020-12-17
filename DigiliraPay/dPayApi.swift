@@ -534,6 +534,8 @@ class digiliraPayApi: NSObject {
                 self.onMember!(true, response)
             }else {
                 
+                
+                
                 let response = digilira.externalTransaction.init(network: external.network,
                                                                  address: croppedAddress,
                                                                  amount: 0,

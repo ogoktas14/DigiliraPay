@@ -16,6 +16,7 @@ class newSendView: UIView {
     weak var delegate: NewCoinSendDelegate?
     var balanceCardView = BalanceCard()
 
+    @IBOutlet weak var recipient: UIView!
     @IBOutlet weak var sendView: UIView!
     @IBOutlet weak var textAmount: UITextField!
     @IBOutlet weak var coinSwitch: UISegmentedControl!
@@ -63,12 +64,14 @@ class newSendView: UIView {
     let digiliraPay = digiliraPayApi()
     
     @objc func sendMoneyButton() {
+        sendView.alpha = 0.4
+        sendView.isUserInteractionEnabled = false
         var isMissing = false
         
         let isAmount = amount
  
         if let transaction = transaction {
-            if transaction.destination == digilira.transactionDestination.foreign {
+            if transaction.destination == digilira.transactionDestination.foreign || transaction.destination == nil {
                 if let coin = selectedCoinX {
                     if !checkAddress(network: coin.network, address: recipientText.text!) {
                         recipientText.textColor = .red
@@ -81,6 +84,11 @@ class newSendView: UIView {
         
         if isMissing {
             shake()
+            
+            errors?.errorHandler(message: "Girdiğiniz bilgileri kontrol ederek tekrar deneyin.", title: "Bir Hata Oluştu", error: true)
+            
+            sendView.alpha = 1
+            sendView.isUserInteractionEnabled = true
             return
         }
         
@@ -125,9 +133,6 @@ class newSendView: UIView {
                             return
                         }
                     }
-                    
-                    
-                    
                 }
                 
                 
@@ -141,27 +146,66 @@ class newSendView: UIView {
         }
     }
     
+    func eval(template: String, address: String) -> Bool {
+        let addressTest = NSPredicate(format: "SELF MATCHES %@", template)
+        let result = addressTest.evaluate(with: address)
+        return result
+    }
+    
     func checkAddress(network: String, address: String) -> Bool {
-        var regexString = ""
         
-        if transaction?.destination != digilira.transactionDestination.foreign {
-            return true
-        }
+        let bitcoinSegwit = "^(bc1|[13])[a-zA-HJ-NP-Z0-9]{25,39}$"
+        let bitcoinReg = "^[13][a-km-zA-HJ-NP-Z0-9]{26,33}$"
+        let ethereumReg = "^0x[a-fA-F0-9]{40}$"
+        let wavesreg = "^[3][a-zA-Z0-9]{34}"
         
+        var regexString = wavesreg
+
         switch network {
         case digilira.bitcoin.network:
-            regexString = "^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$"
+            regexString = bitcoinReg
         case digilira.ethereum.network:
-            regexString = "^0x[a-fA-F0-9]{40}$"
+            regexString = ethereumReg
             break
         case digilira.waves.network:
-            regexString = "^[3][a-zA-Z0-9]{34}"
+            regexString = wavesreg
             break
         default:
-            regexString = "^[3][a-zA-Z0-9]{34}"
+            break
         }
-        let addressTest = NSPredicate(format: "SELF MATCHES %@", regexString)
-        let result = addressTest.evaluate(with: address)
+        
+        let result = eval(template: regexString, address: address)
+        
+        if (!result) {
+            let wavresult = eval(template: wavesreg, address: address)
+             
+            if wavresult {
+                getPage(x: digilira.waves.tokenName)
+                return true
+            }
+            
+            let btcresult = eval(template: bitcoinReg, address: address)
+            
+            if btcresult {
+                getPage(x: digilira.bitcoin.tokenName)
+                return true
+            }
+             
+            let btcresultSegwit = eval(template: bitcoinSegwit, address: address)
+            
+            if btcresultSegwit {
+                getPage(x: digilira.bitcoin.tokenName)
+                return true
+            }
+            
+            let ethresult = eval(template: ethereumReg, address: address)
+            
+            if ethresult {
+                getPage(x: digilira.ethereum.tokenName)
+                return true
+            }
+
+        }
         
         if result {
             recipientText.textColor = .black
@@ -241,6 +285,8 @@ class newSendView: UIView {
             textAmount.isEnabled = true
             pasteLbl.isHidden = false
             errors?.errorCaution(message: "Bu cüzdan adresi DigiliraPay'de kayıtlı bir adres değildir. Transferinizden komisyon ücreti düşecektir.", title: "Dikkat")
+            scrollAreaView.isUserInteractionEnabled = false
+
 
         }
          
@@ -314,14 +360,13 @@ class newSendView: UIView {
         }
     }
     
-    
-    func findToken(tokenName:String) {
+    func getPage(x: String) {
         do {
-            let x = try BC.returnAsset(assetId: tokenName)
-            let y = try BC.returnCoin(tokenName: x.tokenName)
+            let y = try BC.returnCoin(tokenName: x)
             for (i, c) in Filtered.enumerated() {
                 if y.tokenName == c.tokenName
                 {
+                    selectedCoinX = y
                     pageControl.currentPage = i
                     changePage(pageControl)
                     return
@@ -331,8 +376,15 @@ class newSendView: UIView {
         } catch  {
             print(error)
         }
-        
-
+    }
+    
+    func findToken(tokenName:String) {
+        do {
+            let x = try BC.returnAsset(assetId: tokenName)
+            getPage(x:x.tokenName)
+        } catch  {
+            print(error)
+        }
     }
     
     func setTextAmount() {
@@ -358,8 +410,7 @@ class newSendView: UIView {
                 
                     coinSwitch.setTitle("₺", forSegmentAt: 0)
                     coinSwitch.setTitle(coin.symbol, forSegmentAt: 1)
-//                coinSwitch.setTitle(String(format: "%.2f", price) + " ₺", forSegmentAt: 0)
-//                coinSwitch.setTitle(String(format: "%." + coin.decimal.description + "f", amount) + " " + coin.symbol, forSegmentAt: 1)
+
                 commissionLabel.text = "Transfer ücreti: " + String(format: "%." + coin.decimal.description + "f", (amount * 0.005))  + " " + coin.symbol
                 balanceCardView.willPaidCoin.text = String(format: "%." + coin.decimal.description + "f", amount)
 
@@ -371,8 +422,7 @@ class newSendView: UIView {
                 
                     coinSwitch.setTitle("₺", forSegmentAt: 0)
                     coinSwitch.setTitle(coin.symbol, forSegmentAt: 1)
-//                coinSwitch.setTitle(String(format: "%.2f", price) + " ₺", forSegmentAt: 0)
-//                coinSwitch.setTitle(String(format: "%." + coin.decimal.description + "f", amount) + " " + coin.symbol, forSegmentAt: 1)
+
                 balanceCardView.willPaidCoin.text = String(format: "%." + coin.decimal.description + "f", amount)
                 commissionLabel.text = "Transfer ücreti: " + String(format: "%." + coin.decimal.description + "f", (amount * 0.005))  + " " + coin.symbol
             }
@@ -380,19 +430,74 @@ class newSendView: UIView {
         }
     }
     
-       @IBAction func amounTap(_ sender: Any) {
-    
+       @objc func amounTap() {
+        let rec = recipientText.text!
+        if rec == "" {
+            errors?.errorCaution(message: "Alıcı eklemek için Yapıştır ve QR kod butonlarını kullanabilirsiniz. ", title: "Dikkat")
+        }
+
+        
+
        }
     
     @IBAction func pasteAddress(_ sender: Any) {
 
         weak var pb: UIPasteboard? = .general
         guard let text = pb?.string else { return}
+        recipientText.textColor = .black
         
-        recipientText.text = text
+        if let coin = selectedCoinX {
+            if checkAddress(network: coin.network, address: text) {
+                recipientText.text = text
+                memCheck()
+                
+            } else {
+                errors?.errorHandler(message: "Geçerli bir adres bulunamadı. Seçtiğiniz kripto varlık ile göndermek istediğiniz adresin uyuştuğunu kontrol ediniz. \n\nYapıştırmaya çalıştığınız adres:\n\n" + text, title: "Tekrar Deneyin", error: true)
+            }
+        }
         
-//        errors?.errorHandler(message: "Geçerli bir adres bulunamadı.", title: "Tekrar Deneyin", error: true)
+        
+       
+     
     }
+    
+    func memCheck() {
+        let isAmount = amount
+        if let coin = selectedCoinX {
+            let double = Double(truncating: pow(10,coin.decimal) as NSNumber)
+            let external = digilira.externalTransaction.init(network: coin.network,
+                                                             address: recipientText.text,
+                                                             amount: Int64(isAmount * double),
+                                                             assetId: coin.token)
+            
+            digiliraPay.onMember = { res, data in
+                DispatchQueue.main.async { [self] in
+                    switch res {
+                    case true:
+                        
+                        transaction?.merchant = data?.owner!
+                        transaction?.recipient = (data?.wallet)!
+                        transaction?.assetId = data?.assetId!
+                        transaction?.amount = data?.amount!
+                        transaction?.fee = digilira.sponsorTokenFee
+                        transaction?.fiat = self.price * double
+                        transaction?.attachment = data?.message
+                        transaction?.network = data?.network!
+                        transaction?.destination = data?.destination!
+                        transaction?.massWallet = data?.wallet
+                        transaction?.memberCheck = true
+                         
+                        recipientText.text = data?.owner
+                         
+                    default:
+                        return
+                    }
+                }
+            }
+            digiliraPay.isOurMember(external: external)
+        }
+    }
+    
     
     func dismissKeyboard() {
         self.endEditing(true)
@@ -406,6 +511,9 @@ class newSendView: UIView {
     
     override func awakeFromNib()
     {
+        
+        transaction?.destination = digilira.transactionDestination.foreign
+        
         do {
             let user = try secretKeys.userData()
             kullanici = user
@@ -421,13 +529,15 @@ class newSendView: UIView {
 
         let leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipes(_:)))
         let rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipes(_:)))
-        let pasteFromClip = UISwipeGestureRecognizer(target: self, action: #selector(pasteAddress(_:)))
-        
+        let recipientTap = UITapGestureRecognizer(target: self, action: #selector(amounTap))
+
         leftSwipe.direction = .left
         rightSwipe.direction = .right
 
         scrollAreaView.addGestureRecognizer(leftSwipe)
         scrollAreaView.addGestureRecognizer(rightSwipe)
+        recipient.isUserInteractionEnabled = true
+        recipient.addGestureRecognizer(recipientTap)
  
         pageControl.pageIndicatorTintColor = .lightGray
         pageControl.currentPageIndicatorTintColor = .black
@@ -444,7 +554,6 @@ class newSendView: UIView {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(getQR))
         fetchQR.isUserInteractionEnabled = true
         fetchQR.addGestureRecognizer(tap)
-        
         
         let tap2: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(switchChanged))
         coinSwitch.addGestureRecognizer(tap2)
@@ -467,6 +576,7 @@ class newSendView: UIView {
     
     @objc func handleSwipes(_ sender: UISwipeGestureRecognizer)
     {
+        recipientText.text = ""
         direction = sender.direction
         if sender.direction == .right
         {
@@ -497,7 +607,8 @@ class newSendView: UIView {
     }
     
     @IBAction func changePage(_ sender: UIPageControl) {
-
+        
+        
         currentPage = sender.currentPage
         setBalanceView(index: sender.currentPage)
         setAdress()
@@ -681,10 +792,8 @@ class newSendView: UIView {
         }
     }
     
-    override func didMoveToSuperview() {
-        if (transaction != nil) {
-            setQR(params: transaction!)
-        }
+    func set() {
+        
         if Filtered.count == 0 {
             return
         }
@@ -703,10 +812,16 @@ class newSendView: UIView {
 
         setCoinPrice()
         calcPrice(text: textAmount.text!)
-        
+    }
+    
+    override func didMoveToSuperview() {
+        if (transaction != nil) {
+            setQR(params: transaction!)
+        }
     }
     
     @objc func getQR () {
+        transaction = nil
         delegate?.readAddressQR()
     }
  

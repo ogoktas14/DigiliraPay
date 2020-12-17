@@ -692,15 +692,7 @@ class Blockchain: NSObject {
     }
     
     func checkSmart(address: String) {
-        
-        do {
-            let seed = try getSeed()
-            //wavesApi(seed: seed.seed)
-        } catch {
-            print(error)
-        }
-        
-        
+
         WavesSDK.shared.services
             .nodeServices
             .addressesNodeService
