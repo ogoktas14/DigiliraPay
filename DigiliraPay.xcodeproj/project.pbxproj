@@ -86,6 +86,8 @@
 		934242822586B1F0009D6024 /* OrderDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934242812586B1F0009D6024 /* OrderDetailView.swift */; };
 		934F3C4825889950007CFC19 /* string.tr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F3C4725889950007CFC19 /* string.tr.swift */; };
 		934F3C4C2588F627007CFC19 /* mainnet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F3C4B2588F627007CFC19 /* mainnet.swift */; };
+		934F3C50258A4A9F007CFC19 /* SendMoneyCard.xib in Resources */ = {isa = PBXBuildFile; fileRef = 934F3C4F258A4A9E007CFC19 /* SendMoneyCard.xib */; };
+		934F3C53258A4C37007CFC19 /* SendMoneyCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F3C52258A4C37007CFC19 /* SendMoneyCard.swift */; };
 		93534031253B093B00FFEA4D /* shareQRVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93534030253B093B00FFEA4D /* shareQRVC.swift */; };
 		93534036253C4F2C00FFEA4D /* newSendView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93534035253C4F2C00FFEA4D /* newSendView.xib */; };
 		93534039253C528600FFEA4D /* newSendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93534038253C528600FFEA4D /* newSendView.swift */; };
@@ -203,6 +205,10 @@
 		934242812586B1F0009D6024 /* OrderDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDetailView.swift; sourceTree = "<group>"; };
 		934F3C4725889950007CFC19 /* string.tr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = string.tr.swift; sourceTree = "<group>"; };
 		934F3C4B2588F627007CFC19 /* mainnet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mainnet.swift; sourceTree = "<group>"; };
+		934F3C4F258A4A9E007CFC19 /* SendMoneyCard.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SendMoneyCard.xib; sourceTree = "<group>"; };
+		934F3C52258A4C37007CFC19 /* SendMoneyCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendMoneyCard.swift; sourceTree = "<group>"; };
+		934F3C5C258B2BEE007CFC19 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Main.strings; sourceTree = "<group>"; };
+		934F3C5D258B2BF6007CFC19 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/Main.strings"; sourceTree = "<group>"; };
 		93534030253B093B00FFEA4D /* shareQRVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = shareQRVC.swift; sourceTree = "<group>"; };
 		93534035253C4F2C00FFEA4D /* newSendView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = newSendView.xib; sourceTree = "<group>"; };
 		93534038253C528600FFEA4D /* newSendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newSendView.swift; sourceTree = "<group>"; };
@@ -352,6 +358,7 @@
 				93F79FE22580F6EA006DC148 /* HeaderExitView.xib */,
 				932A59BF2584FA1900B64EA9 /* warningView.xib */,
 				9342427E2586AF7E009D6024 /* OrderDetailView.xib */,
+				934F3C4F258A4A9E007CFC19 /* SendMoneyCard.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -396,6 +403,7 @@
 				93F79FE52580F89D006DC148 /* HeaderExitView.swift */,
 				932A59C22584FA6200B64EA9 /* warningView.swift */,
 				934242812586B1F0009D6024 /* OrderDetailView.swift */,
+				934F3C52258A4C37007CFC19 /* SendMoneyCard.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -521,6 +529,8 @@
 			knownRegions = (
 				en,
 				Base,
+				tr,
+				"en-GB",
 			);
 			mainGroup = 882AAAF622FC96DD004CDAA6;
 			productRefGroup = 882AAB0022FC96DD004CDAA6 /* Products */;
@@ -559,6 +569,7 @@
 				93757C21256D43060066A7B9 /* PayTableViewCell.xib in Resources */,
 				9339084825591D350005B64A /* selectCoinView.xib in Resources */,
 				88CA9378231A488A008F894B /* TransactionHistoryDetailCellHeader.xib in Resources */,
+				934F3C50258A4A9F007CFC19 /* SendMoneyCard.xib in Resources */,
 				93F79FDA257E5B4C006DC148 /* CreditCardView.xib in Resources */,
 				88CA9368231979C3008F894B /* WalletOperationButtonSView.xib in Resources */,
 				93757C28256E3EAD0066A7B9 /* PageCardView.xib in Resources */,
@@ -653,6 +664,7 @@
 				88F4A1BF2312AF7B007172A6 /* MenuView.swift in Sources */,
 				88309EBE231FD08500F96C05 /* LoadCoinDelegate.swift in Sources */,
 				88114F642321604100AB3B5A /* ProfilUpgradeView.swift in Sources */,
+				934F3C53258A4C37007CFC19 /* SendMoneyCard.swift in Sources */,
 				889F2A272316D8D400ACD656 /* Languages.swift in Sources */,
 				88CA9377231A488A008F894B /* TransactionHistoryDetailCellHeader.swift in Sources */,
 				93757C2B256E3FDC0066A7B9 /* PageCardView.swift in Sources */,
@@ -702,6 +714,8 @@
 			isa = PBXVariantGroup;
 			children = (
 				0023C0FB2517C92B0042B50C /* Base */,
+				934F3C5C258B2BEE007CFC19 /* tr */,
+				934F3C5D258B2BF6007CFC19 /* en-GB */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -721,6 +735,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -783,6 +798,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -842,7 +858,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 65;
+				CURRENT_PROJECT_VERSION = 66;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;
@@ -867,7 +883,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPayRelease.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 65;
+				CURRENT_PROJECT_VERSION = 66;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;

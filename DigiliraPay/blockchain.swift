@@ -512,6 +512,46 @@ class Blockchain: NSObject {
         
     }
     
+    
+    func returnCoin(tokenName: String) throws -> digilira.coin {
+         
+        switch WavesSDK.shared.enviroment.server {
+        case .mainNet:
+            
+            switch tokenName {
+            case digilira.wavesWaves.tokenName:
+                return digilira.wavesWaves
+            case digilira.tetherWaves.tokenName:
+                return digilira.tetherWaves
+            case digilira.bitcoinWaves.tokenName:
+                return digilira.bitcoinWaves
+            case digilira.ethereumWaves.tokenName:
+                return digilira.ethereumWaves
+            case digilira.litecoinWaves.tokenName:
+                return digilira.litecoinWaves
+            default:
+                throw digilira.NAError.notListedToken
+            }
+        case .testNet:
+            switch tokenName {
+            case digilira.waves.tokenName:
+                return digilira.waves
+            case digilira.bitcoin.tokenName:
+                return digilira.bitcoin
+            case digilira.ethereum.tokenName:
+                return digilira.ethereum
+            case digilira.charity.tokenName:
+                return digilira.charity 
+            default:
+                throw digilira.NAError.notListedToken
+            }
+        default:
+            throw digilira.NAError.notListedToken
+        }
+    }
+    
+    
+    
     func returnCoins() -> [digilira.coin] {
         
         var result: [digilira.coin] = []

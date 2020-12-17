@@ -26,6 +26,7 @@ class WarningView: UIView {
     var title: String  = "Dikkat"
     var message: String  = "Dikkat"
     var isError: Bool = true
+    var isCaution: Bool = false
     var isTransaction: Bool = false
     
     override func awakeFromNib() {
@@ -96,21 +97,27 @@ class WarningView: UIView {
         if isError {
             generator.notificationOccurred(.error)
         }
-            if isTransaction {
-                ok.isHidden = true
-                loading.isHidden = false
-                icon.image = UIImage(named: "verifying")
-                warningLabel.isHidden = false
-                 
-                incProgress()
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
-                    self.ok.isHidden = false
-                    self.warningLabel.isHidden = true
-                    self.removeFromSuperview()
-                }
+        
+        if isTransaction {
+            ok.isHidden = true
+            loading.isHidden = false
+            icon.image = UIImage(named: "verifying")
+            warningLabel.isHidden = false
+            
+            incProgress()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+                self.ok.isHidden = false
+                self.warningLabel.isHidden = true
+                self.removeFromSuperview()
             }
-            titleLabel.text = title
-            messageLabel.text = message
+        }
+        
+        if isCaution {
+            icon.image = UIImage(named: "caution") 
+        }
+        
+        titleLabel.text = title
+        messageLabel.text = message
     }
 }

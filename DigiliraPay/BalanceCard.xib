@@ -127,10 +127,12 @@
             <connections>
                 <outlet property="balanceCoin" destination="0zT-bZ-S3V" id="tLP-6U-QE2"/>
                 <outlet property="balanceTL" destination="rkN-C6-BvQ" id="j1C-HY-lzc"/>
+                <outlet property="balanceTLicon" destination="qAw-Ep-98b" id="Bwt-Cy-Id1"/>
                 <outlet property="container" destination="A5Y-UD-k6l" id="wyw-CM-k1p"/>
                 <outlet property="imgCoin" destination="Hpo-Q6-msM" id="SqH-ad-IHQ"/>
                 <outlet property="onBoardingDesc" destination="Wux-a5-VVI" id="2DP-bd-H2W"/>
                 <outlet property="paidCoin" destination="l1c-aG-cin" id="xgl-ek-xk4"/>
+                <outlet property="totalTitle" destination="r0r-aw-d48" id="Uba-ru-gwD"/>
                 <outlet property="willPaidCoin" destination="cRR-0T-y38" id="CIN-5e-ObO"/>
             </connections>
             <point key="canvasLocation" x="-182.8125" y="-122.00704225352113"/>

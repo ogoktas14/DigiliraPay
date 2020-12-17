@@ -26,6 +26,7 @@ class CreditCardView : UIView {
         if qr == UIImage.init() {
             contentView.isHidden = true
         }
+        
         imageView.image = qr
         adsoyad.text = ad
     }

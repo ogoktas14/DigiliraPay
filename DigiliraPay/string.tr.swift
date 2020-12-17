@@ -45,6 +45,10 @@ struct turkish {
         apiSet: false
         
     )
+    
+    struct messages {
+        static let touchIDAuthorization = ""
+    }
  
     
     

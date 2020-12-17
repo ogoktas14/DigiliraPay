@@ -13,14 +13,10 @@ import Photos
 class ParaYatirView:UIView {
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var scrollAreaView: UIView!
-    @IBOutlet weak var totalAmount: UIView!
-    @IBOutlet weak var totalAmountText: UITextField!
-    @IBOutlet weak var totalAmountLabel: UILabel!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var content: UIView!
-    @IBOutlet weak var cancelButton: UIView!
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var switchCurrency: UISegmentedControl!
+
+    
     @IBOutlet weak var imgCopy: UIImageView!
     @IBOutlet weak var imgSave: UIImageView!
     @IBOutlet weak var imgShare: UIImageView!
@@ -251,29 +247,7 @@ class ParaYatirView:UIView {
         view.layer.shadowOffset = CGSize(width:1, height: 1)
         
     }
-    func setPlaceHolderText() {
-        let isAmount = totalAmountText.text
-        
-        let coin = Filtered[currentPage]
-        switch switchCurrency.selectedSegmentIndex
-        {
-        case 0:
-            if isAmount == "" {
-                totalAmountLabel.text = "MİKTAR GİRİNİZ [ ₺ ]"
-            } else {
-                totalAmountText.text = String(format: "%.2f", amount)
-            }
-        case 1:
-            if isAmount == "" {
-                totalAmountLabel.text = "MİKTAR GİRİNİZ [ " + coin.tokenSymbol + " ]"
-            }else {
-                totalAmountText.text = String(format: "%." + coin.decimal.description + "f" , price)
-            }
-        default:
-            break;
-        }
-        
-    }
+ 
     
     @objc func letsGO()
     {
@@ -437,7 +411,7 @@ class ParaYatirView:UIView {
     }
     
     func setBalanceView(index:Int) {
-        print(Filtered)
+
         if Filtered.count >= currentPage {
             UIView.animate(withDuration: 0.5,
               animations: {

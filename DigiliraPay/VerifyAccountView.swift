@@ -315,8 +315,6 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     
     @objc func goHome()
     {
-        goHomeView.isUserInteractionEnabled = false
-        goHomeView.alpha = 0.4
         
         if isExit {
             delegate?.dismissVErifyAccountView()

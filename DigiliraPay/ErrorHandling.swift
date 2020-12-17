@@ -76,6 +76,30 @@ class ErrorHandling: NSObject {
         }
     }
     
+    
+    func alertCaution (title: String, message: String) {
+        
+        
+        orderDetailView.removeFromSuperview()
+        warningView.removeFromSuperview()
+          
+        
+        DispatchQueue.main.async { [self] in
+            
+            warningView = UIView().loadNib(name: "warningView") as! WarningView
+            warningView.frame = win!.frame
+            
+            warningView.isError = false
+            warningView.isCaution = true
+            warningView.title = title
+            warningView.message = message
+            warningView.setMessage()
+            
+            win?.addSubview(warningView)
+            
+        }
+    }
+    
     func alertTransaction (title: String, message: String, verifying: Bool) {
         
         DispatchQueue.main.async { [self] in

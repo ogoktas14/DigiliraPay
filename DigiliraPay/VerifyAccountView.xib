@@ -92,6 +92,7 @@
                                         </label>
                                         <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" style="wheels" translatesAutoresizingMaskIntoConstraints="NO" id="8Ii-Qb-kcS">
                                             <rect key="frame" x="0.0" y="10" width="371" height="142.33333333333334"/>
+                                            <locale key="locale" localeIdentifier="tr_TR"/>
                                             <connections>
                                                 <action selector="datePickerChangedWithSender:" destination="iN0-l3-epB" eventType="valueChanged" id="guI-iU-RGj"/>
                                                 <action selector="touchBirth:" destination="iN0-l3-epB" eventType="primaryActionTriggered" id="K5u-hd-MSO"/>
@@ -174,7 +175,7 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="22"/>
-                                            <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="next" textContentType="name"/>
+                                            <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="next" textContentType="given-name"/>
                                         </textField>
                                     </subviews>
                                     <constraints>

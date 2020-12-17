@@ -122,7 +122,7 @@ struct digilira {
          var tokenName: String
          var decimal: Int
          var network: String
-        var tokenSymbol: String
+         var tokenSymbol: String
     }
     
     static var demo = ["Bitcoin", "Ethereum", "Waves", "Kızılay", "Kızılay"]

@@ -1,0 +1,42 @@
+
+/* Class = "UILabel"; text = "TestNet"; ObjectID = "1d1-Pb-7xY"; */
+"1d1-Pb-7xY.text" = "TestNet";
+
+/* Class = "UILabel"; text = "Anahtar kelimelerinle hesabın her zaman güvende. Uygulamanı sildiysen veya yeni bir cihaza aktarman gerekiyorsa yukarıya 15 adet anahtar kelimeni yazarak hesabını içeri aktarabilirsin."; ObjectID = "1li-IX-pan"; */
+"1li-IX-pan.text" = "Anahtar kelimelerinle hesabın her zaman güvende. Uygulamanı sildiysen veya yeni bir cihaza aktarman gerekiyorsa yukarıya 15 adet anahtar kelimeni yazarak hesabını içeri aktarabilirsin.";
+
+/* Class = "UILabel"; text = "Yedeklediğiniz anahtar kelimelerinizi küçük harfleri kullanarak giriniz. Kelimeler arasında sadece bir karakter boşluk bırakınız."; ObjectID = "BGV-HL-vda"; */
+"BGV-HL-vda.text" = "Yedeklediğiniz anahtar kelimelerinizi küçük harfleri kullanarak giriniz. Kelimeler arasında sadece bir karakter boşluk bırakınız.";
+
+/* Class = "UITextView"; text = "train, plane, bus, bird, laptop, school,\nscan, text, view, shape, pool, chapter "; ObjectID = "ChR-Zf-9fJ"; */
+"ChR-Zf-9fJ.text" = "train, plane, bus, bird, laptop, school,\nscan, text, view, shape, pool, chapter ";
+
+/* Class = "UILabel"; text = "kullanarak hesabını içeri aktar."; ObjectID = "FgH-Eh-C0B"; */
+"FgH-Eh-C0B.text" = "kullanarak hesabını içeri aktar.";
+
+/* Class = "UILabel"; text = "Anahtar kelimelerini"; ObjectID = "KHh-lj-yr7"; */
+"KHh-lj-yr7.text" = "Anahtar kelimelerini";
+
+/* Class = "UILabel"; text = "Geri"; ObjectID = "Kf3-9h-RLb"; */
+"Kf3-9h-RLb.text" = "Geri";
+
+/* Class = "UILabel"; text = "Bakiye"; ObjectID = "VHR-Nh-8mP"; */
+"VHR-Nh-8mP.text" = "Bakiye";
+
+/* Class = "UILabel"; text = "Başla"; ObjectID = "YUb-xM-Prq"; */
+"YUb-xM-Prq.text" = "Başla";
+
+/* Class = "UILabel"; text = "Başla"; ObjectID = "YqD-d8-lER"; */
+"YqD-d8-lER.text" = "Başla";
+
+/* Class = "UILabel"; text = "Hesabımı İçeri Aktar"; ObjectID = "ZJS-5x-J1Z"; */
+"ZJS-5x-J1Z.text" = "Hesabımı İçeri Aktar";
+
+/* Class = "UILabel"; text = "Geri"; ObjectID = "aso-gc-YQB"; */
+"aso-gc-YQB.text" = "Geri";
+
+/* Class = "UILabel"; text = "Hadi Başlayalım"; ObjectID = "rrG-DE-6ga"; */
+"rrG-DE-6ga.text" = "Hadi Başlayalım";
+
+/* Class = "UILabel"; text = "TEST"; ObjectID = "uLB-Va-OGK"; */
+"uLB-Va-OGK.text" = "TEST";

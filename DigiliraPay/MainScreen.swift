@@ -1589,6 +1589,12 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
                                         y: 0,
                                         width: view.frame.width,
                                         height: view.frame.height)
+        
+        newSendMoneyView.Filtered = self.Filtered
+        newSendMoneyView.Coins = BC.returnCoins()
+        newSendMoneyView.Ticker = Ticker
+        
+        newSendMoneyView.errors = self
         newSendMoneyView.delegate = self
         newSendMoneyView.recipientText.text = transactionRecipient
         
@@ -1602,8 +1608,8 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
                     newSendMoneyView.textAmount.text = ""
                 }
                 
-                newSendMoneyView.coinSwitch.setTitle(params.fiat!.description + " ₺", forSegmentAt: 0)
-                newSendMoneyView.coinSwitch.setTitle((Double(params.amount!) / double).description + " " + params.network!, forSegmentAt: 1)
+//                newSendMoneyView.coinSwitch.setTitle(params.fiat!.description + " ₺", forSegmentAt: 0)
+//                newSendMoneyView.coinSwitch.setTitle((Double(params.amount!) / double).description + " " + params.network!, forSegmentAt: 1)
                 
             } catch  {
                 print (error)
@@ -1615,11 +1621,10 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
         if networkLabel == "" {
             networkLabel = "Cüzdan Seçin"
         }
-        newSendMoneyView.adresBtn.setTitle(networkLabel, for: .normal)
         
         newSendMoneyView.transaction = params
         if params.destination == digilira.transactionDestination.interwallets {
-            newSendMoneyView.adresBtn.isEnabled = false
+
             newSendMoneyView.recipientText.isEnabled = false
         }
         
@@ -2012,6 +2017,10 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
                                         y: 0,
                                         width: view.frame.width,
                                         height: view.frame.height)
+        
+        newSendMoneyView.Filtered = self.Filtered
+        newSendMoneyView.Ticker = Ticker
+
         newSendMoneyView.delegate = self
         
         for subView in sendWithQRView.subviews
@@ -2455,11 +2464,17 @@ extension MainScreen: LoadCoinDelegate
 }
 
 extension MainScreen: ErrorsDelegate {
+    func errorCaution(message: String, title: String) {
+        
+            self.dismissKeyboard()
+            throwEngine.alertCaution(title: title, message: message)
+    }
+    
     func errorHandler(message: String, title: String, error: Bool) {
         self.dismissKeyboard()
         throwEngine.alertWarning(title: title, message: message, error: error)
-
     }
+    
      
 }
 
