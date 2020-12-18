@@ -457,8 +457,6 @@ class digiliraPayApi: NSObject {
                     let result = price / usdt
                         return (Double(round(double * result)), digilira.tetherWaves.token, usdt)
                 }
-            case digilira.charity.tokenName:
-                return (price * double, digilira.charity.token, 1)
             default:
                 throw digilira.NAError.emptyAuth
             }
@@ -491,8 +489,6 @@ class digiliraPayApi: NSObject {
             switch coin.token {
             case digilira.waves.token:
                 return amountFloat * symbol.wavesUSDPrice! * symbol.usdTLPrice!
-            case digilira.charity.token:
-                return amountFloat * 1 
             default:
                 throw digilira.NAError.emptyAuth
             }
@@ -534,7 +530,7 @@ class digiliraPayApi: NSObject {
                 self.onMember!(true, response)
             }else {
                 
-                
+                //-TODO check withdraw address
                 
                 let response = digilira.externalTransaction.init(network: external.network,
                                                                  address: croppedAddress,

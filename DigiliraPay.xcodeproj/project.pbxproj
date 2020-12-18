@@ -103,6 +103,8 @@
 		93757C2B256E3FDC0066A7B9 /* PageCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93757C2A256E3FDC0066A7B9 /* PageCardView.swift */; };
 		93757C2E256E55AF0066A7B9 /* BalanceCard.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93757C2D256E55AF0066A7B9 /* BalanceCard.xib */; };
 		93757C31256E560B0066A7B9 /* BalanceCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93757C30256E560B0066A7B9 /* BalanceCard.swift */; };
+		939FD249258BA69D00964E97 /* TransferConfirmationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 939FD248258BA69D00964E97 /* TransferConfirmationView.xib */; };
+		93A3CC33258C7F5900E89E6E /* TransferConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A3CC32258C7F5900E89E6E /* TransferConfirmationView.swift */; };
 		93B7A11B252F0D8000C89E66 /* PaymentCategories.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93B7A11A252F0D8000C89E66 /* PaymentCategories.xib */; };
 		93B7A11E252F0F0A00C89E66 /* PaymentCategories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93B7A11D252F0F0A00C89E66 /* PaymentCategories.swift */; };
 		93E9D552257A930D00FE19D8 /* ErrorHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E9D551257A930D00FE19D8 /* ErrorHandling.swift */; };
@@ -224,6 +226,8 @@
 		93757C2A256E3FDC0066A7B9 /* PageCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageCardView.swift; sourceTree = "<group>"; };
 		93757C2D256E55AF0066A7B9 /* BalanceCard.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BalanceCard.xib; sourceTree = "<group>"; };
 		93757C30256E560B0066A7B9 /* BalanceCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceCard.swift; sourceTree = "<group>"; };
+		939FD248258BA69D00964E97 /* TransferConfirmationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransferConfirmationView.xib; sourceTree = "<group>"; };
+		93A3CC32258C7F5900E89E6E /* TransferConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferConfirmationView.swift; sourceTree = "<group>"; };
 		93B7A11A252F0D8000C89E66 /* PaymentCategories.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentCategories.xib; sourceTree = "<group>"; };
 		93B7A11D252F0F0A00C89E66 /* PaymentCategories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCategories.swift; sourceTree = "<group>"; };
 		93E9D551257A930D00FE19D8 /* ErrorHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorHandling.swift; sourceTree = "<group>"; };
@@ -359,6 +363,7 @@
 				932A59BF2584FA1900B64EA9 /* warningView.xib */,
 				9342427E2586AF7E009D6024 /* OrderDetailView.xib */,
 				934F3C4F258A4A9E007CFC19 /* SendMoneyCard.xib */,
+				939FD248258BA69D00964E97 /* TransferConfirmationView.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -404,6 +409,7 @@
 				932A59C22584FA6200B64EA9 /* warningView.swift */,
 				934242812586B1F0009D6024 /* OrderDetailView.swift */,
 				934F3C52258A4C37007CFC19 /* SendMoneyCard.swift */,
+				93A3CC32258C7F5900E89E6E /* TransferConfirmationView.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -587,6 +593,7 @@
 				882B9B6722FEFAA500D6E7B6 /* OnBoardingView.xib in Resources */,
 				88A6BA4723203570002640D6 /* LegalView.xib in Resources */,
 				88114F622321602800AB3B5A /* ProfileUpgradeView.xib in Resources */,
+				939FD249258BA69D00964E97 /* TransferConfirmationView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -669,6 +676,7 @@
 				88CA9377231A488A008F894B /* TransactionHistoryDetailCellHeader.swift in Sources */,
 				93757C2B256E3FDC0066A7B9 /* PageCardView.swift in Sources */,
 				888F26B3233E9DF700AB7E4C /* PinViewDelegate.swift in Sources */,
+				93A3CC33258C7F5900E89E6E /* TransferConfirmationView.swift in Sources */,
 				93757C31256E560B0066A7B9 /* BalanceCard.swift in Sources */,
 				93FC66C02562AB4E00E42AAC /* binance.swift in Sources */,
 				88CA9389231B9866008F894B /* OperationButtonsDelegate.swift in Sources */,
@@ -858,7 +866,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 67;
+				CURRENT_PROJECT_VERSION = 69;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;
@@ -883,7 +891,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPayRelease.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 67;
+				CURRENT_PROJECT_VERSION = 69;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;

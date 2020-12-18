@@ -133,7 +133,6 @@ class Blockchain: NSObject {
         let flat, rate: Int
     }
     
-    
     private var balances: NodeService.DTO.AddressAssetsBalance?
     private var disposeBag: DisposeBag = DisposeBag()
     private var disposeBag2: DisposeBag = DisposeBag()
@@ -229,41 +228,7 @@ class Blockchain: NSObject {
     func massTransferTx(recipient: String, fee: Int64, amount:Int64, assetId:String, attachment:String, wallet:digilira.wallet) {
         
         sendTransaction2(recipient: recipient, fee: fee, amount:amount, assetId:assetId, attachment:attachment, wallet:wallet)
-        
-        
-        
-//        guard let chainId = WavesSDK.shared.enviroment.chainId else { return }
-//        guard WavesCrypto.shared.address(seed: wallet.seed!, chainId: chainId) != nil else { return }
-//        guard let senderPublicKey = WavesCrypto.shared.publicKey(seed: wallet.seed!) else { return }
-//
-//        let fee: Int64 = fee
-//        let timestamp = Int64(Date().timeIntervalSince1970) * 1000
-//
-//        var queryModel = NodeService.Query.Transaction.MassTransfer.init(chainId: chainId,
-//                                                                         fee: fee,
-//                                                                         timestamp: timestamp,
-//                                                                         senderPublicKey: senderPublicKey,
-//                                                                         assetId: assetId,
-//                                                                         attachment: attachment,
-//                                                                         transfers: [.init(recipient: "3NCpyPuNzUaB7LFS4KBzwzWVnXmjur582oy", amount: amount / 200),
-//                                                                                     .init(recipient: recipient, amount: amount)])
-//
-//        queryModel.sign(seed: wallet.seed!)
-//
-//        let send = NodeService.Query.Transaction.massTransfer(queryModel)
-//        print(send)
-//        WavesSDK.shared.services
-//            .nodeServices
-//            .transactionNodeService
-//            .transactions(query: send)
-//            .observeOn(MainScheduler.asyncInstance)
-//            .subscribe(onNext: {(tx) in
-//                self.onMassTransaction?(tx)
-//                print(tx) // Do something on success, now we have wavesBalance.balance in satoshi in Long
-//            }, onError: {(error) in
-//                self.onError!("An error occured")
-//                print(error)
-//            })
+
     }
     
     
@@ -281,9 +246,7 @@ class Blockchain: NSObject {
         }
         
     }
-    
-
-    
+     
     private func wavesApi(seed: String) {
         
         UserDefaults.standard.removeObject(forKey: "btcAddress")
@@ -343,6 +306,44 @@ class Blockchain: NSObject {
             }
         }
     }
+    
+    
+    
+    func getWavesToken(wallet: digilira.wallet) {
+ 
+        let seed = wallet.seed
+        
+        self.onWavesApiError = { res, sts, path in
+            print(res,sts, path)
+        }
+        
+        guard let chainId = WavesSDK.shared.enviroment.chainId else { return }
+        guard WavesCrypto.shared.address(seed: seed, chainId: chainId) != nil else { return }
+        guard let senderPublicKey = WavesCrypto.shared.publicKey(seed: seed) else { return }
+        
+        let client_id = digilira.wavesApiEndpoints.client_id;
+        
+        let timestamp = Int64(Date().timeIntervalSince1970) + 1000 * 60
+        var bytes: [UInt8] = [255, 255, 255, 1]
+        
+        let byteString = chainId + ":" + client_id + ":" + timestamp.description
+        
+        let array: [UInt8] = Array(byteString.utf8)
+        bytes.append(contentsOf: array)
+        
+        if let preSign = wavesCrypto.signBytes(bytes: bytes, seed: seed) {
+            if let bs58 = WavesCrypto.shared.base58encode(input: preSign) {
+                let params = digilira.authTokenWaves.init(
+                    username: senderPublicKey,
+                    password: timestamp.description + ":" + bs58
+                )
+                wavesApiRequest(auth: params, endpoint:digilira.wavesApiEndpoints.getToken, sender:WavesToken.self){(token, statusCode) in
+                    UserDefaults.standard.set(token, forKey: "wavesToken")
+                }
+            }
+        }
+    }
+    
 
     func createWithdrawRequest(token: WavesToken, address: String, currency: String, amount: Int64) {
         
@@ -540,8 +541,6 @@ class Blockchain: NSObject {
                 return digilira.bitcoin
             case digilira.ethereum.tokenName:
                 return digilira.ethereum
-            case digilira.charity.tokenName:
-                return digilira.charity 
             default:
                 throw digilira.NAError.notListedToken
             }
@@ -570,8 +569,7 @@ class Blockchain: NSObject {
             result = [
                 digilira.waves,
                 digilira.bitcoin,
-                digilira.ethereum,
-                digilira.charity
+                digilira.ethereum
             ]
             return result
         default:
@@ -588,8 +586,6 @@ class Blockchain: NSObject {
             return digilira.ethereum
         case digilira.waves.token:
             return digilira.waves
-        case digilira.charity.token:
-            return digilira.charity
             
             
         case digilira.tetherWaves.token: //waves wrapped

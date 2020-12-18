@@ -155,6 +155,7 @@ extension TransactionDetailView: UITableViewDelegate, UITableViewDataSource
             if let cell = UITableViewCell().loadXib(name: "TransactionHistoryDetailCellDeatils") as? TransactionHistoryDetailCellDeatils {
                 
                 
+                
                 if let t = transaction {
                     switch indexPath.row {
                         

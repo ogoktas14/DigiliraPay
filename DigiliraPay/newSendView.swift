@@ -25,7 +25,7 @@ class newSendView: UIView {
     @IBOutlet weak var pasteLbl: UILabel!
     @IBOutlet weak var commissionLabel: UILabel!
     @IBOutlet weak var fetchQR: UIImageView!
-    @IBOutlet weak var recipientText: UILabel!
+    @IBOutlet weak var recipientText: UIButton!
      
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var scrollAreaView: UIView!
@@ -73,8 +73,8 @@ class newSendView: UIView {
         if let transaction = transaction {
             if transaction.destination == digilira.transactionDestination.foreign || transaction.destination == nil {
                 if let coin = selectedCoinX {
-                    if !checkAddress(network: coin.network, address: recipientText.text!) {
-                        recipientText.textColor = .red
+                    if !checkAddress(network: coin.network, address: recipientText.title(for: .normal)!) {
+                        recipientText.setTitleColor(.red, for: .normal)
                         isMissing = true
                     }
                 }
@@ -99,50 +99,8 @@ class newSendView: UIView {
         
         if let coin = selectedCoinX {
             let double = Double(truncating: pow(10,coin.decimal) as NSNumber)
-            if !transaction!.memberCheck {
-                if !checkAddress(network: coin.network, address: recipientText.text!) {
-                    recipientText.textColor = .red
-                    isMissing = true
-                }
-                
-                let external = digilira.externalTransaction.init(network: coin.network,
-                                                                 address: recipientText.text,
-                                                                 amount: Int64(isAmount * double),
-                                                                 assetId: coin.token)
-                
-                digiliraPay.onMember = { res, data in
-                    DispatchQueue.main.async {
-                        switch res {
-                        case true:
-                            let trx = SendTrx.init(merchant: data?.owner!,
-                                                   recipient: (data?.wallet)!,
-                                                   assetId: data?.assetId!,
-                                                   amount: data?.amount!,
-                                                   fee: digilira.sponsorTokenFee,
-                                                   fiat: self.price * double,
-                                                   attachment: data?.message,
-                                                   network: data?.network!,
-                                                   destination: data?.destination!,
-                                                   massWallet: data?.wallet,
-                                                   memberCheck: true
-                            )
-                            
-                            
-                            self.delegate?.sendCoinNew(params: trx)
-                        default:
-                            return
-                        }
-                    }
-                }
-                
-                
-                digiliraPay.isOurMember(external: external)
-                
-            }else {
-                transaction?.amount = Int64(isAmount * double)
-                delegate?.sendCoinNew(params: transaction!)
-            }
-             
+            transaction?.amount = Int64(isAmount * double)
+            checkConfirmation()
         }
     }
     
@@ -208,7 +166,7 @@ class newSendView: UIView {
         }
         
         if result {
-            recipientText.textColor = .black
+            recipientText.setTitleColor(.black, for: .normal)
         }
         return result
     }
@@ -277,6 +235,63 @@ class newSendView: UIView {
         }
         
     }
+    
+    @objc func proceed2Transfer(_ sender: Notification) {
+        
+        if let data = sender.userInfo {
+            if let result = data["confirmation"] {
+                if result as! Bool {
+                    delegate?.sendCoinNew(params: transaction!)
+                } else {
+                    self.errors?.errorHandler(message: "Transferiniz iptal edilmiştir.", title: "İptal", error: true)
+                    }
+                sendView.alpha = 1
+                sendView.isUserInteractionEnabled = true
+            }
+        }
+    }
+    
+    func checkConfirmation() {
+        guard let coin = selectedCoinX else {
+            return
+        }
+        if let t = transaction {
+            
+            let double = Double(truncating: pow(10, coin.decimal) as NSNumber)
+            let miktar = Double(t.amount!) / double
+            
+            var komisyon:Double = 0
+            var komisyonText = "Blokzincir komisyon ücreti DigiliraPay tarafından karşılanmaktadır."
+            
+            if t.destination == digilira.transactionDestination.foreign {
+                komisyon = coin.gatewayFee
+                komisyonText = "Hesabınızda bakiye olmaması durumunda blokzincir komisyonu gönderilecek tutardan otomatik olarak düşecektir."
+            }
+            
+            let confirmationMessage = digilira.txConfMsg.init(
+                title: "Transfer Onayı",
+                message: "Bilgileri Kontrol Edin",
+                l1: "Alıcı: " + t.merchant!,
+                l2: "Miktar: " +  miktar.description + " " + coin.tokenSymbol ,
+                l3: "Blokzincir Komisyonu: " + komisyon.description + " " + coin.tokenSymbol  ,
+                l4: "",
+                l5: "",
+                l6: komisyonText,
+                yes: "Onayla",
+                no: "Reddet"
+            )
+            
+            errors?.transferConfirmation(txConMsg: confirmationMessage, destination: .trxConfirm)
+        }
+        
+
+    }
+    
+    func foreignTrx() {
+        errors?.errorCaution(message: "Bu cüzdan adresi DigiliraPay'de kayıtlı bir adres değildir. Transferinizden blokzincir komisyon ücreti düşecektir.", title: "Dikkat")
+    }
+    
+    
     func setQR (params: SendTrx) {
 
         if params.destination == digilira.transactionDestination.foreign {
@@ -284,10 +299,8 @@ class newSendView: UIView {
             recipientText.isEnabled = true
             textAmount.isEnabled = true
             pasteLbl.isHidden = false
-            errors?.errorCaution(message: "Bu cüzdan adresi DigiliraPay'de kayıtlı bir adres değildir. Transferinizden komisyon ücreti düşecektir.", title: "Dikkat")
+            foreignTrx()
             scrollAreaView.isUserInteractionEnabled = false
-
-
         }
          
         findToken( tokenName: params.assetId! )
@@ -314,9 +327,6 @@ class newSendView: UIView {
             case digilira.waves.token:
                 selectedCoinX = digilira.waves
                 break
-            case digilira.charity.token:
-                selectedCoinX = digilira.charity
-                break
             default:
                 return
                     setCoinPrice()
@@ -332,10 +342,10 @@ class newSendView: UIView {
             price = Double(params.fiat!)
             
 
-            recipientText.textColor = .black
+            recipientText.setTitleColor(.black, for: .normal)
             textAmount.textColor = .black
             
-            recipientText.text = params.merchant
+            recipientText.setTitle(params.merchant, for: .normal)
             
                 coinSwitch.setTitle("₺", forSegmentAt: 0)
                 coinSwitch.setTitle(coin.symbol, forSegmentAt: 1)
@@ -353,7 +363,7 @@ class newSendView: UIView {
             if params.destination == digilira.transactionDestination.foreign {
                 let isValid = checkAddress(network: coin.network, address: params.merchant!)
                 if !isValid {
-                    recipientText.textColor = .red
+                    recipientText.setTitleColor(.red, for: .normal)
                 }
                 
             }
@@ -411,7 +421,6 @@ class newSendView: UIView {
                     coinSwitch.setTitle("₺", forSegmentAt: 0)
                     coinSwitch.setTitle(coin.symbol, forSegmentAt: 1)
 
-                commissionLabel.text = "Transfer ücreti: " + String(format: "%." + coin.decimal.description + "f", (amount * 0.005))  + " " + coin.symbol
                 balanceCardView.willPaidCoin.text = String(format: "%." + coin.decimal.description + "f", amount)
 
             }
@@ -424,31 +433,22 @@ class newSendView: UIView {
                     coinSwitch.setTitle(coin.symbol, forSegmentAt: 1)
 
                 balanceCardView.willPaidCoin.text = String(format: "%." + coin.decimal.description + "f", amount)
-                commissionLabel.text = "Transfer ücreti: " + String(format: "%." + coin.decimal.description + "f", (amount * 0.005))  + " " + coin.symbol
             }
-            
+            commissionLabel.text = "Blokzincir transfer ücreti: " + coin.gatewayFee.description + " " + coin.tokenName
+
         }
     }
-    
-       @objc func amounTap() {
-        let rec = recipientText.text!
-        if rec == "" {
-            errors?.errorCaution(message: "Alıcı eklemek için Yapıştır ve QR kod butonlarını kullanabilirsiniz. ", title: "Dikkat")
-        }
-
-        
-
-       }
-    
+  
     @IBAction func pasteAddress(_ sender: Any) {
 
         weak var pb: UIPasteboard? = .general
         guard let text = pb?.string else { return}
-        recipientText.textColor = .black
+        recipientText.setTitleColor(.black, for: .normal)
         
         if let coin = selectedCoinX {
             if checkAddress(network: coin.network, address: text) {
-                recipientText.text = text
+                recipientText.setTitle(text, for: .normal)
+ 
                 memCheck()
                 
             } else {
@@ -466,7 +466,7 @@ class newSendView: UIView {
         if let coin = selectedCoinX {
             let double = Double(truncating: pow(10,coin.decimal) as NSNumber)
             let external = digilira.externalTransaction.init(network: coin.network,
-                                                             address: recipientText.text,
+                                                             address: recipientText.title(for: .normal),
                                                              amount: Int64(isAmount * double),
                                                              assetId: coin.token)
             
@@ -474,6 +474,10 @@ class newSendView: UIView {
                 DispatchQueue.main.async { [self] in
                     switch res {
                     case true:
+                        
+                        if data?.destination == digilira.transactionDestination.foreign {
+                            foreignTrx()
+                        }
                         
                         transaction?.merchant = data?.owner!
                         transaction?.recipient = (data?.wallet)!
@@ -487,10 +491,11 @@ class newSendView: UIView {
                         transaction?.massWallet = data?.wallet
                         transaction?.memberCheck = true
                          
-                        recipientText.text = data?.owner
+                        recipientText.setTitle(data?.owner, for: .normal)
                          
-                    default:
-                        return
+                    case false:
+                        print("foreing")
+                        break
                     }
                 }
             }
@@ -527,17 +532,16 @@ class newSendView: UIView {
         setShad(view: scrollAreaView, cornerRad: 10, mask: true)
         setShad(view: content, mask: false)
 
+        NotificationCenter.default.addObserver(self, selector: #selector(proceed2Transfer), name: .trxConfirm, object: nil)
+        
         let leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipes(_:)))
         let rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipes(_:)))
-        let recipientTap = UITapGestureRecognizer(target: self, action: #selector(amounTap))
 
         leftSwipe.direction = .left
         rightSwipe.direction = .right
 
         scrollAreaView.addGestureRecognizer(leftSwipe)
         scrollAreaView.addGestureRecognizer(rightSwipe)
-        recipient.isUserInteractionEnabled = true
-        recipient.addGestureRecognizer(recipientTap)
  
         pageControl.pageIndicatorTintColor = .lightGray
         pageControl.currentPageIndicatorTintColor = .black
@@ -576,7 +580,7 @@ class newSendView: UIView {
     
     @objc func handleSwipes(_ sender: UISwipeGestureRecognizer)
     {
-        recipientText.text = ""
+        recipientText.setTitle("", for: .normal)
         direction = sender.direction
         if sender.direction == .right
         {
@@ -603,6 +607,13 @@ class newSendView: UIView {
                 shake()
                 generator.notificationOccurred(.error)
             }
+        }
+    }
+    
+    @IBAction func tapRecipient(_ sender: UIButton) {
+        let rec = recipientText.title(for: .normal)
+        if rec == "" {
+            errors?.errorCaution(message: "Alıcı eklemek için Yapıştır ve QR kod butonlarını kullanabilirsiniz. ", title: "Dikkat")
         }
     }
     
@@ -700,10 +711,7 @@ class newSendView: UIView {
                     print(error)
                     throw error
                 }
-
-            
-        
-        
+ 
         var orgX = scrollViewSize.frame.width
         
         if let d = direction {
@@ -772,9 +780,6 @@ class newSendView: UIView {
                     case digilira.waves.tokenName:
                         coinPrice = (fiyatlama.wavesUSDPrice)! * (fiyatlama.usdTLPrice)!
                         break
-                    case digilira.charity.tokenName:
-                        coinPrice = 1
-                        break
                     default:
                         coinPrice = 0
                     }
@@ -795,6 +800,56 @@ class newSendView: UIView {
     func set() {
         
         if Filtered.count == 0 {
+            pageControl.numberOfPages = 1
+            let coin = digilira.DigiliraPayBalance.init(
+                tokenName: digilira.demoCoin.tokenName,
+                tokenSymbol: digilira.demoCoin.tokenSymbol,
+                availableBalance: 0,
+                decimal: digilira.demoCoin.decimal,
+                balance: 0,
+                tlExchange: 0,
+                network: ""
+            )
+            
+            balanceCardView = UIView().loadNib(name: "BalanceCard") as! BalanceCard
+            balanceCardView.setView(desc: coin.tokenName,
+                                    tl: "0",
+                                    amount: "0",
+                                    price: "0",
+                                    symbol: coin.tokenName)
+            
+            balanceCardView.balanceTL.isHidden = true
+            balanceCardView.balanceTLicon.isHidden = true
+            balanceCardView.totalTitle.isHidden = true
+            balanceCardView.willPaidCoin.isHidden = true
+            balanceCardView.paidCoin.isHidden = true
+             
+            balanceCardView.frame = CGRect(x: 0,
+                                           y: 0,
+                                           width: scrollAreaView.frame.width,
+                                           height: scrollAreaView.frame.height)
+
+            
+            let gradient = CAGradientLayer()
+            gradient.frame = balanceCardView.bounds
+            gradient.startPoint = CGPoint(x: 0.0, y: 0.6)
+            gradient.locations = [0.0, 1.0]
+            let color1 = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0) /* #000000 */
+            let color2 = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1.0) /* #333333 */
+            gradient.colors = [color1.cgColor, color2.cgColor]
+            gradient.cornerRadius = 10
+
+            balanceCardView.layer.insertSublayer(gradient, at: 0)
+            balanceCardView.layer.cornerRadius = 10
+            
+            UIView.animate(withDuration: 0.5)
+            {
+                self.balanceCardView.frame.origin.x = 0
+                self.balanceCardView.alpha = 1
+            }
+            
+            scrollAreaView.addSubview(balanceCardView)
+            errors?.errorCaution(message: "Para transferi yapabilmek için hesabınıza bakiye yüklemeniz gerekmektedir.", title: "Bakiye Yükleyin")
             return
         }
         
@@ -815,9 +870,9 @@ class newSendView: UIView {
     }
     
     override func didMoveToSuperview() {
-        if (transaction != nil) {
-            setQR(params: transaction!)
-        }
+//        if (transaction != nil) {
+//            setQR(params: transaction!)
+//        }
     }
     
     @objc func getQR () {

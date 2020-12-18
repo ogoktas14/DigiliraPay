@@ -123,10 +123,11 @@ struct digilira {
          var decimal: Int
          var network: String
          var tokenSymbol: String
+        var gatewayFee: Double
     }
     
-    static var demo = ["Bitcoin", "Ethereum", "Waves", "Kızılay", "Kızılay"]
-    static var demoIcon = ["D-BTC", "D-ETH", "D-WAVES", "D-Aid", "D-Aid"]
+    static var demo = ["Bitcoin", "Ethereum", "Waves"]
+    static var demoIcon = ["D-BTC", "D-ETH", "D-WAVES"]
     
     static var sponsorToken = "7GnHzTaDe3YbDiCD9rueHiSfPB7hdanPpN4Ab79fJGtD"
     static var sponsorTokenFee:Int64 = 9
@@ -138,7 +139,18 @@ struct digilira {
         tokenName: "USDT",
         decimal: 1,
         network: "",
-        tokenSymbol: ""
+        tokenSymbol: "",
+        gatewayFee: 0
+    )
+    
+    static var demoCoin = coin.init(
+        token: "DigiliraPay",
+        symbol: "D-Pay",
+        tokenName: "DigiliraPay",
+        decimal: 2,
+        network: "",
+        tokenSymbol: "D-Pay",
+        gatewayFee: 0
     )
     
     static var ethereumWaves = coin.init(
@@ -147,7 +159,8 @@ struct digilira {
         tokenName: "Ethereum",
         decimal: 8,
         network: "ethereum",
-        tokenSymbol: "WETH"
+        tokenSymbol: "WETH",
+        gatewayFee: 0.01
     )
     static var bitcoinWaves = coin.init(
         token: "DWgwcZTMhSvnyYCoWLRUXXSH1RSkzThXLJhww9gwkqdn",
@@ -155,7 +168,8 @@ struct digilira {
         tokenName: "Bitcoin",
         decimal: 8,
         network: "bitcoin",
-        tokenSymbol: "WBTC"
+        tokenSymbol: "WBTC",
+        gatewayFee: 0.001
     )
     static var tetherWaves = coin.init(
         token: "5Sh9KghfkZyhjwuodovDhB6PghDUGBHiAPZ4MkrPgKtX",
@@ -163,7 +177,8 @@ struct digilira {
         tokenName: "Tether USD",
         decimal: 6,
         network: "ethereum",
-        tokenSymbol: "USDT"
+        tokenSymbol: "USDT",
+        gatewayFee: 5
     )
     
     static var litecoinWaves = coin.init(
@@ -172,7 +187,8 @@ struct digilira {
         tokenName: "Litecoin",
         decimal: 8,
         network: "litecoin",
-        tokenSymbol: "WLTC"
+        tokenSymbol: "WLTC",
+        gatewayFee: 0.01
     )
     
     static var wavesWaves = coin.init(
@@ -181,7 +197,8 @@ struct digilira {
         tokenName: "Waves",
         decimal: 8,
         network: "waves",
-        tokenSymbol: "WAVES"
+        tokenSymbol: "WAVES",
+        gatewayFee: 0
     )
     
     static var gatewayAddress = "3NCpyPuNzUaB7LFS4KBzwzWVnXmjur582oy"
@@ -191,31 +208,34 @@ struct digilira {
                             tokenName: "Bitcoin",
                             decimal: 8,
                             network: "bitcoin",
-                            tokenSymbol: "D-BTC")
+                            tokenSymbol: "D-BTC",
+                            gatewayFee: 0.001)
     
     static var ethereum = coin.init(token: "LVf3qaCtb9tieS1bHD8gg5XjWvqpBm5TaDxeSVcqPwn",
                             symbol: "ETH",
                             tokenName: "Ethereum",
                             decimal: 8,
                             network: "ethereum",
-                            tokenSymbol: "D-ETH")
+                            tokenSymbol: "D-ETH",
+                            gatewayFee: 0.01)
      
     static var waves = coin.init(token: "HGoEZAsEQpbA3DJyV9J3X1JCTTBuwUB6PE19g1kUYXsH",
                             symbol: "WAVES",
                             tokenName: "Waves",
                             decimal: 8,
                             network: "waves",
-                            tokenSymbol: "D-WAVES")
+                            tokenSymbol: "D-WAVES",
+                            gatewayFee: 0)
+//    
+//    static var charity = coin.init(token: "2CrDXATWpvrriHHr1cVpQM65CaP3m7MJ425xz3tn9zMr",
+//                            symbol: "KZY",
+//                            tokenName: "Kızılay",
+//                            decimal: 8,
+//                            network: "waves",
+//                            tokenSymbol: "D-Aid") 
     
-    static var charity = coin.init(token: "2CrDXATWpvrriHHr1cVpQM65CaP3m7MJ425xz3tn9zMr",
-                            symbol: "KZY",
-                            tokenName: "Kızılay",
-                            decimal: 8,
-                            network: "waves",
-                            tokenSymbol: "D-Aid") 
-    
-    static let networks = [bitcoin, ethereum, waves, charity, tetherWaves, ethereumWaves, bitcoinWaves, litecoinWaves]
-    static let networksDescription = ["Bitcoin", "Ethereum", "Waves", "Kızılay", "Tether", "Ethereum", "Bitcoin", "Litecoin"]
+    static let networks = [bitcoin, ethereum, waves, tetherWaves, ethereumWaves, bitcoinWaves, litecoinWaves]
+    static let networksDescription = ["Bitcoin", "Ethereum", "Waves", "Tether", "Ethereum", "Bitcoin", "Litecoin"]
 
     struct transactionDestination {
         static let domestic = "domestic"
@@ -343,6 +363,8 @@ struct digilira {
         var status: String
         var name: String?
         var surname: String?
+        var wallet: String?
+        var _id: String?
     }
     
     struct login: Codable {
@@ -398,6 +420,19 @@ struct digilira {
             self.order_status = json["order_status"] as? Int64 ?? 0
         }
         
+    }
+    
+    struct txConfMsg: Encodable {
+        let title: String
+        let message: String
+        let l1:String
+        let l2:String
+        let l3:String
+        let l4:String
+        let l5:String
+        let l6:String
+        let yes:String?
+        let no:String?
     }
     
     struct DigiliraPayBalance: Encodable {

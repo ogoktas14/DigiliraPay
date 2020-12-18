@@ -23,6 +23,8 @@ class PageCardView: UIView {
     var balanceCardView = BalanceCard()
     let generator = UINotificationFeedbackGenerator()
     
+    weak var errors: ErrorsDelegate?
+
     weak var delegate: PageCardViewDeleGate?
     var Filtered: [digilira.DigiliraPayBalance] = []
     let digiliraPay = digiliraPayApi()
@@ -78,11 +80,11 @@ class PageCardView: UIView {
     
     override func didMoveToSuperview() {
 
-        // Do any additional setup after loading the view, typically from a nib.
-        pageControl.numberOfPages = Filtered.count
-        pageControl.addTarget(self, action: #selector(changePage(_:)), for: .allTouchEvents)
-        shoppingCart = []
-        setTableView()
+//        // Do any additional setup after loading the view, typically from a nib.
+//        pageControl.numberOfPages = Filtered.count
+//        pageControl.addTarget(self, action: #selector(changePage(_:)), for: .allTouchEvents)
+//        shoppingCart = []
+//        setTableView()
     }
     
     
@@ -287,6 +289,10 @@ class PageCardView: UIView {
     
     func setTableView()
     {
+                // Do any additional setup after loading the view, typically from a nib.
+                pageControl.numberOfPages = Filtered.count
+                pageControl.addTarget(self, action: #selector(changePage(_:)), for: .allTouchEvents)
+                shoppingCart = []
         
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.frame = CGRect(x: 0,
@@ -315,7 +321,65 @@ class PageCardView: UIView {
                 } 
             }
         } else {
-            payButton.isHidden = true
+            
+            
+            if Filtered.count == 0 {
+                
+ 
+                pageControl.numberOfPages = 1
+                let coin = digilira.DigiliraPayBalance.init(
+                    tokenName: digilira.demoCoin.tokenName,
+                    tokenSymbol: digilira.demoCoin.tokenSymbol,
+                    availableBalance: 0,
+                    decimal: digilira.demoCoin.decimal,
+                    balance: 0,
+                    tlExchange: 0,
+                    network: ""
+                )
+                
+                balanceCardView = UIView().loadNib(name: "BalanceCard") as! BalanceCard
+                balanceCardView.setView(desc: coin.tokenName,
+                                        tl: "0",
+                                        amount: "0",
+                                        price: "0",
+                                        symbol: coin.tokenName)
+                
+                balanceCardView.balanceTL.isHidden = true
+                balanceCardView.balanceTLicon.isHidden = true
+                balanceCardView.totalTitle.isHidden = true
+                balanceCardView.willPaidCoin.isHidden = true
+                balanceCardView.paidCoin.isHidden = true
+                 
+                balanceCardView.frame = CGRect(x: 0,
+                                               y: 0,
+                                               width: scrollAreaView.frame.width,
+                                               height: scrollAreaView.frame.height)
+
+                
+                let gradient = CAGradientLayer()
+                gradient.frame = balanceCardView.bounds
+                gradient.startPoint = CGPoint(x: 0.0, y: 0.6)
+                gradient.locations = [0.0, 1.0]
+                let color1 = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0) /* #000000 */
+                let color2 = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1.0) /* #333333 */
+                gradient.colors = [color1.cgColor, color2.cgColor]
+                gradient.cornerRadius = 10
+
+                balanceCardView.layer.insertSublayer(gradient, at: 0)
+                balanceCardView.layer.cornerRadius = 10
+                
+                UIView.animate(withDuration: 0.5)
+                {
+                    self.balanceCardView.frame.origin.x = 0
+                    self.balanceCardView.alpha = 1
+                }
+                
+                scrollAreaView.addSubview(balanceCardView)
+                payButton.alpha = 0.4
+                payButton.isUserInteractionEnabled = false
+                
+                errors?.errorCaution(message: "Ödeme yapabilmek için hesabınıza bakiye yüklemeniz gerekmektedir.", title: "Bakiye Yükleyin")
+            }
         }
         
     }

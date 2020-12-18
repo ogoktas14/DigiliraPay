@@ -310,6 +310,7 @@
                 <outlet property="imgCopy" destination="ENQ-81-ySo" id="dnM-BB-jMk"/>
                 <outlet property="imgSave" destination="6PZ-IS-xjj" id="8GC-R8-tLr"/>
                 <outlet property="imgShare" destination="bFO-rI-qaB" id="XNN-m9-AkZ"/>
+                <outlet property="l1" destination="sLx-3H-uwg" id="uaY-47-fdY"/>
                 <outlet property="pageControl" destination="DIQ-Za-y1C" id="oTo-yH-h9k"/>
                 <outlet property="saveView" destination="Bx3-CG-sgH" id="qEN-ei-zGW"/>
                 <outlet property="scrollAreaView" destination="adC-qW-R2O" id="J9D-Ki-0Pe"/>

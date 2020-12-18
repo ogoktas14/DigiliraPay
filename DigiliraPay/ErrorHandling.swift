@@ -14,6 +14,7 @@ class ErrorHandling: NSObject {
     var isOn:Bool = false
     var warningView = WarningView()
     var orderDetailView = OrderDetailView()
+    var transferConfirmationView = TransferConfirmationView()
     
     weak var errors: ErrorsDelegate?
     
@@ -59,7 +60,8 @@ class ErrorHandling: NSObject {
         
         orderDetailView.removeFromSuperview()
         warningView.removeFromSuperview()
-          
+        transferConfirmationView.removeFromSuperview()
+
         
         DispatchQueue.main.async { [self] in
             
@@ -82,7 +84,8 @@ class ErrorHandling: NSObject {
         
         orderDetailView.removeFromSuperview()
         warningView.removeFromSuperview()
-          
+        transferConfirmationView.removeFromSuperview()
+
         
         DispatchQueue.main.async { [self] in
             
@@ -105,7 +108,8 @@ class ErrorHandling: NSObject {
         DispatchQueue.main.async { [self] in
             orderDetailView.removeFromSuperview()
             warningView.removeFromSuperview()
-            
+            transferConfirmationView.removeFromSuperview()
+
             warningView = UIView().loadNib(name: "warningView") as! WarningView
             warningView.frame = win!.frame
             
@@ -115,6 +119,25 @@ class ErrorHandling: NSObject {
             warningView.setMessage()
             
             win?.addSubview(warningView)
+            
+        }
+    }
+    
+    func transferConfirmation (txConMsg: digilira.txConfMsg, destination: NSNotification.Name) {
+        
+        DispatchQueue.main.async { [self] in
+            orderDetailView.removeFromSuperview()
+            warningView.removeFromSuperview()
+            transferConfirmationView.removeFromSuperview()
+            
+            transferConfirmationView = UIView().loadNib(name: "TransferConfirmationView") as! TransferConfirmationView
+            transferConfirmationView.frame = win!.frame
+            
+            transferConfirmationView.params = txConMsg
+            transferConfirmationView.notifyDest = destination
+            transferConfirmationView.setMessage()
+            
+            win?.addSubview(transferConfirmationView)
             
         }
     }

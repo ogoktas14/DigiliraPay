@@ -535,16 +535,19 @@ class MainScreen: UIViewController {
         numberFormatter.decimalSeparator = ","
         numberFormatter.numberStyle = .decimal
         numberFormatter.maximumFractionDigits = digits
-        return numberFormatter.string(from: price as NSNumber)!
+  
+        let res = numberFormatter.string(from: price as NSNumber)!
+
+        return res
     }
     
     static func int2so(_ price: Int64, digits: Int) -> String{
         let double = Double(price) / Double(truncating: pow(10,digits) as NSNumber)
         let numberFormatter = NumberFormatter()
-        numberFormatter.groupingSeparator = "."
+        numberFormatter.groupingSeparator = ","
         numberFormatter.groupingSize = 3
         numberFormatter.usesGroupingSeparator = true
-        numberFormatter.decimalSeparator = ","
+        numberFormatter.decimalSeparator = "."
         numberFormatter.numberStyle = .decimal
         numberFormatter.maximumFractionDigits = digits
         return numberFormatter.string(from: double as NSNumber)!
@@ -685,7 +688,9 @@ class MainScreen: UIViewController {
                     id: res._id,
                     status: "1",
                     name: self.kullanici.firstName,
-                    surname: self.kullanici.lastName 
+                    surname: self.kullanici.lastName,
+                    wallet: self.kullanici.wallet,
+                    _id: self.kullanici.id
                 )
                 
                 self.digiliraPay.setOdemeAliniyor(JSON: try? self.digiliraPay.jsonEncoder.encode(odeme))
@@ -947,6 +952,17 @@ class MainScreen: UIViewController {
         
         walletView.wallet = kullanici.wallet
         
+        if let isim = kullanici.firstName {
+            walletView.ad_soyad = isim
+            if let soyisim = kullanici.lastName {
+                walletView.ad_soyad = isim + " " + soyisim
+            } else {
+                walletView.ad_soyad = "Satoshi Nakamoto"
+            } 
+        }else {
+            walletView.ad_soyad = "Satoshi Nakamoto"
+        }
+        
         walletView.layer.zPosition = 0
         
         walletView.frameValue = walletView.frame
@@ -1197,7 +1213,7 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
 {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if Filtered.count == 0 {
-            return 4
+            return 3
         }
         return Filtered.count
     }
@@ -1590,14 +1606,15 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
                                         width: view.frame.width,
                                         height: view.frame.height)
         
-        newSendMoneyView.Filtered = self.Filtered
+        newSendMoneyView.errors = self
+        newSendMoneyView.delegate = self
+        
+        newSendMoneyView.Filtered = self.Waves
         newSendMoneyView.Coins = BC.returnCoins()
         newSendMoneyView.Ticker = Ticker
         newSendMoneyView.set()
         
-        newSendMoneyView.errors = self
-        newSendMoneyView.delegate = self
-        newSendMoneyView.recipientText.text = transactionRecipient
+        newSendMoneyView.recipientText.setTitle(transactionRecipient, for: .normal)
         
         if let assetId = params.assetId {
             do {
@@ -2043,10 +2060,12 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
                                     y: 0,
                                     width: view.frame.width,
                                     height: view.frame.height)
+        pageCardView.errors = self
         pageCardView.delegate = self
         pageCardView.Filtered = self.Filtered
         pageCardView.Ticker = Ticker
         pageCardView.Order = ORDER
+        pageCardView.setTableView()
         
         for subView in sendWithQRView.subviews
         { subView.removeFromSuperview() }
@@ -2457,6 +2476,12 @@ extension MainScreen: LoadCoinDelegate
 }
 
 extension MainScreen: ErrorsDelegate {
+    func transferConfirmation(txConMsg: digilira.txConfMsg, destination: NSNotification.Name) {
+        
+            self.dismissKeyboard()
+            throwEngine.transferConfirmation(txConMsg: txConMsg, destination: destination)
+    }
+    
     func errorCaution(message: String, title: String) {
         
             self.dismissKeyboard()
@@ -2467,7 +2492,7 @@ extension MainScreen: ErrorsDelegate {
         self.dismissKeyboard()
         throwEngine.alertWarning(title: title, message: message, error: error)
     }
-    
+     
      
 }
 
@@ -2625,6 +2650,7 @@ extension Notification.Name {
     static let didCompleteTask = Notification.Name("didCompleteTask")
     static let completedLengthyDownload = Notification.Name("completedLengthyDownload")
     static let orderClick = Notification.Name("orderClick")
+    static let trxConfirm = Notification.Name("trxConfirm")
 }
 
 
@@ -2752,12 +2778,15 @@ extension MainScreen: NewCoinSendDelegate
                         BC.sendTransaction2(recipient: params.recipient!, fee: digilira.sponsorTokenFee, amount: params.amount!, assetId: params.assetId!, attachment: params.attachment!, wallet:wallet)
                         break
                     case digilira.transactionDestination.foreign:
+                        
+                        BC.getWavesToken(wallet:wallet)
+                        
                         BC.massTransferTx(recipient: params.recipient!, fee: digilira.sponsorTokenFeeMass, amount: params.amount!, assetId: params.assetId!, attachment: "", wallet: wallet)
-                        print(params)
+             
                         break
                     case digilira.transactionDestination.interwallets:
                         BC.massTransferTx(recipient: params.recipient!, fee: digilira.sponsorTokenFeeMass, amount: params.amount!, assetId: params.assetId!, attachment: "", wallet: wallet)
-                        print(params)
+         
                         break
                     default:
                         return

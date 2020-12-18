@@ -65,6 +65,8 @@ class OrderDetailView: UIView {
     }
     
     @objc func exitView() {
+        ok.isUserInteractionEnabled = false
+        ok.alpha = 0.4
         UIView.animateKeyframes(withDuration: 0.5, delay: 0, animations: { [self] in
             self.alpha = 0
         }, completion: { [self]_ in

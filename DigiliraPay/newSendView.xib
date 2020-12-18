@@ -69,7 +69,7 @@
                                                     <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="decimalPad" returnKeyType="next"/>
                                                 </textField>
                                                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="oe7-7U-zmr">
-                                                    <rect key="frame" x="214" y="7.6666666666666856" width="135" height="37.333333333333336"/>
+                                                    <rect key="frame" x="214" y="7.6666666666666856" width="133" height="37.333333333333336"/>
                                                     <segments>
                                                         <segment title="₺"/>
                                                         <segment title=""/>
@@ -84,7 +84,7 @@
                                                 <constraint firstAttribute="trailing" secondItem="gDs-O5-4Yv" secondAttribute="trailing" constant="150" id="dbz-PL-pdR"/>
                                                 <constraint firstItem="oe7-7U-zmr" firstAttribute="centerY" secondItem="LXE-e5-Ewh" secondAttribute="centerY" id="jlw-cM-OFN"/>
                                                 <constraint firstItem="gDs-O5-4Yv" firstAttribute="top" secondItem="W0A-QM-dyk" secondAttribute="bottom" constant="1" id="kZ3-6Y-0Ir"/>
-                                                <constraint firstAttribute="trailing" secondItem="oe7-7U-zmr" secondAttribute="trailing" constant="5" id="omJ-Ez-9fo"/>
+                                                <constraint firstAttribute="trailing" secondItem="oe7-7U-zmr" secondAttribute="trailing" constant="7" id="omJ-Ez-9fo"/>
                                                 <constraint firstItem="W0A-QM-dyk" firstAttribute="leading" secondItem="LXE-e5-Ewh" secondAttribute="leading" constant="5" id="tyg-uY-z0n"/>
                                                 <constraint firstItem="W0A-QM-dyk" firstAttribute="top" secondItem="LXE-e5-Ewh" secondAttribute="top" id="zGa-3D-Ojq"/>
                                             </constraints>
@@ -117,28 +117,29 @@
                                                         <outletCollection property="gestureRecognizers" destination="P1S-Ul-mqI" appends="YES" id="xJz-Hd-n7U"/>
                                                     </connections>
                                                 </label>
-                                                <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rqC-Bt-p8D">
-                                                    <rect key="frame" x="5" y="16" width="232" height="32"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="32" id="fC4-DY-8U6"/>
-                                                    </constraints>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mcy-ca-qcg">
+                                                    <rect key="frame" x="5" y="16" width="232" height="31"/>
                                                     <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="22"/>
-                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
+                                                    <state key="normal">
+                                                        <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="tapRecipient:" destination="iN0-l3-epB" eventType="touchUpInside" id="mxv-gx-MQN"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="trailing" secondItem="mkC-Zd-RWP" secondAttribute="trailing" constant="5" id="1Bb-iI-et4"/>
                                                 <constraint firstItem="mkC-Zd-RWP" firstAttribute="top" secondItem="ewN-7G-cHi" secondAttribute="top" constant="5" id="4iz-eY-CzT"/>
+                                                <constraint firstItem="Mcy-ca-qcg" firstAttribute="leading" secondItem="ewN-7G-cHi" secondAttribute="leading" constant="5" id="51e-w0-7in"/>
                                                 <constraint firstItem="twO-m1-WLQ" firstAttribute="centerY" secondItem="ewN-7G-cHi" secondAttribute="centerY" id="Bdf-jx-e5N"/>
                                                 <constraint firstItem="twO-m1-WLQ" firstAttribute="height" secondItem="ewN-7G-cHi" secondAttribute="height" multiplier="0.8" id="ClI-Yp-iaJ"/>
-                                                <constraint firstItem="mkC-Zd-RWP" firstAttribute="leading" secondItem="rqC-Bt-p8D" secondAttribute="trailing" constant="70" id="JuF-wU-FDB"/>
-                                                <constraint firstItem="rqC-Bt-p8D" firstAttribute="leading" secondItem="uXb-fY-wSf" secondAttribute="leading" id="Wnl-fk-RCi"/>
+                                                <constraint firstItem="twO-m1-WLQ" firstAttribute="leading" secondItem="Mcy-ca-qcg" secondAttribute="trailing" constant="8" symbolic="YES" id="IFx-FG-i9e"/>
                                                 <constraint firstAttribute="height" constant="52" id="b0y-0v-eey"/>
+                                                <constraint firstItem="Mcy-ca-qcg" firstAttribute="top" secondItem="uXb-fY-wSf" secondAttribute="bottom" constant="1" id="fEB-BA-cgG"/>
+                                                <constraint firstAttribute="bottom" secondItem="Mcy-ca-qcg" secondAttribute="bottom" constant="5" id="gWj-Fx-Bf3"/>
                                                 <constraint firstItem="uXb-fY-wSf" firstAttribute="top" secondItem="ewN-7G-cHi" secondAttribute="top" id="kvC-9K-2OX"/>
                                                 <constraint firstItem="uXb-fY-wSf" firstAttribute="leading" secondItem="ewN-7G-cHi" secondAttribute="leading" constant="5" id="mOm-qK-O6e"/>
-                                                <constraint firstItem="rqC-Bt-p8D" firstAttribute="top" secondItem="uXb-fY-wSf" secondAttribute="bottom" constant="1" id="twa-yY-1vw"/>
                                                 <constraint firstItem="mkC-Zd-RWP" firstAttribute="leading" secondItem="twO-m1-WLQ" secondAttribute="trailing" constant="11" id="v9q-54-pxP"/>
                                                 <constraint firstAttribute="bottom" secondItem="mkC-Zd-RWP" secondAttribute="bottom" constant="5" id="z4X-kF-fo3"/>
                                             </constraints>
@@ -147,9 +148,9 @@
                                             <rect key="frame" x="10" y="134.00000000000006" width="354" height="13.666666666666657"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qlq-zg-v70">
-                                                    <rect key="frame" x="10" y="0.0" width="344" height="13.666666666666666"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="354" height="13.666666666666666"/>
                                                     <attributedString key="attributedText">
-                                                        <fragment content="Transfer Ücreti: 0">
+                                                        <fragment content="Blokzincir transfer ücreti: 0">
                                                             <attributes>
                                                                 <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                                 <font key="NSFont" size="12" name="GillSans-Light"/>
@@ -160,12 +161,12 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
-                                            <color key="backgroundColor" systemColor="systemGroupedBackgroundColor"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstAttribute="trailing" secondItem="Qlq-zg-v70" secondAttribute="trailing" id="Fdf-yY-dE9"/>
                                                 <constraint firstItem="Qlq-zg-v70" firstAttribute="top" secondItem="5wV-zS-jCt" secondAttribute="top" id="GaP-F9-9j0"/>
                                                 <constraint firstAttribute="bottom" secondItem="Qlq-zg-v70" secondAttribute="bottom" id="Qo5-X6-adE"/>
-                                                <constraint firstItem="Qlq-zg-v70" firstAttribute="leading" secondItem="5wV-zS-jCt" secondAttribute="leading" constant="10" id="quA-r0-zcR"/>
+                                                <constraint firstItem="Qlq-zg-v70" firstAttribute="leading" secondItem="5wV-zS-jCt" secondAttribute="leading" id="quA-r0-zcR"/>
                                             </constraints>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lHS-wd-2Uo" customClass="DLGradient" customModule="DigiliraPay" customModuleProvider="target">
@@ -251,8 +252,7 @@
                 <outlet property="fetchQR" destination="mkC-Zd-RWP" id="LAv-H4-9R4"/>
                 <outlet property="pageControl" destination="8pv-Ot-XC8" id="GaJ-89-6DI"/>
                 <outlet property="pasteLbl" destination="twO-m1-WLQ" id="xcu-wz-nDN"/>
-                <outlet property="recipient" destination="ewN-7G-cHi" id="ekP-Jb-L2F"/>
-                <outlet property="recipientText" destination="rqC-Bt-p8D" id="Woa-p4-yCM"/>
+                <outlet property="recipientText" destination="Mcy-ca-qcg" id="BEX-cv-LXT"/>
                 <outlet property="scrollAreaView" destination="XNE-IX-HkT" id="bi5-Rp-0wL"/>
                 <outlet property="sendView" destination="lHS-wd-2Uo" id="DUv-B5-y5m"/>
                 <outlet property="textAmount" destination="gDs-O5-4Yv" id="T6J-Fr-pMh"/>
@@ -270,9 +270,6 @@
         <image name="mock" width="250" height="251"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemGroupedBackgroundColor">
-            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="tertiarySystemGroupedBackgroundColor">
             <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

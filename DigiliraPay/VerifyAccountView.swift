@@ -268,6 +268,9 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
             if var soyad = surnameText.text {
                 if ad.last == " " {ad.removeLast()}
                 if soyad.last == " " {soyad.removeLast()}
+                nameText.text = ad
+                surnameText.text = soyad
+                
                 if let tc = tcText.text {
                     let date = dogum.date
                     let calendar = Calendar.current

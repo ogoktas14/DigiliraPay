@@ -15,8 +15,7 @@ class ParaYatirView:UIView {
     @IBOutlet weak var scrollAreaView: UIView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var content: UIView!
-
-    
+ 
     @IBOutlet weak var imgCopy: UIImageView!
     @IBOutlet weak var imgSave: UIImageView!
     @IBOutlet weak var imgShare: UIImageView!
@@ -24,7 +23,8 @@ class ParaYatirView:UIView {
     @IBOutlet weak var saveView: UIView!
     @IBOutlet weak var shareView: UIView!
     @IBOutlet weak var copyView: UIView!
-
+    
+    @IBOutlet weak var l1: UILabel!
 
     var ccView = CreditCardView()
     let generator = UINotificationFeedbackGenerator()
@@ -280,10 +280,6 @@ class ParaYatirView:UIView {
                 address1 = user.wallet
                 assetId = digilira.waves.token
                 break
-            case digilira.charity.tokenName:
-                address1 = user.wallet
-                assetId = digilira.charity.token
-            break
             case "digilira":
                 break
             default:
@@ -340,9 +336,6 @@ class ParaYatirView:UIView {
         case digilira.waves.tokenName:
             let address = kullanici?.wallet
             return address
-        case digilira.charity.tokenName:
-            let address = kullanici?.wallet
-            return address
         case digilira.litecoinWaves.tokenName:
             let address = kullanici?.ltcAddress
             return address
@@ -364,6 +357,12 @@ class ParaYatirView:UIView {
         let soyad = "Nakamoto"
         do {
             let address = try setCoin()
+            
+            let c = coin.gatewayFee
+            let t = coin.symbol
+            
+            l1.text = "Minimum yatırma tutarı " + c.description + " "  + t + "'dir. Bu tutarın altındaki yatırma işlemleri iade edilmeyecektir."
+            
             self.address1 = address
             if let kullanici = kullanici {
                 let name = kullanici.firstName ?? ad

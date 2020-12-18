@@ -17,20 +17,20 @@
                 <rect key="frame" x="0.0" y="0.0" width="394" height="90"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Alındı" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zA3-bu-Bqr">
-                        <rect key="frame" x="55" y="25" width="52" height="26"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="İşleminiz Bulunmamaktadır" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zA3-bu-Bqr">
+                        <rect key="frame" x="55" y="25" width="239.5" height="26"/>
                         <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="19"/>
                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bugün" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dfc-57-hlg">
-                        <rect key="frame" x="55" y="49.5" width="32" height="15.5"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Yaptığınız işlemlere buradan ulaşabilirsiniz." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dfc-57-hlg">
+                        <rect key="frame" x="55" y="49.5" width="208" height="15.5"/>
                         <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="11"/>
                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+0.325 BTC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bQ9-Mk-48U">
-                        <rect key="frame" x="289.5" y="33.5" width="94.5" height="23.5"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bQ9-Mk-48U">
+                        <rect key="frame" x="384" y="45" width="0.0" height="0.0"/>
                         <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="17"/>
                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
@@ -38,7 +38,7 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4yg-XG-k6M">
                         <rect key="frame" x="5" y="25" width="40" height="40"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="receive" translatesAutoresizingMaskIntoConstraints="NO" id="uch-yD-gWP">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="caution" translatesAutoresizingMaskIntoConstraints="NO" id="uch-yD-gWP">
                                 <rect key="frame" x="6" y="6" width="28" height="28"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="uch-yD-gWP" secondAttribute="height" multiplier="1:1" id="NoB-e6-D2b"/>
@@ -67,6 +67,7 @@
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
             <connections>
                 <outlet property="operationAmount" destination="bQ9-Mk-48U" id="H6c-Ju-WcC"/>
                 <outlet property="operationDate" destination="dfc-57-hlg" id="aUh-u2-0G6"/>
@@ -77,6 +78,6 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="receive" width="384" height="384"/>
+        <image name="caution" width="114" height="114"/>
     </resources>
 </document>

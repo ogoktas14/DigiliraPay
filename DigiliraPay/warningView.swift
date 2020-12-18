@@ -62,6 +62,8 @@ class WarningView: UIView {
     
     
     @objc func exitView() {
+        ok.isUserInteractionEnabled = false
+        ok.alpha = 0.4
         UIView.animateKeyframes(withDuration: 0.5, delay: 0, animations: { [self] in
             self.alpha = 0
         }, completion: { [self]_ in
@@ -106,11 +108,11 @@ class WarningView: UIView {
             
             incProgress()
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
-                self.ok.isHidden = false
-                self.warningLabel.isHidden = true
-                self.removeFromSuperview()
-            }
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+//                self.ok.isHidden = false
+//                self.warningLabel.isHidden = true
+//                self.removeFromSuperview()
+//            }
         }
         
         if isCaution {

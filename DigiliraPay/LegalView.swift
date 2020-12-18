@@ -43,25 +43,25 @@ class LegalView: UIView {
         }
         do {
             try Locksmith.deleteDataForUserAccount(userAccount: "sensitive")
-            sleep(1)
+
         } catch  {
             print(error)
         }
         do {
             try Locksmith.deleteDataForUserAccount(userAccount: "authenticate")
-            sleep(1)
+
         } catch  {
             print(error)
         }
         do {
             try Locksmith.deleteDataForUserAccount(userAccount: "sensitiveMainnet")
-            sleep(1)
+
         } catch  {
             print(error)
         }
         do {
             try Locksmith.deleteDataForUserAccount(userAccount: "authenticateMainnet")
-            sleep(1)
+
         } catch  {
             print(error)
         }

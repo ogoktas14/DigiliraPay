@@ -36,7 +36,8 @@ class WalletView: UIView {
     let BC = Blockchain()
     var trxs:[digilira.transfer] = []
     var wallet: String?
-  
+    var ad_soyad: String?
+
     var coin: String = ""
      
     override func awakeFromNib()
@@ -259,12 +260,22 @@ class WalletView: UIView {
 extension WalletView: UITableViewDelegate, UITableViewDataSource
 {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if trxs.count == 0 {
+            return 1
+        }
         return trxs.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell().loadXib(name: "transactionHistoryCell") as! transactionHistoryCell
+        
+        cell.separatorInset = UIEdgeInsets.zero
+        cell.preservesSuperviewLayoutMargins = false
+        cell.layoutMargins = UIEdgeInsets.zero
+        
         if trxs.count == 0 {
+ 
+            
             return cell
         }
         
@@ -278,8 +289,16 @@ extension WalletView: UITableViewDelegate, UITableViewDataSource
                  
                 if let walletAddress = wallet {
                     
-                    if (trxs[indexPath[1]].recipient == walletAddress) {cell.operationImage.image = UIImage(named: "receive")}
-                    if (trxs[indexPath[1]].sender == walletAddress) {cell.operationImage.image = UIImage(named: "send")}
+                    if (trxs[indexPath[1]].recipient == walletAddress) {
+                        trxs[indexPath[1]].recipient = ad_soyad
+                        cell.operationImage.image = UIImage(named: "receive")
+                        
+                    }
+                    if (trxs[indexPath[1]].sender == walletAddress) {
+                        cell.operationImage.image = UIImage(named: "send")
+                        trxs[indexPath[1]].recipient = ad_soyad
+                        
+                    }
                 }
                 
                 self.tableView.rowHeight = 60
