@@ -41,9 +41,8 @@ class WalletView: UIView {
     var coin: String = ""
      
     override func awakeFromNib()
-    { 
+    {
         setView()
-
     }
      
     func setView()
@@ -65,6 +64,17 @@ class WalletView: UIView {
         refreshControl.attributedTitle = NSAttributedString(string: "Güncellemek için çekiniz..")
         refreshControl.addTarget(self, action: #selector(refreshData(_:)), for: UIControl.Event.valueChanged)
         
+        tableView.translatesAutoresizingMaskIntoConstraints = true
+        tableView.frame = CGRect(x: 0,
+                                 y: 0,
+                                 width: frameValue.width,
+                                 height: frameValue.height)
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 100, right: 0)
+        tableView.delegate = self
+        tableView.dataSource = self
+        print(transactionHistory.subviews.count)
+        transactionHistory.addSubview(tableView)
+        
         readHistory(coin: coin)
         
         emptyView.alpha = 0
@@ -80,20 +90,14 @@ class WalletView: UIView {
     }
     
     func readHistory (coin: String) {
-        
-        transactionDetailView.originValueLast = transactionDetailView.originValue
-        
-        UIView.animate(withDuration: 3) {
-            self.transactionDetailView.frame.origin.y = 100
-        }
-        
+//        transactionDetailView.originValueLast = transactionDetailView.originValue
+
         refreshControl.isHidden = true
         //loading.isHidden = false
         tableView.isUserInteractionEnabled = false
         self.trxs.removeAll()
         if let walletAddress = wallet {
            
-            
             BC.checkTransactions(address: walletAddress){ (data) in
                 DispatchQueue.main.async { [self] in
                     data.forEach { trx in
@@ -117,7 +121,6 @@ class WalletView: UIView {
                                 do {
                                     let asset = try self.BC.returnAsset(assetId: trx["assetId"] as! String)
                                     
-                                    
                                     var isOK = false
                                     if coin == "" {
                                         isOK = true
@@ -126,7 +129,6 @@ class WalletView: UIView {
                                     if asset.tokenName == coin {
                                         isOK = true
                                     }
-                                    
                                     
                                     if isOK {
                                         self.trxs.append (digilira.transfer.init(type: trx["type"] as? Int64,
@@ -147,9 +149,6 @@ class WalletView: UIView {
                                 } catch  {
                                     throwEngine.evaluateError(error: error)
                                 }
-                                
-
-                                
                             }
                         }
             
@@ -190,43 +189,28 @@ class WalletView: UIView {
                                 } catch  {
                                     
                                 }
-                                
-                                
-     
                             }
                         }
                     }
                     self.tableView.reloadData()
-                    self.setTableView()
+                    self.removeDetail()
                     self.refreshControl.endRefreshing()
                     self.tableView.isUserInteractionEnabled = true
                     //self.loading.isHidden = true
-
                 }
             }
-            
-            
-            
         }
-        
     }
     
-    
-    
-    func setTableView()
-    {
-        tableView.translatesAutoresizingMaskIntoConstraints = true
-        tableView.frame = CGRect(x: 0,
-                                 y: 0,
-                                 width: frameValue.width,
-                                 height: frameValue.height)
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 300, right: 0)
-        tableView.delegate = self
-        tableView.dataSource = self
-        transactionHistory.addSubview(tableView)
+    func removeDetail() {
+        if transactionDetailView.alpha == 1 {
+            UIView.animate(withDuration: 0.4, animations: { [self] in
+                transactionDetailView.alpha = 0
+                transactionDetailView.frame.origin.y = self.frame.height
+            })
+        }
     }
 
-    
     @IBAction func slideGesture(_ sender: UIPanGestureRecognizer)
     {
         transactionHistory.translatesAutoresizingMaskIntoConstraints = true
@@ -290,13 +274,13 @@ extension WalletView: UITableViewDelegate, UITableViewDataSource
                 if let walletAddress = wallet {
                     
                     if (trxs[indexPath[1]].recipient == walletAddress) {
-                        trxs[indexPath[1]].recipient = ad_soyad
+                        //trxs[indexPath[1]].recipient = ad_soyad
                         cell.operationImage.image = UIImage(named: "receive")
                         
                     }
                     if (trxs[indexPath[1]].sender == walletAddress) {
                         cell.operationImage.image = UIImage(named: "send")
-                        trxs[indexPath[1]].recipient = ad_soyad
+                        //trxs[indexPath[1]].recipient = ad_soyad
                         
                     }
                 }
@@ -319,10 +303,7 @@ extension WalletView: UITableViewDelegate, UITableViewDataSource
     {
         transactionDetailView.originValue.y = 0
         transactionDetailView.originValueLast = transactionDetailView.originValue
-        
-        UIView.animate(withDuration: 0.3) {
-            self.transactionDetailView.frame.origin.y = 0
-        }
+
     }
     
  

@@ -100,6 +100,13 @@ class newSendView: UIView {
         if let coin = selectedCoinX {
             let double = Double(truncating: pow(10,coin.decimal) as NSNumber)
             t.amount = Int64(isAmount * double)
+            if t.amount == 0 {
+                
+                sendView.alpha = 1
+                sendView.isUserInteractionEnabled = true
+                errors?.evaluate(error: digilira.NAError.noAmount)
+                return
+            }
             transaction = t
             checkConfirmation()
         }
@@ -183,13 +190,19 @@ class newSendView: UIView {
     }
     
     @objc func textFieldDidChange(_ textField: UITextField) {
+        
+        let floatRegex = "^[0-9]*(?:.[0-9]*)?$"
+        let result = eval(template: floatRegex, address: textField.text!)
+        if !result {
+            textField.text = ""
+        }
         textField.textColor = .black
         
         guard let str = textField.text else {
             errors?.evaluate(error: digilira.NAError.missingParameters)
             return
         }
-
+        
         let replaced = str.replacingOccurrences(of: ",", with: ".")
         textField.text = replaced
         
@@ -210,9 +223,6 @@ class newSendView: UIView {
             }
             
         }
-        else {
-            print("Not found")
-        }
         
         if  str.count > maxLength {
             if str.last != "." {
@@ -220,22 +230,7 @@ class newSendView: UIView {
             }
             return
         }
-        
-        if let coin = selectedCoinX {
-            guard Float.init(str) != nil else {
-                textField.text = ""
-                coinSwitch.setTitle("₺", forSegmentAt: 0)
-                coinSwitch.setTitle(coin.symbol, forSegmentAt: 1)
-                return
-            }
-            
-            if textField.text == "" {
-                coinSwitch.setTitle("₺", forSegmentAt: 0)
-                coinSwitch.setTitle(coin.symbol, forSegmentAt: 1)
-                return}
-            setCoinPrice()
-            calcPrice(text: str)
-        }
+        setCoinPrice()
     }
     
     @objc func proceed2Transfer(_ sender: Notification) {
@@ -250,8 +245,6 @@ class newSendView: UIView {
                     }
                     delegate?.sendCoinNew(params: params)
                     
-                } else {
-                    self.errors?.errorHandler(message: "Transferiniz iptal edilmiştir.", title: "İptal", error: true)
                 }
                 sendView.alpha = 1
                 sendView.isUserInteractionEnabled = true
@@ -266,7 +259,8 @@ class newSendView: UIView {
         if let t = transaction {
             
             let double = Double(truncating: pow(10, coin.decimal) as NSNumber)
-            let miktar = Double(t.amount!) / double
+            guard let m = t.amount else {return}
+            let miktar: Double = Double(m) / double
             
             var komisyon:Double = 0
             var komisyonText = "Blokzincir komisyon ücreti DigiliraPay tarafından karşılanmaktadır."
@@ -425,10 +419,14 @@ class newSendView: UIView {
             if text == "" {
                 coinSwitch.setTitle("₺", forSegmentAt: 0)
                 coinSwitch.setTitle(coin.symbol, forSegmentAt: 1)
+                amount = 0
+                balanceCardView.willPaidCoin.text = String(format: "%." + coin.decimal.description + "f", 0)
                 return
             }
             if coinSwitch.selectedSegmentIndex == 0 { //₺
-                price = Double.init(text)!
+                if let d = Double.init(text) {
+                    price = d
+                }
                 amount =  price / (coinPrice!)
                 
                 coinSwitch.setTitle("₺", forSegmentAt: 0)
@@ -438,7 +436,9 @@ class newSendView: UIView {
             }
             
             if coinSwitch.selectedSegmentIndex == 1 { //token
-                amount = Double.init(text)!
+                if let d = Double.init(text) {
+                    amount = d
+                }
                 price = (coinPrice!) * amount
                 
                 coinSwitch.setTitle("₺", forSegmentAt: 0)
@@ -630,7 +630,6 @@ class newSendView: UIView {
         setAdress()
         
         setCoinPrice()
-        calcPrice(text: textAmount.text!)
     }
     
     func setBalanceView(index:Int) {
@@ -760,7 +759,6 @@ class newSendView: UIView {
     
     func setCoinPrice () {
         if let coin = selectedCoinX {
-            _ = Double(truncating: pow(10,coin.decimal) as NSNumber)
             
             if let fiyatlama = ticker {
                 
@@ -859,7 +857,6 @@ class newSendView: UIView {
         setAdress()
         
         setCoinPrice()
-        calcPrice(text: textAmount.text!)
     }
     
     override func didMoveToSuperview() {

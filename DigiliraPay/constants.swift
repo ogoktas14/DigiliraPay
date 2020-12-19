@@ -472,6 +472,7 @@ struct digilira {
         case noBalance
         case anErrorOccured
         case missingParameters
+        case noAmount
         
         
     }

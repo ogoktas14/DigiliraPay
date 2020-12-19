@@ -965,7 +965,7 @@ class MainScreen: UIViewController {
             walletView.ad_soyad = "Satoshi Nakamoto"
         }
         
-        walletView.layer.zPosition = 0
+        //walletView.layer.zPosition = 0
         
         walletView.frameValue = walletView.frame
         walletView.setView()
@@ -1313,6 +1313,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
             headerInfoLabel.isHidden = true
             closeCoinSendView()
             isShowWallet = false
+            walletView.removeDetail()
         }
         
         if isHomeScreen {
@@ -1353,7 +1354,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
             headerInfoLabel.isHidden = true
             closeCoinSendView()
             isShowWallet = false
-            
+            walletView.removeDetail()
         }
         if isHomeScreen {
             UIView.animate(withDuration: 0.3) {
@@ -1398,6 +1399,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         
         if isShowWallet
         {
+            walletView.removeDetail()
             headerInfoLabel.isHidden = true
             closeCoinSendView()
             isShowWallet = false
@@ -1494,12 +1496,9 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
             closeSendView()
         }
          
-
-        
         if !isShowWallet
         {
             isShowWallet = true
-            
             setLogoView()
             
             isShowSettings = false

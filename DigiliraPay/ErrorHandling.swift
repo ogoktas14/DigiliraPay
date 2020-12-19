@@ -36,6 +36,9 @@ class ErrorHandling: NSObject {
             break
         case digilira.NAError.sponsorToken:
             return
+        case digilira.NAError.noAmount:
+            alertWarning(title: "Miktar Giriniz", message: "Gödermek istediğiniz miktarı giriniz.")
+            return
         case NetworkError.negativeBalance:
             alertWarning(title: "Yetersiz Bakiye", message: "Bakiyeniz bu transferi gerçekleştirebilmek için yeterli değil.")
             break
