@@ -64,7 +64,8 @@ class BitexenAPIView: UIView {
             
             self.shake()
             
-            errors?.errorHandler(message: "Girdiğiniz bilgileri kontrol edip tekrar deneyin.", title: "Bir Hata Oluştu", error: true)
+            errors?.evaluate(error: digilira.NAError.missingParameters)
+
 
             
         }

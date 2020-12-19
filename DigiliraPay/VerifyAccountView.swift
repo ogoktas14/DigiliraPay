@@ -154,7 +154,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
                 
                 delegate?.dismissVErifyAccountView()
             }else {
-                errors?.errorHandler(message: "Girdiğiniz bilgileri kontrol edip tekrar deneyin.", title: "Bir Hata Oluştu", error: true)
+                errors?.evaluate(error: digilira.NAError.missingParameters)
                 understand.isEnabled = true
                 understand.isOn = false
             }
@@ -303,9 +303,8 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
         }
         
         if error {
-            DispatchQueue.main.async {
-                
-                self.errors?.errorHandler(message: "Girdiğiniz bilgileri kontrol edip tekrar deneyin.", title: "Bir Hata Oluştu", error: true)
+            DispatchQueue.main.async { [self] in
+                errors?.evaluate(error: digilira.NAError.missingParameters)
             }
             
             understand.isEnabled = true

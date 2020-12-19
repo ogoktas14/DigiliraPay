@@ -153,16 +153,14 @@ class ParaYatirView:UIView {
                         popup(image: takeScreenshot())
                     }
                 } else {
-                    errors?.errorHandler(message: "İsim bilgisi okunamadı, lütfen yeniden giriş yapın.", title: "Bir Hata Oluştu", error: true)
+                    errors?.evaluate(error: digilira.NAError.emptyAuth)
+
                 }
             } catch {
-                errors?.errorHandler(message: "Kullanıcı bilgileri okunamadı, lütfen yeniden giriş yapın.", title: "Bir Hata Oluştu", error: true)
+                errors?.evaluate(error: digilira.NAError.emptyAuth)
             }
-            
-            
                 self.shareView.alpha = 1
                 self.shareView.isUserInteractionEnabled = true
-            
         })
           
     }

@@ -470,6 +470,8 @@ struct digilira {
         case userCanceled
         case updateAPP
         case noBalance
+        case anErrorOccured
+        case missingParameters
         
         
     }

@@ -109,7 +109,7 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
         if BC.checkIfUser() {
             
             digiliraPay.onLogin2 = {user, status in
-                DispatchQueue.main.async {
+                DispatchQueue.main.async { [self] in
                     switch status {
                         case 200:
                         if user.status == 403 {

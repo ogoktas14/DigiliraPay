@@ -20,6 +20,12 @@ class ErrorHandling: NSObject {
     
     func evaluateError(error: Error) {
         switch error {
+        case digilira.NAError.missingParameters:
+            alertWarning(title: "Bir Hata Oluştu", message: "Girdiğiniz bilgileri kontrol ederek tekrar deneyin.", error: true)
+            break
+        case digilira.NAError.anErrorOccured:
+            alertWarning(title: "Bir Hata Oluştu", message: "Lütfen tekrar deneyin.", error: true)
+            break
         case digilira.NAError.emptyAuth:
             alertWarning(title: "Bir Hata Oluştu", message: "Kullanıcı bilgileri okunamadı")
             break
@@ -47,7 +53,7 @@ class ErrorHandling: NSObject {
             break
         default:
             DispatchQueue.main.async {
-                
+                print(error)
                 self.warningView.removeFromSuperview()
                 self.alertWarning(title: "Bir Hata Oluştu", message: "Geçersiz işlem")
             }

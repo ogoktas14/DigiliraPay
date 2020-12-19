@@ -244,8 +244,8 @@ class MainScreen: UIViewController {
                 Filtered.removeAll()
                 Filtered.append(contentsOf: Waves)
                 Filtered.append(contentsOf: Bitexen)
-                Waves.removeAll()
-                Bitexen.removeAll()
+//                Waves.removeAll()
+//                Bitexen.removeAll()
                 self.checkHeaderExist()
 
             }
@@ -398,6 +398,8 @@ class MainScreen: UIViewController {
     func construct(result: NodeService.DTO.AddressAssetsBalance) {
         let ticker = digiliraPay.ticker(ticker: Ticker)
         totalBalance = 0
+        Waves.removeAll()
+
         for asset1 in result.balances {
             
             do {
@@ -1591,7 +1593,7 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
         
         if isNewSendScreen {
             newSendMoneyView.transaction = params
-            newSendMoneyView.setQR(params: params)
+            newSendMoneyView.setQR()
             return
         }
         
@@ -1609,7 +1611,7 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
         newSendMoneyView.errors = self
         newSendMoneyView.delegate = self
         
-        newSendMoneyView.Filtered = self.Waves
+        newSendMoneyView.Filtered = Waves
         newSendMoneyView.Coins = BC.returnCoins()
         newSendMoneyView.Ticker = Ticker
         newSendMoneyView.set()
@@ -1633,8 +1635,8 @@ extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder y�
         
         
         newSendMoneyView.transaction = params
+        newSendMoneyView.setQR()
         if params.destination == digilira.transactionDestination.interwallets {
-
             newSendMoneyView.recipientText.isEnabled = false
         }
         
@@ -2476,6 +2478,11 @@ extension MainScreen: LoadCoinDelegate
 }
 
 extension MainScreen: ErrorsDelegate {
+    func evaluate(error: digilira.NAError) {
+        self.dismissKeyboard()
+        throwEngine.evaluateError(error: error)
+    }
+    
     func transferConfirmation(txConMsg: digilira.txConfMsg, destination: NSNotification.Name) {
         
             self.dismissKeyboard()
@@ -2916,7 +2923,7 @@ extension MainScreen: PinViewDelegate
         if isNewSendScreen {
             isNewSendScreen = false
             walletOperationView.isUserInteractionEnabled = true
-            goNewSendView()
+//            goNewSendView()
         }
         
         UIView.animate(withDuration: 0.3) {
