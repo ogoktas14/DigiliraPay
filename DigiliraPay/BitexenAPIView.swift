@@ -65,9 +65,6 @@ class BitexenAPIView: UIView {
             self.shake()
             
             errors?.evaluate(error: digilira.NAError.missingParameters)
-
-
-            
         }
         
         
@@ -83,8 +80,6 @@ class BitexenAPIView: UIView {
                                                passphrase: textApiPassphrase.text!,
                                                username: textUsername.text!,
                                                valid: false)
-        
-        
         bitexenSign.onBitexenBalance = { [self] _, statusCode in
             
             saveView.alpha = 1

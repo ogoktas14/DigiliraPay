@@ -76,7 +76,6 @@ class TransferConfirmationView: UIView {
         
     }
     
-    
     @objc func exitView(_ sender: UIView) {
         no.isUserInteractionEnabled = false
         no.alpha = 0.4

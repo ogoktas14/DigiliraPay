@@ -47,6 +47,7 @@ class MenuView: UIView {
     }
     func setView(mode: ())
     {
+        
     }
     
     func home() {
@@ -56,12 +57,7 @@ class MenuView: UIView {
             walletIcon.alpha = 0.3
             paymentsIcon.alpha = 0.3
             othersIcon.alpha = 0.3
-//
-//        homeIcon.image = UIImage(named: "home")
-//        walletIcon.image = UIImage(named: "walletNS")
-//        paymentsIcon.image = UIImage(named: "cardNS")
-//        othersIcon.image = UIImage(named: "settingsNS")
-
+            
             self.selectorView.center.x = self.homeIcon.center.x
         }
     }
@@ -69,18 +65,10 @@ class MenuView: UIView {
     func wallet() {
         UIView.animate(withDuration: 0.3)
         { [self] in
-
-            
             homeIcon.alpha = 0.3
-                walletIcon.alpha = 1
-                paymentsIcon.alpha = 0.3
-                othersIcon.alpha = 0.3
-            //
-//        self.homeIcon.image = UIImage(named: "homeNS")
-//        self.walletIcon.image = UIImage(named: "wallet")
-//        self.paymentsIcon.image = UIImage(named: "cardNS")
-//        self.othersIcon.image = UIImage(named: "settingsNS")
-
+            walletIcon.alpha = 1
+            paymentsIcon.alpha = 0.3
+            othersIcon.alpha = 0.3
             self.selectorView.center.x = self.walletIcon.center.x
         }
     }
@@ -90,10 +78,10 @@ class MenuView: UIView {
         { [self] in
             
             homeIcon.alpha = 0.3
-                walletIcon.alpha = 0.3
-                paymentsIcon.alpha = 1
-                othersIcon.alpha = 0.3
-
+            walletIcon.alpha = 0.3
+            paymentsIcon.alpha = 1
+            othersIcon.alpha = 0.3
+            
             self.selectorView.center.x = self.paymentsIcon.center.x
         }
     }
@@ -114,7 +102,6 @@ class MenuView: UIView {
     {
         home()
         delegate?.goHomeScreen()
-        
     }
     
     
@@ -122,15 +109,12 @@ class MenuView: UIView {
     {
         wallet()
         delegate?.goWalletScreen(coin: "")
-        
-        
     }
     
     
     @objc func goPayments()
     {
         delegate?.goPayments()
-        
         payments()
     }
     

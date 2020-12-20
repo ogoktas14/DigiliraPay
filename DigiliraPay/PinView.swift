@@ -62,16 +62,14 @@ class PinView: UIView {
             }
         }
         
-        
         digiliraPay.onError = { res, sts in
             print(res)
         }
         
         let gradient = CAGradientLayer()
-        gradient.colors = [UIColor.black.cgColor, UIColor(red:0.30, green:0.30, blue:0.30, alpha:1.0).cgColor]
+        gradient.colors = [UIColor.black.cgColor, UIColor.darkGray.cgColor]
         gradient.startPoint = CGPoint(x: 0.0, y: 0.0)
         gradient.endPoint = CGPoint(x: 1.0, y: 0.0)
-        
     }
     
     func setView()
@@ -175,7 +173,7 @@ class PinView: UIView {
             }
             
             if isEntryMode && !isTouchIDCanceled {
-                digiliraPay.touchID(reason: "Parmak izini okutarak giriş yapabilirsin.")
+                digiliraPay.touchID(reason: "Parmak izini okutarak giriş yapabilirsiniz.")
                 self.goBackButtonView.isHidden = true
                 
                 self.lastCode = String((user.pincode))
@@ -383,15 +381,5 @@ class PinView: UIView {
     @IBAction func goHomeButton(_ sender: Any)
     {
         delegate?.closePinView()
-    }
-}
-
-extension UIView {
-    func shake() {
-        let animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
-        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
-        animation.duration = 0.6
-        animation.values = [-20.0, 20.0, -20.0, 20.0, -10.0, 10.0, -5.0, 5.0, 0.0 ]
-        layer.add(animation, forKey: "shake")
     }
 }

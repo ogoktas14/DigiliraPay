@@ -77,7 +77,6 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
                         self.importAccountView.isHidden = false
                     }))
                     self.present(alert, animated: true)
-                    
                     break
                     
                 default:
@@ -109,7 +108,6 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
                                 exit(0)
                             }))
                             self.present(alert, animated: true)
-                            
                         }
                         
                         self.BC.checkSmart(address: user.wallet)
@@ -339,8 +337,6 @@ extension OnBoardingVC: UIScrollViewDelegate
         onBoardingScrollView.addSubview(onBoardingView3)
         onBoardingScrollView.contentSize = CGSize(width: scrollViewSize.width * 3,
                                                   height: scrollViewSize.height)
-        
-        
         
         onBoardingScrollView.showsVerticalScrollIndicator = false
         onBoardingScrollView.showsHorizontalScrollIndicator = false

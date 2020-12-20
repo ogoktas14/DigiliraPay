@@ -16,7 +16,6 @@ enum DeviceLockState {
  
 struct digilira {
     
-  
     struct requestMethod {
         static let put = "PUT"
         static let post = "POST"

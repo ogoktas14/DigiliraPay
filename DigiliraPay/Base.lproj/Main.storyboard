@@ -459,7 +459,6 @@
                         <outlet property="sendMoneyBackButton" destination="xob-X5-xnL" id="9Vc-FA-Zy5"/>
                         <outlet property="sendWithQRView" destination="COd-Ba-SB8" id="Lbg-VS-FMq"/>
                         <outlet property="serverLabel" destination="1d1-Pb-7xY" id="2D6-SG-7un"/>
-                        <segue destination="ppo-qU-rpA" kind="show" identifier="showLoadMoney" id="tPZ-ZS-zRk"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4PK-U2-7LP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -470,37 +469,6 @@
                 </panGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="885.50724637681162" y="855.80357142857144"/>
-        </scene>
-        <!--ShareQRVC-->
-        <scene sceneID="Cuf-My-qvn">
-            <objects>
-                <viewController id="ppo-qU-rpA" customClass="ShareQRVC" customModule="DigiliraPay" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="E6E-Zg-VOd">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RZB-2M-ml7">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="798"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </view>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="Yeh-44-T1g"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="Yeh-44-T1g" firstAttribute="bottom" secondItem="RZB-2M-ml7" secondAttribute="bottom" constant="10" id="EkJ-Og-ovA"/>
-                            <constraint firstItem="Yeh-44-T1g" firstAttribute="trailing" secondItem="RZB-2M-ml7" secondAttribute="trailing" id="rVN-Uo-aIt"/>
-                            <constraint firstItem="RZB-2M-ml7" firstAttribute="top" secondItem="Yeh-44-T1g" secondAttribute="top" id="vGr-pJ-fO6"/>
-                            <constraint firstItem="RZB-2M-ml7" firstAttribute="leading" secondItem="Yeh-44-T1g" secondAttribute="leading" id="ySf-kN-9qs"/>
-                        </constraints>
-                    </view>
-                    <navigationItem key="navigationItem" id="qD6-bG-4qw"/>
-                    <connections>
-                        <outlet property="mainView" destination="RZB-2M-ml7" id="RUE-oO-l7B"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="3SS-br-Tkx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1743" y="863"/>
         </scene>
         <!--Import AccountVC-->
         <scene sceneID="9UF-dz-kkT">

@@ -43,9 +43,7 @@ class ColoredCardView: CardView {
         cardNumber.addGestureRecognizer(tap)
 
         contentView.layer.cornerRadius  = 10
-        contentView.layer.masksToBounds = true
-        
-                
+        contentView.layer.masksToBounds = true 
     }
     
     override func layoutSubviews() {

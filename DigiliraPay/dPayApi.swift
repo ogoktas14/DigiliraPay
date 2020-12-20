@@ -104,7 +104,7 @@ class digiliraPayApi: NSObject {
             throw parsingError
         }
     }
-
+    
     func touchID(reason: String) {
         
         let context = LAContext()
@@ -455,7 +455,7 @@ class digiliraPayApi: NSObject {
             case digilira.tetherWaves.tokenName:
                 if let usdt = symbol.usdTLPrice {
                     let result = price / usdt
-                        return (Double(round(double * result)), digilira.tetherWaves.token, usdt)
+                    return (Double(round(double * result)), digilira.tetherWaves.token, usdt)
                 }
             default:
                 throw digilira.NAError.emptyAuth
@@ -464,7 +464,7 @@ class digiliraPayApi: NSObject {
         case "bitexen":
             if let usdt = symbol.usdTLPrice {
                 let result = price / usdt
-                    return (Double(round(double * result)), digilira.tetherWaves.token, usdt)
+                return (Double(round(double * result)), digilira.tetherWaves.token, usdt)
             }
             break
         default:
@@ -472,7 +472,7 @@ class digiliraPayApi: NSObject {
         }
         
         
-
+        
         throw digilira.NAError.emptyAuth
     }
     
@@ -580,7 +580,7 @@ class digiliraPayApi: NSObject {
             print(error)
         }
         throwEngine.resetApp()
-
+        
         let defaults = UserDefaults.standard
         let dictionary = defaults.dictionaryRepresentation()
         dictionary.keys.forEach { key in
@@ -603,7 +603,7 @@ class digiliraPayApi: NSObject {
             return loginCredits
         } catch  {
             throw digilira.NAError.tokenNotFound
-
+            
         }
         
     }
@@ -640,96 +640,96 @@ class digiliraPayApi: NSObject {
             }
         }
         
-
+        
         do {
             let loginCredits = try secretKeys.LocksmithLoad(forKey: sensitiveSource, conformance: digilira.login.self)
-                
-                if let json = encode2(jsonData: loginCredits) {
-                    crud.onResponse = { [self] res, sts in
+            
+            if let json = encode2(jsonData: loginCredits) {
+                crud.onResponse = { [self] res, sts in
+                    
+                    switch (sts) {
+                    
+                    case 503, 502:
+                        onError!(digilira.NAError.E_502, sts)
+                        break;
                         
-                        switch (sts) {
+                    case 404:
+                        do {
+                            try Locksmith.deleteDataForUserAccount(userAccount: sensitiveSource)
+                        } catch  {
+                            onError!(digilira.NAError.seed404, sts)
+                        }
                         
-                        case 503, 502:
-                            onError!(digilira.NAError.E_502, sts)
-                            break;
-                            
-                        case 404:
+                        do {
+                            try Locksmith.deleteDataForUserAccount(userAccount: authenticateSource)
+                        } catch  {
+                            onError!(digilira.NAError.user404, sts)
+                        }
+                        onError!(digilira.NAError.E_404, sts)
+                        
+                        break;
+                        
+                    case 200:
+                        if secretKeys.LocksmithSave(forKey: authenticateSource, data: res) {
                             do {
-                                try Locksmith.deleteDataForUserAccount(userAccount: sensitiveSource)
-                            } catch  {
-                                onError!(digilira.NAError.seed404, sts)
-                            }
-                            
-                            do {
-                                try Locksmith.deleteDataForUserAccount(userAccount: authenticateSource)
-                            } catch  {
-                                onError!(digilira.NAError.user404, sts)
-                            }
-                            onError!(digilira.NAError.E_404, sts)
-                            
-                            break;
-                            
-                        case 200:
-                            if secretKeys.LocksmithSave(forKey: authenticateSource, data: res) {
-                                do {
-                                    let user = try self.decodeDefaults(forKey: res, conformance: digilira.auth.self)
-                                     
-                                    if let latestApp = user.appV {
-                                        if let appVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
-                                            if let appV = Double(appVersion) {
-                                                if latestApp > appV {
-                                                    self.onError!(digilira.NAError.updateAPP,0)
-                                                     return
-                                                }
-                                            }
-                                           
-
-                                        }
-                                    }
-                                    
-                                    
-                                    onLogin2!(user, sts)
-                                    DispatchQueue.main.async {
-                                        let defaults = UserDefaults.standard
-                                        if let savedApnToken = defaults.object(forKey: "deviceToken") as? String {
-                                            if savedApnToken != user.apnToken {
-                                                let user = digilira.exUser.init(
-                                                    apnToken:savedApnToken
-                                                )
-                                                
-                                                let encoder = JSONEncoder()
-                                                let data = try? encoder.encode(user)
-                                                self.onUpdate = { res in
-                                                    print(res)
-                                                }
-                                                self.updateUser(user: data)
+                                let user = try self.decodeDefaults(forKey: res, conformance: digilira.auth.self)
+                                
+                                if let latestApp = user.appV {
+                                    if let appVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+                                        if let appV = Double(appVersion) {
+                                            if latestApp > appV {
+                                                self.onError!(digilira.NAError.updateAPP,0)
+                                                return
                                             }
                                         }
                                         
+                                        
+                                    }
+                                }
+                                
+                                
+                                onLogin2!(user, sts)
+                                DispatchQueue.main.async {
+                                    let defaults = UserDefaults.standard
+                                    if let savedApnToken = defaults.object(forKey: "deviceToken") as? String {
+                                        if savedApnToken != user.apnToken {
+                                            let user = digilira.exUser.init(
+                                                apnToken:savedApnToken
+                                            )
+                                            
+                                            let encoder = JSONEncoder()
+                                            let data = try? encoder.encode(user)
+                                            self.onUpdate = { res in
+                                                print(res)
+                                            }
+                                            self.updateUser(user: data)
+                                        }
                                     }
                                     
-                                } catch {
-                                    print(error)
                                 }
-                                 
+                                
+                            } catch {
+                                print(error)
                             }
-                            break;
-                            
-                        default:
-                            break;
                             
                         }
+                        break;
+                        
+                    default:
+                        break;
                         
                     }
                     
-                    crud.onError = { [self] res, sts in
-                        sleep(10)
-                        login2()
-                    }
-                    
-                    crud.request(rURL: getApiURL() + digilira.api.auth, postData: json, method: digilira.requestMethod.post)
                 }
                 
+                crud.onError = { [self] res, sts in
+                    sleep(10)
+                    login2()
+                }
+                
+                crud.request(rURL: getApiURL() + digilira.api.auth, postData: json, method: digilira.requestMethod.post)
+            }
+            
             
             
         } catch  {
@@ -737,9 +737,6 @@ class digiliraPayApi: NSObject {
             login2()
         }
     }
-    
-    
-    
 }
 
 class OpenUrlManager {
@@ -826,11 +823,8 @@ class OpenUrlManager {
             
             break
         default:
-            //return []
             break
         }
-        
-        //return ["",""]
     }
     
     class ImagePickerManager: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -900,15 +894,11 @@ class OpenUrlManager {
             pickImageCallback?(image)
         }
         
-        
-        
         @objc func imagePickerController(_ picker: UIImagePickerController, pickedImage: UIImage?) {
             print("ok")
         }
         
     }
-    
-    
 }
 
 extension digiliraPayApi: URLSessionDelegate {
@@ -939,7 +929,7 @@ extension digiliraPayApi: URLSessionDelegate {
             //Compare certificates
             if(isServerTrusted && remoteCertificateData.isEqual(to: localCertificateData as Data)){
                 let credential:URLCredential =  URLCredential(trust:serverTrust)
-
+                
                 completionHandler(.useCredential,credential)
             }
             else{
@@ -1097,7 +1087,6 @@ class centralRequest: NSObject {
 
 extension centralRequest: URLSessionDelegate {
     
-    
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         
         guard let serverTrust = challenge.protectionSpace.serverTrust else {
@@ -1124,7 +1113,7 @@ extension centralRequest: URLSessionDelegate {
             //Compare certificates
             if(isServerTrusted && remoteCertificateData.isEqual(to: localCertificateData as Data)){
                 let credential:URLCredential =  URLCredential(trust:serverTrust)
-
+                
                 completionHandler(.useCredential,credential)
             }
             else{

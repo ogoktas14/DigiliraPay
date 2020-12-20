@@ -322,10 +322,8 @@ class PageCardView: UIView {
             }
         } else {
             
-            
             if Filtered.count == 0 {
                 
- 
                 pageControl.numberOfPages = 1
                 let coin = digilira.DigiliraPayBalance.init(
                     tokenName: digilira.demoCoin.tokenName,

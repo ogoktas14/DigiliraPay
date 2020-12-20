@@ -21,9 +21,7 @@ class LetsStartVC: UIViewController {
     var isKeyWordView = false
     
     var gotoSeedRecover = false
-    
     let digiliraPay = digiliraPayApi()
-
     let BC = Blockchain()
     
     private func initial() {
@@ -264,7 +262,6 @@ class LetsStartVC: UIViewController {
                                        width: scrollViewSize.width,
                                        height: scrollViewSize.height)
         
-        
         let letsStartView3: OnBoardingView = UIView().loadOnBoardingNib()
         letsStartView3.makeWhiteBackground()
         letsStartView3.setView(image: UIImage(named: "letsStart3")!,
@@ -292,7 +289,6 @@ class LetsStartVC: UIViewController {
                                   height: scrollViewSize.height)
         verifyView.setView()
         
-        
         letsStartScrollView.addSubview(letsStartView1)
         letsStartScrollView.addSubview(letsStartView2)
         letsStartScrollView.addSubview(letsStartView3)
@@ -301,15 +297,12 @@ class LetsStartVC: UIViewController {
         letsStartScrollView.contentSize = CGSize(width: scrollViewSize.width * CGFloat(letsStartScrollView.subviews.count),
                                                   height: scrollViewSize.height)
         
-        
-
         letsStartScrollView.showsVerticalScrollIndicator = false
         letsStartScrollView.showsHorizontalScrollIndicator = false
         letsStartScrollView.isPagingEnabled = true
         scrollAreaView.addSubview(letsStartScrollView)
-        
-        
     }
+    
     func showKeywordView()
     {
         if !isKeyWordView
@@ -321,6 +314,7 @@ class LetsStartVC: UIViewController {
             })
         }
     }
+    
     func notShowKeyWordView()
     {
         if isKeyWordView

@@ -16,17 +16,9 @@ class LogoAnimation: UIView {
     @IBOutlet weak var view: UIView!
 
     func setImage() {
-        rotate()
+        view.rotate()
     }
     
-    func rotate() {
-        
-        let rotation : CABasicAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
-        rotation.toValue = NSNumber(value: Double.pi)
-        rotation.duration = 0.5
-        rotation.isCumulative = true
-        rotation.repeatCount = Float.greatestFiniteMagnitude
-        view.layer.add(rotation, forKey: "rotationAnimation")
-    }
+
     
 }

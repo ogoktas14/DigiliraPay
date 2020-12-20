@@ -66,7 +66,6 @@ class LegalView: UIView {
         
         do {
             try Locksmith.deleteDataForUserAccount(userAccount: "environment")
-            sleep(1)
         } catch  {
             print(error)
         }

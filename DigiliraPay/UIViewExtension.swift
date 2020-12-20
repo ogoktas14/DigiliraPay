@@ -44,4 +44,22 @@ extension UIView {
 
     }
     
+    func shake() {
+        let animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
+        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
+        animation.duration = 0.6
+        animation.values = [-20.0, 20.0, -20.0, 20.0, -10.0, 10.0, -5.0, 5.0, 0.0 ]
+        layer.add(animation, forKey: "shake")
+    }
+    
+    func rotate() {
+        
+        let rotation : CABasicAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
+        rotation.toValue = NSNumber(value: Double.pi)
+        rotation.duration = 0.5
+        rotation.isCumulative = true
+        rotation.repeatCount = Float.greatestFiniteMagnitude
+        layer.add(rotation, forKey: "rotationAnimation")
+    }
+    
 }

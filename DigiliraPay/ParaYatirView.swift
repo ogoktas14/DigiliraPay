@@ -15,7 +15,7 @@ class ParaYatirView:UIView {
     @IBOutlet weak var scrollAreaView: UIView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var content: UIView!
- 
+    
     @IBOutlet weak var imgCopy: UIImageView!
     @IBOutlet weak var imgSave: UIImageView!
     @IBOutlet weak var imgShare: UIImageView!
@@ -25,24 +25,24 @@ class ParaYatirView:UIView {
     @IBOutlet weak var copyView: UIView!
     
     @IBOutlet weak var l1: UILabel!
-
+    
     var ccView = CreditCardView()
     let generator = UINotificationFeedbackGenerator()
     
     weak var delegate: LoadCoinDelegate?
     weak var errors: ErrorsDelegate?
-
+    
     var Filtered: [digilira.coin] = []
     let digiliraPay = digiliraPayApi()
     let BC = Blockchain()
     
     private var selectedCoinX: digilira.coin?
-
+    
     var direction: UISwipeGestureRecognizer.Direction?
     private var decimal: Bool = false
     var shoppingCart: [digilira.shoppingCart] = []
     let pasteboard = UIPasteboard.general
-
+    
     var Ticker: binance.BinanceMarketInfo = []
     let binanceAPI = binance()
     var ticker: digilira.ticker?
@@ -79,7 +79,7 @@ class ParaYatirView:UIView {
         
         leftSwipe.direction = .left
         rightSwipe.direction = .right
-
+        
         scrollAreaView.addGestureRecognizer(leftSwipe)
         scrollAreaView.addGestureRecognizer(rightSwipe)
         
@@ -122,18 +122,18 @@ class ParaYatirView:UIView {
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 self.imgCopy.image = UIImage(named: "copyImg")
-
+                
             }
             pasteboard.string = address1
             
             errors?.errorHandler(message: "Cüzdan adresiniz kopyalandı: " + address1!, title: "Başarılı", error: false)
             
-                self.copyView.alpha = 1
-                self.copyView.isUserInteractionEnabled = true
+            self.copyView.alpha = 1
+            self.copyView.isUserInteractionEnabled = true
         })
         
         
-
+        
     }
     
     @objc func shareButton()
@@ -144,32 +144,32 @@ class ParaYatirView:UIView {
             self.shareView.alpha = 0.4
             self.shareView.isUserInteractionEnabled = false
         }, completion: { [self]_ in
-
+            
             do {
                 let user = try secretKeys.userData()
-                 
+                
                 if user.firstName != nil {
                     if user.lastName != nil {
                         popup(image: takeScreenshot())
                     }
                 } else {
                     errors?.evaluate(error: digilira.NAError.emptyAuth)
-
+                    
                 }
             } catch {
                 errors?.evaluate(error: digilira.NAError.emptyAuth)
             }
-                self.shareView.alpha = 1
-                self.shareView.isUserInteractionEnabled = true
+            self.shareView.alpha = 1
+            self.shareView.isUserInteractionEnabled = true
         })
-          
+        
     }
     
     @objc func saveButton()
     {
         
         PHPhotoLibrary.requestAuthorization { [self] status in
-              if status == .authorized {
+            if status == .authorized {
                 generator.notificationOccurred(.success)
                 DispatchQueue.main.async {
                     UIView.animateKeyframes(withDuration: 0.1, delay: 0, options: .allowUserInteraction, animations: {
@@ -181,9 +181,9 @@ class ParaYatirView:UIView {
                     })
                 }
                 
-              }
-            
             }
+            
+        }
         switch PHPhotoLibrary.authorizationStatus() {
         case .denied:
             errors?.errorHandler(message: "Ayarlar menüsünden Galeri'ye erişim izni vermeniz gerekmektedir.", title: "Dikkat", error: true)
@@ -197,45 +197,41 @@ class ParaYatirView:UIView {
         errors?.errorHandler(message: "QR Kodunuz galeriye kaydedildi", title: "Başarılı", error: false)
         imgSave.alpha = 1
         
-            self.saveView.alpha = 1
-            self.saveView.isUserInteractionEnabled = true
+        self.saveView.alpha = 1
+        self.saveView.isUserInteractionEnabled = true
     }
     
     func popup (image: UIImage?) {
-            //do things
-            if let image = image {
-                   
-                DispatchQueue.main.async {
-                    if let pngImageData = image.pngData() {
-                        // Write the png image into a filepath and return the filepath in NSURL
-                        if let pngImageURL = pngImageData.dataToFile(fileName:  UUID().uuidString + ".png") {
-                            
-                            // Create the Array which includes the files you want to share
-                            var filesToShare = [Any]()
-
-                            // Add the path of png image to the Array
-                            filesToShare.append(pngImageURL)
-                            
-                            let activityViewController = UIActivityViewController(activityItems:filesToShare, applicationActivities: nil)
-                            if #available(iOS 13.0, *) {
-                                activityViewController.isModalInPresentation = true
-                            } else {
-                                // Fallback on earlier versions
-                            }
- 
-                            activityViewController.excludedActivityTypes = [ UIActivity.ActivityType.saveToCameraRoll ]
-                         self.window?.rootViewController?.presentedViewController?.present(activityViewController, animated: true, completion: nil)
-                            
+        //do things
+        if let image = image {
+            
+            DispatchQueue.main.async {
+                if let pngImageData = image.pngData() {
+                    // Write the png image into a filepath and return the filepath in NSURL
+                    if let pngImageURL = pngImageData.dataToFile(fileName:  UUID().uuidString + ".png") {
+                        
+                        // Create the Array which includes the files you want to share
+                        var filesToShare = [Any]()
+                        
+                        // Add the path of png image to the Array
+                        filesToShare.append(pngImageURL)
+                        
+                        let activityViewController = UIActivityViewController(activityItems:filesToShare, applicationActivities: nil)
+                        if #available(iOS 13.0, *) {
+                            activityViewController.isModalInPresentation = true
+                        } else {
+                            // Fallback on earlier versions
                         }
+                        
+                        activityViewController.excludedActivityTypes = [ UIActivity.ActivityType.saveToCameraRoll ]
+                        self.window?.rootViewController?.presentedViewController?.present(activityViewController, animated: true, completion: nil)
+                        
                     }
                 }
-                  
-               }
-       
-         
-   
+            }
+        }
     }
-
+    
     private func setShad(view: UIView, cornerRad: CGFloat = 0, mask: Bool = false) {
         view.layer.shadowOpacity = 0.2
         view.layer.cornerRadius = cornerRad
@@ -245,7 +241,7 @@ class ParaYatirView:UIView {
         view.layer.shadowOffset = CGSize(width:1, height: 1)
         
     }
- 
+    
     
     @objc func letsGO()
     {
@@ -286,7 +282,7 @@ class ParaYatirView:UIView {
         } catch {
             print(error)
         }
-         
+        
     }
     
     @objc func handleSwipes(_ sender: UISwipeGestureRecognizer)
@@ -346,7 +342,7 @@ class ParaYatirView:UIView {
         default:
             throw digilira.NAError.notListedToken
         }
-
+        
     }
     
     func setCoinCard(scrollViewSize: UIView, layer: CGFloat, coin:digilira.coin) throws -> UIView {
@@ -370,7 +366,7 @@ class ParaYatirView:UIView {
                     
                     if let a = generateQRCode(from: coin.network, network: coin.network, address: adres, amount: "0", assetId: coin.token) {
                         ccView.setView(tokenName: coin.tokenName, wallet: address!, qr: a, ad:isim)
-                }
+                    }
                 }
             }
             
@@ -378,7 +374,7 @@ class ParaYatirView:UIView {
             print(error)
             throw error
         }
-
+        
         var orgX = scrollViewSize.frame.width
         
         if let d = direction {
@@ -392,11 +388,11 @@ class ParaYatirView:UIView {
         }
         
         ccView.frame = CGRect(x: orgX,
-                                       y: 0,
-                                       width: scrollViewSize.frame.width,
-                                       height: scrollViewSize.frame.height)
-
-    
+                              y: 0,
+                              width: scrollViewSize.frame.width,
+                              height: scrollViewSize.frame.height)
+        
+        
         
         UIView.animate(withDuration: 0.5)
         {
@@ -408,41 +404,37 @@ class ParaYatirView:UIView {
     }
     
     func setBalanceView(index:Int) {
-
+        
         if Filtered.count >= currentPage {
             UIView.animate(withDuration: 0.5,
-              animations: {
-                var orgX = self.scrollAreaView.frame.width
-                
-                if let d = self.direction {
-                    switch d {
-                    case UISwipeGestureRecognizer.Direction.right:
-                        orgX = 1 - self.scrollAreaView.frame.width
-                        break
-                    default:
-                        break
-                    }
-                }
-                
-                self.scrollAreaView.subviews[self.scrollAreaView.subviews.count - 1].frame.origin.x = 1 - orgX
-                self.scrollAreaView.subviews[self.scrollAreaView.subviews.count - 1].alpha = 0
-              }, completion: {finished in
-                self.scrollAreaView.subviews[0].removeFromSuperview()
-              }
+                           animations: {
+                            var orgX = self.scrollAreaView.frame.width
+                            
+                            if let d = self.direction {
+                                switch d {
+                                case UISwipeGestureRecognizer.Direction.right:
+                                    orgX = 1 - self.scrollAreaView.frame.width
+                                    break
+                                default:
+                                    break
+                                }
+                            }
+                            
+                            self.scrollAreaView.subviews[self.scrollAreaView.subviews.count - 1].frame.origin.x = 1 - orgX
+                            self.scrollAreaView.subviews[self.scrollAreaView.subviews.count - 1].alpha = 0
+                           }, completion: {finished in
+                            self.scrollAreaView.subviews[0].removeFromSuperview()
+                           }
             )
- 
+            
             do {
                 try scrollAreaView.addSubview(setCoinCard(scrollViewSize: scrollAreaView, layer: 0, coin: Filtered[currentPage]))
             } catch {
                 print(error)
             }
-
+            
         }
         
-    }
-    
-    override func didMoveToWindow() {
-            
     }
     
     override func didMoveToSuperview() {
@@ -456,7 +448,6 @@ class ParaYatirView:UIView {
             print(error)
         }
         
-
         pageControl.numberOfPages = Filtered.count
         pageControl.addTarget(self, action: #selector(changePage(_:)), for: .allTouchEvents)
         shoppingCart = []
@@ -473,7 +464,7 @@ class ParaYatirView:UIView {
         let amountPrefix = "?amount=".data(using: String.Encoding.ascii)
         let assetIdPrefix = "&assetId=".data(using: String.Encoding.ascii)
         var data = string.data(using: String.Encoding.ascii)! + doubleStop! + address.data(using: String.Encoding.ascii)!
-
+        
         if network == "waves" {
             let assetIdData = assetId.data(using: String.Encoding.ascii)
             data = data + amountPrefix! + miktar.data(using: String.Encoding.ascii)! + assetIdPrefix! + assetIdData!
@@ -481,24 +472,24 @@ class ParaYatirView:UIView {
         if let filter = CIFilter(name: "CIQRCodeGenerator") {
             filter.setValue(data, forKey: "inputMessage")
             let transform = CGAffineTransform(scaleX: 10, y: 10)
-
+            
             if let output = filter.outputImage?.transformed(by: transform) {
                 return UIImage(ciImage: output)
             }
         }
-
+        
         return nil
     }
- 
+    
     
     
 }
- 
+
 class ImageSaver: NSObject {
     func writeToPhotoAlbum(image: UIImage) {
         UIImageWriteToSavedPhotosAlbum(image, self, #selector(saveError), nil)
     }
-
+    
     @objc func saveError(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
         print("Save finished!")
     }
@@ -507,19 +498,19 @@ class ImageSaver: NSObject {
 
 
 extension UIView {
-
+    
     func takeScreenshot() -> UIImage {
-
+        
         // Begin context
         UIGraphicsBeginImageContextWithOptions(self.bounds.size, false, UIScreen.main.scale)
-
+        
         // Draw view in that context
         drawHierarchy(in: self.bounds, afterScreenUpdates: true)
-
+        
         // And finally, get image
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-
+        
         if (image != nil)
         {
             return image!
@@ -532,52 +523,52 @@ extension UIView {
 extension UITextField {
     func addDoneCancelToolbar(onDone: (target: Any, action: Selector)? = nil, onCancel: (target: Any, action: Selector)? = nil) {
         let onDone = onDone ?? (target: self, action: #selector(doneButtonTapped))
-
+        
         let toolbar: UIToolbar = UIToolbar()
         toolbar.barStyle = .default
         toolbar.items = [
             UIBarButtonItem(title: "Tamam", style: .done, target: onDone.target, action: onDone.action)
         ]
         toolbar.sizeToFit()
-
+        
         self.inputAccessoryView = toolbar
     }
-
+    
     // Default actions:
     @objc func doneButtonTapped() { self.resignFirstResponder() }
     @objc func cancelButtonTapped() { self.resignFirstResponder() }
 }
 
 extension Data {
-
+    
     /// Data into file
     ///
     /// - Parameters:
     ///   - fileName: the Name of the file you want to write
     /// - Returns: Returns the URL where the new file is located in NSURL
     func dataToFile(fileName: String) -> NSURL? {
-
+        
         // Make a constant from the data
         let data = self
-
+        
         // Make the file path (with the filename) where the file will be loacated after it is created
         let filePath = getDocumentsDirectory().appendingPathComponent(fileName)
-
+        
         do {
             // Write the file from data into the filepath (if there will be an error, the code jumps to the catch block below)
             try data.write(to: URL(fileURLWithPath: filePath))
-
+            
             // Returns the URL where the new file is located in NSURL
             return NSURL(fileURLWithPath: filePath)
-
+            
         } catch {
             // Prints the localized description of the error from the do block
             print("Error writing the file: \(error.localizedDescription)")
         }
-
+        
         // Returns nil if there was an error in the do-catch -block
         return nil
-
+        
     }
     
     
@@ -587,5 +578,5 @@ extension Data {
         return documentsDirectory as NSString
     }
     
-
+    
 }

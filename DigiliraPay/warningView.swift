@@ -71,16 +71,7 @@ class WarningView: UIView {
         })
 
     }
-    
-    func rotate() {
-        let rotation : CABasicAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
-        rotation.toValue = NSNumber(value: Double.pi)
-        rotation.duration = 0.5
-        rotation.isCumulative = true
-        rotation.repeatCount = Float.greatestFiniteMagnitude
-        icon.layer.add(rotation, forKey: "rotationAnimation")
-    }
-    
+
     func incProgress() {
         
         if loading.progress > 0.95 {
@@ -115,7 +106,7 @@ class WarningView: UIView {
             loading.isHidden = false
             icon.image = UIImage(named: "verifying")
             warningLabel.isHidden = false
-            rotate()
+            icon.rotate()
             incProgress()
         }
         

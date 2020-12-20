@@ -9,9 +9,6 @@
 import Foundation
 import UIKit
 
-
-
-
 class PayTableViewCell: UITableViewCell {
     @IBOutlet weak var prodName: UILabel!
     @IBOutlet weak var prodPrice: UILabel!

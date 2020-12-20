@@ -139,7 +139,6 @@ class Verify_StartView: UIView {
                             overall.text = text + label + " "
                             selectedWords.append(label)
                         }
-                        
                     }
                 }
             }
@@ -181,17 +180,11 @@ class Verify_StartView: UIView {
             label13.text = keywordArray[12]
             label14.text = keywordArray[13]
             label15.text = keywordArray[14]
-            
         }
-
     }
-    
-
     
     func setFirstView(lineView: UIView, count: Int)
     {
-
-                
         let wordScrollView = UIScrollView()
         wordScrollView.frame = lineView.frame
         wordScrollView.frame.origin.x = 0

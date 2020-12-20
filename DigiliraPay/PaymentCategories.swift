@@ -54,11 +54,5 @@ class PaymentCat: WalletView1, ColoredCardViewDelegate {
         self.didUpdatePresentedCardViewBlock = { (_) in
             
         }
-    }
-    
- 
-    
-    
-
-    
+    } 
 }

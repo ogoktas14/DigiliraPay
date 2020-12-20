@@ -18,8 +18,8 @@ class TransactionHistoryDetailCellHeader: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
         
-        cellTitle.textColor = UIColor(red:0.30, green:0.30, blue:0.30, alpha:1.0)
-        cellAmount.textColor = UIColor(red:0.30, green:0.30, blue:0.30, alpha:1.0)
+        cellTitle.textColor = .darkGray
+        cellAmount.textColor = .darkGray
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

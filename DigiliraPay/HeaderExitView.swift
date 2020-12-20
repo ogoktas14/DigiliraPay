@@ -15,13 +15,5 @@ class HeaderExitView: UIView{
     @IBOutlet weak var scrollArea: UIScrollView!
     @IBOutlet weak var exitButton: UIButton!
 
-    override func awakeFromNib() {
-    }
-    
-    override func didMoveToSuperview() {
-        
-    }
-    
-    
     
 }

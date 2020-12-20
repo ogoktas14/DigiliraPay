@@ -15,7 +15,7 @@ class TransactionDetailView: UIView
     
     var frameValue = CGRect()
     var tableView: UITableView = UITableView()
-
+    
     var originValue: CGPoint = CGPoint(x: 0, y: 0)
     var originValueLast: CGPoint = CGPoint(x: 0, y: 0)
     
@@ -24,13 +24,13 @@ class TransactionDetailView: UIView
     let BC = Blockchain()
     
     var fetching: Bool = false
-
+    
     let generator = UINotificationFeedbackGenerator()
-
+    
     weak var delegate: TransactionDetailCloseDelegate?
     override func awakeFromNib()
     {
-
+        
         slideIndicator.backgroundColor = UIColor(red:1, green:1, blue:1, alpha:1.0)
         slideIndicator.layer.cornerRadius = 3
         
@@ -38,9 +38,9 @@ class TransactionDetailView: UIView
         self.layer.cornerRadius = 10
         
         slideView.layer.cornerRadius = 10
-      
+        
     }
-
+    
     override func didMoveToSuperview() {
         setView()
     }
@@ -60,7 +60,7 @@ class TransactionDetailView: UIView
         self.tableView.rowHeight = 70
         
         originValueLast.y = self.frame.height * 0.2
-
+        
         
         layer.shadowColor = UIColor.gray.cgColor
         layer.shadowRadius = 2.0
@@ -70,28 +70,28 @@ class TransactionDetailView: UIView
         
         tableView.showsHorizontalScrollIndicator = false
         tableView.showsVerticalScrollIndicator = false
-
+        
         self.addSubview(tableView)
     }
     
     
- 
+    
     
     @objc func handleTap (recognizer: MyTapGesture) {
         if recognizer.qrAttachment == "-" {
             generator.notificationOccurred(.error) 
-//            return
+            //            return
         }
         if fetching {
             return
         }
         fetching = true
         generator.notificationOccurred(.success)
-
+        
         let QrDict:[String: String] = ["qr": recognizer.qrAttachment]
         NotificationCenter.default.post(name: .orderClick, object: nil, userInfo: QrDict )
         fetching = false
-
+        
     }
     
     @IBAction func slideGesture(_ sender: UIPanGestureRecognizer)
@@ -154,11 +154,9 @@ extension TransactionDetailView: UITableViewDelegate, UITableViewDataSource
         {
             if let cell = UITableViewCell().loadXib(name: "TransactionHistoryDetailCellDeatils") as? TransactionHistoryDetailCellDeatils {
                 
-                
-                
                 if let t = transaction {
                     switch indexPath.row {
-                        
+                    
                     case 1:
                         cell.setView(image: UIImage(named: "send")!, title: "Gönderici", detail: t.sender!)
                     case 2:
@@ -168,17 +166,17 @@ extension TransactionDetailView: UITableViewDelegate, UITableViewDataSource
                     case 4:
                         let pasteboard = UIPasteboard.general
                         pasteboard.string = t.recipient!
-                            cell.setView(image: UIImage(named: "verifying")!, title: "Detaylar", detail: t.attachment ?? "-" )
+                        cell.setView(image: UIImage(named: "verifying")!, title: "Detaylar", detail: t.attachment ?? "-" )
                         
                         let tapped = MyTapGesture.init(target: self, action: #selector(handleTap))
-                            tapped.qrAttachment = t.attachment ?? "-"
+                        tapped.qrAttachment = t.attachment ?? "-"
                         
                         cell.addGestureRecognizer(tapped)
                         
                         
                     case 5:
                         break
-                        //cell.setView(image: UIImage(), title: "Komisyon", detail: "0.00001325 BTC")
+                    //cell.setView(image: UIImage(), title: "Komisyon", detail: "0.00001325 BTC")
                     default:
                         break
                     }
@@ -186,10 +184,10 @@ extension TransactionDetailView: UITableViewDelegate, UITableViewDataSource
                 }
                 
                 return cell
-            
+                
                 
             }
-            }
+        }
         return UITableViewCell()
     }
     

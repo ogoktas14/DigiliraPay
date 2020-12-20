@@ -27,25 +27,25 @@ class WalletView: UIView {
     var transactionHistoryOriginLast: CGPoint = CGPoint(x: 0, y: 0)
     
     var transactionDetailView = TransactionDetailView()
-
+    
     private let refreshControl = UIRefreshControl()
-
+    
     var frameValue = CGRect()
     var throwEngine = ErrorHandling()
-
+    
     let BC = Blockchain()
     var trxs:[digilira.transfer] = []
     var wallet: String?
     var ad_soyad: String?
-
+    
     var coin: String = ""
     var onSight:Bool = false
-     
+    
     override func awakeFromNib()
     {
         setView()
     }
-     
+    
     func setView()
     {
         headerLabel.textColor = UIColor(red:0.70, green:0.70, blue:0.70, alpha:1.0)
@@ -72,7 +72,7 @@ class WalletView: UIView {
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 100, right: 0)
         tableView.delegate = self
         tableView.dataSource = self
-
+        
         transactionHistory.addSubview(tableView)
         
         readHistory(coin: coin)
@@ -90,18 +90,17 @@ class WalletView: UIView {
     }
     
     func readHistory (coin: String) {
-//        transactionDetailView.originValueLast = transactionDetailView.originValue
         
         if onSight{
             throwEngine.waitPlease()
         }
-
+        
         refreshControl.isHidden = true
-        //loading.isHidden = false
+
         tableView.isUserInteractionEnabled = false
         self.trxs.removeAll()
         if let walletAddress = wallet {
-           
+            
             BC.checkTransactions(address: walletAddress){ (data) in
                 DispatchQueue.main.async { [self] in
                     data.forEach { trx in
@@ -114,7 +113,7 @@ class WalletView: UIView {
                         let strDate = dateFormatter.string(from: Date(milliseconds: Int64(dateWaves)) )
                         var attachment: String?
                         if attachment == "null" {
-
+                            
                         }
                         if (trx["type"] as? Int64 == 4) {
                             if (trx["assetId"] as? String != nil) {
@@ -155,7 +154,7 @@ class WalletView: UIView {
                                 }
                             }
                         }
-            
+                        
                         if (trx["type"] as? Int64 == 11) {
                             if (trx["assetId"] as? String != nil) {
                                 if (trx["attachment"] as? String != "") {
@@ -163,7 +162,7 @@ class WalletView: UIView {
                                 }
                                 
                                 do {
-                                let asset = try self.BC.returnAsset(assetId: trx["assetId"] as! String)
+                                    let asset = try self.BC.returnAsset(assetId: trx["assetId"] as! String)
                                     
                                     var isOK = false
                                     if coin == "" {
@@ -215,7 +214,7 @@ class WalletView: UIView {
             })
         }
     }
-
+    
     @IBAction func slideGesture(_ sender: UIPanGestureRecognizer)
     {
         transactionHistory.translatesAutoresizingMaskIntoConstraints = true
@@ -263,7 +262,7 @@ extension WalletView: UITableViewDelegate, UITableViewDataSource
         cell.layoutMargins = UIEdgeInsets.zero
         
         if trxs.count == 0 {
- 
+            
             
             return cell
         }
@@ -275,7 +274,7 @@ extension WalletView: UITableViewDelegate, UITableViewDataSource
                 cell.operationAmount.text = (Double(trxs[indexPath[1]].amount) / double).description
                 cell.operationTitle.text = coin.tokenName
                 cell.operationDate.text = trxs[indexPath[1]].timestamp!
-                 
+                
                 if let walletAddress = wallet {
                     
                     if (trxs[indexPath[1]].recipient == walletAddress) {
@@ -291,7 +290,7 @@ extension WalletView: UITableViewDelegate, UITableViewDataSource
                 }
                 
                 self.tableView.rowHeight = 60
-
+                
                 let tapped = MyTapGesture.init(target: self, action: #selector(handleTap))
                 tapped.floatValue = indexPath[1]
                 cell.addGestureRecognizer(tapped)
@@ -299,7 +298,7 @@ extension WalletView: UITableViewDelegate, UITableViewDataSource
                 throwEngine.evaluateError(error: error)
             }
         }
-
+        
         
         return cell
     }
@@ -308,10 +307,10 @@ extension WalletView: UITableViewDelegate, UITableViewDataSource
     {
         transactionDetailView.originValue.y = 0
         transactionDetailView.originValueLast = transactionDetailView.originValue
-
+        
     }
     
- 
+    
     
     @objc func handleTap(recognizer: MyTapGesture) { // gecmisini sorgula
         showDetail(index: recognizer.floatValue)
@@ -322,14 +321,14 @@ extension WalletView: UITableViewDelegate, UITableViewDataSource
         if index <= trxs.count {
             tableView.isUserInteractionEnabled = false
             transactionDetailView = UIView().loadNib(name: "TransactionDetailView") as! TransactionDetailView
-
+            
             transactionDetailView.alpha = 0
-
+            
             transactionDetailView.layer.cornerRadius = 10
             transactionDetailView.frame = CGRect(x: tableView.frame.width * 0.05,
-                                   y: tableView.frame.height,
-                                   width: tableView.frame.width * 0.9,
-                                   height: tableView.frame.height)
+                                                 y: tableView.frame.height,
+                                                 width: tableView.frame.width * 0.9,
+                                                 height: tableView.frame.height)
             
             
             transactionDetailView.delegate = self
@@ -341,11 +340,7 @@ extension WalletView: UITableViewDelegate, UITableViewDataSource
                 self.transactionDetailView.frame.origin.y =  self.tableView.frame.height * 0.2
                 self.transactionDetailView.alpha = 1
             }
-        }else {
-            print("out of index error")
         }
-
-        
     }
 }
 extension WalletView: TransactionDetailCloseDelegate
@@ -359,4 +354,4 @@ extension WalletView: TransactionDetailCloseDelegate
         }
     }
 }
- 
+

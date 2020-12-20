@@ -65,9 +65,9 @@ class WalletOperationButtonSView: UIView {
                 self.balance.backgroundColor = .white
             }, completion: {_ in
                 UILabel.animate(withDuration: 0.2, animations: {
-                    balanceText.textColor = UIColor(red:0.30, green:0.30, blue:0.30, alpha:1.0)
-                    sendLabel.textColor = UIColor(red:0.30, green:0.30, blue:0.30, alpha:1.0)
-                    loadLabel.textColor = UIColor(red:0.30, green:0.30, blue:0.30, alpha:1.0)
+                    balanceText.textColor = .darkGray
+                    sendLabel.textColor = .darkGray
+                    loadLabel.textColor = .darkGray
                     balanceText.alpha = 1
                     self.balanceText.text  = blnx
                     self.balanceText.minimumScaleFactor = 0.1
@@ -113,8 +113,5 @@ class WalletOperationButtonSView: UIView {
             self.loadMoneyView.alpha = 1
             delegate?.load()
         })
-        
-        
-
     }
 }

@@ -9,7 +9,7 @@
 import UIKit
 
 class transactionHistoryCell: UITableViewCell {
-
+    
     @IBOutlet weak var operationImage: UIImageView!
     @IBOutlet weak var operationTitle: UILabel!
     @IBOutlet weak var operationDate: UILabel!
@@ -19,10 +19,10 @@ class transactionHistoryCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
     }
-
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         //super.setSelected(selected, animated: animated)
-
+        
         // Configure the view for the selected state
     }
     
