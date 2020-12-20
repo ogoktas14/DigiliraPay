@@ -289,12 +289,7 @@ extension MainScreen: PinViewDelegate
             pincode:code
         )
         
-        digiliraPay.request(  rURL: digiliraPay.getApiURL() + digilira.api.userUpdate,
-                              JSON: try? digiliraPay.jsonEncoder.encode(user),
-                              METHOD: digilira.requestMethod.put,
-                              AUTH: true
-        ) { (json, statusCode) in
-            
+        digiliraPay.onResponse = { res, sts in
             DispatchQueue.main.async {
                 self.throwEngine.alertWarning(title: "Pin Kodu Güncellendi", message: "Pin kodunuzu unutmayın, cüzdanınızı başka bir cihaza aktarırken ihtiyacınız olacaktır.", error: false)
                 
@@ -308,6 +303,8 @@ extension MainScreen: PinViewDelegate
                 self.digiliraPay.login2()
             }
         }
+        
+        digiliraPay.request2(rURL: digiliraPay.getApiURL() + digilira.api.userUpdate, JSON: try? digiliraPay.jsonEncoder.encode(user), METHOD: digilira.requestMethod.put, AUTH: true)
     }
 }
 

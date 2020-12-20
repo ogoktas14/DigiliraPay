@@ -72,7 +72,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         
         
-        
         OpenUrlManager.onURL = { res in
             let encoder = JSONEncoder()
             if let encoded = try? encoder.encode(res) {

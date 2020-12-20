@@ -28,6 +28,7 @@ struct digilira {
         static let payment = "/payment/"
         static let paymentStatus = "/payment/status"
         static let userUpdate =  "/users/update/me"
+        static let userRegister =  "/users/register"
         static let auth =  "/users/authenticate"
         static let updateScript =  "/users/signscript/update"
         static let isOurMember = "/transfer/recipient"

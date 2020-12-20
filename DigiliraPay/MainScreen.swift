@@ -235,6 +235,12 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         
         self.onB = { [self] in
             if (isBitexenReload && isWavesReloaded && isPinEntered) {
+                
+                if let qr = decodeDefaults(forKey: "QRARRAY2", conformance: digilira.QR.self, setNil: true) {
+                    QR = qr
+                    self.getOrder(address: QR)
+                }
+                
                 isBitexenReload = false
                 isWavesReloaded = false
                 Filtered.removeAll()
@@ -459,10 +465,13 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         
         menuView.isUserInteractionEnabled = true
         emptyBG.isHidden = true
-        if let qr = decodeDefaults(forKey: "QRARRAY2", conformance: digilira.QR.self, setNil: true) {
-            QR = qr
-            self.getOrder(address: QR)
+        if isPinEntered {
+            if let qr = decodeDefaults(forKey: "QRARRAY2", conformance: digilira.QR.self, setNil: true) {
+                QR = qr
+                self.getOrder(address: QR)
+            }
         }
+        
     }
     
     func isKeyPresentInUserDefaults(key: String) -> Bool {
@@ -480,7 +489,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         let iat, exp: Int64
     }
     
-    func isTokenOK() {
+    func isTokenOK() -> Bool {
         let token = kullanici.token
         let jwt = token.split(separator: ".")
         
@@ -492,28 +501,21 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                 let then : Int64 = jwtPayload.exp * Int64(1000)
                 
                 let diff = ((then - now) / Int64(1000)) / 60
-                
-                if diff < 5 {
-                    
-                    self.digiliraPay.onLogin2 = { user, status in
-                        DispatchQueue.main.sync {
-                            self.kullanici = user
-                        }
-                    }
-                    
-                    self.digiliraPay.login2()
-                    
-                    
+
+                if diff == 0 {
+                    return false
                 }
+                return true
             } catch {
                 print(error)
             }
             
         }
+        return false
     }
     
     @objc func onDidCompleteTask(_ sender: Notification) {
-        isTokenOK()
+
     }
     
     static func df2so(_ price: Double, digits: Int = 2) -> String{
@@ -655,51 +657,70 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
     
     func getOrder(address: digilira.QR) {
         
-        if address.address == nil {return}
-        switch address.network {
-        
-        case digilira.bitcoin.network:
-            let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!, assetId:digilira.bitcoin.token)
-            sendBTCETH(external: external, ticker:digiliraPay.ticker(ticker: Ticker))
-            break
-        case digilira.waves.network:
-            let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!, assetId: address.assetId!)
-            sendBTCETH(external: external, ticker:digiliraPay.ticker(ticker: Ticker))
-            break
-        case digilira.ethereum.network:
-            let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!, assetId:digilira.ethereum.token)
-            sendBTCETH(external: external, ticker:digiliraPay.ticker(ticker: Ticker))
-            break
-        default:
-            digiliraPay.onGetOrder = { res in
-                //self.goSelectCoinView(ORDER: res)
-                let odeme = digilira.odemeStatus.init(
-                    id: res._id,
-                    status: "1",
-                    name: self.kullanici.firstName,
-                    surname: self.kullanici.lastName,
-                    wallet: self.kullanici.wallet,
-                    _id: self.kullanici.id
-                )
-                
-                self.digiliraPay.setOdemeAliniyor(JSON: try? self.digiliraPay.jsonEncoder.encode(odeme))
-                self.goPageCardView(ORDER: res)
-                
+        if !isTokenOK() {
+            throwEngine.waitPlease()
+            self.digiliraPay.onLogin2 = { user, status in
+                DispatchQueue.main.sync {
+                    self.throwEngine.removeWait()
+                    self.kullanici = user
+                    self.getOrder(address: address)
+                }
             }
-            digiliraPay.getOrder(PARAMS: address.address!)
+            
+            self.digiliraPay.login2()
+        }else {
+            
+            if address.address == nil {return}
+            switch address.network {
+            
+            case digilira.bitcoin.network:
+                let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!, assetId:digilira.bitcoin.token)
+                sendBTCETH(external: external, ticker:digiliraPay.ticker(ticker: Ticker))
+                break
+            case digilira.waves.network:
+                let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!, assetId: address.assetId!)
+                sendBTCETH(external: external, ticker:digiliraPay.ticker(ticker: Ticker))
+                break
+            case digilira.ethereum.network:
+                let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!, assetId:digilira.ethereum.token)
+                sendBTCETH(external: external, ticker:digiliraPay.ticker(ticker: Ticker))
+                break
+            default:
+                digiliraPay.onGetOrder = { res in
+                    //self.goSelectCoinView(ORDER: res)
+                    let odeme = digilira.odemeStatus.init(
+                        id: res._id,
+                        status: "1",
+                        name: self.kullanici.firstName,
+                        surname: self.kullanici.lastName,
+                        wallet: self.kullanici.wallet,
+                        _id: self.kullanici.id
+                    )
+                    
+                    self.digiliraPay.setOdemeAliniyor(JSON: try? self.digiliraPay.jsonEncoder.encode(odeme))
+                    self.goPageCardView(ORDER: res)
+                    
+                }
+                digiliraPay.getOrder(PARAMS: address.address!)
+            }
         }
+        
         
     }
     
     @objc func onDidReceiveData(_ sender: Notification) {
         // Do what you need, including updating IBOutlets
         
-        if let qr = decodeDefaults(forKey: "QRARRAY2", conformance: digilira.QR.self, setNil: true) {
-            QR = qr
-            self.getOrder(address: QR)
+        if isPinEntered {
+            if let qr = decodeDefaults(forKey: "QRARRAY2", conformance: digilira.QR.self, setNil: true) {
+                QR = qr
+                self.getOrder(address: QR)
+            }
+            
+            self.throwEngine.warningView.removeFromSuperview()
         }
         
-        self.throwEngine.warningView.removeFromSuperview()
+        
  
         
         if isVerifyAccount {
@@ -1922,8 +1943,11 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         sendWithQRView.addSubview(pageCardView)
         
         if QR.address != nil {
-            UserDefaults.standard.set(nil, forKey: "QRARRAY2")
-            self.QR = digilira.QR.init()
+            
+            if isPinEntered {
+                UserDefaults.standard.set(nil, forKey: "QRARRAY2")
+                self.QR = digilira.QR.init()
+            }
             
         }
         
@@ -2133,37 +2157,37 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
     
     func sendQR(ORDER: digilira.order) {
         
-        do {
-            let auth = try digiliraPay.auth()
-            
-            if (auth.status == 0) {
-                alertError ()
-                return
-            }
-            
-            let odeme = digilira.odemeStatus.init(
-                id: ORDER._id,
-                status: "1",
-                name: auth.firstName,
-                surname: auth.lastName
-            )
-            
-            self.digiliraPay.setOdemeAliniyor(JSON: try? self.digiliraPay.jsonEncoder.encode(odeme))
-            
-            let data = SendTrx.init(merchant: ORDER.merchant,
-                                    recipient: ORDER.wallet,
-                                    assetId: ORDER.asset!,
-                                    amount: ORDER.rate,
-                                    fee: digilira.sponsorTokenFee,
-                                    fiat: ORDER.totalPrice!,
-                                    attachment: ORDER._id,
-                                    network: digilira.transactionDestination.domestic,
-                                    products: ORDER.products
-            )
-            send(params: data)
-        } catch  {
-            print(error)
+        digiliraPay.onAuth = { auth, sts in
+           
+        if (auth.status == 0) {
+            self.alertError ()
+            return
         }
+        
+        let odeme = digilira.odemeStatus.init(
+            id: ORDER._id,
+            status: "1",
+            name: auth.firstName,
+            surname: auth.lastName
+        )
+        
+        self.digiliraPay.setOdemeAliniyor(JSON: try? self.digiliraPay.jsonEncoder.encode(odeme))
+        
+        let data = SendTrx.init(merchant: ORDER.merchant,
+                                recipient: ORDER.wallet,
+                                assetId: ORDER.asset!,
+                                amount: ORDER.rate,
+                                fee: digilira.sponsorTokenFee,
+                                fiat: ORDER.totalPrice!,
+                                attachment: ORDER._id,
+                                network: digilira.transactionDestination.domestic,
+                                products: ORDER.products
+        )
+            self.send(params: data)
+        }
+        
+        digiliraPay.auth()
+ 
     }
 }
 

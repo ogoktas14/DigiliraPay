@@ -793,7 +793,6 @@ class Blockchain: NSObject {
                             METHOD: digilira.requestMethod.post
         ) { (json, statusCode) in
             DispatchQueue.main.async {
-
                 do {
                     try Locksmith.saveData(
                         data: ["password": uuid,
@@ -903,7 +902,6 @@ class Blockchain: NSObject {
                                 METHOD: digilira.requestMethod.post
             ) { (json, statusCode) in
                 DispatchQueue.main.async {
-                    
                     do {
                         try Locksmith.saveData(
                             data: ["password": uuid,
@@ -915,6 +913,7 @@ class Blockchain: NSObject {
                         returnCompletion("TRY AGAIN")
                     }
                     returnCompletion(address)
+                    
                 }
             }
         }
