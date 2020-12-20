@@ -29,8 +29,8 @@
                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bQ9-Mk-48U">
-                        <rect key="frame" x="384" y="45" width="0.0" height="0.0"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bQ9-Mk-48U">
+                        <rect key="frame" x="378.5" y="33.5" width="5.5" height="23.5"/>
                         <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="17"/>
                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
@@ -57,6 +57,7 @@
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="bQ9-Mk-48U" secondAttribute="trailing" constant="10" id="71c-TN-ln6"/>
+                    <constraint firstItem="bQ9-Mk-48U" firstAttribute="height" secondItem="H2p-sc-9uM" secondAttribute="height" multiplier="0.261111" id="FCd-Pn-Z4k"/>
                     <constraint firstItem="4yg-XG-k6M" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="5" id="GEh-Al-qNh"/>
                     <constraint firstItem="zA3-bu-Bqr" firstAttribute="leading" secondItem="4yg-XG-k6M" secondAttribute="trailing" constant="10" id="eXG-ws-OGg"/>
                     <constraint firstItem="dfc-57-hlg" firstAttribute="bottom" secondItem="4yg-XG-k6M" secondAttribute="bottom" id="gyu-1b-lgu"/>

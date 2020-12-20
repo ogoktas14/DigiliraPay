@@ -10,7 +10,9 @@ import UIKit
 import UserNotifications
 import WavesSDK
 
-class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDelegate {
+class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
+    
+    @IBOutlet var curtain:UIView!
     
     var gotoSeedRecover = false
     func doSomethingWith() {
@@ -19,25 +21,11 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
         nowLetsGo()
     }
     
-    func closePinView() {
-        self.goMainVC()
-    }
-    
-    func updatePinCode(code: Int32) {
-        
-    }
-    
-    func pinSuccess(res: Bool) {
-        self.goMainVC()        
-    }
-    
     @IBOutlet weak var scrollAreaView: UIView!
-    @IBOutlet weak var pinView: UIView!
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var letsGoView: UIView!
     @IBOutlet weak var importAccountView: UILabel!
     @IBOutlet weak var letsGoLabel: UILabel!
-    @IBOutlet weak var sendWithQRView: UIView!
 
     
     var onBoardingScrollView = UIScrollView()
@@ -125,27 +113,8 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
                         }
                         
                         self.BC.checkSmart(address: user.wallet)
-                        
-                        if user.pincode == "-1"
-                        {
-                            self.goMainVC()
-                            return
-                        }
-                        
-                        if let pinView = UIView().loadNib(name: "PinView") as? PinView {
-                            pinView.isEntryMode = true
-                            pinView.setCode()
-                            
-                            pinView.delegate = self
-                            
-                            pinView.frame = CGRect(x: 0,
-                                                   y: 0,
-                                                   width: self.view.frame.width,
-                                                   height: self.view.frame.height)
-                            self.view.addSubview(pinView)
-                        }
-                        
-                        break
+                        self.goMainVC()
+                        return
                         
                     default:
                         
@@ -163,6 +132,8 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
         } else {
             self.letsGoView.isHidden = false
             self.importAccountView.isHidden = false
+            curtain.isHidden = true
+
         }
     }
     
@@ -252,18 +223,19 @@ class OnBoardingVC: UIViewController, PinViewDelegate, DisplayViewControllerDele
     
     func setLetsGoView()
     {
-        letsGoView.layer.cornerRadius = letsGoView.frame.height / 2
-        let letsGoGradient = CAGradientLayer()
-        letsGoGradient.colors = [
-            UIColor(red: 0.24, green: 0.54, blue: 1, alpha: 1).cgColor,
-            UIColor(red: 0, green: 0.4, blue: 1, alpha: 1).cgColor
-        ]
-        letsGoGradient.frame = letsGoView.bounds
-        letsGoGradient.startPoint = CGPoint(x: 0.17355118936567193, y: 1.2736177884615385)
-        letsGoGradient.endPoint = CGPoint(x: 0.8794163945895522, y: -0.8311899038461539)
-        letsGoGradient.cornerRadius = letsGoView.frame.height / 2
-        letsGoView.layer.addSublayer(letsGoGradient)
-        letsGoLabel.layer.zPosition = 1
+        letsGoView.layer.cornerRadius = 25
+
+//        let letsGoGradient = CAGradientLayer()
+//        letsGoGradient.colors = [
+//            UIColor(red: 0.24, green: 0.54, blue: 1, alpha: 1).cgColor,
+//            UIColor(red: 0, green: 0.4, blue: 1, alpha: 1).cgColor
+//        ]
+//        letsGoGradient.frame = letsGoView.bounds
+//        letsGoGradient.startPoint = CGPoint(x: 0.17355118936567193, y: 1.2736177884615385)
+//        letsGoGradient.endPoint = CGPoint(x: 0.8794163945895522, y: -0.8311899038461539)
+//        letsGoGradient.cornerRadius = letsGoView.frame.height / 2
+//        letsGoView.layer.addSublayer(letsGoGradient)
+//        letsGoLabel.layer.zPosition = 1
     }
     
     @objc func letsGO()
@@ -327,7 +299,7 @@ extension OnBoardingVC: UIScrollViewDelegate
         let scrollViewSize: CGSize = scrollAreaView.frame.size
         
         let onBoardingView1: OnBoardingView = UIView().loadOnBoardingNib()
-        onBoardingView1.setView(image: UIImage(named: "onboarding1")!,
+        onBoardingView1.setView(image: UIImage(named: "letsStart1")!,
                                 titleFirst: "Blokzincir",
                                 titleSecond: "Ödeme Geçidi",
                                 desc: "DigiliraPay’e hoşgeldin.\nBlockzincir tabanlı ödeme yöntemimizle tanış.")

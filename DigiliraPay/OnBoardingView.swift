@@ -17,6 +17,10 @@ class OnBoardingView: UIView {
     
     func setView(image: UIImage, titleFirst: String, titleSecond: String, desc: String)
     {
+        let screenSize: CGRect = UIScreen.main.bounds
+        if screenSize.height < 600 {
+            onBoardingDesc.isHidden = true
+        }
         onBoardingImage.image = image
         onBoardingTitleFirst.text = titleFirst
         onBoardingTitleSecond.text = titleSecond

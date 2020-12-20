@@ -94,6 +94,8 @@
 		93534F1825496A950000329F /* bitexenApiView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93534F1725496A950000329F /* bitexenApiView.xib */; };
 		93534F1B2549851A0000329F /* BitexenAPIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93534F1A2549851A0000329F /* BitexenAPIView.swift */; };
 		93534F1E2549958C0000329F /* bitexenSignature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93534F1D2549958C0000329F /* bitexenSignature.swift */; };
+		9360FE62258F6B510064C579 /* LogoAnimation.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9360FE61258F6B510064C579 /* LogoAnimation.xib */; };
+		9360FE65258F6C990064C579 /* LogoAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9360FE64258F6C990064C579 /* LogoAnimation.swift */; };
 		936F25B125323B0300C5FA85 /* ColoredCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 936F25B025323B0300C5FA85 /* ColoredCardView.xib */; };
 		936F25B425323B2E00C5FA85 /* ColoredCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F25B325323B2E00C5FA85 /* ColoredCardView.swift */; };
 		936F25B725323B3900C5FA85 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936F25B625323B3900C5FA85 /* UIViewExtension.swift */; };
@@ -217,6 +219,8 @@
 		93534F1725496A950000329F /* bitexenApiView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = bitexenApiView.xib; sourceTree = "<group>"; };
 		93534F1A2549851A0000329F /* BitexenAPIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitexenAPIView.swift; sourceTree = "<group>"; };
 		93534F1D2549958C0000329F /* bitexenSignature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bitexenSignature.swift; sourceTree = "<group>"; };
+		9360FE61258F6B510064C579 /* LogoAnimation.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LogoAnimation.xib; sourceTree = "<group>"; };
+		9360FE64258F6C990064C579 /* LogoAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoAnimation.swift; sourceTree = "<group>"; };
 		936F25B025323B0300C5FA85 /* ColoredCardView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ColoredCardView.xib; sourceTree = "<group>"; };
 		936F25B325323B2E00C5FA85 /* ColoredCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColoredCardView.swift; sourceTree = "<group>"; };
 		936F25B625323B3900C5FA85 /* UIViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
@@ -364,6 +368,7 @@
 				9342427E2586AF7E009D6024 /* OrderDetailView.xib */,
 				934F3C4F258A4A9E007CFC19 /* SendMoneyCard.xib */,
 				939FD248258BA69D00964E97 /* TransferConfirmationView.xib */,
+				9360FE61258F6B510064C579 /* LogoAnimation.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -410,6 +415,7 @@
 				934242812586B1F0009D6024 /* OrderDetailView.swift */,
 				934F3C52258A4C37007CFC19 /* SendMoneyCard.swift */,
 				93A3CC32258C7F5900E89E6E /* TransferConfirmationView.swift */,
+				9360FE64258F6C990064C579 /* LogoAnimation.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -580,6 +586,7 @@
 				88CA9368231979C3008F894B /* WalletOperationButtonSView.xib in Resources */,
 				93757C28256E3EAD0066A7B9 /* PageCardView.xib in Resources */,
 				88CA937C231A48A0008F894B /* TransactionHistoryDetailCellDeatils.xib in Resources */,
+				9360FE62258F6B510064C579 /* LogoAnimation.xib in Resources */,
 				88F3F957230FD92600D81F2B /* LetsStartWordView.xib in Resources */,
 				936F25B125323B0300C5FA85 /* ColoredCardView.xib in Resources */,
 				889F2A2123158BAB00ACD656 /* MenuView.xib in Resources */,
@@ -696,6 +703,7 @@
 				88CA93612319741A008F894B /* MenuViewDelegate.swift in Sources */,
 				880664EF22FEFF5B00C4DF69 /* OnBoardingView.swift in Sources */,
 				88CA9383231A5F46008F894B /* TransactionDetailCloseDelegate.swift in Sources */,
+				9360FE65258F6C990064C579 /* LogoAnimation.swift in Sources */,
 				880541FA2319702B004EE85F /* CoinTableViewCell.swift in Sources */,
 				882AAB0322FC96DD004CDAA6 /* AppDelegate.swift in Sources */,
 				888F26B1233E8DF500AB7E4C /* PinView.swift in Sources */,
@@ -866,7 +874,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 69;
+				CURRENT_PROJECT_VERSION = 70.1;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;
@@ -891,7 +899,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPayRelease.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 69;
+				CURRENT_PROJECT_VERSION = 70.1;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;

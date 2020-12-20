@@ -16,7 +16,6 @@ class HeaderExitView: UIView{
     @IBOutlet weak var exitButton: UIButton!
 
     override func awakeFromNib() {
-        print("ok")
     }
     
     override func didMoveToSuperview() {

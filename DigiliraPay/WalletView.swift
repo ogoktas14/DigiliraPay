@@ -39,6 +39,7 @@ class WalletView: UIView {
     var ad_soyad: String?
 
     var coin: String = ""
+    var onSight:Bool = false
      
     override func awakeFromNib()
     {
@@ -61,9 +62,8 @@ class WalletView: UIView {
         
         tableView.refreshControl = refreshControl
         
-        refreshControl.attributedTitle = NSAttributedString(string: "Güncellemek için çekiniz..")
         refreshControl.addTarget(self, action: #selector(refreshData(_:)), for: UIControl.Event.valueChanged)
-        
+        refreshControl.alpha = 0
         tableView.translatesAutoresizingMaskIntoConstraints = true
         tableView.frame = CGRect(x: 0,
                                  y: 0,
@@ -82,7 +82,7 @@ class WalletView: UIView {
     }
     
     @objc private func refreshData(_ sender: Any) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [self] in
             refreshControl.endRefreshing()
         }
         tableView.isUserInteractionEnabled = false
@@ -91,6 +91,10 @@ class WalletView: UIView {
     
     func readHistory (coin: String) {
 //        transactionDetailView.originValueLast = transactionDetailView.originValue
+        
+        if onSight{
+            throwEngine.waitPlease()
+        }
 
         refreshControl.isHidden = true
         //loading.isHidden = false
@@ -195,6 +199,7 @@ class WalletView: UIView {
                     self.tableView.reloadData()
                     self.removeDetail()
                     self.refreshControl.endRefreshing()
+                    throwEngine.removeAlert()
                     self.tableView.isUserInteractionEnabled = true
                     //self.loading.isHidden = true
                 }

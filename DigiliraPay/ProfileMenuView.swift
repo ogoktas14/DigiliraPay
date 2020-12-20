@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import LocalAuthentication
 
 class ProfileMenuView: UIView {
 
@@ -69,6 +70,24 @@ class ProfileMenuView: UIView {
         
         let showBitexenGesture = UITapGestureRecognizer(target: self, action: #selector(openBitexenAPI))
         bitexenAPI.addGestureRecognizer(showBitexenGesture)
+        
+        let authContext = LAContext()
+        
+            let _ = authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
+            switch(authContext.biometryType) {
+            case .none:
+                securityLabel.text = "Pin"
+                biometricSecurityToggle.setOn(true, animated: true)
+                biometricSecurityToggle.isEnabled = false
+            case .touchID:
+                securityLabel.text = "Touch ID"
+            case .faceID:
+                securityLabel.text = "Face ID"
+            @unknown default:
+                securityLabel.text = "Pin"
+                biometricSecurityToggle.setOn(true, animated: true)
+                biometricSecurityToggle.isEnabled = false
+            }
         
         
         if let isSecure = UserDefaults.standard.value(forKey: "isSecure") as? Bool

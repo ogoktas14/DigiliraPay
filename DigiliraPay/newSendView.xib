@@ -90,7 +90,7 @@
                                             </constraints>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ewN-7G-cHi" userLabel="miktar" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
-                                            <rect key="frame" x="10" y="72" width="354" height="52"/>
+                                            <rect key="frame" x="10" y="72" width="354" height="46"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ALICI" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uXb-fY-wSf">
                                                     <rect key="frame" x="5" y="0.0" width="30" height="15"/>
@@ -101,15 +101,15 @@
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mock" translatesAutoresizingMaskIntoConstraints="NO" id="mkC-Zd-RWP">
-                                                    <rect key="frame" x="307" y="5" width="42" height="42"/>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pay" translatesAutoresizingMaskIntoConstraints="NO" id="mkC-Zd-RWP">
+                                                    <rect key="frame" x="310" y="2" width="42" height="42"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="42" id="T55-B5-EcK"/>
                                                         <constraint firstAttribute="height" constant="42" id="tEN-AT-hGf"/>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="YAPIŞTIR" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="twO-m1-WLQ">
-                                                    <rect key="frame" x="245" y="5" width="51" height="41.666666666666664"/>
+                                                    <rect key="frame" x="248" y="4.3333333333333712" width="51" height="37"/>
                                                     <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="12"/>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
@@ -118,7 +118,7 @@
                                                     </connections>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mcy-ca-qcg">
-                                                    <rect key="frame" x="5" y="16" width="232" height="31"/>
+                                                    <rect key="frame" x="5" y="16" width="235" height="25"/>
                                                     <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="22"/>
                                                     <state key="normal">
                                                         <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -129,23 +129,22 @@
                                                 </button>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="mkC-Zd-RWP" secondAttribute="trailing" constant="5" id="1Bb-iI-et4"/>
-                                                <constraint firstItem="mkC-Zd-RWP" firstAttribute="top" secondItem="ewN-7G-cHi" secondAttribute="top" constant="5" id="4iz-eY-CzT"/>
+                                                <constraint firstAttribute="trailing" secondItem="mkC-Zd-RWP" secondAttribute="trailing" constant="2" id="1Bb-iI-et4"/>
+                                                <constraint firstItem="mkC-Zd-RWP" firstAttribute="top" secondItem="ewN-7G-cHi" secondAttribute="top" constant="2" id="4iz-eY-CzT"/>
                                                 <constraint firstItem="Mcy-ca-qcg" firstAttribute="leading" secondItem="ewN-7G-cHi" secondAttribute="leading" constant="5" id="51e-w0-7in"/>
                                                 <constraint firstItem="twO-m1-WLQ" firstAttribute="centerY" secondItem="ewN-7G-cHi" secondAttribute="centerY" id="Bdf-jx-e5N"/>
                                                 <constraint firstItem="twO-m1-WLQ" firstAttribute="height" secondItem="ewN-7G-cHi" secondAttribute="height" multiplier="0.8" id="ClI-Yp-iaJ"/>
                                                 <constraint firstItem="twO-m1-WLQ" firstAttribute="leading" secondItem="Mcy-ca-qcg" secondAttribute="trailing" constant="8" symbolic="YES" id="IFx-FG-i9e"/>
-                                                <constraint firstAttribute="height" constant="52" id="b0y-0v-eey"/>
                                                 <constraint firstItem="Mcy-ca-qcg" firstAttribute="top" secondItem="uXb-fY-wSf" secondAttribute="bottom" constant="1" id="fEB-BA-cgG"/>
                                                 <constraint firstAttribute="bottom" secondItem="Mcy-ca-qcg" secondAttribute="bottom" constant="5" id="gWj-Fx-Bf3"/>
                                                 <constraint firstItem="uXb-fY-wSf" firstAttribute="top" secondItem="ewN-7G-cHi" secondAttribute="top" id="kvC-9K-2OX"/>
                                                 <constraint firstItem="uXb-fY-wSf" firstAttribute="leading" secondItem="ewN-7G-cHi" secondAttribute="leading" constant="5" id="mOm-qK-O6e"/>
                                                 <constraint firstItem="mkC-Zd-RWP" firstAttribute="leading" secondItem="twO-m1-WLQ" secondAttribute="trailing" constant="11" id="v9q-54-pxP"/>
-                                                <constraint firstAttribute="bottom" secondItem="mkC-Zd-RWP" secondAttribute="bottom" constant="5" id="z4X-kF-fo3"/>
+                                                <constraint firstAttribute="bottom" secondItem="mkC-Zd-RWP" secondAttribute="bottom" constant="2" id="z4X-kF-fo3"/>
                                             </constraints>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5wV-zS-jCt">
-                                            <rect key="frame" x="10" y="134.00000000000006" width="354" height="13.666666666666657"/>
+                                            <rect key="frame" x="10" y="128.00000000000006" width="354" height="13.666666666666657"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qlq-zg-v70">
                                                     <rect key="frame" x="0.0" y="0.0" width="354" height="13.666666666666666"/>
@@ -170,7 +169,7 @@
                                             </constraints>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lHS-wd-2Uo" customClass="DLGradient" customModule="DigiliraPay" customModuleProvider="target">
-                                            <rect key="frame" x="42" y="177.66666666666669" width="290" height="50"/>
+                                            <rect key="frame" x="42" y="171.66666666666669" width="290" height="50"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Gönder" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dN0-J5-7UY">
                                                     <rect key="frame" x="113" y="12.666666666666631" width="64.333333333333314" height="24.666666666666671"/>
@@ -267,7 +266,7 @@
     </objects>
     <resources>
         <image name="exit" width="44" height="44"/>
-        <image name="mock" width="250" height="251"/>
+        <image name="pay" width="150" height="150"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

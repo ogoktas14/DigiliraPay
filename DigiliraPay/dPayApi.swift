@@ -850,15 +850,15 @@ class OpenUrlManager {
             pickImageCallback = callback;
             self.viewController = viewController;
             
-            let cameraAction = UIAlertAction(title: "Camera", style: .default){
+            let cameraAction = UIAlertAction(title: "Kamera", style: .default){
                 UIAlertAction in
                 self.openCamera()
             }
-            let galleryAction = UIAlertAction(title: "Gallery", style: .default){
+            let galleryAction = UIAlertAction(title: "Galeri", style: .default){
                 UIAlertAction in
                 self.openGallery()
             }
-            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel){
+            let cancelAction = UIAlertAction(title: "İptal", style: .cancel){
                 UIAlertAction in
             }
             

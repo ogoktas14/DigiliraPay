@@ -30,11 +30,11 @@ class sendWithQR: UIView {
     
     
     override func didMoveToSuperview() {
+
     }
     
     override func awakeFromNib()
     {
-        openCamera()
     }
     
     func openCamera() {
@@ -84,30 +84,13 @@ class sendWithQR: UIView {
                // Initialize the video preview layer and add it as a sublayer to the viewPreview view's layer.
                videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
                videoPreviewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
-                videoPreviewLayer?.frame = CGRect(x: 10,
-                                                  y: UIScreen.main.bounds.size.height / 2 - 100,
-                                                  width: UIScreen.main.bounds.size.width - 20,
-                                                  height: 300)
-        
-        videoPreviewLayer?.cornerRadius = 20
-        //print(qrAreaView.frame.size)
-               
+                videoPreviewLayer?.frame = CGRect(x: 0,
+                                                  y: qrAreaView.frame.minY,
+                                                  width: UIScreen.main.bounds.size.width,
+                                                  height: UIScreen.main.bounds.size.height - qrAreaView.frame.minY - 100)
                self.layer.addSublayer(videoPreviewLayer!)
                
-        
-               
-               
-               // Start video capture.
                captureSession.startRunning()
-               
-               // Move the message label and top bar to the front
-              
-
-               
-               
-               // Initialize QR Code Frame to highlight the QR code
-
-               
                
                self.bringSubviewToFront(qrCodeFrameView!)
         

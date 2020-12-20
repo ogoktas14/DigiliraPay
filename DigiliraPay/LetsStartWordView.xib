@@ -22,7 +22,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" verticalCompressionResistancePriority="751" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z6R-J9-Zf5">
-                    <rect key="frame" x="3" y="368.5" width="410" height="25"/>
+                    <rect key="frame" x="3" y="375" width="410" height="25"/>
                     <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="18"/>
                     <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
@@ -320,7 +320,7 @@
                     </constraints>
                 </stackView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hMI-MV-oWT" customClass="smallButton" customModule="DigiliraPay" customModuleProvider="target">
-                    <rect key="frame" x="40" y="425.5" width="334" height="40"/>
+                    <rect key="frame" x="40" y="432" width="334" height="40"/>
                     <color key="backgroundColor" systemColor="linkColor"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="40" id="m74-Q5-1VL"/>
@@ -344,6 +344,7 @@
                 <constraint firstItem="mix-t8-Fwx" firstAttribute="top" secondItem="mFH-MJ-CyB" secondAttribute="bottom" constant="80" id="39U-IF-ZxL"/>
                 <constraint firstItem="hMI-MV-oWT" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="40" id="4id-Af-Tys"/>
                 <constraint firstItem="UUV-sD-B1H" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="37" id="5VY-Ud-fkP"/>
+                <constraint firstItem="Lwm-2i-LME" firstAttribute="top" secondItem="mix-t8-Fwx" secondAttribute="bottom" constant="2" id="5ds-lE-kDN"/>
                 <constraint firstItem="mFH-MJ-CyB" firstAttribute="top" secondItem="UUV-sD-B1H" secondAttribute="bottom" constant="10" id="7Fq-1c-f09"/>
                 <constraint firstItem="z6R-J9-Zf5" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="3" id="7HK-RP-cg4"/>
                 <constraint firstItem="Lwm-2i-LME" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="3" id="7fQ-xu-bMR"/>
@@ -354,6 +355,7 @@
                 <constraint firstItem="mpi-I7-QN3" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="11" id="LoR-Hl-bKr"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="z6R-J9-Zf5" secondAttribute="bottom" id="Rvq-eg-gXZ"/>
                 <constraint firstItem="ISI-iR-mHz" firstAttribute="top" secondItem="mpi-I7-QN3" secondAttribute="bottom" constant="10" id="RxX-tx-f0r"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="hMI-MV-oWT" secondAttribute="bottom" constant="30" id="Tmj-WH-itJ"/>
                 <constraint firstItem="UUV-sD-B1H" firstAttribute="top" secondItem="ISI-iR-mHz" secondAttribute="bottom" constant="10" id="UBb-bm-qGU"/>
                 <constraint firstItem="mpi-I7-QN3" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="37" id="Wsj-VU-fVv"/>
                 <constraint firstItem="ISI-iR-mHz" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="37" id="afX-87-cbI"/>
@@ -366,7 +368,6 @@
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="Lwm-2i-LME" secondAttribute="trailing" constant="1" id="naT-tU-1Nu"/>
                 <constraint firstItem="hMI-MV-oWT" firstAttribute="top" secondItem="z6R-J9-Zf5" secondAttribute="bottom" constant="32" id="rHb-0f-aqf"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="taQ-4E-hjL" secondAttribute="trailing" constant="35.5" id="tsR-Yl-GgD"/>
-                <constraint firstItem="z6R-J9-Zf5" firstAttribute="top" secondItem="Lwm-2i-LME" secondAttribute="bottom" constant="12" id="uWV-gW-Txe"/>
                 <constraint firstItem="taQ-4E-hjL" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="37" id="vHm-Nn-H42"/>
                 <constraint firstAttribute="trailing" secondItem="mFH-MJ-CyB" secondAttribute="trailing" constant="37" id="zD4-Mx-Kx1"/>
             </constraints>

@@ -68,6 +68,10 @@ class LetsStartWordsView: UIView {
     
     private func setViewLayout()
     {
+        let screenSize: CGRect = UIScreen.main.bounds
+        if screenSize.height < 600 {
+            descLabel.isHidden = true
+        }
         viewArray.forEach { (view) in
             view.layer.cornerRadius = 10
             view.backgroundColor = .white

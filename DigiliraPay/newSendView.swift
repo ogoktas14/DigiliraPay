@@ -469,6 +469,7 @@ class newSendView: UIView {
     }
     
     func memCheck() {
+        errors?.waitPlease()
         let isAmount = amount
         if let coin = selectedCoinX {
             let double = Double(truncating: pow(10,coin.decimal) as NSNumber)
@@ -479,6 +480,7 @@ class newSendView: UIView {
             
             digiliraPay.onMember = { res, data in
                 DispatchQueue.main.async { [self] in
+                    errors?.removeWait()
                     switch res {
                     case true:
                         
@@ -793,6 +795,9 @@ class newSendView: UIView {
     func set() {
         
         if Filtered.count == 0 {
+            coinSwitch.isUserInteractionEnabled = false
+            sendView.isUserInteractionEnabled = false
+            sendView.alpha = 0.4
             pageControl.numberOfPages = 1
             let coin = digilira.DigiliraPayBalance.init(
                 tokenName: digilira.demoCoin.tokenName,

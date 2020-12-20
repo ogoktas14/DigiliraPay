@@ -14,6 +14,7 @@ class ImportAccountVC: UIViewController {
     @IBOutlet weak var nextButtonView: UIView!
     @IBOutlet weak var backButtonView: UIView!
     @IBOutlet weak var nextButtonLabel: UILabel!
+    @IBOutlet weak var desc: UILabel!
     @IBOutlet weak var keyWordsTextView: UITextView!
     
     let digiliraPay = digiliraPayApi()
@@ -22,6 +23,11 @@ class ImportAccountVC: UIViewController {
     var isKeyboard = false
     
     override func viewDidLoad() {
+        let screenSize: CGRect = UIScreen.main.bounds
+        if screenSize.height < 600 {
+            desc.isHidden = true
+        }
+        
         super.viewDidLoad()
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .light

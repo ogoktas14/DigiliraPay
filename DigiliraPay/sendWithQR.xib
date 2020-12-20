@@ -5,6 +5,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -59,11 +60,19 @@
                                     <constraint firstItem="ptg-PQ-tOe" firstAttribute="top" secondItem="yfi-GV-XlY" secondAttribute="top" constant="60" id="fam-5N-hBH"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Ti-h2-INc">
+                                <rect key="frame" x="0.0" y="160" width="414" height="640"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
                         </subviews>
                         <constraints>
                             <constraint firstItem="yfi-GV-XlY" firstAttribute="top" secondItem="Ckg-12-b3c" secondAttribute="top" id="PPl-bI-z42"/>
                             <constraint firstAttribute="trailing" secondItem="yfi-GV-XlY" secondAttribute="trailing" id="PTE-qd-gQy"/>
                             <constraint firstItem="yfi-GV-XlY" firstAttribute="leading" secondItem="Ckg-12-b3c" secondAttribute="leading" id="SAa-BD-wQx"/>
+                            <constraint firstItem="9Ti-h2-INc" firstAttribute="top" secondItem="yfi-GV-XlY" secondAttribute="bottom" id="YjW-sl-4Rw"/>
+                            <constraint firstAttribute="trailing" secondItem="9Ti-h2-INc" secondAttribute="trailing" id="bni-CV-hlv"/>
+                            <constraint firstItem="9Ti-h2-INc" firstAttribute="leading" secondItem="Ckg-12-b3c" secondAttribute="leading" id="eMS-OK-2DL"/>
+                            <constraint firstItem="iNh-US-qMx" firstAttribute="top" secondItem="9Ti-h2-INc" secondAttribute="bottom" constant="31" id="ej2-eB-HxC"/>
                             <constraint firstAttribute="centerX" secondItem="iNh-US-qMx" secondAttribute="centerX" id="jKQ-Hr-Bre"/>
                             <constraint firstAttribute="bottom" secondItem="iNh-US-qMx" secondAttribute="bottom" constant="40" id="x1E-35-gKn"/>
                         </constraints>
@@ -83,10 +92,16 @@
                 <constraint firstItem="hti-wC-AgE" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="qzY-ta-4kd"/>
                 <constraint firstItem="su6-l6-stj" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="ss4-gs-HYm"/>
             </constraints>
+            <connections>
+                <outlet property="qrAreaView" destination="9Ti-h2-INc" id="2b9-tU-hbV"/>
+            </connections>
             <point key="canvasLocation" x="136.23188405797103" y="141.29464285714286"/>
         </view>
     </objects>
     <resources>
         <image name="exit" width="44" height="44"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>

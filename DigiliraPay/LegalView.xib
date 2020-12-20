@@ -127,6 +127,7 @@
             <connections>
                 <outlet property="backView" destination="Coh-h4-tke" id="Jdk-2i-1c1"/>
                 <outlet property="confirmView" destination="eKx-ef-xwh" id="lKZ-h9-EeQ"/>
+                <outlet property="content" destination="Ek8-k0-yLj" id="vow-Y7-DLe"/>
                 <outlet property="contentLabel" destination="Ae1-Tf-WNf" id="M0t-83-HMA"/>
                 <outlet property="titleLabel" destination="cNg-WG-Fue" id="c0A-2X-7rG"/>
             </connections>

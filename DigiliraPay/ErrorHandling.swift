@@ -13,6 +13,7 @@ class ErrorHandling: NSObject {
     var win = UIApplication.shared.windows.filter({$0.isKeyWindow}).first
     var isOn:Bool = false
     var warningView = WarningView()
+    var logoAnimation = LogoAnimation()
     var orderDetailView = OrderDetailView()
     var transferConfirmationView = TransferConfirmationView()
     
@@ -64,14 +65,30 @@ class ErrorHandling: NSObject {
         }
     }
     
-    func alertWarning (title: String, message: String, error: Bool = true) {
-        
-        
+    func waitPlease () {
         orderDetailView.removeFromSuperview()
         warningView.removeFromSuperview()
         transferConfirmationView.removeFromSuperview()
-
+        logoAnimation.removeFromSuperview()
         
+        DispatchQueue.main.async { [self] in
+            
+            logoAnimation = UIView().loadNib(name: "LogoAnimation") as! LogoAnimation
+            logoAnimation.frame = win!.frame
+
+            logoAnimation.setImage()
+            
+            win?.addSubview(logoAnimation)
+            
+        }
+    }
+    
+    func alertWarning (title: String, message: String, error: Bool = true) {
+        orderDetailView.removeFromSuperview()
+        warningView.removeFromSuperview()
+        transferConfirmationView.removeFromSuperview()
+        logoAnimation.removeFromSuperview()
+ 
         DispatchQueue.main.async { [self] in
             
             warningView = UIView().loadNib(name: "warningView") as! WarningView
@@ -89,11 +106,10 @@ class ErrorHandling: NSObject {
     
     
     func alertCaution (title: String, message: String) {
-        
-        
         orderDetailView.removeFromSuperview()
         warningView.removeFromSuperview()
         transferConfirmationView.removeFromSuperview()
+        logoAnimation.removeFromSuperview()
 
         
         DispatchQueue.main.async { [self] in
@@ -118,6 +134,7 @@ class ErrorHandling: NSObject {
             orderDetailView.removeFromSuperview()
             warningView.removeFromSuperview()
             transferConfirmationView.removeFromSuperview()
+            logoAnimation.removeFromSuperview()
 
             warningView = UIView().loadNib(name: "warningView") as! WarningView
             warningView.frame = win!.frame
@@ -130,6 +147,44 @@ class ErrorHandling: NSObject {
             win?.addSubview(warningView)
             
         }
+    }
+    
+    func removeWait() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: { [self] in
+            UIView.animate(withDuration: 0.5, animations: {
+                logoAnimation.alpha = 0
+                    
+            },completion: {_ in
+                logoAnimation.removeFromSuperview()
+
+                logoAnimation.alpha = 1
+
+            })
+        })
+    }
+    
+    func removeAlert() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: { [self] in
+            UIView.animate(withDuration: 0.5, animations: {
+                orderDetailView.alpha = 0
+                warningView.alpha = 0
+                transferConfirmationView.alpha = 0
+                logoAnimation.alpha = 0
+                    
+            },completion: {_ in
+                orderDetailView.removeFromSuperview()
+                warningView.removeFromSuperview()
+                transferConfirmationView.removeFromSuperview()
+                logoAnimation.removeFromSuperview()
+
+                orderDetailView.alpha = 1
+                warningView.alpha = 1
+                transferConfirmationView.alpha = 1
+                logoAnimation.alpha = 1
+
+            })
+        })
+          
     }
     
     func transferConfirmation (txConMsg: digilira.txConfMsg, destination: NSNotification.Name) {

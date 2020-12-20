@@ -20,6 +20,9 @@ protocol ErrorsDelegate: class {
     func errorCaution(message: String, title: String)
     func transferConfirmation(txConMsg: digilira.txConfMsg, destination: NSNotification.Name)
     func evaluate(error: digilira.NAError)
+    func removeAlert()
+    func waitPlease()
+    func removeWait()
     
 }
 

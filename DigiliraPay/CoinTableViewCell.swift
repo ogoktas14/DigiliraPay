@@ -38,6 +38,8 @@ class CoinTableViewCell: UITableViewCell {
         shadow1.layer.shadowRadius = 14
         BGView.addSubview(shadow1)
         
+        self.indentationWidth = 0
+        
         coinName.textColor = UIColor(red:0.30, green:0.30, blue:0.30, alpha:1.0)
         type.textColor = UIColor(red:0.68, green:0.68, blue:0.68, alpha:1.0)
         coinAmount.textColor = UIColor(red:0.30, green:0.30, blue:0.30, alpha:1.0)

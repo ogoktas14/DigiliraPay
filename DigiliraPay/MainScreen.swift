@@ -41,6 +41,7 @@ class MainScreen: UIViewController {
     @IBOutlet weak var bottomView: UIView!
     @IBOutlet weak var logoView: UIImageView!
     @IBOutlet weak var emptyBG: UIImageView!
+    @IBOutlet weak var curtain: UIView!
 
     @IBOutlet var mainView: UIView!
     var profileViewXib: ProfileMenuView = ProfileMenuView()
@@ -84,6 +85,7 @@ class MainScreen: UIViewController {
     
     var isBitexenFetched = false
     var isBinanceFetched = false
+    var isPinEntered = false
     
     var isBitexenReload = false
     var isBinanceReload = false
@@ -196,7 +198,6 @@ class MainScreen: UIViewController {
         coinTableView.showsVerticalScrollIndicator = false
         menuView.isUserInteractionEnabled = false
         
-        
         switch WavesSDK.shared.enviroment.server {
         case .mainNet:
             serverLabel.text = "MainNet"
@@ -232,29 +233,22 @@ class MainScreen: UIViewController {
         self.contentView.addGestureRecognizer(swipeLeft)
         
         headerHeightBuffer =  headerView.frame.size.height 
-        //        when requested asset balances
-        
-        
         
         self.onB = { [self] in
-            
-            if (isBitexenReload  == true && isWavesReloaded == true) {
+            if (isBitexenReload && isWavesReloaded && isPinEntered) {
                 isBitexenReload = false
                 isWavesReloaded = false
                 Filtered.removeAll()
                 Filtered.append(contentsOf: Waves)
                 Filtered.append(contentsOf: Bitexen)
-//                Waves.removeAll()
-//                Bitexen.removeAll()
                 self.checkHeaderExist()
-
             }
-            
         }
         
         bitexenSign.onBitexenBalance = { [self] balances, statusCode in
             if statusCode == 200 {
                 bitexenBalance = 0
+                Bitexen.removeAll()
                 for bakiye in balances.data.balances {
                     if Double(bakiye.value.balance)! > 0 {
                         for mrkt in (bexMarketInfo?.data.markets)! {
@@ -333,7 +327,7 @@ class MainScreen: UIViewController {
         }
         
         BC.onVerified = { res in
-            print("verified verified verified")
+
             NotificationCenter.default.post(name: .didCompleteTask, object: nil)
             DispatchQueue.main.async {
                 self.showSuccess(mode: 2, transaction: res)
@@ -367,7 +361,7 @@ class MainScreen: UIViewController {
         bitexenSign.onBitexenError = { res, sts in
             self.throwEngine.alertWarning(title: "Bitexen API", message: "Bitexen API bilgileriniz hatalıdır.", error: true)
         }
-        
+        refreshControl.alpha = 0
         refreshControl.attributedTitle = NSAttributedString(string: "Güncellemek için çekiniz..")
         refreshControl.addTarget(self, action: #selector(refreshData(_:)), for: UIControl.Event.valueChanged)
         
@@ -768,7 +762,7 @@ class MainScreen: UIViewController {
     
     
     @objc private func refreshData(_ sender: Any) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [self] in
             refreshControl.endRefreshing()
         }
         if isSuccessView {
@@ -778,7 +772,7 @@ class MainScreen: UIViewController {
         let lamda = Date()
         let differenceInSeconds = lamda.timeIntervalSince(lastBinanceCheck)
         
-        if differenceInSeconds > 5  {
+        if differenceInSeconds > 2  {
             fetch()
             lastBinanceCheck = lamda
         } else {
@@ -807,7 +801,9 @@ class MainScreen: UIViewController {
         }
         
         isFetching = true
-        
+        if isPinEntered {
+            throwEngine.waitPlease()
+        }
         
         if let api = decodeDefaults(forKey: bex.bexApiDefaultKey.key, conformance: bex.bitexenAPICred.self) {
             if (api.valid) { // if bitexen api valid
@@ -856,6 +852,7 @@ class MainScreen: UIViewController {
     }
     
     func endRefresh() {
+        throwEngine.removeWait()
         if isBitexenFetched && isBinanceFetched {
             self.isBinanceFetched = false
             self.isBitexenFetched = false
@@ -903,6 +900,7 @@ class MainScreen: UIViewController {
     }
     override func viewDidAppear(_ animated: Bool)
     {
+        openPinView()
         setScrollView()
         headerView.translatesAutoresizingMaskIntoConstraints = true
         profileSettingsView.translatesAutoresizingMaskIntoConstraints = true
@@ -936,7 +934,7 @@ class MainScreen: UIViewController {
         coinTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 150, right: 0)
         coinTableView.delegate = self
         coinTableView.dataSource = self
-        coinTableView.separatorColor = .clear
+        coinTableView.separatorColor = .gray
         coinTableView.tableFooterView = GradientView()
         contentScrollView.addSubview(coinTableView)
         contentScrollView.contentSize.width = contentScrollView.frame.width * CGFloat(contentScrollView.subviews.count)
@@ -973,16 +971,6 @@ class MainScreen: UIViewController {
         contentScrollView.addSubview(walletView)
         
         contentScrollView.contentSize.width = contentScrollView.frame.width * CGFloat(contentScrollView.subviews.count)
-        
-        if isFirstLaunch {
-            //
-            if pinkodaktivasyon! {
-                if kullanici.pincode == "-1" {
-                    openPinView()
-                }
-            }
-        }
-        
     }
     
     func setSettingsView() {
@@ -1163,7 +1151,6 @@ class MainScreen: UIViewController {
         }))
         
         alert.addAction(UIAlertAction.init(title: "İptal", style: .cancel, handler: nil))
-        
         self.present(alert, animated: true, completion: nil)
     }
     
@@ -1192,7 +1179,7 @@ class MainScreen: UIViewController {
             
             for subView in sendWithQRView.subviews
             { subView.removeFromSuperview() }
-            
+            sendWithQRXib.openCamera()
             sendWithQRView.addSubview(sendWithQRXib)
             UIView.animate(withDuration: 0.3) {
                 self.sendWithQRView.frame.origin.y = 0
@@ -1450,9 +1437,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
                     self.headerView.frame.size.height =  self.headerHomeBuffer! + 70
                 
             }, completion: { [self]_ in
-       
                     setHeaderTotal()
-                
             })
              
 
@@ -1485,6 +1470,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
             })
         }
         
+        walletView.onSight = true
         menuXib.wallet()
         walletView.coin = coin
         walletView.readHistory(coin: coin)
@@ -2257,7 +2243,6 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         PHPhotoLibrary.requestAuthorization { status in
           if status == .authorized {
             //do things
-            print("ok")
             if let image = image {
                 if let pngImageData = image.pngData() {
                     // Write the png image into a filepath and return the filepath in NSURL
@@ -2461,12 +2446,13 @@ extension MainScreen: LoadCoinDelegate
         isShowLoadCoinView = false
         sendMoneyBackButton.isHidden = true
         dismissKeyboard()
-        UIView.animate(withDuration: 0.3) {
+        UIView.animate(withDuration: 0.3, animations: {
             self.qrView.frame.origin.y = self.view.frame.height
-        }
-        for subView in self.qrView.subviews
-        { subView.removeFromSuperview() }
-    
+        }, completion: {_ in
+            for subView in self.qrView.subviews
+            { subView.removeFromSuperview() }
+        })
+        
         menuView.isHidden = false
     }
     
@@ -2477,6 +2463,18 @@ extension MainScreen: LoadCoinDelegate
 }
 
 extension MainScreen: ErrorsDelegate {
+    func removeAlert() {
+        throwEngine.removeAlert()
+    }
+    
+    func removeWait() {
+        throwEngine.removeWait()
+    }
+    
+    func waitPlease() {
+        throwEngine.waitPlease()
+    }
+    
     func evaluate(error: digilira.NAError) {
         self.dismissKeyboard()
         throwEngine.evaluateError(error: error)
@@ -2573,7 +2571,8 @@ extension MainScreen: LegalDelegate // kullanım sözleşmesi gibi view'ların g
 {
     func showLegal(mode: digilira.terms)
     {
-        profileSettingsView.frame.origin.y = view.frame.height
+        profileSettingsView.frame.origin.y = 0
+        profileSettingsView.frame.origin.x = 0 - view.frame.height
         let legalXib = UIView().loadNib(name: "LegalView") as! LegalView
         legalXib.delegate = self
         legalXib.frame = CGRect(x: 0,
@@ -2592,6 +2591,7 @@ extension MainScreen: LegalDelegate // kullanım sözleşmesi gibi view'ların g
         closeProfileView()
         UIView.animate(withDuration: 0.4, animations: {
             self.profileSettingsView.alpha = 1
+            self.profileSettingsView.frame.origin.x = 0
             self.profileSettingsView.frame.origin.y = 0
         }) { (_) in
             
@@ -2600,12 +2600,15 @@ extension MainScreen: LegalDelegate // kullanım sözleşmesi gibi view'ların g
     
     func dismissLegalView()
     {
+        checkEssentials()
         UIView.animate(withDuration: 0.4, animations: {
-            self.profileSettingsView.frame.origin.y = self.view.frame.height
+            self.profileSettingsView.frame.origin.x = 0 - self.view.frame.width
+        }, completion: { [self]_ in
+            for subView in profileSettingsView.subviews
+            { subView.removeFromSuperview() }
         })
         
-        for subView in profileSettingsView.subviews
-        { subView.removeFromSuperview() }
+        
     }
 }
 
@@ -2667,11 +2670,12 @@ extension MainScreen: PageCardViewDeleGate
         isNewSendScreen = false
         menuView.isHidden = false
         
-        UIView.animate(withDuration: 0.3) {
+        UIView.animate(withDuration: 0.3, animations: {
             self.sendWithQRView.frame.origin.y = self.view.frame.height
-        }
-        for subView in self.sendWithQRView.subviews
-        { subView.removeFromSuperview() }
+        }, completion: {_ in
+            for subView in self.sendWithQRView.subviews
+            { subView.removeFromSuperview() }
+        })
         
         let odeme = digilira.odemeStatus.init(
             id: id,
@@ -2686,12 +2690,12 @@ extension MainScreen: PageCardViewDeleGate
         isNewSendScreen = false
         menuView.isHidden = false
         
-        UIView.animate(withDuration: 0.3) {
-            self.sendWithQRView.frame.origin.y = self.view.frame.height
-        }
-        for subView in self.sendWithQRView.subviews
-        { subView.removeFromSuperview() }
-        
+//        UIView.animate(withDuration: 0.3, animations: {
+//            self.sendWithQRView.frame.origin.y = self.view.frame.height
+//        }, completion: {_ in
+//
+//        })
+         
         let data = SendTrx.init(merchant: params.merchant,
                                 recipient: params.wallet,
                                 assetId: params.asset!,
@@ -2705,9 +2709,6 @@ extension MainScreen: PageCardViewDeleGate
         )
         
         sendCoinNew(params: data)
-        
-        
-        
         
     }
     
@@ -2759,11 +2760,13 @@ extension MainScreen: NewCoinSendDelegate
         isNewSendScreen = false
         menuView.isHidden = false
         
-        UIView.animate(withDuration: 0.3) {
+        UIView.animate(withDuration: 0.3, animations: {
             self.sendWithQRView.frame.origin.y = self.view.frame.height
-        }
-        for subView in self.sendWithQRView.subviews
-        { subView.removeFromSuperview() }
+        }, completion: {_ in
+            for subView in self.sendWithQRView.subviews
+            { subView.removeFromSuperview() }
+        })
+
     }
     
     func sendCoinNew(params:SendTrx) // gelen parametrelerle birlikte gönder butonuna basıldı.
@@ -2908,6 +2911,12 @@ extension MainScreen: PinViewDelegate
     }
     
     func closePinView() {
+        curtain.isHidden = true
+
+        self.isPinEntered = true
+        self.onB!()
+
+
         
         if isSeedScreen {
             isSeedScreen = false
@@ -2924,15 +2933,14 @@ extension MainScreen: PinViewDelegate
             walletOperationView.isUserInteractionEnabled = true
 //            goNewSendView()
         }
-        
-        UIView.animate(withDuration: 0.3) {
+
+        UIView.animate(withDuration: 0.3, animations: {
             self.sendWithQRView.frame.origin.y = self.view.frame.height
-            self.sendWithQRView.alpha = 0
-        }
-        
-        for subView in self.sendWithQRView.subviews
-        { subView.removeFromSuperview() }
-        
+        }, completion: {_ in
+            for subView in self.sendWithQRView.subviews
+            { subView.removeFromSuperview() }
+        })
+
         menuView.isHidden = false
         
         

@@ -15,6 +15,8 @@ class LegalView: UIView {
     @IBOutlet weak var contentLabel: UILabel!
     @IBOutlet weak var confirmView: UIView!
     @IBOutlet weak var backView: UIView!
+    @IBOutlet weak var content: UIView!
+
     let throwEngine = ErrorHandling()
     weak var delegate: LegalDelegate?
     var tapOkGesture = UITapGestureRecognizer()
@@ -25,14 +27,10 @@ class LegalView: UIView {
     {
         confirmView.clipsToBounds = true
 
-        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
-        swipeRight.direction = .right
-        self.addGestureRecognizer(swipeRight)
-        
-        let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
-        swipeDown.direction = .down
-        self.addGestureRecognizer(swipeDown)
-
+        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
+        swipeLeft.direction = .left
+        self.addGestureRecognizer(swipeLeft)
+        content.addGestureRecognizer(swipeLeft)
     }
     
     @IBAction func resetApp(_ sender: Any) {
@@ -87,9 +85,7 @@ class LegalView: UIView {
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {
 
             switch swipeGesture.direction {
-            case .right:
-                delegate?.dismissLegalView()
-            case .down:
+            case .left:
                 delegate?.dismissLegalView()
             default:
                 break

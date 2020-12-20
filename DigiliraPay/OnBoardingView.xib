@@ -17,22 +17,22 @@
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" verticalCompressionResistancePriority="752" text="Blokzincir Tabanlı" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Lp-Aw-71o">
                     <rect key="frame" x="2" y="200.5" width="346" height="42.5"/>
                     <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="31"/>
-                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ödeme Geçidi" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yqZ-jw-Pzu">
                     <rect key="frame" x="2" y="243" width="346" height="42.5"/>
                     <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="28"/>
-                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" verticalCompressionResistancePriority="751" text="Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ESd-o3-8hi">
                     <rect key="frame" x="9.5" y="288" width="333.5" height="66"/>
                     <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="16"/>
-                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="onboarding1" translatesAutoresizingMaskIntoConstraints="NO" id="9VL-5E-Ha9">
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="letsStart1" translatesAutoresizingMaskIntoConstraints="NO" id="9VL-5E-Ha9">
                     <rect key="frame" x="52" y="1" width="247" height="190"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="9VL-5E-Ha9" secondAttribute="height" multiplier="247:227" constant="40.259911894273131" id="nam-uo-oh2"/>
@@ -70,6 +70,6 @@
         </view>
     </objects>
     <resources>
-        <image name="onboarding1" width="292.5" height="227"/>
+        <image name="letsStart1" width="457" height="423"/>
     </resources>
 </document>
