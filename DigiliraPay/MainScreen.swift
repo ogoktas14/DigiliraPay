@@ -717,7 +717,7 @@ class MainScreen: UIViewController {
     
     @objc func onTrxCompleted(_ sender: Notification) {
         // Do what you need, including updating IBOutlets
-        print("ok")
+
     }
     
     @objc func onOrderClicked(_ sender: Notification) {
@@ -762,7 +762,7 @@ class MainScreen: UIViewController {
     
     
     @objc private func refreshData(_ sender: Any) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0) { [self] in
             refreshControl.endRefreshing()
         }
         if isSuccessView {

@@ -72,7 +72,7 @@ class WalletView: UIView {
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 100, right: 0)
         tableView.delegate = self
         tableView.dataSource = self
-        print(transactionHistory.subviews.count)
+
         transactionHistory.addSubview(tableView)
         
         readHistory(coin: coin)
@@ -114,7 +114,7 @@ class WalletView: UIView {
                         let strDate = dateFormatter.string(from: Date(milliseconds: Int64(dateWaves)) )
                         var attachment: String?
                         if attachment == "null" {
-                            print("1")
+
                         }
                         if (trx["type"] as? Int64 == 4) {
                             if (trx["assetId"] as? String != nil) {
