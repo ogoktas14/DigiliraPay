@@ -12,7 +12,9 @@ import Locksmith
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-
+    var bg:UIView?
+    var logo:UIImageView?
+    private var isCertificatePinning: Bool = true
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -48,13 +50,33 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneDidBecomeActive(_ scene: UIScene) {
         // Called when the scene has moved from an inactive state to an active state.
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
-
+        UIView.animate(withDuration: 0.2, animations: {
+            self.window?.viewWithTag(74396893368329)?.alpha = 0
+        }, completion: {_ in
+            self.window?.viewWithTag(74396893368329)?.removeFromSuperview()
+        })
+        
         NotificationCenter.default.post(name: .didCompleteTask, object: nil)
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
         // Called when the scene will move from an active state to an inactive state.
         // This may occur due to temporary interruptions (ex. an incoming phone call).
+        let screenSize: CGRect = UIScreen.main.bounds
+        
+        let myView = UIView(frame: CGRect(x: 0, y: 0, width: screenSize.width, height: screenSize.height))
+        let myLogo = UIImageView(frame: CGRect(x: (screenSize.width/2) - 36, y: (screenSize.height/2) - 36, width: 72, height: 72))
+     
+        myLogo.image = UIImage(named: "ico2")
+        
+        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.light)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.frame = window!.frame
+        myView.addSubview(blurEffectView)
+        myView.addSubview(myLogo)
+        myView.tag = 74396893368329
+
+        self.window?.addSubview(myView)
     } 
 
     func sceneWillEnterForeground(_ scene: UIScene) {

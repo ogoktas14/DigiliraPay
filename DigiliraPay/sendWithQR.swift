@@ -76,13 +76,38 @@ class sendWithQR: UIView {
         videoPreviewLayer?.frame = CGRect(x: 0,
                                           y: qrAreaView.frame.minY,
                                           width: UIScreen.main.bounds.size.width,
-                                          height: UIScreen.main.bounds.size.height - qrAreaView.frame.minY - 100)
+                                          height: UIScreen.main.bounds.size.height)
+        
         self.layer.addSublayer(videoPreviewLayer!)
         
         captureSession.startRunning()
         
         self.bringSubviewToFront(qrCodeFrameView!)
         
+        let screenSize: CGRect = UIScreen.main.bounds
+        
+        let myView = UIView(frame: CGRect(x: 0, y: qrAreaView.frame.minY, width: screenSize.width, height: screenSize.height - qrAreaView.frame.minY))
+         
+        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.light)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.frame = CGRect.init(x: 0, y: screenSize.height - qrAreaView.frame.minY - 100, width: screenSize.width, height: 100)
+        
+        myView.addSubview(blurEffectView)
+        self.addSubview(myView)
+         
+        let closeView = UIView(frame: CGRect(x: screenSize.width / 2 - 25, y: screenSize.height - 75, width: 50, height:50))
+        closeView.layer.cornerRadius = 25
+        closeView.backgroundColor = .white
+        
+        let myLogo = UIImageView(frame: CGRect(x: 15, y: 15, width: 20, height: 20))
+     
+        myLogo.image = UIImage(named: "exit")
+        closeView.addSubview(myLogo)
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(exit))
+        closeView.addGestureRecognizer(tap)
+        
+        setShadExt(view: closeView, cornerRad: 25, mask: true)
+        self.addSubview(closeView)
         
     }
     
@@ -92,6 +117,11 @@ class sendWithQR: UIView {
     @objc func openGallery()
     {
         
+    }
+    
+    @objc func exit() {
+        captureSession.stopRunning()
+        delegate?.dismissSendWithQr(url: "")
     }
     
     @IBAction func exitButton(_ sender: Any)

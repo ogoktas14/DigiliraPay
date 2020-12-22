@@ -16,7 +16,6 @@ class WalletView: UIView {
     @IBOutlet weak var slideView: UIView!
     @IBOutlet weak var emptyView: UIView!
     @IBOutlet weak var emptyInfo: UILabel!
-    @IBOutlet weak var loading: UIActivityIndicatorView!
     
     private var customView: UIView!
     

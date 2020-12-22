@@ -233,7 +233,9 @@ class Blockchain: NSObject {
     
     
     func verifyTrx(txid: String) {
-        getTransactionId(rURL: WavesSDK.shared.enviroment.nodeUrl.description + "/transactions/info/" + txid)
+        DispatchQueue.global(qos: .background).async  { [self] in
+            getTransactionId(rURL: WavesSDK.shared.enviroment.nodeUrl.description + "/transactions/info/" + txid)
+        }
     }
     
     func decodeDefaults<T>(forKey: Data, conformance: T.Type, setNil: Bool = false ) -> T? where T: Decodable  {
@@ -491,7 +493,8 @@ class Blockchain: NSObject {
             } else if data != nil {
                 
                 if httpResponse!.statusCode == 404 {
-                    sleep(2)
+                    sleep(1)
+                    print("control")
                     self.getTransactionId(rURL: url)
                     return
                 }else{

@@ -50,18 +50,18 @@
                             <rect key="frame" x="0.0" y="0.0" width="374" height="369.66666666666669"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gWL-gf-3pJ" userLabel="contentView">
-                                    <rect key="frame" x="0.0" y="0.0" width="374" height="350"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="374" height="500"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9sA-Ur-bmY">
-                                            <rect key="frame" x="10" y="88" width="354" height="58.333333333333343"/>
+                                            <rect key="frame" x="10" y="88" width="354" height="94"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sLx-3H-uwg">
-                                                    <rect key="frame" x="10" y="10" width="334" height="38.333333333333336"/>
+                                                    <rect key="frame" x="10" y="10" width="334" height="74"/>
                                                     <attributedString key="attributedText">
                                                         <fragment content="Minimum yatırma tutarı 0.001 BTC'dir. Bu tutarın altındaki yatırma işlemleri iade edilmeyecektir.">
                                                             <attributes>
                                                                 <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                                                <font key="NSFont" size="14" name="Avenir-Book"/>
+                                                                <font key="NSFont" size="18" name="Avenir-Book"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                                             </attributes>
                                                         </fragment>
@@ -78,15 +78,15 @@
                                             </constraints>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zoi-ch-hAe">
-                                            <rect key="frame" x="10" y="156.33333333333337" width="354" height="58.333333333333343"/>
+                                            <rect key="frame" x="10" y="192.00000000000006" width="354" height="94"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EnS-Aa-bT4">
-                                                    <rect key="frame" x="10" y="9.9999999999999432" width="334" height="38.333333333333336"/>
+                                                    <rect key="frame" x="10" y="10" width="334" height="74"/>
                                                     <attributedString key="attributedText">
                                                         <fragment content="Gönderdiğiniz turar blokzincirde onaylandıktan sonra DigiliraPAY hesabınıza aktarılacaktır.">
                                                             <attributes>
                                                                 <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                                                <font key="NSFont" size="14" name="Avenir-Book"/>
+                                                                <font key="NSFont" size="18" name="Avenir-Book"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                                             </attributes>
                                                         </fragment>
@@ -103,15 +103,15 @@
                                             </constraints>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i9X-2X-YVE">
-                                            <rect key="frame" x="10" y="224.66666666666669" width="354" height="58.333333333333314"/>
+                                            <rect key="frame" x="10" y="296.00000000000006" width="354" height="69.333333333333314"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vE3-zb-UdF">
-                                                    <rect key="frame" x="10" y="10" width="334" height="38.333333333333336"/>
+                                                    <rect key="frame" x="10" y="10.000000000000004" width="334" height="49.333333333333343"/>
                                                     <attributedString key="attributedText">
                                                         <fragment content="Cüzdan adresinizi kopyalamak için adrese basabilirsiniz.">
                                                             <attributes>
                                                                 <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                                                <font key="NSFont" size="14" name="Avenir-Book"/>
+                                                                <font key="NSFont" size="18" name="Avenir-Book"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                                             </attributes>
                                                         </fragment>
@@ -128,15 +128,15 @@
                                             </constraints>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kbV-ch-ICx">
-                                            <rect key="frame" x="10" y="293.00000000000006" width="354" height="58.333333333333314"/>
+                                            <rect key="frame" x="10" y="375.33333333333331" width="354" height="69.333333333333314"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="llB-Gl-0wQ">
-                                                    <rect key="frame" x="10" y="10" width="334" height="38.333333333333336"/>
+                                                    <rect key="frame" x="10" y="10.000000000000004" width="334" height="49.333333333333343"/>
                                                     <attributedString key="attributedText">
                                                         <fragment content="Kopyaladığınız adres ile yapıştırdığınız adresi mutlaka kontrol edin.">
                                                             <attributes>
                                                                 <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                                                <font key="NSFont" size="14" name="Avenir-Book"/>
+                                                                <font key="NSFont" size="18" name="Avenir-Book"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
                                                             </attributes>
                                                         </fragment>
@@ -153,15 +153,15 @@
                                             </constraints>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YGV-fq-Vk7">
-                                            <rect key="frame" x="10" y="359.33333333333331" width="354" height="34.333333333333314"/>
+                                            <rect key="frame" x="10" y="452.66666666666669" width="354" height="64.333333333333314"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dXf-nE-Pnn">
-                                                    <rect key="frame" x="10" y="9.9999999999999982" width="334" height="19.333333333333329"/>
+                                                    <rect key="frame" x="10" y="10.000000000000004" width="334" height="49.333333333333343"/>
                                                     <attributedString key="attributedText">
                                                         <fragment content="Ödeme almak için QR kodunuzu paylaşabilirsiniz.">
                                                             <attributes>
                                                                 <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                                                <font key="NSFont" size="14" name="Avenir-Book"/>
+                                                                <font key="NSFont" size="18" name="Avenir-Book"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                                             </attributes>
                                                         </fragment>
@@ -260,7 +260,7 @@
                                         <constraint firstItem="wgf-B0-kV5" firstAttribute="leading" secondItem="gWL-gf-3pJ" secondAttribute="leading" constant="10" id="e3E-u5-L3U"/>
                                         <constraint firstAttribute="trailing" secondItem="i9X-2X-YVE" secondAttribute="trailing" constant="10" id="kEH-px-GA4"/>
                                         <constraint firstItem="wgf-B0-kV5" firstAttribute="top" secondItem="gWL-gf-3pJ" secondAttribute="top" constant="8" id="r8T-6w-LZR"/>
-                                        <constraint firstAttribute="height" constant="350" id="uHQ-ES-eaj"/>
+                                        <constraint firstAttribute="height" constant="500" id="uHQ-ES-eaj"/>
                                         <constraint firstAttribute="trailing" secondItem="wgf-B0-kV5" secondAttribute="trailing" constant="10" id="vYB-G4-wlB"/>
                                     </constraints>
                                 </view>
@@ -318,13 +318,6 @@
                 <outlet property="shareView" destination="dkj-0F-Otb" id="Xeg-TR-9ha"/>
             </connections>
             <point key="canvasLocation" x="137.68115942028987" y="152.67857142857142"/>
-        </view>
-        <view contentMode="scaleToFill" id="PNS-Xa-Kn0">
-            <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-            <viewLayoutGuide key="safeArea" id="HDX-dY-4cX"/>
-            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-            <point key="canvasLocation" x="-120" y="800"/>
         </view>
     </objects>
     <resources>

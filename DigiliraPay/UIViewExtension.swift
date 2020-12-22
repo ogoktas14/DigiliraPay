@@ -62,4 +62,14 @@ extension UIView {
         layer.add(rotation, forKey: "rotationAnimation")
     }
     
+    func setShadExt(view: UIView, cornerRad: CGFloat = 0, mask: Bool = false) {
+        view.layer.shadowOpacity = 0.2
+        view.layer.cornerRadius = cornerRad
+        view.layer.masksToBounds = mask
+        view.layer.shadowRadius = 1
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOffset = CGSize(width:1, height: 1)
+        
+    }
+    
 }

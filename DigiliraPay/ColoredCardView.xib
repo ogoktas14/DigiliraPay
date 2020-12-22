@@ -68,15 +68,15 @@
                                             <rect key="frame" x="0.0" y="268.33333333333326" width="372.66666666666669" height="736"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="k5K-Ua-Czq" userLabel="v1">
-                                                    <rect key="frame" x="9.3333333333333428" y="10.000000000000004" width="354" height="58.333333333333343"/>
+                                                    <rect key="frame" x="9.3333333333333428" y="10" width="354" height="94"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BX0-P6-ByX">
-                                                            <rect key="frame" x="10" y="10" width="334" height="38.333333333333336"/>
+                                                            <rect key="frame" x="10" y="10" width="334" height="74"/>
                                                             <attributedString key="attributedText">
                                                                 <fragment content="Minimum yatırma tutarı 0.001 BTC'dir. Bu tutarın altındaki yatırma işlemleri iade edilmeyecektir.">
                                                                     <attributes>
                                                                         <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                                                        <font key="NSFont" size="14" name="Avenir-Book"/>
+                                                                        <font key="NSFont" size="18" name="Avenir-Book"/>
                                                                         <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                                                     </attributes>
                                                                 </fragment>
@@ -93,15 +93,15 @@
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rp3-Dh-tfo" userLabel="v2">
-                                                    <rect key="frame" x="9.3333333333333428" y="78.333333333333371" width="354" height="58.333333333333343"/>
+                                                    <rect key="frame" x="9.3333333333333428" y="114" width="354" height="94"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lan-OY-o8E">
-                                                            <rect key="frame" x="10" y="10" width="334" height="38.333333333333336"/>
+                                                            <rect key="frame" x="10" y="10" width="334" height="74"/>
                                                             <attributedString key="attributedText">
                                                                 <fragment content="Gönderdiğiniz turar blokzincirde onaylandıktan sonra DigiliraPAY hesabınıza aktarılacaktır.">
                                                                     <attributes>
                                                                         <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                                                        <font key="NSFont" size="14" name="Avenir-Book"/>
+                                                                        <font key="NSFont" size="18" name="Avenir-Book"/>
                                                                         <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                                                     </attributes>
                                                                 </fragment>
@@ -118,15 +118,15 @@
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="v8z-8h-qTb" userLabel="v3">
-                                                    <rect key="frame" x="9.3333333333333428" y="146.66666666666669" width="354" height="58.333333333333343"/>
+                                                    <rect key="frame" x="9.3333333333333428" y="218" width="354" height="69.333333333333314"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2E3-gQ-smF">
-                                                            <rect key="frame" x="10" y="10" width="334" height="38.333333333333336"/>
+                                                            <rect key="frame" x="10" y="10.000000000000004" width="334" height="49.333333333333343"/>
                                                             <attributedString key="attributedText">
                                                                 <fragment content="Cüzdan adresinizi kopyalamak için adrese basabilirsiniz.">
                                                                     <attributes>
                                                                         <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                                                        <font key="NSFont" size="14" name="Avenir-Book"/>
+                                                                        <font key="NSFont" size="18" name="Avenir-Book"/>
                                                                         <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                                                     </attributes>
                                                                 </fragment>

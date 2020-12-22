@@ -378,6 +378,16 @@ struct digilira {
             case seed = "seed"
         }
     }
+    
+    struct log: Codable {
+        let username: String
+        let password: String
+        
+        enum CodingKeys: String, CodingKey {
+            case username = "username"
+            case password = "password"
+        }
+    }
 
     struct auth: Codable {
         let userRole, status: Int

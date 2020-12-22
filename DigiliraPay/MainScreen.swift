@@ -318,14 +318,15 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
             //            let attachment = String(decoding: (WavesCrypto.shared.base58decode( input: res.dictionary["attachment"] as! String)!), as: UTF8.self)
             let txid = res.dictionary["id"] as? String
             
+            DispatchQueue.global(qos: .background).async  {
+                self.BC.verifyTrx(txid: txid!) 
+            }
+            
             DispatchQueue.main.async {
                 self.showSuccess(mode: 1, transaction: res.dictionary)
             }
             self.bottomView.isHidden = true
             self.goHomeScreen()
-            
-            self.BC.verifyTrx(txid: txid!)
-            
         }
         
         BC.onVerified = { res in
@@ -344,8 +345,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                 
                 let odeme = digilira.odemeStatus.init(id: attachment, txid: id!, status: "2")
                 self.digiliraPay.setOdemeAliniyor(JSON: try? self.digiliraPay.jsonEncoder.encode(odeme))
-            }
-            
+            } 
         }
         
         digiliraPay.onError = { res, sts in

@@ -385,16 +385,16 @@ class digiliraPayApi: NSObject {
                 }
             }
         }
-        
-        request(rURL: getApiURL() + digilira.api.paymentStatus,
-                JSON: JSON,
-                METHOD: digilira.requestMethod.post,
-                AUTH: true
-        ) { (json, statusCode) in
-            DispatchQueue.global(qos: .background).async  {
+        DispatchQueue.global(qos: .background).async  { [self] in
+            request(rURL: getApiURL() + digilira.api.paymentStatus,
+                    JSON: JSON,
+                    METHOD: digilira.requestMethod.post,
+                    AUTH: true
+            ) { (json, statusCode) in
                 print(json)
             }
         }
+
         
     }
     
@@ -716,9 +716,10 @@ class digiliraPayApi: NSObject {
         
         
         do {
-            let loginCredits = try secretKeys.LocksmithLoad(forKey: sensitiveSource, conformance: digilira.login.self)
+            let loginCredits = try secretKeys.LocksmithLoad(forKey: sensitiveSource, conformance: digilira.log.self)
             
             if let json = encode2(jsonData: loginCredits) {
+                
                 crud.onResponse = { [self] res, sts in
                     
                     switch (sts) {
@@ -799,6 +800,8 @@ class digiliraPayApi: NSObject {
                     sleep(10)
                     login2()
                 }
+                
+         
                 
                 crud.request(rURL: getApiURL() + digilira.api.auth, postData: json, method: digilira.requestMethod.post)
             }
