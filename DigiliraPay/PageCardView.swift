@@ -37,7 +37,7 @@ class PageCardView: UIView {
     let binanceAPI = binance()
     var ticker: digilira.ticker?
     
-    var Order: digilira.order?
+    var Order: PaymentModel?
     var currentPage: Int = 0
     
     @IBAction func changePage(_ sender: UIPageControl) {
@@ -120,7 +120,7 @@ class PageCardView: UIView {
     @objc func letsGO()
     {
         if let orderId = Order {
-            delegate?.cancel1(id: orderId._id)
+            delegate?.cancel1(id: orderId.paymentModelID)
         }
     }
     
@@ -210,7 +210,7 @@ class PageCardView: UIView {
         let ticker = digiliraPay.ticker(ticker: Ticker)
         
         if let order = Order {
-            if let fiyat = order.totalPrice {
+            let fiyat = order.totalPrice
                 do {
                     let (amount, asset, tlfiyat) = try digiliraPay.ratePrice(price: fiyat, asset: coin.tokenName, symbol: ticker, digits: coin.decimal, network: coin.network)
                     
@@ -222,7 +222,7 @@ class PageCardView: UIView {
                     
                     
                     if coin.availableBalance >= (Int64(amount)) {
-                        Order?.asset = asset
+                        Order?.currency = asset
                         Order?.rate = (Int64(amount))
                         payButton.isHidden = false
                     } else {
@@ -244,7 +244,6 @@ class PageCardView: UIView {
                     throw error
                 }
 
-            }
         }
         
         var orgX = scrollViewSize.frame.width
@@ -397,15 +396,17 @@ extension PageCardView: UITableViewDelegate, UITableViewDataSource {
                         }
                     }
                 }
+            }
                 
-                if  let kargo = order.order_shipping {
+                
+                if  let kargo = order.orderShipping {
                     shoppingCart.append(digilira.shoppingCart.init(label: "Kargo Ücreti", price: kargo, mode: 1))
                 }
                 
-                if  let total = order.totalPrice {
+               let total = order.totalPrice
                     shoppingCart.append(digilira.shoppingCart.init(label: "Toplam", price: total, mode: 2))
-                }
-            }
+                
+            
         }
         return shoppingCart.count
     }

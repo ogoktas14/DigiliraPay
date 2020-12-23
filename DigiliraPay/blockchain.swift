@@ -482,7 +482,6 @@ class Blockchain: NSObject {
         
         self.isCertificatePinning = true
         
-        
         let task2 = session2.dataTask(with: request) { (data, response, error) in
             let httpResponse = response as? HTTPURLResponse
             

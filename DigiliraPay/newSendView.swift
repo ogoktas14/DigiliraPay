@@ -301,7 +301,6 @@ class newSendView: UIView {
             
             recipientText.isEnabled = true
             textAmount.isEnabled = true
-            pasteLbl.isHidden = false
             foreignTrx()
             scrollAreaView.isUserInteractionEnabled = false
         }
@@ -335,7 +334,7 @@ class newSendView: UIView {
         recipientText.isEnabled = false
         textAmount.isEnabled = true
         scrollAreaView.isUserInteractionEnabled = false
-        pasteLbl.isHidden = true
+
         
         if let coin = selectedCoinX {
             let double = Double(truncating: pow(10,coin.decimal) as NSNumber)
@@ -446,7 +445,15 @@ class newSendView: UIView {
                 
                 balanceCardView.willPaidCoin.text = String(format: "%." + coin.decimal.description + "f", amount)
             }
-            commissionLabel.text = "Blokzincir transfer ücreti: " + coin.gatewayFee.description + " " + coin.tokenName
+            if let t = transaction {
+                if t.destination == digilira.transactionDestination.foreign {
+                    commissionLabel.text = "Blokzincir transfer ücreti: " + coin.gatewayFee.description + " " + coin.tokenName
+                    commissionLabel.isHidden = false
+
+                } else {
+                    commissionLabel.isHidden = true
+                }
+            }
         }
     }
     
@@ -459,7 +466,8 @@ class newSendView: UIView {
         if let coin = selectedCoinX {
             if checkAddress(network: coin.network, address: text) {
                 recipientText.setTitle(text, for: .normal)
-                
+                scrollAreaView.isUserInteractionEnabled = false
+             
                 memCheck()
                 
             } else {

@@ -206,7 +206,7 @@ class ErrorHandling: NSObject {
         }
     }
     
-    func alertOrder (order: digilira.order) {
+    func alertOrder (order: PaymentModel) {
         DispatchQueue.main.async { [self] in
             
             orderDetailView.removeFromSuperview()

@@ -29,7 +29,7 @@ class OrderDetailView: UIView {
     var message: String  = "Dikkat"
     var isError: Bool = true
     var isTransaction: Bool = false
-    var order:digilira.order?
+    var order:PaymentModel?
     
     override func awakeFromNib() {
         if #available(iOS 13.0, *) {
@@ -120,13 +120,13 @@ extension OrderDetailView: UITableViewDelegate, UITableViewDataSource {
                     }
                 }
                 
-                if  let kargo = order.order_shipping {
+                if  let kargo = order.orderShipping {
                     shoppingCart.append(digilira.shoppingCart.init(label: "Kargo Ücreti", price: kargo, mode: 1))
                 }
                 
-                if  let total = order.totalPrice {
+                let total = order.totalPrice
                     shoppingCart.append(digilira.shoppingCart.init(label: "Toplam", price: total, mode: 1))
-                }
+               
             }
             messageLabel.text = order.merchant
         }

@@ -364,7 +364,10 @@ struct digilira {
         var name: String?
         var surname: String?
         var wallet: String?
+        var hash:String?
         var _id: String?
+        var assetId: String?
+        var amount: Int64?
     }
     
     struct login: Codable {
@@ -517,13 +520,10 @@ struct digilira {
         var totalPrice: Double?
         var paidPrice: Double?
         var refundPrice: Double?
-        var currency: String?
         var currencyFiat: Double?
         var userId: String?
-        var paymentChannel: String?
         var ip: String?
         var registrationDate: String?
-        var wallet: String
         var asset: String?
         var successUrl: String?
         var failureUrl: String?

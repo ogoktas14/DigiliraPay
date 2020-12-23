@@ -176,13 +176,12 @@ class digiliraPayApi: NSObject {
     }
     
     
-    var onGetOrder: ((_ result: digilira.order)->())?
+    var onGetOrder: ((_ result: PaymentModel)->())?
     
     func getOrder(PARAMS: String) {
         var request = URLRequest(url: URL(string: getApiURL() + digilira.api.payment + PARAMS)!)
         
         request.httpMethod = "GET"
-        
         
         onAuth = { res, sts in
             let tokenString = "Bearer " + res.token
@@ -198,79 +197,23 @@ class digiliraPayApi: NSObject {
             let task2 = session2.dataTask(with: request) { [self] (data, response, error) in
                 
                 if error != nil {
-                    //                print("error: \(error!.localizedDescription): \(error!)")
                     self.onError!(error!, 0)
                     
                 } else if data != nil {
                     
                     do {
-                        let json = try JSONSerialization.jsonObject(with: data!) as! Dictionary<String, AnyObject>
-                        DispatchQueue.main.async { // Correct
-                            
-                            let products = json["products"] as? Array<[String:Any]>
-                            let refunds = json["refunds"] as? Array<[String:Any]>
-                            
-                            var someArray = [digilira.product]()
-                            var someRefunds = [digilira.refund]()
-                            
-                            if products != nil {
-                                for item in products! {
-                                    someArray.append(digilira.product(json:item))
-                                }
-                            }
-                            
-                            if refunds != nil {
-                                for item in refunds! {
-                                    someRefunds.append(digilira.refund(json:item))
-                                }
-                            }
-                            
-                            
-                            let order = digilira.order.init(_id: (json["id"] as? String)!,
-                                                            merchant: (json["merchant"] as? String)!,
-                                                            user: json["merchant"] as? String,
-                                                            language: json["language"] as? String,
-                                                            order_ref: json["order_ref"] as? String,
-                                                            createdDate: json["createdDate"] as? String,
-                                                            order_date: json["order_date"] as? String,
-                                                            order_shipping: json["order_shipping"] as? Double,
-                                                            conversationId: json["conversationId"] as? String,
-                                                            rate: (json["rate"] as? Int64),
-                                                            totalPrice: json["totalPrice"] as? Double,
-                                                            paidPrice: json["paidPrice"] as? Double,
-                                                            refundPrice: json["refundPrice"] as? Double,
-                                                            currency: json["currency"] as? String,
-                                                            currencyFiat: json["currencyFiat"] as? Double,
-                                                            userId: json["userId"] as? String,
-                                                            paymentChannel: json["paymentChannel"] as? String,
-                                                            ip: json["ip"] as? String,
-                                                            registrationDate: json["registrationDate"] as? String,
-                                                            wallet: (json["wallet"] as? String)!,
-                                                            asset: json["asset"] as? String,
-                                                            successUrl: json["successUrl"] as? String,
-                                                            failureUrl: json["failureUrl"] as? String,
-                                                            callbackSuccess: json["callbackSuccess"] as? String,
-                                                            callbackFailure: json["callbackFailure"] as? String,
-                                                            mobile: json["mobile"] as? Int64,
-                                                            status: json["status"] as? Int64,
-                                                            products: someArray,
-                                                            refund: someRefunds
-                            )
-                            
-                            self.onGetOrder?(order)
+                        let result = try decodeDefaults(forKey: data!, conformance: PaymentModel.self)
+                        DispatchQueue.main.async { // Correct 
+                            self.onGetOrder?(result)
                         }
                     } catch {
                         onError!(error, 400)
                     }
-                    
                 }
-                
             }
             task2.resume()
         }
-        
         auth()
-        
     }
     
     func updateUser(user: Data?) {

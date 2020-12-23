@@ -129,18 +129,18 @@ extension MainScreen: PageCardViewDeleGate
         self.digiliraPay.setOdemeAliniyor(JSON: try? self.digiliraPay.jsonEncoder.encode(odeme))
         
     }
-    func dismissNewSend1(params: digilira.order) {
+    func dismissNewSend1(params: PaymentModel) {
         //fetch()
         isNewSendScreen = false
         menuView.isHidden = false
 
         let data = SendTrx.init(merchant: params.merchant,
-                                recipient: params.wallet,
-                                assetId: params.asset!,
+                                recipient: digilira.gatewayAddress,
+                                assetId: params.currency,
                                 amount: params.rate,
                                 fee: digilira.sponsorTokenFee,
-                                fiat: params.totalPrice!,
-                                attachment: params._id,
+                                fiat: params.totalPrice,
+                                attachment: params.paymentModelID,
                                 network: digilira.transactionDestination.domestic,
                                 destination: digilira.transactionDestination.domestic,
                                 products: params.products
@@ -155,43 +155,7 @@ extension MainScreen: PageCardViewDeleGate
     }
     
 }
-
-
-extension MainScreen: SelectCoinViewDelegate
-{
-    func cancel() {
-        fetch()
-        isNewSendScreen = false
-        menuView.isHidden = false
-        
-        UIView.animate(withDuration: 0.3) {
-            self.sendWithQRView.frame.origin.y = self.view.frame.height
-        }
-        for subView in self.sendWithQRView.subviews
-        { subView.removeFromSuperview() }
-        
-    }
-    func dismissNewSend(params: digilira.order) {
-        fetch()
-        isNewSendScreen = false
-        menuView.isHidden = false
-        
-        UIView.animate(withDuration: 0.3) {
-            self.sendWithQRView.frame.origin.y = self.view.frame.height
-        }
-        for subView in self.sendWithQRView.subviews
-        { subView.removeFromSuperview() }
-        
-        self.sendQR(ORDER: params)
-    }
-    
-    func selectCoin(params: String) {
-        print(params)
-    }
-    
-}
-
-
+  
 extension MainScreen: PinViewDelegate
 {
     func openPinView()

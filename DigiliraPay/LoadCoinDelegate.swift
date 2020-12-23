@@ -32,15 +32,9 @@ protocol NewCoinSendDelegate: class {
     func dismissNewSend()
     func sendCoinNew(params:SendTrx)
 }
-
-protocol SelectCoinViewDelegate: class {
-    func cancel()
-    func dismissNewSend(params: digilira.order)
-    func selectCoin(params: String)
-}
-
+ 
 protocol PageCardViewDeleGate: class {
     func cancel1(id: String)
-    func dismissNewSend1(params: digilira.order)
+    func dismissNewSend1(params: PaymentModel)
     func selectCoin1(params: String)
 }

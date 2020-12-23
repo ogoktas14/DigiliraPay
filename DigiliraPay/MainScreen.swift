@@ -58,7 +58,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
     var profileMenuView = ProfileMenuView()
     let imagePicker = UIImagePickerController()
     var newSendMoneyView = newSendView()
-    var selectCoin = selectCoinView()
+
     var pageCardView = PageCardView()
     var paraYatirView = ParaYatirView()
     var bitexenAPIView = BitexenAPIView()
@@ -343,7 +343,13 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
             default:
                 let attachment = String(decoding: (WavesCrypto.shared.base58decode( input: res["attachment"] as! String)!), as: UTF8.self)
                 
-                let odeme = digilira.odemeStatus.init(id: attachment, txid: id!, status: "2")
+                let odeme = digilira.odemeStatus.init(
+                    id: attachment,
+                    txid: id!,
+                    status: "2",
+                    assetId: res["assetId"] as? String,
+                    amount: res["amount"] as? Int64
+                )
                 self.digiliraPay.setOdemeAliniyor(JSON: try? self.digiliraPay.jsonEncoder.encode(odeme))
             } 
         }
@@ -687,9 +693,9 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                 break
             default:
                 digiliraPay.onGetOrder = { res in
-                    //self.goSelectCoinView(ORDER: res)
+
                     let odeme = digilira.odemeStatus.init(
-                        id: res._id,
+                        id: res.paymentModelID,
                         status: "1",
                         name: self.kullanici.firstName,
                         surname: self.kullanici.lastName,
@@ -1920,7 +1926,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
     }
     
     
-    func goPageCardView(ORDER: digilira.order) {
+    func goPageCardView(ORDER: PaymentModel) {
         
         pageCardView = UIView().loadNib(name: "PageCardView") as! PageCardView
         pageCardView.frame.origin.y = self.view.frame.height
@@ -1963,35 +1969,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
     }
     
     
-    func goSelectCoinView(ORDER: digilira.order) {
-        
-        selectCoin = UIView().loadNib(name: "selectCoinView") as! selectCoinView
-        sendWithQRView.frame.origin.y = self.view.frame.height
-        selectCoin.frame = CGRect(x: 0,
-                                  y: 0,
-                                  width: view.frame.width,
-                                  height: view.frame.height)
-        selectCoin.delegate = self
-        selectCoin.Filtered = self.Filtered
-        selectCoin.Order = ORDER
-        
-        for subView in sendWithQRView.subviews
-        { subView.removeFromSuperview() }
-        
-        menuView.isHidden = true
-        
-        sendWithQRView.addSubview(selectCoin)
-        selectCoin.setupTableView()
-        sendWithQRView.isHidden = false
-        sendWithQRView.translatesAutoresizingMaskIntoConstraints = true
-        
-        UIView.animate(withDuration: 0.3)
-        {
-            self.sendWithQRView.frame.origin.y = 0
-            self.sendWithQRView.alpha = 1
-        }
-        
-    }
+ 
     
     func showSuccess(mode: Int, transaction: [String : Any]) {
         do {
@@ -2150,45 +2128,8 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
             }
           }
             
-        }
-         
-
-    }
-    
-    func sendQR(ORDER: digilira.order) {
-        
-        digiliraPay.onAuth = { auth, sts in
-           
-        if (auth.status == 0) {
-            self.alertError ()
-            return
-        }
-        
-        let odeme = digilira.odemeStatus.init(
-            id: ORDER._id,
-            status: "1",
-            name: auth.firstName,
-            surname: auth.lastName
-        )
-        
-        self.digiliraPay.setOdemeAliniyor(JSON: try? self.digiliraPay.jsonEncoder.encode(odeme))
-        
-        let data = SendTrx.init(merchant: ORDER.merchant,
-                                recipient: ORDER.wallet,
-                                assetId: ORDER.asset!,
-                                amount: ORDER.rate,
-                                fee: digilira.sponsorTokenFee,
-                                fiat: ORDER.totalPrice!,
-                                attachment: ORDER._id,
-                                network: digilira.transactionDestination.domestic,
-                                products: ORDER.products
-        )
-            self.send(params: data)
-        }
-        
-        digiliraPay.auth()
- 
-    }
+        } 
+    } 
 }
 
 
