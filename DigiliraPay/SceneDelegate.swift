@@ -64,19 +64,25 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This may occur due to temporary interruptions (ex. an incoming phone call).
         let screenSize: CGRect = UIScreen.main.bounds
         
-        let myView = UIView(frame: CGRect(x: 0, y: 0, width: screenSize.width, height: screenSize.height))
-        let myLogo = UIImageView(frame: CGRect(x: (screenSize.width/2) - 36, y: (screenSize.height/2) - 36, width: 72, height: 72))
-     
-        myLogo.image = UIImage(named: "ico2")
-        
-        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.light)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.frame = window!.frame
-        myView.addSubview(blurEffectView)
-        myView.addSubview(myLogo)
-        myView.tag = 74396893368329
+        if let isBiometrics = UserDefaults.standard.value(forKey: "biometrics") as? Bool {
+            if isBiometrics {return}
+            if let img = UIImage(named: "appLogoWhite") {
+                let myView = DLGradient(frame: CGRect(x: 0, y: 0, width: screenSize.width, height: screenSize.height))
+                let myLogo = UIImageView(frame: CGRect(x: (screenSize.width/2) - (img.size.width / 2),
+                                                       y: (screenSize.height/2) - (img.size.height / 2),
+                                                       width: img.size.width,
+                                                       height: img.size.height))
+             
+                myLogo.image = img
+                
+                myView.addSubview(myLogo)
+                myView.tag = 74396893368329
+                 
+                self.window?.addSubview(myView)
+            }
 
-        self.window?.addSubview(myView)
+        }
+        
     } 
 
     func sceneWillEnterForeground(_ scene: UIScene) {

@@ -24,17 +24,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iNh-US-qMx">
-                                <rect key="frame" x="194.66666666666666" y="831" width="25" height="25"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="25" id="8cM-LC-Lnj"/>
-                                    <constraint firstAttribute="height" constant="25" id="CA7-Me-zdF"/>
-                                </constraints>
-                                <state key="normal" image="exit"/>
-                                <connections>
-                                    <action selector="exitButton:" destination="iN0-l3-epB" eventType="touchUpInside" id="iS6-20-Xr3"/>
-                                </connections>
-                            </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yfi-GV-XlY" customClass="DLGradient" customModule="DigiliraPay" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="160"/>
                                 <subviews>
@@ -61,20 +50,18 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Ti-h2-INc">
-                                <rect key="frame" x="0.0" y="160" width="414" height="640"/>
+                                <rect key="frame" x="0.0" y="160" width="414" height="736"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                         </subviews>
                         <constraints>
+                            <constraint firstAttribute="bottom" secondItem="9Ti-h2-INc" secondAttribute="bottom" id="7gL-lm-SpF"/>
                             <constraint firstItem="yfi-GV-XlY" firstAttribute="top" secondItem="Ckg-12-b3c" secondAttribute="top" id="PPl-bI-z42"/>
                             <constraint firstAttribute="trailing" secondItem="yfi-GV-XlY" secondAttribute="trailing" id="PTE-qd-gQy"/>
                             <constraint firstItem="yfi-GV-XlY" firstAttribute="leading" secondItem="Ckg-12-b3c" secondAttribute="leading" id="SAa-BD-wQx"/>
                             <constraint firstItem="9Ti-h2-INc" firstAttribute="top" secondItem="yfi-GV-XlY" secondAttribute="bottom" id="YjW-sl-4Rw"/>
                             <constraint firstAttribute="trailing" secondItem="9Ti-h2-INc" secondAttribute="trailing" id="bni-CV-hlv"/>
                             <constraint firstItem="9Ti-h2-INc" firstAttribute="leading" secondItem="Ckg-12-b3c" secondAttribute="leading" id="eMS-OK-2DL"/>
-                            <constraint firstItem="iNh-US-qMx" firstAttribute="top" secondItem="9Ti-h2-INc" secondAttribute="bottom" constant="31" id="ej2-eB-HxC"/>
-                            <constraint firstAttribute="centerX" secondItem="iNh-US-qMx" secondAttribute="centerX" id="jKQ-Hr-Bre"/>
-                            <constraint firstAttribute="bottom" secondItem="iNh-US-qMx" secondAttribute="bottom" constant="40" id="x1E-35-gKn"/>
                         </constraints>
                     </view>
                     <blurEffect style="regular"/>
@@ -99,7 +86,6 @@
         </view>
     </objects>
     <resources>
-        <image name="exit" width="44" height="44"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

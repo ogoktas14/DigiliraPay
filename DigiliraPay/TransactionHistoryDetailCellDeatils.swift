@@ -12,13 +12,13 @@ class TransactionHistoryDetailCellDeatils: UITableViewCell {
 
     @IBOutlet weak var cellImage: UIImageView!
     @IBOutlet weak var cellTitle: UILabel!
-    @IBOutlet weak var cellDetail: UILabel!
+    @IBOutlet weak var cellDetailBtn: UIButton!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
         
         cellTitle.textColor = .darkGray
-        cellDetail.textColor = .darkGray
+        cellDetailBtn.setTitleColor(.darkGray, for: .normal)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -31,6 +31,6 @@ class TransactionHistoryDetailCellDeatils: UITableViewCell {
     {
         cellImage.image = image
         cellTitle.text = title
-        cellDetail.text = detail
+        cellDetailBtn.setTitle(detail, for: .normal)
     }
 }

@@ -74,7 +74,7 @@ class sendWithQR: UIView {
         videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         videoPreviewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
         videoPreviewLayer?.frame = CGRect(x: 0,
-                                          y: qrAreaView.frame.minY,
+                                          y: 0,
                                           width: UIScreen.main.bounds.size.width,
                                           height: UIScreen.main.bounds.size.height)
         
@@ -85,14 +85,36 @@ class sendWithQR: UIView {
         self.bringSubviewToFront(qrCodeFrameView!)
         
         let screenSize: CGRect = UIScreen.main.bounds
+        let myView = UIView(frame: CGRect(x: 0, y: 0, width: screenSize.width, height: screenSize.height))
         
-        let myView = UIView(frame: CGRect(x: 0, y: qrAreaView.frame.minY, width: screenSize.width, height: screenSize.height - qrAreaView.frame.minY))
-         
         let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.light)
+        
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.frame = CGRect.init(x: 0, y: screenSize.height - qrAreaView.frame.minY - 100, width: screenSize.width, height: 100)
+        blurEffectView.frame = CGRect.init(x: 0, y: 0, width: screenSize.width, height: screenSize.height)
+  
+        let w = screenSize.width / 1.2
+        
+        let maskView = UIView(frame: CGRect(x: (screenSize.width / 2) - (w / 2),
+                                            y: (screenSize.height / 2) - (w / 2),
+                                            width: w,
+                                            height: w))
+        
+        let path = UIBezierPath(rect: bounds)
+        let croppedPath = UIBezierPath(roundedRect: maskView.frame, cornerRadius: 20)
+        path.append(croppedPath)
+        path.usesEvenOddFillRule = true
+
+        let mask = CAShapeLayer()
+        mask.path = path.cgPath
+        mask.fillRule = CAShapeLayerFillRule.evenOdd
+         
+ 
+        maskView.layer.mask = mask
+
+        blurEffectView.layer.mask = mask
         
         myView.addSubview(blurEffectView)
+         
         self.addSubview(myView)
          
         let closeView = UIView(frame: CGRect(x: screenSize.width / 2 - 25, y: screenSize.height - 75, width: 50, height:50))
@@ -109,23 +131,61 @@ class sendWithQR: UIView {
         setShadExt(view: closeView, cornerRad: 25, mask: true)
         self.addSubview(closeView)
         
+        let line = UIView(frame: CGRect(x: (screenSize.width / 2) - (w / 2) + 10, y: (screenSize.height / 2), width: w - 20, height: 2))
+        
+        line.backgroundColor = .white
+        
+        myView.addSubview(line)
+        animate(view: line, bounds: maskView.frame)
+        
+        
+        if let img = UIImage(named: "appLogoWhite") {
+            let myLogo2 = UIImageView(frame: CGRect(x: (screenSize.width/2) - (img.size.width / 2),
+                                                   y: 50,
+                                                   width: img.size.width,
+                                                   height: img.size.height))
+         
+            myLogo2.image = img
+            
+            myView.addSubview(myLogo2)
+              
+        }
+        
+        
+ 
+//        let headerView = DLGradient(frame: CGRect(x: 0,
+//                                                    y: 0,
+//                                                    width: screenSize.width, height:150))
+//
+//        let headerLabel = UILabel(frame: headerView.frame)
+//        headerLabel.text = "QR Kodu Okutunuz"
+//        headerLabel.textColor = .white
+//        headerLabel.textAlignment = .center
+//        headerLabel.font = UIFont(name: "Avenir-Black", size: 22)
+//        headerView.addSubview(headerLabel)
+//
+//
+//        headerView.backgroundColor = .white
+//        headerView.layer.cornerRadius = 0
+//        myView.addSubview(headerView)
+
+        
     }
     
-    @IBAction func btnGallery(_ sender: Any) {
-        
+    func animate(view: UIView, bounds: CGRect, inits: TimeInterval = 1) {
+        UIView.animate(withDuration: inits, animations: {
+            view.frame.origin.y = bounds.minY + 20
+        }, completion: {_ in
+            UIView.animate(withDuration: 2, animations: {
+                view.frame.origin.y = bounds.maxY - 20
+            }, completion: { [self]_ in
+                animate(view: view, bounds: bounds, inits: 2)
+            })
+        })
     }
-    @objc func openGallery()
-    {
-        
-    }
+ 
     
     @objc func exit() {
-        captureSession.stopRunning()
-        delegate?.dismissSendWithQr(url: "")
-    }
-    
-    @IBAction func exitButton(_ sender: Any)
-    {
         captureSession.stopRunning()
         delegate?.dismissSendWithQr(url: "")
     }

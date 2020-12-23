@@ -486,8 +486,6 @@ struct digilira {
         case anErrorOccured
         case missingParameters
         case noAmount
-        
-        
     }
     
     struct refund: Encodable {

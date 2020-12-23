@@ -140,7 +140,7 @@ class digiliraPayApi: NSObject {
         
         let context = LAContext()
         var error: NSError?
-        
+        UserDefaults.standard.setValue(true, forKey: "biometrics")
         if let isSecure = UserDefaults.standard.value(forKey: "isSecure") as? Bool
         {
             if isSecure == false {
@@ -167,6 +167,7 @@ class digiliraPayApi: NSObject {
                     } else {
                         self?.onTouchID!(false, authenticationError!.localizedDescription)
                     }
+                    UserDefaults.standard.setValue(false, forKey: "biometrics")
                 }
             }
         } else {
@@ -320,11 +321,10 @@ class digiliraPayApi: NSObject {
     
     func setOdemeAliniyor(JSON : Data?) {
         if let json = try! JSONSerialization.jsonObject(with: JSON!, options: []) as? [String: Any] {
-            // try to read out a string array
+
             if let status = json["status"] as? String {
                 if (status == "2") {
-                    //guard let url = URL(string: "https://api.digilirapay.com/v7/?h=" + (json["id"] as! String)) else { return }
-                    //UIApplication.shared.open(url)
+
                 }
             }
         }
@@ -671,7 +671,7 @@ class digiliraPayApi: NSObject {
                         onError!(digilira.NAError.E_502, sts)
                         break;
                         
-                    case 404:
+                    case 400, 404:
                         do {
                             try Locksmith.deleteDataForUserAccount(userAccount: sensitiveSource)
                         } catch  {

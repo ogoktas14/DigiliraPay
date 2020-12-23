@@ -2218,6 +2218,13 @@ class MyTapGesture: UITapGestureRecognizer {
     
 }
 
+class CopyGesture: UITapGestureRecognizer {
+    var cp:String?
+    var btn:UIButton?
+    var msg:String?
+    
+}
+
 
 class depositeGesture: UITapGestureRecognizer {
     var floatValue:Float?

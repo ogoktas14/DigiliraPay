@@ -24,8 +24,9 @@ class TransactionDetailView: UIView
     let BC = Blockchain()
     
     var fetching: Bool = false
-    
     let generator = UINotificationFeedbackGenerator()
+    
+    var cp: String?
     
     weak var delegate: TransactionDetailCloseDelegate?
     override func awakeFromNib()
@@ -75,12 +76,25 @@ class TransactionDetailView: UIView
     }
     
     
+    @objc func copyText (recognizer: CopyGesture) {
+        if let cp = recognizer.cp {
+            let pasteboard = UIPasteboard.general
+            pasteboard.string = cp
+        }
+        generator.notificationOccurred(.success)
+        if let btn = recognizer.btn {
+            let a = btn.title(for: .normal)
+            btn.setTitle(recognizer.msg, for: .normal)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                btn.setTitle(a, for: .normal)
+            }
+        }
+    }
     
     
     @objc func handleTap (recognizer: MyTapGesture) {
         if recognizer.qrAttachment == "-" {
-            generator.notificationOccurred(.error) 
-            //            return
+            generator.notificationOccurred(.error)
         }
         if fetching {
             return
@@ -159,18 +173,26 @@ extension TransactionDetailView: UITableViewDelegate, UITableViewDataSource
                     
                     case 1:
                         cell.setView(image: UIImage(named: "send")!, title: "Gönderici", detail: t.sender!)
+                        let tapped = CopyGesture.init(target: self, action: #selector(copyText))
+                        tapped.cp = t.sender
+                        tapped.btn = cell.cellDetailBtn
+                        tapped.msg = "Adres Kopyalandı"
+                        cell.addGestureRecognizer(tapped)
                     case 2:
                         cell.setView(image: UIImage(named: "receive")!, title: "Alıcı", detail: t.recipient!)
+                        
+                        let tapped = CopyGesture.init(target: self, action: #selector(copyText))
+                        tapped.cp = t.recipient
+                        tapped.btn = cell.cellDetailBtn
+                        tapped.msg = "Adres Kopyalandı"
+                        cell.addGestureRecognizer(tapped)
                     case 3:
                         cell.setView(image: UIImage(named: "time")!, title: "İşlem Zamanı", detail: t.timestamp!)
                     case 4:
-                        let pasteboard = UIPasteboard.general
-                        pasteboard.string = t.recipient!
                         cell.setView(image: UIImage(named: "verifying")!, title: "Detaylar", detail: t.attachment ?? "-" )
                         
                         let tapped = MyTapGesture.init(target: self, action: #selector(handleTap))
                         tapped.qrAttachment = t.attachment ?? "-"
-                        
                         cell.addGestureRecognizer(tapped)
                         
                         
