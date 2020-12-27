@@ -16,6 +16,8 @@ enum DeviceLockState {
  
 struct digilira {
     
+    static let dummyName = "Satoshi Nakamoto"
+    
     struct requestMethod {
         static let put = "PUT"
         static let post = "POST"
@@ -23,10 +25,12 @@ struct digilira {
     }
     struct api {
         static let sslpin = "https://pay.digilirapay.com/"
-        static let url = "https://pay.digilirapay.com/v4"
-        static let urlMainnet = "https://pay.digilirapay.com/v7"
+        static let url = "https://server1.digilirapay.com/v4"
+        static let urlMainnet = "https://server1.digilirapay.com/v7"
         static let payment = "/payment/"
         static let paymentStatus = "/payment/status"
+        static let transferNew = "/transfer/create/new"
+        static let transferGet = "/transfer/get/"
         static let userUpdate =  "/users/update/me"
         static let userRegister =  "/users/register"
         static let auth =  "/users/authenticate"
@@ -343,10 +347,12 @@ struct digilira {
         var wallet: String?
         var token: String?
         var status: Int?
-        var pincode: Int32?
+        var pincode: String?
         var imported: Bool?
         var id1: String?
         var apnToken: String?
+        var signed: String?
+        var publicKey: String?
     }
     
     struct idImage: Encodable {
@@ -446,6 +452,7 @@ struct digilira {
         let l6:String
         let yes:String?
         let no:String?
+        let icon:String
     }
     
     struct DigiliraPayBalance: Encodable {

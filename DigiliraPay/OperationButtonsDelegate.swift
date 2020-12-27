@@ -14,15 +14,19 @@ import Foundation
         var assetId: String?
         var amount: Int64?
         var fee: Int64?
-        var fiat: Double?
-        var attachment:String?
+        var fiat: Double
+        var attachment:String
         var network: String?
-        var destination: String?
+        var destination: String
         var externalAddress: String?
         var massWallet: String?
         var massNameSurname: String?
         var products: [Product]?
         var memberCheck: Bool = false
+        var me: String
+        var blockchainFee: Int64
+        var merchantId: String?
+
    }
 
 

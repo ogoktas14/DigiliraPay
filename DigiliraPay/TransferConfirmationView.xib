@@ -51,25 +51,6 @@
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <view contentMode="scaleToFill" restorationIdentifier="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5aq-3W-c1T" customClass="DLGradient" customModule="DigiliraPay" customModuleProvider="target">
-                            <rect key="frame" x="172" y="548" width="139" height="50"/>
-                            <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Evet" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kN6-k1-7qN">
-                                    <rect key="frame" x="10" y="10" width="119" height="30"/>
-                                    <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="17"/>
-                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                            </subviews>
-                            <color key="backgroundColor" systemColor="systemRedColor"/>
-                            <constraints>
-                                <constraint firstAttribute="bottom" secondItem="kN6-k1-7qN" secondAttribute="bottom" constant="10" id="BiG-52-Nhn"/>
-                                <constraint firstAttribute="height" constant="50" id="Fzg-iO-TNB"/>
-                                <constraint firstItem="kN6-k1-7qN" firstAttribute="leading" secondItem="5aq-3W-c1T" secondAttribute="leading" constant="10" id="jpl-L8-Bea"/>
-                                <constraint firstItem="kN6-k1-7qN" firstAttribute="top" secondItem="5aq-3W-c1T" secondAttribute="top" constant="10" id="mrt-Hg-Y0d"/>
-                                <constraint firstAttribute="trailing" secondItem="kN6-k1-7qN" secondAttribute="trailing" constant="10" id="n0N-L7-vXn"/>
-                            </constraints>
-                        </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OVd-Qi-CYT">
                             <rect key="frame" x="0.0" y="120" width="331" height="5"/>
                             <color key="backgroundColor" systemColor="systemPinkColor"/>
@@ -149,6 +130,43 @@
                                 <constraint firstItem="RUX-OK-RDB" firstAttribute="top" secondItem="rgo-55-fL7" secondAttribute="bottom" constant="7.5" id="zq1-3w-yaR"/>
                             </constraints>
                         </view>
+                        <view hidden="YES" contentMode="scaleToFill" restorationIdentifier="OK" translatesAutoresizingMaskIntoConstraints="NO" id="CGL-xF-TrQ" customClass="DLGradient" customModule="DigiliraPay" customModuleProvider="target">
+                            <rect key="frame" x="49.5" y="548" width="232" height="50"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tamam" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b7p-Gh-9fa">
+                                    <rect key="frame" x="10" y="10" width="212" height="30"/>
+                                    <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="17"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemRedColor"/>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="b7p-Gh-9fa" secondAttribute="trailing" constant="10" id="5Lw-yN-rtw"/>
+                                <constraint firstItem="b7p-Gh-9fa" firstAttribute="top" secondItem="CGL-xF-TrQ" secondAttribute="top" constant="10" id="F6y-IM-YIH"/>
+                                <constraint firstItem="b7p-Gh-9fa" firstAttribute="centerY" secondItem="CGL-xF-TrQ" secondAttribute="centerY" id="GYc-Nj-yce"/>
+                                <constraint firstAttribute="height" constant="50" id="liT-nU-UXW"/>
+                                <constraint firstItem="b7p-Gh-9fa" firstAttribute="leading" secondItem="CGL-xF-TrQ" secondAttribute="leading" constant="10" id="ofV-Kg-q8w"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" restorationIdentifier="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5aq-3W-c1T" customClass="DLGradient" customModule="DigiliraPay" customModuleProvider="target">
+                            <rect key="frame" x="172" y="548" width="139" height="50"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Evet" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kN6-k1-7qN">
+                                    <rect key="frame" x="10" y="10" width="119" height="30"/>
+                                    <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="17"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemRedColor"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="50" id="Fzg-iO-TNB"/>
+                                <constraint firstItem="kN6-k1-7qN" firstAttribute="leading" secondItem="5aq-3W-c1T" secondAttribute="leading" constant="10" id="jpl-L8-Bea"/>
+                                <constraint firstItem="kN6-k1-7qN" firstAttribute="top" secondItem="5aq-3W-c1T" secondAttribute="top" constant="10" id="mrt-Hg-Y0d"/>
+                                <constraint firstAttribute="trailing" secondItem="kN6-k1-7qN" secondAttribute="trailing" constant="10" id="n0N-L7-vXn"/>
+                            </constraints>
+                        </view>
                         <view contentMode="scaleToFill" restorationIdentifier="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HjO-lS-kpH" customClass="BlackGradientView" customModule="DigiliraPay" customModuleProvider="target">
                             <rect key="frame" x="20" y="548" width="139" height="50"/>
                             <subviews>
@@ -174,6 +192,7 @@
                     <color key="backgroundColor" systemColor="systemOrangeColor"/>
                     <constraints>
                         <constraint firstAttribute="trailing" secondItem="lSu-tg-fvE" secondAttribute="trailing" id="6vF-c5-RMX"/>
+                        <constraint firstItem="CGL-xF-TrQ" firstAttribute="top" secondItem="lSu-tg-fvE" secondAttribute="bottom" constant="20" id="A7c-gU-GdD"/>
                         <constraint firstItem="OVd-Qi-CYT" firstAttribute="top" secondItem="fGk-9H-mMM" secondAttribute="bottom" constant="20" id="NU2-4F-upb"/>
                         <constraint firstAttribute="trailing" secondItem="5aq-3W-c1T" secondAttribute="trailing" constant="20" id="NkW-Eo-Ksb"/>
                         <constraint firstItem="5aq-3W-c1T" firstAttribute="width" secondItem="fAG-Jw-okr" secondAttribute="width" multiplier="0.42" id="OQx-Q7-xqz"/>
@@ -183,6 +202,7 @@
                         <constraint firstItem="dVK-yu-Fve" firstAttribute="width" secondItem="fAG-Jw-okr" secondAttribute="width" id="TSs-7U-Qfg"/>
                         <constraint firstAttribute="trailing" secondItem="fGk-9H-mMM" secondAttribute="trailing" constant="20" id="U7B-36-6eq"/>
                         <constraint firstItem="OVd-Qi-CYT" firstAttribute="leading" secondItem="fAG-Jw-okr" secondAttribute="leading" id="WRM-Qj-kcC"/>
+                        <constraint firstItem="CGL-xF-TrQ" firstAttribute="width" secondItem="fAG-Jw-okr" secondAttribute="width" multiplier="0.7" id="Xol-Yj-Ner"/>
                         <constraint firstItem="lSu-tg-fvE" firstAttribute="top" secondItem="dVK-yu-Fve" secondAttribute="bottom" id="Ym2-jf-RnC"/>
                         <constraint firstItem="dVK-yu-Fve" firstAttribute="centerX" secondItem="fAG-Jw-okr" secondAttribute="centerX" id="a1K-Eb-xPL"/>
                         <constraint firstItem="HjO-lS-kpH" firstAttribute="height" secondItem="kN6-k1-7qN" secondAttribute="height" multiplier="1.66667" id="aPU-mv-RWm"/>
@@ -202,6 +222,7 @@
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.20063677226027396" colorSpace="custom" customColorSpace="displayP3"/>
             <constraints>
+                <constraint firstItem="CGL-xF-TrQ" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="Oek-SH-gaW"/>
                 <constraint firstItem="fAG-Jw-okr" firstAttribute="centerY" secondItem="vUN-kp-3ea" secondAttribute="centerY" id="Tjs-5A-FHo"/>
                 <constraint firstItem="fAG-Jw-okr" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="Un9-hU-9qo"/>
                 <constraint firstItem="fAG-Jw-okr" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="0.8" id="eKd-7K-OQG"/>
@@ -219,6 +240,7 @@
                 <outlet property="msg" destination="fAG-Jw-okr" id="MRO-SE-Vqa"/>
                 <outlet property="no" destination="HjO-lS-kpH" id="WqU-ws-7cQ"/>
                 <outlet property="noLabel" destination="m5t-sb-CGl" id="S6v-5a-9fX"/>
+                <outlet property="ok" destination="CGL-xF-TrQ" id="d24-m4-3cM"/>
                 <outlet property="titleLabel" destination="7ve-iv-MbF" id="QIa-a7-kNd"/>
                 <outlet property="titleView" destination="fGk-9H-mMM" id="Qih-Si-kUn"/>
                 <outlet property="yes" destination="5aq-3W-c1T" id="6n1-Rr-3j5"/>

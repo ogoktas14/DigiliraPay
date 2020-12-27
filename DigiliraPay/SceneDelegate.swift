@@ -9,7 +9,7 @@
 import UIKit
 import Locksmith
 @available(iOS 13.0, *)
-class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+class SceneDelegate: UIResponder, UIWindowSceneDelegate, UNUserNotificationCenterDelegate {
 
     var window: UIWindow?
     var bg:UIView?
@@ -50,6 +50,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneDidBecomeActive(_ scene: UIScene) {
         // Called when the scene has moved from an inactive state to an active state.
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
+        
+        
+        
         UIView.animate(withDuration: 0.2, animations: {
             self.window?.viewWithTag(74396893368329)?.alpha = 0
         }, completion: {_ in
@@ -64,8 +67,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This may occur due to temporary interruptions (ex. an incoming phone call).
         let screenSize: CGRect = UIScreen.main.bounds
         
-        if let isBiometrics = UserDefaults.standard.value(forKey: "biometrics") as? Bool {
-            if isBiometrics {return}
+        guard let isBiometrics = UserDefaults.standard.value(forKey: "isSecure") as? Bool  else { return }
+        guard let isOnScreen = UserDefaults.standard.value(forKey: "biometrics") as? Bool  else { return }
+        
+        if isBiometrics && isOnScreen {return}
+        
             if let img = UIImage(named: "appLogoWhite") {
                 let myView = DLGradient(frame: CGRect(x: 0, y: 0, width: screenSize.width, height: screenSize.height))
                 let myLogo = UIImageView(frame: CGRect(x: (screenSize.width/2) - (img.size.width / 2),
@@ -81,7 +87,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 self.window?.addSubview(myView)
             }
 
-        }
+        
         
     } 
 
@@ -111,6 +117,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
     print("failed to register for remote notifications: \(error.localizedDescription)")
     }
+    
+    
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]) {
     print("Received push notification: \(userInfo)")
     let aps = userInfo["aps"] as! [String: Any]

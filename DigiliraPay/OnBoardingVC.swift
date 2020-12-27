@@ -15,6 +15,7 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
     @IBOutlet var curtain:UIView!
     
     var gotoSeedRecover = false
+    
     func doSomethingWith() {
         importAccountView.isHidden = true
         letsGoView.isHidden = true
@@ -32,12 +33,7 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
     let digiliraPay = digiliraPayApi()
     let BC = Blockchain()
     
-    var onPinSuccess: ((_ result: Bool)->())?
-    
-    
-    var trxs:[digilira.transfer] = []
     var QR:digilira.QR = digilira.QR.init()
-    
     
     private func initial2() {
         letsGoView.isHidden = true
@@ -68,15 +64,9 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
                     self.present(alert, animated: true)
                     
                     break;
-                case 404:
+                case 400, 404:
                     
-                    let alert = UIAlertController(title: "Kullanıcı Bulunamadı", message: "Cüzdanınızı içeri aktararak başka bir cihazda açtıysanız bu cihazdan giriş yapamazsınız. Böyle bir işlem yapmadıysanız anahtar kelimelerinizi kullanarak cüzdanınızı yeniden tanımlayabilirsiniz.", preferredStyle: .alert)
-                    
-                    alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
-                        self.letsGoView.isHidden = false
-                        self.importAccountView.isHidden = false
-                    }))
-                    self.present(alert, animated: true)
+                    self.checkSeed()
                     break
                     
                 default:
@@ -134,6 +124,26 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
 
         }
     }
+    
+    func checkSeed() {
+        var sensitiveSource = "sensitive"
+        
+        if let environment = UserDefaults.standard.value(forKey: "environment") {
+            if environment as! Bool {
+                sensitiveSource = "sensitiveMainnet"
+            }
+        }
+        
+        do {
+            let loginCredits = try secretKeys.LocksmithLoad(forKey: sensitiveSource, conformance: digilira.login.self)
+            let seed = loginCredits.seed
+            
+            nowLetsGo(imported: true,  seed: seed)
+        } catch {
+            print (error)
+        }
+    }
+    
     
     
     @objc func goMainVC()
@@ -222,18 +232,6 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
     func setLetsGoView()
     {
         letsGoView.layer.cornerRadius = 25
-
-//        let letsGoGradient = CAGradientLayer()
-//        letsGoGradient.colors = [
-//            UIColor(red: 0.24, green: 0.54, blue: 1, alpha: 1).cgColor,
-//            UIColor(red: 0, green: 0.4, blue: 1, alpha: 1).cgColor
-//        ]
-//        letsGoGradient.frame = letsGoView.bounds
-//        letsGoGradient.startPoint = CGPoint(x: 0.17355118936567193, y: 1.2736177884615385)
-//        letsGoGradient.endPoint = CGPoint(x: 0.8794163945895522, y: -0.8311899038461539)
-//        letsGoGradient.cornerRadius = letsGoView.frame.height / 2
-//        letsGoView.layer.addSublayer(letsGoGradient)
-//        letsGoLabel.layer.zPosition = 1
     }
     
     @objc func letsGO()
@@ -250,8 +248,12 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
         }
     }
     
-    func nowLetsGo() {
-        let alert = UIAlertController(title: "Lütfen bekleyin", message: "Cüzdanınız oluşturuluyor..", preferredStyle: .alert)
+    func nowLetsGo(imported: Bool = false, seed: String = "") {
+        var message = "Cüzdanınız oluşturuluyor"
+        if imported {
+            message = "Giriş yapılıyor"
+        }
+        let alert = UIAlertController(title: "Lütfen bekleyin", message: message, preferredStyle: .alert)
         self.present(alert, animated: true, completion: nil)
         
         
@@ -259,19 +261,27 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
             BC.onComplete = { res in
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     alert.dismiss(animated: true, completion: nil)
-                    self.performSegue(withIdentifier: "toLetsStartVC", sender: nil)
+                    if imported {
+                        self.goMainVC()
+                    }else {
+                        self.performSegue(withIdentifier: "toLetsStartVC", sender: nil)
+                    }
                 }
             }
-            
-            BC.createMainnet()
+            BC.createMainnet(imported: imported, importedSeed: seed)
         } else {
-            BC.create(){ (address) in
+            BC.create(imported: imported, importedSeed: seed ){ (address) in
                 if (address == "TRY AGAIN") {
                     return
                 }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     alert.dismiss(animated: true, completion: nil)
-                    self.performSegue(withIdentifier: "toLetsStartVC", sender: nil)
+                    
+                    if imported {
+                        self.goMainVC()
+                    }else {
+                        self.performSegue(withIdentifier: "toLetsStartVC", sender: nil)
+                    }
                 }
             }
         }
@@ -372,6 +382,7 @@ extension OnBoardingVC: UIScrollViewDelegate
 extension OnBoardingVC: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         print(notification.request.content.body);
+        
         completionHandler([.alert, .sound])
     }}
 
@@ -385,7 +396,7 @@ class DynamicViewController: UIViewController, LegalDelegate {
     
     
     func showLegal(mode: digilira.terms) {
-        print(1)
+
     }
     
     func dismissLegalView() {

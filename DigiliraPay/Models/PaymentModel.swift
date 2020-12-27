@@ -18,7 +18,8 @@ import Foundation
 // MARK: - PaymentModel
 struct PaymentModel: Codable {
     let whois: Whois?
-    let refundPrice, currencyFiat, status: Double
+    let refundPrice: Double?
+    let currencyFiat, status: Double
     let called: Bool
     let id, merchant, orderRef: String
     let orderShipping: Double?

@@ -217,6 +217,47 @@ class digiliraPayApi: NSObject {
         auth()
     }
     
+    var onGetTransfer: ((_ result: TransferModel)->())?
+    
+    func getTransfer(PARAMS: String) {
+        var request = URLRequest(url: URL(string: getApiURL() + digilira.api.transferGet + PARAMS)!)
+        
+        request.httpMethod = "GET"
+        
+        onAuth = { res, sts in
+            let tokenString = "Bearer " + res.token
+            request.setValue(tokenString, forHTTPHeaderField: "Authorization")
+            
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            
+            
+            let session2 = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
+            
+            self.isCertificatePinning = true
+            
+            let task2 = session2.dataTask(with: request) { [self] (data, response, error) in
+                
+                if error != nil {
+                    self.onError!(error!, 0)
+                    
+                } else if data != nil {
+                    
+                    do {
+                        let result = try decodeDefaults(forKey: data!, conformance: TransferModel.self)
+                        DispatchQueue.main.async { // Correct
+                            self.onGetTransfer?(result)
+                        }
+                    } catch {
+                        onError!(error, 400)
+                    }
+                }
+            }
+            task2.resume()
+        }
+        auth()
+    }
+    
+    
     func updateUser(user: Data?) {
         
         self.onResponse = { res, sts in
@@ -320,6 +361,9 @@ class digiliraPayApi: NSObject {
     }
     
     func setOdemeAliniyor(JSON : Data?) {
+        self.onError = { res, sts in
+            print(res)
+        }
         if let json = try! JSONSerialization.jsonObject(with: JSON!, options: []) as? [String: Any] {
 
             if let status = json["status"] as? String {
@@ -337,9 +381,23 @@ class digiliraPayApi: NSObject {
                 print(json)
             }
         }
-
-        
     }
+    
+    func saveTransactionTransfer(JSON : Data?) {
+        self.onError = { res, sts in
+            print(res)
+        }
+        DispatchQueue.global(qos: .background).async  { [self] in
+            request(rURL: getApiURL() + digilira.api.transferNew,
+                    JSON: JSON,
+                    METHOD: digilira.requestMethod.post,
+                    AUTH: true
+            ) { (json, statusCode) in
+                print(json)
+            }
+        }
+    }
+    
     
     func convertImageToBase64String (img: UIImage) -> String {
         return img.jpegData(compressionQuality: 1)?.base64EncodedString() ?? ""
@@ -488,18 +546,29 @@ class digiliraPayApi: NSObject {
         let encoder = JSONEncoder()
         let data = try? encoder.encode(user)
         
-        self.onResponse = { res, sts in
+        crud.onResponse = { [self] res, sts in
             if (sts == 200) {
-                let response = digilira.externalTransaction.init(network: external.network,
-                                                                 address: external.address,
-                                                                 amount: external.amount,
-                                                                 owner: res["owner"] as? String,
-                                                                 wallet: (res["wallet"] as! String),
-                                                                 assetId: external.assetId,
-                                                                 destination: res["destination"] as? String
-                )
                 
-                self.onMember!(true, response)
+                do {
+                    let ourMember = try decodeDefaults(forKey: res, conformance: TransferDestination.self)
+               
+                    let response = digilira.externalTransaction.init(network: external.network,
+                                                                     address: external.address,
+                                                                     amount: external.amount,
+                                                                     owner: ourMember.owner,
+                                                                     wallet: ourMember.wallet,
+                                                                     assetId: external.assetId,
+                                                                     destination: ourMember.destination
+                    )
+                    
+                    self.onMember!(true, response)
+                
+                
+                } catch  {
+                    print(error)
+                }
+                
+ 
             }else {
                 
                 //-TODO check withdraw address
@@ -515,8 +584,11 @@ class digiliraPayApi: NSObject {
                 self.onMember!(false, response)
             }
         }
-        request2(rURL: getApiURL() + digilira.api.isOurMember, JSON: data, METHOD: digilira.requestMethod.post, AUTH: true)
         
+        onAuth = { [self] res, sts in
+            crud.request(rURL: getApiURL() + digilira.api.isOurMember, postData: data, method: digilira.requestMethod.post, token: res.token )
+        }
+        auth()
     }
     
     func wipeOut () {
@@ -672,17 +744,17 @@ class digiliraPayApi: NSObject {
                         break;
                         
                     case 400, 404:
-                        do {
-                            try Locksmith.deleteDataForUserAccount(userAccount: sensitiveSource)
-                        } catch  {
-                            onError!(digilira.NAError.seed404, sts)
-                        }
-                        
-                        do {
-                            try Locksmith.deleteDataForUserAccount(userAccount: authenticateSource)
-                        } catch  {
-                            onError!(digilira.NAError.user404, sts)
-                        }
+//                        do {
+//                            try Locksmith.deleteDataForUserAccount(userAccount: sensitiveSource)
+//                        } catch  {
+//                            onError!(digilira.NAError.seed404, sts)
+//                        }
+//
+//                        do {
+//                            try Locksmith.deleteDataForUserAccount(userAccount: authenticateSource)
+//                        } catch  {
+//                            onError!(digilira.NAError.user404, sts)
+//                        }
                         onError!(digilira.NAError.E_404, sts)
                         
                         break;
@@ -700,8 +772,6 @@ class digiliraPayApi: NSObject {
                                                 return
                                             }
                                         }
-                                        
-                                        
                                     }
                                 }
                                 
@@ -748,8 +818,6 @@ class digiliraPayApi: NSObject {
                 
                 crud.request(rURL: getApiURL() + digilira.api.auth, postData: json, method: digilira.requestMethod.post)
             }
-            
-            
             
         } catch  {
             sleep(3)

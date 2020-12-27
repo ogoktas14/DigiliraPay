@@ -18,6 +18,7 @@ class TransferConfirmationView: UIView {
 
     @IBOutlet weak var yes: UIView!
     @IBOutlet weak var no: UIView!
+    @IBOutlet weak var ok: UIView!
     @IBOutlet weak var yesLabel: UILabel!
     @IBOutlet weak var noLabel: UILabel!
     @IBOutlet weak var titleView: UIView!
@@ -60,6 +61,10 @@ class TransferConfirmationView: UIView {
         let tapNo: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(exitView(_:)))
         no.isUserInteractionEnabled = true
         no.addGestureRecognizer(tapNo)
+        
+        ok.layer.cornerRadius = 25
+        ok.isUserInteractionEnabled = true
+        ok.addGestureRecognizer(tapNo)
         
         self.frame.size.width = 0
         self.frame.size.height = 0
@@ -120,9 +125,16 @@ class TransferConfirmationView: UIView {
         if let customConfirm = p.yes {
             yesLabel.text = customConfirm
         }
+        if p.no == "" {
+            no.isHidden = true
+            yes.isHidden = true
+            ok.isHidden = false
+        }
         if let customReject = p.no {
             noLabel.text = customReject
         }
+        
+        icon.image = UIImage(named: p.icon)
         
         
         

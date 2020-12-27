@@ -73,7 +73,7 @@ class newSendView: UIView {
             return
         }
         
-        if t.destination == digilira.transactionDestination.foreign || t.destination == nil {
+        if t.destination == digilira.transactionDestination.foreign {
             if let coin = selectedCoinX {
                 if !checkAddress(network: coin.network, address: recipientText.title(for: .normal)!) {
                     recipientText.setTitleColor(.red, for: .normal)
@@ -96,6 +96,17 @@ class newSendView: UIView {
             t.memberCheck = true
             t.destination = digilira.transactionDestination.domestic
         }
+        
+        if let user = kullanici {
+            if let name = user.firstName {
+                if let surname = user.lastName {
+                    t.me = name + " " + surname
+                }
+            }
+        }
+        
+        t.fiat = price
+        
         
         if let coin = selectedCoinX {
             let double = Double(truncating: pow(10,coin.decimal) as NSNumber)
@@ -280,7 +291,8 @@ class newSendView: UIView {
                 l5: "",
                 l6: komisyonText,
                 yes: "Onayla",
-                no: "Reddet"
+                no: "Reddet",
+                icon: "caution"
             )
             errors?.transferConfirmation(txConMsg: confirmationMessage, destination: .trxConfirm)
         }
@@ -339,7 +351,7 @@ class newSendView: UIView {
         if let coin = selectedCoinX {
             let double = Double(truncating: pow(10,coin.decimal) as NSNumber)
             amount = (Double(params.amount!) / double)
-            price = Double(params.fiat!)
+            price = Double(params.fiat)
             
             if let text = textAmount.text {
                 if text != "" {

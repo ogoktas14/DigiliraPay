@@ -692,7 +692,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                 sendBTCETH(external: external, ticker:digiliraPay.ticker(ticker: Ticker))
                 break
             default:
-                digiliraPay.onGetOrder = { res in
+                digiliraPay.onGetOrder = { [self] res in
 
                     let odeme = digilira.odemeStatus.init(
                         id: res.paymentModelID,
@@ -703,8 +703,14 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                         _id: self.kullanici.id
                     )
                     
-                    self.digiliraPay.setOdemeAliniyor(JSON: try? self.digiliraPay.jsonEncoder.encode(odeme))
-                    self.goPageCardView(ORDER: res)
+                    if res.status == 2 {
+                        errorCaution(message: "Bu ödeme kodu daha önce kullanılmış. Lütfen yeni bir QR kod okutunuz.", title: "Hatalı QR Kod")
+                    } else {
+                        self.digiliraPay.setOdemeAliniyor(JSON: try? self.digiliraPay.jsonEncoder.encode(odeme))
+                        self.goPageCardView(ORDER: res)
+                    }
+                    
+                    
                     
                 }
                 digiliraPay.getOrder(PARAMS: address.address!)
@@ -725,10 +731,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
             
             self.throwEngine.warningView.removeFromSuperview()
         }
-        
-        
- 
-        
+         
         if isVerifyAccount {
             self.dismissVErifyAccountView()
         }
@@ -977,10 +980,10 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
             if let soyisim = kullanici.lastName {
                 walletView.ad_soyad = isim + " " + soyisim
             } else {
-                walletView.ad_soyad = "Satoshi Nakamoto"
+                walletView.ad_soyad = digilira.dummyName
             } 
         }else {
-            walletView.ad_soyad = "Satoshi Nakamoto"
+            walletView.ad_soyad = digilira.dummyName
         }
         
         //walletView.layer.zPosition = 0
@@ -1021,7 +1024,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
     }
     
     func getName() -> String {
-        var name: String = "Satoshi Nakamoto"
+        var name: String = digilira.dummyName
         
         if let n = kullanici.firstName {
             name = n
@@ -2054,35 +2057,42 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
                     let exchange = try digiliraPay.exchange(amount: external.amount!, coin: coin, symbol: digiliraPay.ticker(ticker: Ticker))
                     
                     digiliraPay.onMember = { res, data in
-                        DispatchQueue.main.async {
+                        DispatchQueue.main.async { [self] in
 
+                            guard let data = data else {return}
+                            
                             var miktar: Int64 = 0
                             var attach = ""
                             
-                            if data?.amount != nil {
-                                miktar = data!.amount!
+                            if data.amount != nil {
+                                miktar = data.amount!
                             }
                             
-                            if data?.message != nil {
-                                attach = data!.message
+                            attach = data.message
+                            
+                            var name = digilira.dummyName
+                            if let f = kullanici.firstName {
+                                if let l = kullanici.lastName {
+                                    name = f + " " + l
+                                }
                             }
                             
-                                let trx = SendTrx.init(merchant: data?.owner!,
-                                                       recipient: (data?.wallet)!,
-                                                       assetId: data?.assetId!,
+                                let trx = SendTrx.init(merchant: data.owner!,
+                                                       recipient: data.wallet!,
+                                                       assetId: data.assetId!,
                                                        amount: miktar,
                                                        fee: digilira.sponsorTokenFee,
                                                        fiat: exchange,
                                                        attachment: attach,
-                                                       network: data?.network!,
-                                                       destination: data?.destination!,
-                                                       massWallet: data?.wallet,
-                                                       memberCheck: true
+                                                       network: data.network!,
+                                                       destination: data.destination!,
+                                                       massWallet: data.wallet,
+                                                       memberCheck: true,
+                                                       me: name,
+                                                       blockchainFee: 0
                                 )
                                 
                                 self.send(params: trx)
-                                
-
                         }
                         
                     }
@@ -2215,6 +2225,7 @@ class MyTapGesture: UITapGestureRecognizer {
     var floatValue = 0
     var assetName = ""
     var qrAttachment = ""
+    var trxId = ""
     
 }
 

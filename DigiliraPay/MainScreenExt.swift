@@ -41,17 +41,17 @@ extension MainScreen: NewCoinSendDelegate
                     self.dismissNewSend()
                     switch params.destination {
                     case digilira.transactionDestination.domestic:
-                        BC.sendTransaction2(recipient: params.recipient!, fee: digilira.sponsorTokenFee, amount: params.amount!, assetId: params.assetId!, attachment: params.attachment!, wallet:wallet)
+                        BC.sendTransaction2(name: params.merchant!, recipient: params.recipient!, fee: digilira.sponsorTokenFee, amount: params.amount!, assetId: params.assetId!, attachment: params.attachment, wallet:wallet, blob: params)
                         break
                     case digilira.transactionDestination.foreign:
                         
                         BC.getWavesToken(wallet:wallet)
                         
-                        BC.massTransferTx(recipient: params.recipient!, fee: digilira.sponsorTokenFeeMass, amount: params.amount!, assetId: params.assetId!, attachment: "", wallet: wallet)
+                        BC.massTransferTx(name: params.merchant!, recipient: params.recipient!, fee: digilira.sponsorTokenFeeMass, amount: params.amount!, assetId: params.assetId!, attachment: "", wallet: wallet, blob: params)
              
                         break
                     case digilira.transactionDestination.interwallets:
-                        BC.massTransferTx(recipient: params.recipient!, fee: digilira.sponsorTokenFeeMass, amount: params.amount!, assetId: params.assetId!, attachment: "", wallet: wallet)
+                        BC.massTransferTx(name: params.merchant!, recipient: params.recipient!, fee: digilira.sponsorTokenFeeMass, amount: params.amount!, assetId: params.assetId!, attachment: "", wallet: wallet, blob: params)
          
                         break
                     default:
@@ -133,7 +133,15 @@ extension MainScreen: PageCardViewDeleGate
         //fetch()
         isNewSendScreen = false
         menuView.isHidden = false
-
+        
+        var name = digilira.dummyName
+        
+        if let f = kullanici.firstName {
+            if let l = kullanici.lastName {
+                name = f + " " + l
+            }
+        }
+        
         let data = SendTrx.init(merchant: params.merchant,
                                 recipient: digilira.gatewayAddress,
                                 assetId: params.currency,
@@ -143,7 +151,11 @@ extension MainScreen: PageCardViewDeleGate
                                 attachment: params.paymentModelID,
                                 network: digilira.transactionDestination.domestic,
                                 destination: digilira.transactionDestination.domestic,
-                                products: params.products
+                                products: params.products,
+                                me: name,
+                                blockchainFee: 0,
+                                merchantId: params.user
+                                
         )
         
         sendCoinNew(params: data)

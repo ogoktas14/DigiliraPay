@@ -11,6 +11,10 @@ import Foundation
 protocol TransactionDetailCloseDelegate: class
 {
     func close()
+    func alertO(order:PaymentModel)
+    func alertTransfer(order:TransferModel)
+    func alertT(message:String, title: String)
+    func alertEr(error: Error)
 }
 
 

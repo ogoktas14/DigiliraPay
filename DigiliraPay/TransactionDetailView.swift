@@ -91,6 +91,46 @@ class TransactionDetailView: UIView
         }
     }
     
+    @objc func getOr(recognizer: MyTapGesture) {
+        if recognizer.qrAttachment == "-" {
+            generator.notificationOccurred(.error)
+        }
+        
+        digiliraPay.onError = { [self] res, sts in
+            delegate?.alertEr(error: res)
+        }
+        
+        if recognizer.qrAttachment == "DIGILIRAPAY TRANSFER" {
+            generator.notificationOccurred(.error)
+            digiliraPay.onGetTransfer = { [self] res in
+                delegate?.alertTransfer(order: res)
+            }
+            digiliraPay.getTransfer(PARAMS: recognizer.trxId)
+            DispatchQueue.main.async { [self] in
+                delegate?.alertT(message: "Transder detaylarınız yükleniyor...", title: "Transfer detayları")
+
+            }
+            
+            return
+        }
+        
+        if fetching {
+            return
+        }
+        fetching = true
+        generator.notificationOccurred(.success)
+        
+        fetching = false
+        
+        digiliraPay.onGetOrder = { [self] res in
+            delegate?.alertO(order: res)
+        }
+        digiliraPay.getOrder(PARAMS: recognizer.qrAttachment)
+        DispatchQueue.main.async { [self] in
+            delegate?.alertT(message: "Sipariş detaylarınız yükleniyor...", title: "Sipariş detayları")
+
+        }
+    }
     
     @objc func handleTap (recognizer: MyTapGesture) {
         if recognizer.qrAttachment == "-" {
@@ -191,8 +231,9 @@ extension TransactionDetailView: UITableViewDelegate, UITableViewDataSource
                     case 4:
                         cell.setView(image: UIImage(named: "verifying")!, title: "Detaylar", detail: t.attachment ?? "-" )
                         
-                        let tapped = MyTapGesture.init(target: self, action: #selector(handleTap))
+                        let tapped = MyTapGesture.init(target: self, action: #selector(getOr))
                         tapped.qrAttachment = t.attachment ?? "-"
+                        tapped.trxId = t.id!
                         cell.addGestureRecognizer(tapped)
                         
                         

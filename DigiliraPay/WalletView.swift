@@ -352,5 +352,33 @@ extension WalletView: TransactionDetailCloseDelegate
             self.tableView.alpha = 1
         }
     }
+    
+    func alertO(order:PaymentModel) {
+        throwEngine.alertOrder(order: order)
+    }
+    
+    func alertT(message: String, title: String) {
+        throwEngine.alertTransaction(title: title, message: message, verifying: true)
+    }
+    
+    func alertEr(error: Error) {
+        throwEngine.evaluateError(error: error)
+    }
+    
+    func alertTransfer(order: TransferModel) {
+        let asset = try? BC.returnAsset(assetId: order.assetID)
+        let t = digilira.txConfMsg.init(title: "Transfer Detayları",
+                                        message: "Hesabınıza gelen transfer detayları",
+                                        l1: "Gönderici: " + order.myName,
+                                        l2: "Token: " + asset!.tokenSymbol,
+                                        l3: "Miktar: " + order.amount.description,
+                                        l4: "",
+                                        l5: "",
+                                        l6: "",
+                                        yes: "Tamam",
+                                        no: "",
+                                        icon: "success")
+        throwEngine.transferConfirmation(txConMsg: t, destination: .trxConfirm)
+    }
 }
 

@@ -73,6 +73,7 @@
 		88F4A1BB2312AD63007172A6 /* MainScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F4A1BA2312AD63007172A6 /* MainScreen.swift */; };
 		88F4A1BF2312AF7B007172A6 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F4A1BE2312AF7B007172A6 /* MenuView.swift */; };
 		88F4A1C42312CA56007172A6 /* MockImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 88F4A1C32312CA56007172A6 /* MockImages.xcassets */; };
+		9317703225946CB400A6EC5F /* TransferModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9317703125946CB400A6EC5F /* TransferModel.swift */; };
 		932A59C02584FA1900B64EA9 /* warningView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 932A59BF2584FA1900B64EA9 /* warningView.xib */; };
 		932A59C32584FA6200B64EA9 /* warningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932A59C22584FA6200B64EA9 /* warningView.swift */; };
 		93390886255A76D40005B64A /* cloudflaressl.cer in Resources */ = {isa = PBXBuildFile; fileRef = 93390885255A76CD0005B64A /* cloudflaressl.cer */; };
@@ -193,6 +194,7 @@
 		88F4A1BA2312AD63007172A6 /* MainScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreen.swift; sourceTree = "<group>"; };
 		88F4A1BE2312AF7B007172A6 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		88F4A1C32312CA56007172A6 /* MockImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = MockImages.xcassets; sourceTree = "<group>"; };
+		9317703125946CB400A6EC5F /* TransferModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferModel.swift; sourceTree = "<group>"; };
 		932A59BF2584FA1900B64EA9 /* warningView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = warningView.xib; sourceTree = "<group>"; };
 		932A59C22584FA6200B64EA9 /* warningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = warningView.swift; sourceTree = "<group>"; };
 		93390885255A76CD0005B64A /* cloudflaressl.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = cloudflaressl.cer; sourceTree = "<group>"; };
@@ -271,7 +273,6 @@
 				93E9D551257A930D00FE19D8 /* ErrorHandling.swift */,
 				934F3C4725889950007CFC19 /* string.tr.swift */,
 				934F3C4B2588F627007CFC19 /* mainnet.swift */,
-				93CAC396259225B9006B8FB7 /* PaymentModel.swift */,
 			);
 			name = blockchain;
 			sourceTree = "<group>";
@@ -308,6 +309,7 @@
 		882AAB0122FC96DD004CDAA6 /* DigiliraPay */ = {
 			isa = PBXGroup;
 			children = (
+				9317703025946C9D00A6EC5F /* Models */,
 				9339086A255A6E000005B64A /* SSLPinning */,
 				00608081237B1573006FFBD2 /* DigiliraPayRelease.entitlements */,
 				006B1EE4234CC2530045B6B4 /* custom */,
@@ -458,6 +460,15 @@
 				6B7278F70D172AF69D354796 /* Pods_DigiliraPay.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9317703025946C9D00A6EC5F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				93CAC396259225B9006B8FB7 /* PaymentModel.swift */,
+				9317703125946CB400A6EC5F /* TransferModel.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		9339086A255A6E000005B64A /* SSLPinning */ = {
@@ -657,6 +668,7 @@
 				936F25B425323B2E00C5FA85 /* ColoredCardView.swift in Sources */,
 				93F79FD7257E1139006DC148 /* ParaYatirView.swift in Sources */,
 				93F79FE62580F89D006DC148 /* HeaderExitView.swift in Sources */,
+				9317703225946CB400A6EC5F /* TransferModel.swift in Sources */,
 				882AAB0722FC96DD004CDAA6 /* OnBoardingVC.swift in Sources */,
 				934F3C4825889950007CFC19 /* string.tr.swift in Sources */,
 				93E9D552257A930D00FE19D8 /* ErrorHandling.swift in Sources */,

@@ -96,7 +96,10 @@ class WalletOperationButtonSView: UIView {
                 fee: digilira.sponsorTokenFee,
                 fiat: 0,
                 attachment: "",
-                network: "")
+                network: "",
+                destination: digilira.transactionDestination.interwallets,
+                me: digilira.dummyName,
+                blockchainFee: 0)
             self.delegate?.send(params: empty)
         })
 

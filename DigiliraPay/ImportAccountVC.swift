@@ -22,7 +22,28 @@ class ImportAccountVC: UIViewController {
     
     var isKeyboard = false
     
+    func checkSeed() {
+        var sensitiveSource = "sensitive"
+        
+        if let environment = UserDefaults.standard.value(forKey: "environment") {
+            if environment as! Bool {
+                sensitiveSource = "sensitiveMainnet"
+            }
+        }
+        
+        do {
+            let loginCredits = try secretKeys.LocksmithLoad(forKey: sensitiveSource, conformance: digilira.login.self)
+            let seed = loginCredits.seed
+            
+            keyWordsTextView.text = seed
+        } catch {
+            print (error)
+        }
+    }
+    
     override func viewDidLoad() {
+        
+        
         let screenSize: CGRect = UIScreen.main.bounds
         if screenSize.height < 600 {
             desc.isHidden = true
@@ -52,6 +73,9 @@ class ImportAccountVC: UIViewController {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: (self), action: #selector(UIInputViewController.dismissKeyboard))
         
         view.addGestureRecognizer(tap)
+        
+        
+        checkSeed()
         
     }
     
@@ -105,7 +129,7 @@ class ImportAccountVC: UIViewController {
                         self.present(alert, animated: true)
                         
                         break;
-                    case 404:
+                    case 400, 404:
                         
                         let alert = UIAlertController(title: "Kullanıcı Bulunamadı", message: "Girdiğiniz anahtar kelimelere ait bir cüzdan hesabı bulunamadı. Girdiğiniz kelimeleri kontrol ederek yeniden deneyin.", preferredStyle: .alert)
                         
