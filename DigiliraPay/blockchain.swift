@@ -233,6 +233,10 @@ class Blockchain: NSObject {
                         }
                     }
                     
+                    let bytes = bytization(recipient, attachmentValidation, address)
+                    let sign = wavesCrypto.signBytes(bytes: bytes, seed: wallet.seed)
+                    let signature = WavesCrypto.shared.base58encode(input: sign!)
+
                     let t = TransferOnWay.init(recipientName: name,
                                                recipient: recipient,
                                                myName: blob.me,
@@ -248,7 +252,9 @@ class Blockchain: NSObject {
                                                destination: blob.destination,
                                                externalAddress: external,
                                                attachment: attachmentValidation,
-                                               merchantId: merchantId)
+                                               merchantId: merchantId,
+                                               senderPublicKey: senderPublicKey,
+                                               signature: signature!)
                     do {
                         let json = try self.digiliraPay.jsonEncoder.encode(t)
                         self.digiliraPay.saveTransactionTransfer(JSON: json)
@@ -824,6 +830,14 @@ class Blockchain: NSObject {
         }
     }
     
+    func bytization(_ t1:String, _ t2:String, _ t3:String) -> Bytes {
+        var bytes: [UInt8] = [255, 255, 255, 1]
+        let byteString = t1 + ":" + t2 + ":" + t3
+        let array: [UInt8] = Array(byteString.utf8)
+        bytes.append(contentsOf: array)
+        return bytes
+    }
+    
     func createUser(seed: String) {
         let uuid = NSUUID().uuidString
         guard let chainId = WavesSDK.shared.enviroment.chainId else { return }
@@ -838,12 +852,7 @@ class Blockchain: NSObject {
 
         let username = NSUUID().uuidString
         
-        var bytes: [UInt8] = [255, 255, 255, 1]
-        let byteString = username + ":" + uuid + ":" + wallet
-        let array: [UInt8] = Array(byteString.utf8)
-        bytes.append(contentsOf: array)
-        
-        guard let signed = wavesCrypto.signBytes(bytes: bytes, seed: seed) else {return}
+        guard let signed = wavesCrypto.signBytes(bytes: bytization(username, uuid, wallet), seed: seed) else {return}
         guard let signed64 = wavesCrypto.base58encode(input: signed) else {return}
 
         var user = digilira.exUser.init(username: username,

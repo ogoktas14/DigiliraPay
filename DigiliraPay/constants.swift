@@ -25,17 +25,21 @@ struct digilira {
     }
     struct api {
         static let sslpin = "https://pay.digilirapay.com/"
-        static let url = "https://server1.digilirapay.com/v4"
-        static let urlMainnet = "https://server1.digilirapay.com/v7"
-        static let payment = "/payment/"
-        static let paymentStatus = "/payment/status"
-        static let transferNew = "/transfer/create/new"
+        static let url = "https://pay.digilirapay.com/v4"
+        static let urlMainnet = "https://pay.digilirapay.com/v7"
+        
+        static let payment = "/app/"
+        static let paymentStatus = "/app/status"
+        
         static let transferGet = "/transfer/get/"
-        static let userUpdate =  "/users/update/me"
-        static let userRegister =  "/users/register"
-        static let auth =  "/users/authenticate"
-        static let updateScript =  "/users/signscript/update"
         static let isOurMember = "/transfer/recipient"
+        
+        static let userUpdate =  "/users/update/me"
+        static let updateScript =  "/users/signscript/update"
+        static let auth =  "/users/authenticate"
+        
+        static let transferNew = "/transfer/create/new"
+        static let userRegister =  "/users/register"
     }
     
     struct node {
@@ -44,10 +48,12 @@ struct digilira {
     }
     
     struct wavesApiEndpoints {
+        
         static let getToken = "/v1/oauth2/token"
         static let getDeposit = "/v1/deposit/addresses/"
         static let getCurrencies = "/v1/deposit/currencies"
         static let getWithdraw = "/v1/withdraw/addresses/"
+        
         static let client_id = "waves.exchange"
         static let BTC = "BTC"
         static let ETH = "ETH"
@@ -374,6 +380,8 @@ struct digilira {
         var _id: String?
         var assetId: String?
         var amount: Int64?
+        var senderPublicKey: String?
+        var signature: String?
     }
     
     struct login: Codable {

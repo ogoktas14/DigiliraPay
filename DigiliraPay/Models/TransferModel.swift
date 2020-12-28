@@ -38,6 +38,8 @@ struct TransferOnWay: Codable {
     let externalAddress: String
     let attachment: String
     let merchantId: String
+    let senderPublicKey: String
+    let signature: String
 }
  
 // MARK: - TransferModel
