@@ -25,21 +25,19 @@ struct digilira {
     }
     struct api {
         static let sslpin = "https://pay.digilirapay.com/"
-        static let url = "https://pay.digilirapay.com/v4"
-        static let urlMainnet = "https://pay.digilirapay.com/v7"
-        
-        static let payment = "/app/"
-        static let paymentStatus = "/app/status"
-        
+        static let url = "https://server1.digilirapay.com/v4"
+        static let urlMainnet = "https://server1.digilirapay.com/v7"
+                
         static let transferGet = "/transfer/get/"
+        static let transferPrefix = "transfer/"
+        static let paymentPrefix = "payment/"
         static let isOurMember = "/transfer/recipient"
-        
-        static let userUpdate =  "/users/update/me"
-        static let updateScript =  "/users/signscript/update"
-        static let auth =  "/users/authenticate"
-        
         static let transferNew = "/transfer/create/new"
         static let userRegister =  "/users/register"
+        
+        static let userUpdate =  "/users/update/me"
+        static let auth =  "/users/authenticate"
+        
     }
     
     struct node {

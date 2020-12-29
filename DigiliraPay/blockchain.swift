@@ -147,10 +147,9 @@ class Blockchain: NSObject {
         return toByteArray(Int16(b.count)) + b
     }
     
-    var onMassTransaction: ((_ result: NodeService.DTO.Transaction)->())?
     var onAssetBalance: ((_ result: NodeService.DTO.AddressAssetsBalance)->())?
-    var onTransferTransaction: ((_ result: NodeService.DTO.Transaction)->())?
-    var onVerified: ((_ result: [String : AnyObject])->())?
+    var onTransferTransaction: ((_ result: NodeService.DTO.Transaction, _ verifyData: TransferOnWay )->())?
+    var onVerified: ((_ result: [String : AnyObject], _ verifyData: TransferOnWay)->())?
     var onSensitive: ((_ result: digilira.wallet, _ err: String)->())?
     var onError: ((_ result: Error)->())?
     var onPinSuccess: ((_ result: Bool)->())?
@@ -255,14 +254,12 @@ class Blockchain: NSObject {
                                                merchantId: merchantId,
                                                senderPublicKey: senderPublicKey,
                                                signature: signature!)
-                    do {
-                        let json = try self.digiliraPay.jsonEncoder.encode(t)
-                        self.digiliraPay.saveTransactionTransfer(JSON: json)
-                    } catch {
-                        print(error)
-                    }
+                    
+
+                    
+                    self.onTransferTransaction?(tx, t)
                 }
-                self.onTransferTransaction?(tx)
+                
             }, onError: { (error ) -> Void in
                 
                 if let s = error as? NetworkError{
@@ -291,8 +288,8 @@ class Blockchain: NSObject {
     }
     
     
-    func verifyTrx(txid: String) {
-        getTransactionId(rURL: WavesSDK.shared.enviroment.nodeUrl.description + "/transactions/info/" + txid)
+    func verifyTrx(txid: String, t: TransferOnWay) {
+        getTransactionId(rURL: WavesSDK.shared.enviroment.nodeUrl.description + "/transactions/info/" + txid, t:t)
         
     }
     
@@ -531,7 +528,7 @@ class Blockchain: NSObject {
     
     
     
-    func getTransactionId(rURL: String) {
+    func getTransactionId(rURL: String, t: TransferOnWay) {
         
         let url = rURL
         
@@ -554,7 +551,7 @@ class Blockchain: NSObject {
                 if httpResponse!.statusCode == 404 {
                     sleep(1)
                     print("control")
-                    self.getTransactionId(rURL: url)
+                    self.getTransactionId(rURL: url, t:t)
                     return
                 }else{
                     guard let dataResponse = data,
@@ -563,7 +560,7 @@ class Blockchain: NSObject {
                         return }
                     do{
                         let jsonResponse = try JSONSerialization.jsonObject(with: dataResponse) as! Dictionary<String, AnyObject>
-                        self.onVerified!(jsonResponse)
+                        self.onVerified!(jsonResponse, t)
                     } catch let parsingError {
                         print("Error", parsingError)
                     }

@@ -121,13 +121,6 @@ extension MainScreen: PageCardViewDeleGate
             { subView.removeFromSuperview() }
         })
         
-        let odeme = digilira.odemeStatus.init(
-            id: id,
-            status: "5"
-        )
-        
-        self.digiliraPay.setOdemeAliniyor(JSON: try? self.digiliraPay.jsonEncoder.encode(odeme))
-        
     }
     func dismissNewSend1(params: PaymentModel) {
         //fetch()

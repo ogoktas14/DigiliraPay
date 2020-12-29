@@ -180,19 +180,17 @@ class digiliraPayApi: NSObject {
     var onGetOrder: ((_ result: PaymentModel)->())?
     
     func getOrder(PARAMS: String) {
-        var request = URLRequest(url: URL(string: getApiURL() + digilira.api.payment + PARAMS)!)
+        var request = URLRequest(url: URL(string: getApiURL() + digilira.api.transferGet + digilira.api.paymentPrefix + PARAMS)!)
         
         request.httpMethod = "GET"
         
         onAuth = { res, sts in
             let tokenString = "Bearer " + res.token
             request.setValue(tokenString, forHTTPHeaderField: "Authorization")
-            
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            
-            
+
             let session2 = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
-            
+
             self.isCertificatePinning = true
             
             let task2 = session2.dataTask(with: request) { [self] (data, response, error) in
@@ -220,7 +218,7 @@ class digiliraPayApi: NSObject {
     var onGetTransfer: ((_ result: TransferModel)->())?
     
     func getTransfer(PARAMS: String) {
-        var request = URLRequest(url: URL(string: getApiURL() + digilira.api.transferGet + PARAMS)!)
+        var request = URLRequest(url: URL(string: getApiURL() + digilira.api.transferGet + digilira.api.transferPrefix + PARAMS)!)
         
         request.httpMethod = "GET"
         
@@ -267,6 +265,7 @@ class digiliraPayApi: NSObject {
                 self.onUpdate!(false)
             }
         }
+        
         request2(rURL: getApiURL() + digilira.api.userUpdate, JSON: user, METHOD: digilira.requestMethod.put, AUTH: true)
     }
     
@@ -280,7 +279,7 @@ class digiliraPayApi: NSObject {
             }
         }
         
-        request2(rURL: getApiURL() + digilira.api.updateScript, JSON: data.data, METHOD: digilira.requestMethod.post, AUTH: true)
+        request2(rURL: getApiURL() + digilira.api.userUpdate, JSON: data.data, METHOD: digilira.requestMethod.put, AUTH: true)
         
     }
     
@@ -358,29 +357,6 @@ class digiliraPayApi: NSObject {
     
     func isLoggedIn() -> Bool {
         return false
-    }
-    
-    func setOdemeAliniyor(JSON : Data?) {
-        self.onError = { res, sts in
-            print(res)
-        }
-        if let json = try! JSONSerialization.jsonObject(with: JSON!, options: []) as? [String: Any] {
-
-            if let status = json["status"] as? String {
-                if (status == "2") {
-
-                }
-            }
-        }
-        DispatchQueue.global(qos: .background).async  { [self] in
-            request(rURL: getApiURL() + digilira.api.paymentStatus,
-                    JSON: JSON,
-                    METHOD: digilira.requestMethod.post,
-                    AUTH: true
-            ) { (json, statusCode) in
-                print(json)
-            }
-        }
     }
     
     func saveTransactionTransfer(JSON : Data?) {

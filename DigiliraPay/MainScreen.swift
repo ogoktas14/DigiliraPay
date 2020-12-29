@@ -277,49 +277,29 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                                 
                                 self.BitexenBalances.append(bakiye.value)
                             }
-                            
                         }
                     }
                 }
                 self.isBitexenReload = true
                 self.onB!()
-                
 //                self.checkHeaderExist()
                 //coinTableView.reloadData()
                 
             }else{
                 print("error")
             }
-            
         }
         
         BC.onAssetBalance = { [self] result in
             construct(result: result)
         }
         
-        BC.onMassTransaction = { res in
-            print(res)
-            let txid = res.dictionary["id"] as? String
-            
-            DispatchQueue.main.async {
-                self.showSuccess(mode: 1, transaction: res.dictionary)
-            }
-            self.bottomView.isHidden = true
-            self.goHomeScreen()
-            
-            self.BC.verifyTrx(txid: txid!)
-            
-            self.bottomView.isHidden = true
-            self.goHomeScreen()
-        }
-        
-        
-        BC.onTransferTransaction = { res in
+        BC.onTransferTransaction = { res, t in
             //            let attachment = String(decoding: (WavesCrypto.shared.base58decode( input: res.dictionary["attachment"] as! String)!), as: UTF8.self)
             let txid = res.dictionary["id"] as? String
             
             DispatchQueue.global(qos: .background).async  {
-                self.BC.verifyTrx(txid: txid!) 
+                self.BC.verifyTrx(txid: txid!, t: t) 
             }
             
             DispatchQueue.main.async {
@@ -329,28 +309,31 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
             self.goHomeScreen()
         }
         
-        BC.onVerified = { res in
+        BC.onVerified = { res, t in
 
             NotificationCenter.default.post(name: .didCompleteTask, object: nil)
             DispatchQueue.main.async {
                 self.showSuccess(mode: 2, transaction: res)
             }
             
-            let id = res["id"] as? String
+//            let id = res["id"] as? String
             switch res["type"] as? Int {
             case 11:
                 return
             default:
                 let attachment = String(decoding: (WavesCrypto.shared.base58decode( input: res["attachment"] as! String)!), as: UTF8.self)
                 
-                let odeme = digilira.odemeStatus.init(
-                    id: attachment,
-                    txid: id!,
-                    status: "2",
-                    assetId: res["assetId"] as? String,
-                    amount: res["amount"] as? Int64
-                )
-                self.digiliraPay.setOdemeAliniyor(JSON: try? self.digiliraPay.jsonEncoder.encode(odeme))
+                do {
+                    let json = try self.digiliraPay.jsonEncoder.encode(t)
+                    self.digiliraPay.saveTransactionTransfer(JSON: json)
+                } catch {
+                    print(error)
+                }
+                
+                if (attachment == "DIGILIRAPAY TRANSFER") {
+                    //wallet to wallet transfer
+                    return
+                }
             } 
         }
         
@@ -378,9 +361,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(onDidReceiveData(_:)), name: .didReceiveData, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(onTrxCompleted), name: .didCompleteTask, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(onOrderClicked), name: .orderClick, object: nil)
-        
-        
-        
+         
         if #available(iOS 13.0, *), traitCollection.userInterfaceStyle == .dark{
             
             //            IQKeyboardManager.shared.keyboardAppearance = .dark
@@ -693,25 +674,12 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                 break
             default:
                 digiliraPay.onGetOrder = { [self] res in
-
-                    let odeme = digilira.odemeStatus.init(
-                        id: res.paymentModelID,
-                        status: "1",
-                        name: self.kullanici.firstName,
-                        surname: self.kullanici.lastName,
-                        wallet: self.kullanici.wallet,
-                        _id: self.kullanici.id
-                    )
                     
                     if res.status == 2 {
                         errorCaution(message: "Bu ödeme kodu daha önce kullanılmış. Lütfen yeni bir QR kod okutunuz.", title: "Hatalı QR Kod")
                     } else {
-                        self.digiliraPay.setOdemeAliniyor(JSON: try? self.digiliraPay.jsonEncoder.encode(odeme))
                         self.goPageCardView(ORDER: res)
                     }
-                    
-                    
-                    
                 }
                 digiliraPay.getOrder(PARAMS: address.address!)
             }
