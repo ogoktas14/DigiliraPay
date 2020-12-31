@@ -17,8 +17,8 @@ class ImportAccountVC: UIViewController {
     @IBOutlet weak var desc: UILabel!
     @IBOutlet weak var keyWordsTextView: UITextView!
     
-    let digiliraPay = digiliraPayApi()
     let BC = Blockchain()
+    let throwEngine = ErrorHandling()
     
     var isKeyboard = false
     
@@ -73,8 +73,6 @@ class ImportAccountVC: UIViewController {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: (self), action: #selector(UIInputViewController.dismissKeyboard))
         
         view.addGestureRecognizer(tap)
-        
-        
         checkSeed()
         
     }
@@ -89,103 +87,45 @@ class ImportAccountVC: UIViewController {
         isKeyboard = false
         self.view.frame.origin.y = 0
     }
-    
-    
+     
     @objc func dismissKeyboard() {
         //Causes the view (or one of its embedded text fields) to resign the first responder status.
         view.endEditing(true)
     }
-    
-    
-    
+     
     @objc func goHome()
     {
         let seedTest = NSPredicate(format: "SELF MATCHES %@", digilira.regExp.seedRegex)
         let result = seedTest.evaluate(with: keyWordsTextView.text)
         
         if result {
-            let alert = UIAlertController(title: "Lütfen bekleyin", message: "Girdiğiniz anahtar kelimeler kontrol ediliyor.", preferredStyle: .alert)
-            self.present(alert, animated: true, completion: nil)
             
-            digiliraPay.onError = { res, sts in
-                DispatchQueue.main.async {
-                    alert.dismiss(animated: true, completion: nil)
-                    switch sts {
-                    
-                    case 0:
-                        let alert = UIAlertController(title: "Uygulamanızı Güncelleyin", message: "DigiliraPAY uygulamasını kullanmaya devam edebilmek için lütfen uygulamanızı güncelleyin.", preferredStyle: .alert)
-                        
-                        alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
-                            exit(1)
-                        }))
-                        self.present(alert, animated: true)
-                        break
-                    case 503:
-                        let alert = UIAlertController(title: "Bir Hata Oluştu", message: "Şu anda hizmet veremiyoruz. Lütfen daha sonra yeniden deneyin.", preferredStyle: .alert)
-                        
-                        alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
-                            exit(1)
-                        }))
-                        self.present(alert, animated: true)
-                        
-                        break;
-                    case 400, 404:
-                        
-                        let alert = UIAlertController(title: "Kullanıcı Bulunamadı", message: "Girdiğiniz anahtar kelimelere ait bir cüzdan hesabı bulunamadı. Girdiğiniz kelimeleri kontrol ederek yeniden deneyin.", preferredStyle: .alert)
-                        
-                        alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
-                            //                    todo
-                        }))
-                        self.present(alert, animated: true)
-                        
-                        break
-                        
-                    default:
-                        
-                        let alert = UIAlertController(title: "Bir Hata Oluştu..", message: "Maalesef şu an işleminizi gerçekleştiremiyoruz. Lütfen birazdan tekrar deneyin.", preferredStyle: UIAlertController.Style.alert)
-                        alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
-                            exit(1)
-                        }))
-                        self.present(alert, animated: true, completion: nil)
-                        break
-                        
-                    }
-                }
+            throwEngine.alertTransaction(title: "Lütfen bekleyin", message: "Girdiğiniz anahtar kelimeler kontrol ediliyor.", verifying: true)
+            
+            BC.onError = { [self] res in
+                throwEngine.evaluateError(error: res)
             }
             
-            BC.create(imported: true, importedSeed: keyWordsTextView.text) { (seed) in
-                if (seed == "TRY AGAIN") {
-                    return
-                }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    
-                    self.digiliraPay.onLogin2 = { user, status in
-                        DispatchQueue.main.sync {
-                            alert.dismiss(animated: true, completion: nil)
-                            switch (status) {
-                            
-                            case 200:
-                                UserDefaults.standard.set(false, forKey: "isSecure")
-                                let alert = UIAlertController(title: "Cüzdanınız Başarıyla Aktarıldı!", message: "Ödeme yapabilmek ve kripto varlıklarınızı transfer edebilmek için KYC sürecini yeniden tamamlamanız gerekmektedir.", preferredStyle: .alert)
-                                
-                                alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
-                                    self.performSegue(withIdentifier: "toMainVCFromImport", sender: nil)
-                                }))
-                                self.present(alert, animated: true)
-                                break
-                            default:
-                                break
-                            }
-                        }
+            BC.onComplete = { [self] res, status in
+                
+                switch status {
+                case 200:
+                    if (res) {
+                        self.performSegue(withIdentifier: "toMainVCFromImport", sender: nil)
+                        UserDefaults.standard.set(false, forKey: "isSecure")
                     }
-                    self.digiliraPay.login2()
+                case 502:
+                    throwEngine.evaluateError(error: digilira.NAError.E_502)
+                default:
+                    throwEngine.evaluateError(error: digilira.NAError.anErrorOccured)
                 }
             }
+            BC.createMainnet(imported: true, importedSeed: keyWordsTextView.text)
+            
         }else {
             
-            let alert = UIAlertController(title: "Dikkat", message: "Anahtar kelimeler eksik veya hatalı. Lütfen kontrole ederek tekrar deneyin.", preferredStyle: UIAlertController.Style.alert)
-            alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: nil ))
-            self.present(alert, animated: true)
+            throwEngine.alertCaution(title: "Dikkat", message: "Anahtar kelimeler eksik veya hatalı. Lütfen kontrole ederek tekrar deneyin.")
+            
         }
     }
     

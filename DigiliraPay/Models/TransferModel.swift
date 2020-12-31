@@ -25,7 +25,7 @@ struct TransferOnWay: Codable {
     let recipientName: String
     let recipient: String
     let myName: String
-    let myWallet: String
+    let wallet: String
     let amount: Int64
     let assetId: String
     let tickerTl: Double
@@ -38,8 +38,9 @@ struct TransferOnWay: Codable {
     let externalAddress: String
     let attachment: String
     let merchantId: String
-    let senderPublicKey: String
-    let signature: String
+    let publicKey: String
+    let signed: String
+    let timestamp: Int64
 }
  
 // MARK: - TransferModel
@@ -48,7 +49,7 @@ struct TransferModel: Codable {
     let amount: Int
     let feeAssetID: String
     let blockchainFee, tickerUsd, fee: Int
-    let externalAddress, myWallet, merchantID, recipientName: String
+    let externalAddress, wallet, merchantID, recipientName: String
     let recipient: String
     let tickerTl: Double
     let assetID, destination, attachment: String
@@ -59,7 +60,7 @@ struct TransferModel: Codable {
         case id = "_id"
         case myName, amount
         case feeAssetID = "feeAssetId"
-        case blockchainFee, tickerUsd, fee, externalAddress, myWallet
+        case blockchainFee, tickerUsd, fee, externalAddress, wallet
         case merchantID = "merchantId"
         case recipientName, recipient, tickerTl
         case assetID = "assetId"

@@ -100,35 +100,64 @@ class TransactionDetailView: UIView
             delegate?.alertEr(error: res)
         }
         
-        if recognizer.qrAttachment == "DIGILIRAPAY TRANSFER" {
-            generator.notificationOccurred(.error)
-            digiliraPay.onGetTransfer = { [self] res in
-                delegate?.alertTransfer(order: res)
-            }
-            digiliraPay.getTransfer(PARAMS: recognizer.trxId)
-            DispatchQueue.main.async { [self] in
-                delegate?.alertT(message: "Transder detaylarınız yükleniyor...", title: "Transfer detayları")
-
+        let timestamp = Int64(Date().timeIntervalSince1970) * 1000
+        if let kullanici = try? secretKeys.userData() {
+            
+            var tid = recognizer.qrAttachment
+            if recognizer.qrAttachment == "DIGILIRAPAY TRANSFER" {
+                tid = recognizer.trxId
+                recognizer.assetName = "transfer"
             }
             
-            return
-        }
-        
-        if fetching {
-            return
-        }
-        fetching = true
-        generator.notificationOccurred(.success)
-        
-        fetching = false
-        
-        digiliraPay.onGetOrder = { [self] res in
-            delegate?.alertO(order: res)
-        }
-        digiliraPay.getOrder(PARAMS: recognizer.qrAttachment)
-        DispatchQueue.main.async { [self] in
-            delegate?.alertT(message: "Sipariş detaylarınız yükleniyor...", title: "Sipariş detayları")
-
+            if let sign = try? BC.bytization([recognizer.assetName, tid, kullanici.id], timestamp) {
+                
+                generator.notificationOccurred(.success)
+                let data = digilira.transferGetModel.init(mode: recognizer.assetName,
+                                                          user: kullanici.id,
+                                                          transactionId: tid,
+                                                          signed: sign.signature,
+                                                          publicKey: sign.publicKey,
+                                                          timestamp: timestamp, wallet: sign.wallet)
+                
+                digiliraPay.onResponse = { res, sts in
+                    DispatchQueue.main.async { [self] in
+                        if let j = try? JSONSerialization.data(withJSONObject: res, options: []) {
+                            
+                            switch recognizer.assetName {
+                            case "transfer":
+                                do {
+                                    let tm2 = try digiliraPay.decodeDefaults(forKey: j, conformance: TransferModel.self)
+                                    
+                                    delegate?.alertTransfer(order: tm2)
+                                    generator.notificationOccurred(.success)
+                                    
+                                } catch {
+                                    print (error)
+                                }
+                            case "payment":
+                                do {
+                                    let tm1 = try digiliraPay.decodeDefaults(forKey: j, conformance: PaymentModel.self)
+                                    
+                                    delegate?.alertO(order: tm1)
+                                    generator.notificationOccurred(.success)
+                                    
+                                } catch {
+                                    print (error)
+                                }
+                            default:
+                                break
+                            }
+                        }
+                    }
+                }
+                
+                digiliraPay.request2(rURL: digiliraPay.getApiURL() + digilira.api.transferGet, JSON: try? digiliraPay.jsonEncoder.encode(data), METHOD: digilira.requestMethod.post)
+                
+                DispatchQueue.main.async { [self] in
+                    delegate?.alertT(message: "Transder detaylarınız yükleniyor...", title: "Detaylar")
+                    
+                }
+            }
         }
     }
     
@@ -233,7 +262,12 @@ extension TransactionDetailView: UITableViewDelegate, UITableViewDataSource
                         
                         let tapped = MyTapGesture.init(target: self, action: #selector(getOr))
                         tapped.qrAttachment = t.attachment ?? "-"
+                        
                         tapped.trxId = t.id!
+                        if t.attachment == "DIGILIRA TRANSFER" {
+                            tapped.assetName = "transfer"
+                        }
+                        tapped.assetName = "payment"
                         cell.addGestureRecognizer(tapped)
                         
                         

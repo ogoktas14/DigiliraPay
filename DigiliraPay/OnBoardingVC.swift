@@ -28,11 +28,13 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
     @IBOutlet weak var importAccountView: UILabel!
     @IBOutlet weak var letsGoLabel: UILabel!
 
-    
+    var logoAnimation = LogoAnimation()
+    var warningView = WarningView()
+
     var onBoardingScrollView = UIScrollView()
     let digiliraPay = digiliraPayApi()
     let BC = Blockchain()
-    
+
     var QR:digilira.QR = digilira.QR.init()
     
     private func initial2() {
@@ -84,44 +86,25 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
         
         
         if BC.checkIfUser() {
-            
-            digiliraPay.onLogin2 = {user, status in
-                DispatchQueue.main.async { [self] in
-                    switch status {
-                        case 200:
-                        if user.status == 403 {
-                            let alert = UIAlertController(title: "Hata", message: "Hesabınız bloke edilmiştir.", preferredStyle: .alert)
-                            
-                            alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
-                                self.letsGoView.isHidden = false
-                                self.importAccountView.isHidden = false
-                                exit(0)
-                            }))
-                            self.present(alert, animated: true)
-                        }
-                        
-                        self.BC.checkSmart(address: user.wallet)
-                        self.goMainVC()
-                        return
-                        
-                    default:
-                        
-                        let alert = UIAlertController(title: "Hata", message: String(status!), preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
-                            self.letsGoView.isHidden = false
-                            self.importAccountView.isHidden = false
-                        }))
-                        self.present(alert, animated: true)
-                        break
-                    }
+
+            DispatchQueue.main.async { [self] in
+                if let user = try? secretKeys.userData() {
+                    self.BC.checkSmart(address: user.wallet)
+                    self.goMainVC()
+                    return
+                } else {
+                    self.letsGoView.isHidden = false
+                    self.importAccountView.isHidden = false
+                    curtain.isHidden = true
                 }
-            }
-            digiliraPay.login2()
+
+        }
+ 
         } else {
             self.letsGoView.isHidden = false
             self.importAccountView.isHidden = false
             curtain.isHidden = true
-
+            
         }
     }
     
@@ -143,6 +126,38 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
             print (error)
         }
     }
+
+    func waitPlease () {
+        logoAnimation.removeFromSuperview()
+        
+        DispatchQueue.main.async { [self] in
+            
+            logoAnimation = UIView().loadNib(name: "LogoAnimation") as! LogoAnimation
+            logoAnimation.frame = self.view.frame
+
+            logoAnimation.setImage()
+            
+            self.view.addSubview(logoAnimation)
+            
+        }
+    }
+    
+    func alertWarning (title: String, message: String, error: Bool = true) {
+        DispatchQueue.main.async { [self] in
+                logoAnimation.removeFromSuperview()
+                
+                warningView = UIView().loadNib(name: "warningView") as! WarningView
+                warningView.frame = self.view.frame
+                
+                warningView.isError = error
+                warningView.title = title
+                warningView.message = message
+                warningView.setMessage()
+                
+            self.view.addSubview(warningView)
+           
+        }
+    }
     
     
     
@@ -152,15 +167,15 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
     }
     
     func initialWaves() -> Bool {
-
+        
         if let environment = UserDefaults.standard.value(forKey: "environment") {
             if environment as! Bool {
                 WavesSDK.initialization(servicesPlugins: .init(data: [],
                                                                node: [],
                                                                matcher: []),
                                         enviroment: .init(server: .mainNet, timestampServerDiff: 0))
-            return true
-            
+                return true
+                
             }
         }
         
@@ -175,23 +190,23 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
         if initialWaves() {
             print("mainnet")
         }
-            initial2()
-            UNUserNotificationCenter.current().delegate = self;
-            
-            super.viewDidLoad()
-            if #available(iOS 13.0, *) {
-                overrideUserInterfaceStyle = .light
-            } else {
-                // Fallback on earlier versions
-            }
-            let tapLetsGoViewGesture = UITapGestureRecognizer(target: self, action: #selector(letsGO))
-            letsGoView.addGestureRecognizer(tapLetsGoViewGesture)
-            letsGoView.isUserInteractionEnabled = true
-            
-            let importGesture = UITapGestureRecognizer(target: self, action: #selector(impoertAccount))
-            importAccountView.addGestureRecognizer(importGesture)
+        initial2()
+        UNUserNotificationCenter.current().delegate = self;
         
- 
+        super.viewDidLoad()
+        if #available(iOS 13.0, *) {
+            overrideUserInterfaceStyle = .light
+        } else {
+            // Fallback on earlier versions
+        }
+        let tapLetsGoViewGesture = UITapGestureRecognizer(target: self, action: #selector(letsGO))
+        letsGoView.addGestureRecognizer(tapLetsGoViewGesture)
+        letsGoView.isUserInteractionEnabled = true
+        
+        let importGesture = UITapGestureRecognizer(target: self, action: #selector(impoertAccount))
+        importAccountView.addGestureRecognizer(importGesture)
+        
+        
     }
     override func viewDidAppear(_ animated: Bool) {
         setScrollView()
@@ -208,7 +223,7 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
     }
     
     @objc func onDidReceiveData(_ sender: Notification) {
-
+        
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle
@@ -249,44 +264,35 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
     }
     
     func nowLetsGo(imported: Bool = false, seed: String = "") {
-        var message = "Cüzdanınız oluşturuluyor"
-        if imported {
-            message = "Giriş yapılıyor"
-        }
-        let alert = UIAlertController(title: "Lütfen bekleyin", message: message, preferredStyle: .alert)
-        self.present(alert, animated: true, completion: nil)
         
-        
-        if initialWaves() {
-            BC.onComplete = { res in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    alert.dismiss(animated: true, completion: nil)
-                    if imported {
-                        self.goMainVC()
-                    }else {
-                        self.performSegue(withIdentifier: "toLetsStartVC", sender: nil)
-                    }
+        BC.onComplete = { res, status in
+            print(res,status)
+            switch status {
+            case 200:
+                DispatchQueue.main.async {
+                    UIView.animate(withDuration: 0.5, animations: { [self] in
+                        logoAnimation.alpha = 0
+                            
+                    },completion: { [self]_ in
+                        logoAnimation.removeFromSuperview()
+                        logoAnimation.alpha = 1
+                        
+                        if imported {
+                            self.goMainVC()
+                        }else {
+                            self.performSegue(withIdentifier: "toLetsStartVC", sender: nil)
+                        }
+                    })
                 }
-            }
-            BC.createMainnet(imported: imported, importedSeed: seed)
-        } else {
-            BC.create(imported: imported, importedSeed: seed ){ (address) in
-                if (address == "TRY AGAIN") {
-                    return
-                }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    alert.dismiss(animated: true, completion: nil)
-                    
-                    if imported {
-                        self.goMainVC()
-                    }else {
-                        self.performSegue(withIdentifier: "toLetsStartVC", sender: nil)
-                    }
-                }
+            case 502:
+                self.alertWarning(title: "Bir Hata Oluştu", message: "Şu anda işleminizi gerçekleştiremiyoruz. Lütfen daha sonra tekrar deneyin.", error: true)
+            default:
+                self.alertWarning(title: "Bir Hata Oluştu", message: "Şu anda işleminizi gerçekleştiremiyoruz. Lütfen daha sonra tekrar deneyin.", error: true)
             }
         }
- 
-
+         
+        waitPlease()
+        BC.createMainnet(imported: imported, importedSeed: seed)
     }
     
     @objc func impoertAccount()
@@ -317,7 +323,6 @@ extension OnBoardingVC: UIScrollViewDelegate
                                        width: scrollViewSize.width,
                                        height: scrollViewSize.height)
         
-        
         let onBoardingView2: OnBoardingView = UIView().loadOnBoardingNib()
         onBoardingView2.setView(image: UIImage(named: "onboarding2")!,
                                 titleFirst: "Kripto Paralarınızı",
@@ -328,7 +333,6 @@ extension OnBoardingVC: UIScrollViewDelegate
                                        y: 0,
                                        width: scrollViewSize.width,
                                        height: scrollViewSize.height)
-        
         
         let onBoardingView3: OnBoardingView = UIView().loadOnBoardingNib()
         onBoardingView3.setView(image: UIImage(named: "onboarding3")!,
@@ -396,7 +400,7 @@ class DynamicViewController: UIViewController, LegalDelegate {
     
     
     func showLegal(mode: digilira.terms) {
-
+        
     }
     
     func dismissLegalView() {

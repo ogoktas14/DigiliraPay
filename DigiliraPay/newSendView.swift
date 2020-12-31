@@ -498,7 +498,7 @@ class newSendView: UIView {
                                                              amount: Int64(isAmount * double),
                                                              assetId: coin.token)
             
-            digiliraPay.onMember = { res, data in
+            BC.onMember = { res, data in
                 DispatchQueue.main.async { [self] in
                     errors?.removeWait()
                     switch res {
@@ -534,7 +534,7 @@ class newSendView: UIView {
                     }
                 }
             }
-            digiliraPay.isOurMember(external: external)
+            BC.isOurMember(external: external)
         }
     }
     

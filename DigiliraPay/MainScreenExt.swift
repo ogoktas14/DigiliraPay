@@ -23,7 +23,7 @@ extension MainScreen: NewCoinSendDelegate
             for subView in self.sendWithQRView.subviews
             { subView.removeFromSuperview() }
         })
-
+        
     }
     
     func sendCoinNew(params:SendTrx) // gelen parametrelerle birlikte gönder butonuna basıldı.
@@ -48,11 +48,11 @@ extension MainScreen: NewCoinSendDelegate
                         BC.getWavesToken(wallet:wallet)
                         
                         BC.massTransferTx(name: params.merchant!, recipient: params.recipient!, fee: digilira.sponsorTokenFeeMass, amount: params.amount!, assetId: params.assetId!, attachment: "", wallet: wallet, blob: params)
-             
+                        
                         break
                     case digilira.transactionDestination.interwallets:
                         BC.massTransferTx(name: params.merchant!, recipient: params.recipient!, fee: digilira.sponsorTokenFeeMass, amount: params.amount!, assetId: params.assetId!, attachment: "", wallet: wallet, blob: params)
-         
+                        
                         break
                     default:
                         return
@@ -62,7 +62,7 @@ extension MainScreen: NewCoinSendDelegate
                 case "Canceled by user.":
                     self.shake()
                     self.throwEngine.alertWarning(title: "Dikkat", message: "İşleminiz iptal edilmiştir.", error: true)
-                
+                    
                     //self.dismissNewSend()
                     return
                     
@@ -103,7 +103,7 @@ extension MainScreen: NewCoinSendDelegate
     func readAddressQR() {
         goQRScreen()
     }
-     
+    
 }
 
 
@@ -160,7 +160,7 @@ extension MainScreen: PageCardViewDeleGate
     }
     
 }
-  
+
 extension MainScreen: PinViewDelegate
 {
     func openPinView()
@@ -219,11 +219,11 @@ extension MainScreen: PinViewDelegate
     
     func closePinView() {
         curtain.isHidden = true
-
+        
         self.isPinEntered = true
         self.onB!()
-
-
+        
+        
         
         if isSeedScreen {
             isSeedScreen = false
@@ -238,42 +238,76 @@ extension MainScreen: PinViewDelegate
         if isNewSendScreen {
             isNewSendScreen = false
             walletOperationView.isUserInteractionEnabled = true
-//            goNewSendView()
+            //            goNewSendView()
         }
-
+        
         UIView.animate(withDuration: 0.3, animations: {
             self.sendWithQRView.frame.origin.y = self.view.frame.height
         }, completion: {_ in
             for subView in self.sendWithQRView.subviews
             { subView.removeFromSuperview() }
         })
-
+        
         menuView.isHidden = false
-        
-        
     }
     
     func updatePinCode (code:Int32) {
-        let user = digilira.pin.init(
-            pincode:code
-        )
-        
-        digiliraPay.onResponse = { res, sts in
-            DispatchQueue.main.async {
-                self.throwEngine.alertWarning(title: "Pin Kodu Güncellendi", message: "Pin kodunuzu unutmayın, cüzdanınızı başka bir cihaza aktarırken ihtiyacınız olacaktır.", error: false)
-                
-                self.profileMenuView.pinWarning.isHidden = true
-                self.digiliraPay.onLogin2 = { user, status in
-                    DispatchQueue.main.sync {
-                        self.kullanici = user
+        let timestamp = Int64(Date().timeIntervalSince1970) * 1000
+ 
+        do {
+            let u = try secretKeys.userData()
+ 
+            if let sign = try? BC.bytization([u.btcAddress ?? "",
+                                              u.dogum ?? "",
+                                              u.ethAddress ?? "",
+                                              u.firstName ?? "",
+                                              u.lastName ?? "",
+                                              u.ltcAddress ?? "",
+                                              u.mail ?? "",
+                                              code.description,
+                                              u.status.description,
+                                              u.tcno ?? "", u.tel ?? "",
+                                              u.tetherAddress ?? ""
+            ], timestamp) {
+                let user = digilira.exUser.init(firstName: u.firstName,
+                                                 lastName: u.lastName,
+                                                 tcno: u.tcno,
+                                                 dogum: u.dogum,
+                                                 tel: u.tel,
+                                                 mail: u.mail,
+                                                 btcAddress: u.btcAddress,
+                                                 ethAddress: u.ethAddress,
+                                                 ltcAddress: u.ltcAddress,
+                                                 tetherAddress: u.tetherAddress,
+                                                 wallet: sign.wallet,
+                                                 status: u.status,
+                                                 pincode: code.description,
+                                                 signed: sign.signature,
+                                                 publicKey: sign.publicKey,
+                                                 timestamp: timestamp
+                )
+              
+                digiliraPay.onResponse = { res, sts in
+                    DispatchQueue.main.async { [self] in
+                        
+                        if sts == 200 {
+                            let j = try? JSONSerialization.data(withJSONObject: res, options: [])
+                            if secretKeys.LocksmithSave(forKey: try! BC.getKeyChainSource().authenticateData, data: j!) {
+                                self.throwEngine.alertWarning(title: "Pin Kodu Güncellendi", message: "Pin kodunuzu unutmayın, cüzdanınızı başka bir cihaza aktarırken ihtiyacınız olacaktır.", error: false)
+                                
+                                self.profileMenuView.pinWarning.isHidden = true
+                                self.checkEssentials()
+                            } else {
+                                throwEngine.evaluateError(error: digilira.NAError.E_500)
+                            }
+                        }
                     }
                 }
-                
-                self.digiliraPay.login2()
+                digiliraPay.request2(rURL: digiliraPay.getApiURL() + digilira.api.userUpdate, JSON: try? digiliraPay.jsonEncoder.encode(user), METHOD: digilira.requestMethod.put)
             }
+        } catch {
+            print(error)
         }
-        
-        digiliraPay.request2(rURL: digiliraPay.getApiURL() + digilira.api.userUpdate, JSON: try? digiliraPay.jsonEncoder.encode(user), METHOD: digilira.requestMethod.put, AUTH: true)
     }
 }
 
@@ -332,22 +366,22 @@ extension MainScreen: ErrorsDelegate {
     
     func transferConfirmation(txConMsg: digilira.txConfMsg, destination: NSNotification.Name) {
         
-            self.dismissKeyboard()
-            throwEngine.transferConfirmation(txConMsg: txConMsg, destination: destination)
+        self.dismissKeyboard()
+        throwEngine.transferConfirmation(txConMsg: txConMsg, destination: destination)
     }
     
     func errorCaution(message: String, title: String) {
         
-            self.dismissKeyboard()
-            throwEngine.alertCaution(title: title, message: message)
+        self.dismissKeyboard()
+        throwEngine.alertCaution(title: title, message: message)
     }
     
     func errorHandler(message: String, title: String, error: Bool) {
         self.dismissKeyboard()
         throwEngine.alertWarning(title: title, message: message, error: error)
     }
-     
-     
+    
+    
 }
 
 extension MainScreen: VerifyAccountDelegate
@@ -367,6 +401,12 @@ extension MainScreen: VerifyAccountDelegate
         }
     }
     
+    func loadEssentials() {
+        DispatchQueue.main.async {
+            self.checkEssentials()
+        }
+    }
+    
     func enableEntry(user:digilira.auth) {
         DispatchQueue.main.async {
             self.kullanici = user
@@ -376,8 +416,8 @@ extension MainScreen: VerifyAccountDelegate
                 self.profileMenuView.profileWarning.image = UIImage(named: "success")
             }
         }
-
-
+        
+        
     }
     
     func dismissVErifyAccountView() // profil doğrulama sayfasının kapatılması
@@ -385,7 +425,7 @@ extension MainScreen: VerifyAccountDelegate
         if kullanici.status != 0 {
             self.profileMenuView.profileWarning.image = UIImage(named: "success")
         }
-                
+        
         if QR.address != nil {
             UserDefaults.standard.set(nil, forKey: "QRARRAY2")
             getOrder(address: self.QR)
@@ -499,7 +539,7 @@ extension MainScreen: LetsStartSkipDelegate {
             self.sendWithQRView.alpha = 0
         }
     }
-  
+    
     
     
 }

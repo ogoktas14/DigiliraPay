@@ -28,7 +28,7 @@ struct digilira {
         static let url = "https://server1.digilirapay.com/v4"
         static let urlMainnet = "https://server1.digilirapay.com/v7"
                 
-        static let transferGet = "/transfer/get/"
+        static let transferGet = "/transfer/get"
         static let transferPrefix = "transfer/"
         static let paymentPrefix = "payment/"
         static let isOurMember = "/transfer/recipient"
@@ -36,13 +36,13 @@ struct digilira {
         static let userRegister =  "/users/register"
         
         static let userUpdate =  "/users/update/me"
-        static let auth =  "/users/authenticate"
-        
+        static let auth =  "/users/authenticate" 
     }
     
     struct node {
         static let url = "https://nodes.wavesnodes.com"
         static let apiUrl = "https://api.waves.exchange"
+        static let apiTestnetUrl = "https://api-testnet.waves.exchange"
     }
     
     struct wavesApiEndpoints {
@@ -96,6 +96,16 @@ struct digilira {
         var bg: String?
     }
     
+    struct transferGetModel: Codable {
+        var mode: String
+        var user: String
+        var transactionId: String
+        var signed: String
+        var publicKey: String
+        var timestamp: Int64
+        var wallet: String
+    }
+    
     static let tcDoguralma = "https://tckimlik.nvi.gov.tr/Service/KPSPublic.asmx?op=TCKimlikNoDogrula&wsdl"
     static let soapAction = "http://tckimlik.nvi.gov.tr/WS/TCKimlikNoDogrula"
     
@@ -132,6 +142,11 @@ struct digilira {
          var network: String
          var tokenSymbol: String
         var gatewayFee: Double
+    }
+    
+    struct keychainData {
+        var authenticateData: String
+        var sensitiveData: String
     }
     
     static var demo = ["Bitcoin", "Ethereum", "Waves"]
@@ -326,6 +341,9 @@ struct digilira {
         var wallet: String?
         var assetId: String?
         var destination: String?
+        var signed: String?
+        var publicKey: String?
+        var timestamp: Int64?
     }
      
     struct ticker {
@@ -335,9 +353,9 @@ struct digilira {
         var usdTLPrice: Double? 
     }
     
+ 
     struct exUser: Encodable {
-        var username: String?
-        var password: String?
+        var id: String?
         var firstName: String?
         var lastName: String?
         var tcno: String?
@@ -357,6 +375,7 @@ struct digilira {
         var apnToken: String?
         var signed: String?
         var publicKey: String?
+        var timestamp: Int64?
     }
     
     struct idImage: Encodable {
@@ -366,41 +385,12 @@ struct digilira {
     struct pin: Encodable {
         var pincode: Int32?
     }
-    
-    struct odemeStatus: Encodable {
-        var id: String
-        var txid: String?
-        var status: String
-        var name: String?
-        var surname: String?
-        var wallet: String?
-        var hash:String?
-        var _id: String?
-        var assetId: String?
-        var amount: Int64?
-        var senderPublicKey: String?
-        var signature: String?
-    }
-    
+
     struct login: Codable {
-        let username: String
-        let password: String
         let seed: String
         
         enum CodingKeys: String, CodingKey {
-            case username = "username"
-            case password = "password"
             case seed = "seed"
-        }
-    }
-    
-    struct log: Codable {
-        let username: String
-        let password: String
-        
-        enum CodingKeys: String, CodingKey {
-            case username = "username"
-            case password = "password"
         }
     }
 
@@ -408,45 +398,26 @@ struct digilira {
         let userRole, status: Int
         let pincode: String
         let imported: Bool
-        let apnToken, id, username, wallet: String
+        let apnToken, id, wallet: String
         let firstName, lastName, ltcAddress, btcAddress, tetherAddress, ethAddress, tcno, tel, mail: String?
         let createdDate: String
         let dogum: String?
         let v: Int?
         let appV: Double?
-        let token: String
         let id1: String?
 
         enum CodingKeys: String, CodingKey {
             case userRole, status, pincode, imported, apnToken
             case id = "_id"
-            case username, lastName, firstName, wallet, btcAddress, ethAddress, tetherAddress, ltcAddress, createdDate, appV, id1, dogum, tcno, tel, mail
+            case lastName, firstName, wallet, btcAddress, ethAddress, tetherAddress, ltcAddress, createdDate, appV, id1, dogum, tcno, tel, mail
             case v = "__v"
-            case token
         }
     }
     
     struct wallet: Encodable {
         var seed: String
     }
-    
-    struct product: Encodable {
-        var order_pname: String?
-        var order_pcode: String?
-        var order_price: Double?
-        var order_qty: Int64?
-        var order_status: Int64?
-        
-        init(json: [String: Any]) {
-            self.order_pname = json["order_pname"] as? String ?? ""
-            self.order_pcode = json["order_pcode"] as? String ?? ""
-            self.order_price = json["order_price"] as? Double ?? 0.0
-            self.order_qty = json["order_qty"] as? Int64 ?? 0
-            self.order_status = json["order_status"] as? Int64 ?? 0
-        }
-        
-    }
-    
+
     struct txConfMsg: Encodable {
         let title: String
         let message: String
@@ -500,52 +471,7 @@ struct digilira {
         case missingParameters
         case noAmount
     }
-    
-    struct refund: Encodable {
-        var order_pname: String?
-        var order_pcode: String?
-        var order_price: Double?
-        var order_qty: Int64?
-        var order_status: Int64?
-         
-        init(json: [String: Any]) {
-            self.order_pname = json["order_pname"] as? String ?? ""
-            self.order_pcode = json["order_pcode"] as? String ?? ""
-            self.order_price = json["order_price"] as? Double ?? 0.0
-            self.order_qty = json["order_qty"] as? Int64 ?? 0
-            self.order_status = json["order_status"] as? Int64 ?? 0
-        }
-    }
-    
-    struct order:  Encodable {
-        var _id:String
-        var merchant: String
-        var user: String?
-        var language: String?
-        var order_ref: String?
-        var createdDate: String?
-        var order_date: String?
-        var order_shipping: Double?
-        var conversationId: String?
-        var rate: Int64?
-        var totalPrice: Double?
-        var paidPrice: Double?
-        var refundPrice: Double?
-        var currencyFiat: Double?
-        var userId: String?
-        var ip: String?
-        var registrationDate: String?
-        var asset: String?
-        var successUrl: String?
-        var failureUrl: String?
-        var callbackSuccess: String?
-        var callbackFailure: String?
-        var mobile: Int64?
-        var status: Int64?
-        var products: [product]?
-        var refund: [refund]?
-        
-    }
+
     
    
     // MARK: - MarketInfoElement

@@ -16,4 +16,5 @@ protocol VerifyAccountDelegate: class
     func disableEntry()
     func uploadImage()
     func enableEntry(user:digilira.auth)
+    func loadEssentials()
 }

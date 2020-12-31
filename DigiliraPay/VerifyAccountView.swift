@@ -43,17 +43,21 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     
     let digiliraPay = digiliraPayApi()
     var onUpdate: ((_ result: [String:Any])->())?
+    var kullanici = try? secretKeys.userData()
     
     override func didMoveToSuperview() {
         do {
             let user = try secretKeys.userData()
             
-            nameText.text = user.firstName
-            surnameText.text = user.lastName
-            tcText.text = user.tcno
-            telText.text = user.tel
-            mailText.text = user.mail
-            
+            if let k = kullanici {
+                
+                nameText.text = k.firstName
+                surnameText.text = k.lastName
+                tcText.text = k.tcno
+                telText.text = k.tel
+                mailText.text = k.mail
+                
+            }
             if let dogumTarihi = user.dogum {
                 let isoDateFormatter = ISO8601DateFormatter()
                 isoDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
@@ -142,8 +146,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     }
     
     func parser(_ parser: XMLParser, foundCharacters string: String) {
-        
-        
+         
         DispatchQueue.main.async { [self] in
             var sts = 0
             if string == "true" {
@@ -159,29 +162,44 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
                 understand.isOn = false
             }
             
+            let BC = Blockchain()
+            
             digiliraPay.onUpdate = { res in
-                
-                self.digiliraPay.onLogin2 = { user, status in
-                    delegate?.enableEntry(user:user)
-                }
-                self.digiliraPay.login2()
+                delegate?.loadEssentials()
             }
             delegate?.dismissKeyboard()
             
-            let user = digilira.exUser.init(
-                firstName: nameText.text,
-                lastName: surnameText.text,
-                tcno: tcText.text,
-                dogum: dogum.date.description,
-                tel: telText.text,
-                mail: mailText.text,
-                status: sts
-            )
+            let timestamp = Int64(Date().timeIntervalSince1970) * 1000
             
-            let encoder = JSONEncoder()
-            let data = try? encoder.encode(user)
-            
-            digiliraPay.updateUser(user: data)
+            guard let name = nameText.text else {return}
+            guard let surname = surnameText.text else {return}
+            guard let tel = telText.text else {return}
+            guard let tcno = tcText.text else {return}
+            guard let mail = mailText.text else {return}
+
+            if let k = kullanici {
+                if let sign = try? BC.bytization([dogum.date.description, name, k.id, surname, mail, sts.description, tcno, tel], timestamp) {
+                    let user = digilira.exUser.init(
+                        id:k.id,
+                        firstName: name,
+                        lastName: surnameText.text,
+                        tcno: tcText.text,
+                        dogum: dogum.date.description,
+                        tel: telText.text,
+                        mail: mailText.text,
+                        wallet: sign.wallet,
+                        status: sts,
+                        signed: sign.signature,
+                        publicKey: sign.publicKey,
+                        timestamp: timestamp
+                    )
+                    
+                    let encoder = JSONEncoder()
+                    let data = try? encoder.encode(user)
+                    
+                    digiliraPay.updateUser(user: data)
+                }
+            } 
         }
     }
     

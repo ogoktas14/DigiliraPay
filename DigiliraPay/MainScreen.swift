@@ -158,6 +158,12 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
     let digiliraPay = digiliraPayApi()
     
     func checkEssentials() {
+        do {
+            kullanici = try secretKeys.userData()
+        } catch {
+            print(error)
+        }
+        
         if let versionLegal = UserDefaults.standard.value(forKey: "isLegalView") as? Int {
             let v = digilira.legalView.version
             if (versionLegal < v) {
@@ -184,12 +190,16 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
             if isVerified {
                 profileMenuView.seedBackupWarning.isHidden = true
             }
-            
+        }
+        
+        if kullanici.status != 0 {
+            profileMenuView.profileWarning.image = UIImage(named: "success")
         }
     }
     
     override func viewDidLoad()
     {
+        
         super.viewDidLoad()
         self.headerHomeBuffer = self.headerView.frame.size.height
 
@@ -205,18 +215,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
             serverLabel.text = "TestNet"
             break
         }
-        
-        do {
-            kullanici = try secretKeys.userData()
-        } catch {
-            self.digiliraPay.onLogin2 = { user, status in
-                DispatchQueue.main.sync {
-                    self.kullanici = user
-                }
-            }
-            digiliraPay.login2()
-        }
-        
+         
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .light
         } else {
@@ -464,43 +463,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
     func isKeyPresentInUserDefaults(key: String) -> Bool {
         return UserDefaults.standard.object(forKey: key) != nil
     }
-    
-    struct JwtAlg: Codable {
-        let alg, typ: String
-    }
-    
-    struct JwtPayload: Codable {
-        let sub: String
-        let def: Int
-        let m: String
-        let iat, exp: Int64
-    }
-    
-    func isTokenOK() -> Bool {
-        let token = kullanici.token
-        let jwt = token.split(separator: ".")
-        
-        if let decodedData = Data(base64Encoded: String(jwt[1])) {
-            
-            do {
-                let jwtPayload = try digiliraPay.decodeDefaults(forKey: decodedData, conformance: JwtPayload.self)
-                let now = Date().millisecondsSince1970
-                let then : Int64 = jwtPayload.exp * Int64(1000)
-                
-                let diff = ((then - now) / Int64(1000)) / 60
-
-                if diff == 0 {
-                    return false
-                }
-                return true
-            } catch {
-                print(error)
-            }
-            
-        }
-        return false
-    }
-    
+ 
     @objc func onDidCompleteTask(_ sender: Notification) {
 
     }
@@ -643,21 +606,8 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
     }
     
     func getOrder(address: digilira.QR) {
-        
-        if !isTokenOK() {
-            throwEngine.waitPlease()
-            self.digiliraPay.onLogin2 = { user, status in
-                DispatchQueue.main.sync {
-                    self.throwEngine.removeWait()
-                    self.kullanici = user
-                    self.getOrder(address: address)
-                }
-            }
-            
-            self.digiliraPay.login2()
-        }else {
-            
-            if address.address == nil {return}
+                 
+        guard let a = address.address else { return }
             switch address.network {
             
             case digilira.bitcoin.network:
@@ -681,12 +631,31 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                         self.goPageCardView(ORDER: res)
                     }
                 }
-                digiliraPay.getOrder(PARAMS: address.address!)
+                
+                
+                let timestamp = Int64(Date().timeIntervalSince1970) * 1000
+                
+                if let sign = try? BC.bytization(["payment", a, kullanici.id], timestamp) {
+                    
+                    let data = digilira.transferGetModel.init(mode: "payment",
+                                                              user: kullanici.id,
+                                                              transactionId: a,
+                                                              signed: sign.signature,
+                                                              publicKey: sign.publicKey,
+                                                              timestamp: timestamp,
+                                                              wallet: sign.wallet)
+                
+                
+                    do {
+                        try digiliraPay.getOrder(PARAMS: digiliraPay.jsonEncoder.encode(data))
+                    } catch {
+                        print (error)
+                    }
+                }
             }
         }
         
-        
-    }
+   
     
     @objc func onDidReceiveData(_ sender: Notification) {
         // Do what you need, including updating IBOutlets
@@ -718,7 +687,25 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
             digiliraPay.onGetOrder = { res in
                 self.throwEngine.alertOrder(order: res)
             }
-            digiliraPay.getOrder(PARAMS: ifQR as! String)
+            
+            let timestamp = Int64(Date().timeIntervalSince1970) * 1000
+            
+            if let sign = try? BC.bytization(["payment", ifQR as! String, kullanici.id], timestamp) {
+                
+                let data = digilira.transferGetModel.init(mode: "payment",
+                                                          user: kullanici.id,
+                                                          transactionId: ifQR as! String,
+                                                          signed: sign.signature,
+                                                          publicKey: sign.publicKey,
+                                                          timestamp: timestamp,
+                                                          wallet: sign.wallet)
+            
+            
+                let j = try? JSONSerialization.data(withJSONObject: data, options: [])
+                digiliraPay.getOrder(PARAMS: j!)
+            }
+             
+             
             DispatchQueue.main.async {
                 self.throwEngine.alertTransaction(title: "Sipariş detayları", message:"Sipariş detaylarınız yükleniyor...", verifying: true)
 
@@ -977,7 +964,6 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         
         if kullanici.status != 0 {
             profileMenuView.profileWarning.image = UIImage(named: "success")
-            
         }
         
         profileMenuView.layer.zPosition = 1
@@ -2024,7 +2010,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
                 do {
                     let exchange = try digiliraPay.exchange(amount: external.amount!, coin: coin, symbol: digiliraPay.ticker(ticker: Ticker))
                     
-                    digiliraPay.onMember = { res, data in
+                    BC.onMember = { res, data in
                         DispatchQueue.main.async { [self] in
 
                             guard let data = data else {return}
@@ -2068,7 +2054,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
                     throwEngine.evaluateError(error: error)
                 }
                 
-                digiliraPay.isOurMember(external: external)
+                BC.isOurMember(external: external)
                 
             } catch  {
                 print (error)
@@ -2120,6 +2106,7 @@ extension MainScreen: UIImagePickerControllerDelegate {
         })
     }
     
+
     public func imagePickerController(_ picker: UIImagePickerController,
                                       didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         guard let image = info[.editedImage] as? UIImage else {
@@ -2132,34 +2119,43 @@ extension MainScreen: UIImagePickerControllerDelegate {
             
         digiliraPay.onUpdate = { res in
             
-            DispatchQueue.main.async {
-                
-                self.throwEngine.warningView.removeFromSuperview()
-                self.throwEngine.alertWarning(title: "Bilgileriniz Yüklendi", message: "Gönderdiğiniz bilgiler kontrol edildikten sonra profiliniz güncellenecektir.", error: false)
-           
-            self.digiliraPay.onLogin2 = { user, status in
-                
-                DispatchQueue.main.async {
-                    self.dismissVErifyAccountView()
+            DispatchQueue.main.async { [self] in
+                if res {
+                    self.throwEngine.warningView.removeFromSuperview()
+                    self.throwEngine.alertWarning(title: "Bilgileriniz Yüklendi", message: "Gönderdiğiniz bilgiler kontrol edildikten sonra profiliniz güncellenecektir.", error: false)
+               
+                    checkEssentials()
+                } else {
+                    throwEngine.evaluateError(error: digilira.NAError.anErrorOccured)
                 }
-            }
-            
-            self.digiliraPay.login2()
+                
             }
         }
         
             throwEngine.alertTransaction(title: "Yükleniyor...", message: "Fotoğrafınız yükleniyor lütfen bekleyin.", verifying: true)
             
             let b64 = digiliraPay.convertImageToBase64String(img: image)
-            let user = digilira.exUser.init(
-                status:2,
-                id1: b64
-            )
-            
-            let encoder = JSONEncoder()
-            let data = try? encoder.encode(user)
-            
-            digiliraPay.updateUser(user: data)
+
+            let idHash = b64.hash256()
+            let timestamp = Int64(Date().timeIntervalSince1970) * 1000
+
+            if let sign = try? BC.bytization([kullanici.id, idHash, 2.description], timestamp) {
+                let user = digilira.exUser.init(
+                    id: kullanici.id,
+                    wallet: sign.wallet, status:2,
+                    id1: b64,
+                    signed: sign.signature,
+                    publicKey: sign.publicKey,
+                    timestamp: timestamp
+                )
+                
+                let encoder = JSONEncoder()
+                let data = try? encoder.encode(user)
+                
+                digiliraPay.updateUser(user: data)
+            }
+             
+
         }else {
             if let features = detectQRCode(image), !features.isEmpty{
                 for case let row as CIQRCodeFeature in features{
@@ -2173,9 +2169,7 @@ extension MainScreen: UIImagePickerControllerDelegate {
                 }
             }
         }
-        
-       
-        
+         
         self.imagePicker.dismiss(animated: true, completion: {})
     }
 }
@@ -2210,4 +2204,24 @@ class depositeGesture: UITapGestureRecognizer {
     var address: String?
     var qrAttachment: String = ""
     
+}
+
+import CryptoKit
+import CommonCrypto
+
+extension String {
+    func hash256() -> String {
+        let inputData = Data(utf8)
+        
+        if #available(iOS 13.0, *) {
+            let hashed = SHA256.hash(data: inputData)
+            return hashed.compactMap { String(format: "%02x", $0) }.joined()
+        } else {
+            var digest = [UInt8](repeating: 0, count: Int(CC_SHA256_DIGEST_LENGTH))
+            inputData.withUnsafeBytes { bytes in
+                _ = CC_SHA256(bytes.baseAddress, UInt32(inputData.count), &digest)
+            }
+            return digest.makeIterator().compactMap { String(format: "%02x", $0) }.joined()
+        }
+    }
 }

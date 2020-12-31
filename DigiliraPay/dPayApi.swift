@@ -26,15 +26,12 @@ class digiliraPayApi: NSObject {
     var onResponse: ((_ result: [String:Any], _ statusCode: Int?)->())?
     var onUpdate: ((_ result: Bool)->())?
     var onTicker: ((_ result: String)->())?
-    var onLogin2: ((_ result: digilira.auth, _ statusCode: Int?)->())?
-    var onAuth: ((_ result: digilira.auth, _ statusCode: Int?)->())?
-    var onMember: ((_ result: Bool, _ data: digilira.externalTransaction?)->())?
     
     var crud = centralRequest()
     var throwEngine = ErrorHandling()
     
     func request(rURL: String, JSON: Data? = nil,
-                 PARAMS: String = "", METHOD: String, AUTH: Bool = false,
+                 PARAMS: String = "", METHOD: String,
                  returnCompletion: @escaping ([String:Any], Int?) -> ()) {
         
         var request = URLRequest(url: URL(string: rURL)!)
@@ -46,53 +43,10 @@ class digiliraPayApi: NSObject {
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         }
         
-        
         if PARAMS != "" {
             request.url?.appendPathComponent(PARAMS, isDirectory: true)
         }
         
-        if AUTH  {
-            
-            onAuth = { res, sts in
-                let tokenString = "Bearer " + res.token
-                request.setValue(tokenString, forHTTPHeaderField: "Authorization")
-                
-                let session2 = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
-                
-                self.isCertificatePinning = true
-                
-                let task2 = session2.dataTask(with: request) { (data, response, error) in
-                    let httpResponse = response as? HTTPURLResponse
-                    if error != nil {
-                        
-                        //                print("error: \(error!.localizedDescription): \(error!)")
-                        self.onError!(error!, 0)
-                        
-                    } else if data != nil {
-                        
-                        guard let dataResponse = data,
-                              error == nil else {
-                            print(error?.localizedDescription ?? "Response Error")
-                            return }
-                        do{
-                            
-                            let jsonResponse = try JSONSerialization.jsonObject(with: dataResponse) as! Dictionary<String, AnyObject>
-                            
-                            returnCompletion(jsonResponse, httpResponse?.statusCode)
-                            
-                        } catch let parsingError {
-                            print("Error", parsingError)
-                            returnCompletion([:], httpResponse?.statusCode)
-                        }
-                    }
-                    
-                }
-                task2.resume()
-            }
-            
-            auth()
-            
-        } else {
         let session2 = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
         
         self.isCertificatePinning = true
@@ -101,7 +55,7 @@ class digiliraPayApi: NSObject {
             let httpResponse = response as? HTTPURLResponse
             if error != nil {
                 
-                //                print("error: \(error!.localizedDescription): \(error!)")
+                //print("error: \(error!.localizedDescription): \(error!)")
                 self.onError!(error!, 0)
                 
             } else if data != nil {
@@ -124,7 +78,6 @@ class digiliraPayApi: NSObject {
             
         }
         task2.resume()
-        }
     }
     
     func decodeDefaults<T>(forKey: Data, conformance: T.Type, setNil: Bool = false ) throws -> T where T: Decodable  {
@@ -179,40 +132,37 @@ class digiliraPayApi: NSObject {
     
     var onGetOrder: ((_ result: PaymentModel)->())?
     
-    func getOrder(PARAMS: String) {
-        var request = URLRequest(url: URL(string: getApiURL() + digilira.api.transferGet + digilira.api.paymentPrefix + PARAMS)!)
+    func getOrder(PARAMS: Data) {
+        var request = URLRequest(url: URL(string: getApiURL() + digilira.api.transferGet)!)
         
-        request.httpMethod = "GET"
+        request.httpMethod = digilira.requestMethod.post
         
-        onAuth = { res, sts in
-            let tokenString = "Bearer " + res.token
-            request.setValue(tokenString, forHTTPHeaderField: "Authorization")
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-
-            let session2 = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
-
-            self.isCertificatePinning = true
+        request.httpBody = PARAMS
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let session2 = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
+        
+        self.isCertificatePinning = true
+        
+        let task2 = session2.dataTask(with: request) { [self] (data, response, error) in
             
-            let task2 = session2.dataTask(with: request) { [self] (data, response, error) in
+            if error != nil {
+                self.onError!(error!, 0)
                 
-                if error != nil {
-                    self.onError!(error!, 0)
-                    
-                } else if data != nil {
-                    
-                    do {
-                        let result = try decodeDefaults(forKey: data!, conformance: PaymentModel.self)
-                        DispatchQueue.main.async { // Correct 
-                            self.onGetOrder?(result)
-                        }
-                    } catch {
-                        onError!(error, 400)
+            } else if data != nil {
+                
+                do {
+                    let result = try decodeDefaults(forKey: data!, conformance: PaymentModel.self)
+                    DispatchQueue.main.async { // Correct
+                        self.onGetOrder?(result)
                     }
+                } catch {
+                    onError!(error, 400)
                 }
             }
-            task2.resume()
         }
-        auth()
+        task2.resume()
+        
     }
     
     var onGetTransfer: ((_ result: TransferModel)->())?
@@ -221,52 +171,66 @@ class digiliraPayApi: NSObject {
         var request = URLRequest(url: URL(string: getApiURL() + digilira.api.transferGet + digilira.api.transferPrefix + PARAMS)!)
         
         request.httpMethod = "GET"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        onAuth = { res, sts in
-            let tokenString = "Bearer " + res.token
-            request.setValue(tokenString, forHTTPHeaderField: "Authorization")
+        let session2 = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
+        
+        self.isCertificatePinning = true
+        
+        let task2 = session2.dataTask(with: request) { [self] (data, response, error) in
             
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            
-            
-            let session2 = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
-            
-            self.isCertificatePinning = true
-            
-            let task2 = session2.dataTask(with: request) { [self] (data, response, error) in
+            if error != nil {
+                self.onError!(error!, 0)
                 
-                if error != nil {
-                    self.onError!(error!, 0)
-                    
-                } else if data != nil {
-                    
-                    do {
-                        let result = try decodeDefaults(forKey: data!, conformance: TransferModel.self)
-                        DispatchQueue.main.async { // Correct
-                            self.onGetTransfer?(result)
-                        }
-                    } catch {
-                        onError!(error, 400)
+            } else if data != nil {
+                
+                do {
+                    let result = try decodeDefaults(forKey: data!, conformance: TransferModel.self)
+                    DispatchQueue.main.async { // Correct
+                        self.onGetTransfer?(result)
                     }
+                } catch {
+                    onError!(error, 400)
                 }
             }
-            task2.resume()
         }
-        auth()
+        task2.resume()
+        
     }
     
+    func getKeyChainSource() throws -> digilira.keychainData {
+        guard let chainId = WavesSDK.shared.enviroment.chainId else { throw digilira.NAError.emptyAuth }
+        
+        switch chainId {
+        case "T":
+            return digilira.keychainData.init(authenticateData: "authenticate", sensitiveData: "sensitive")
+        case "W":
+            return digilira.keychainData.init(authenticateData: "authenticateMainnet", sensitiveData: "sensitiveMainnet")
+        default:
+            throw digilira.NAError.emptyAuth
+        }
+    }
     
     func updateUser(user: Data?) {
-        
-        self.onResponse = { res, sts in
-            if (sts == 200) {
-                self.onUpdate!(true)
-            }else {
-                self.onUpdate!(false)
+        self.onResponse = { [self] res, sts in
+            switch sts {
+            case 200:
+                do {
+                    let j = try  JSONSerialization.data(withJSONObject: res, options: [])
+                    if secretKeys.LocksmithSave(forKey: try! getKeyChainSource().authenticateData, data: j) {
+                        self.onUpdate!(true)
+                    } else {
+                        self.onUpdate!(false)
+                    }
+                    
+                } catch  {
+                    print(error)
+                }
+            default:
+                print(res)
             }
-        }
-        
-        request2(rURL: getApiURL() + digilira.api.userUpdate, JSON: user, METHOD: digilira.requestMethod.put, AUTH: true)
+        } 
+        request2(rURL: getApiURL() + digilira.api.userUpdate, JSON: user, METHOD: digilira.requestMethod.put)
     }
     
     func updateSmartAcountScript(data: NodeService.Query.Transaction) {
@@ -279,7 +243,7 @@ class digiliraPayApi: NSObject {
             }
         }
         
-        request2(rURL: getApiURL() + digilira.api.userUpdate, JSON: data.data, METHOD: digilira.requestMethod.put, AUTH: true)
+        request2(rURL: getApiURL() + digilira.api.userUpdate, JSON: data.data, METHOD: digilira.requestMethod.put)
         
     }
     
@@ -297,7 +261,7 @@ class digiliraPayApi: NSObject {
         
     }
     
-    func request2(rURL: String, JSON: Data? = nil, PARAMS: String = "", METHOD: String, AUTH: Bool = false) {
+    func request2(rURL: String, JSON: Data? = nil, PARAMS: String = "", METHOD: String) {
         
         var request = URLRequest(url: URL(string: rURL)!)
         
@@ -312,19 +276,6 @@ class digiliraPayApi: NSObject {
             request.url?.appendPathComponent(PARAMS, isDirectory: true)
         }
         
-        if AUTH  {
-            onAuth = { [self] res, sts in
-                let tokenString = "Bearer " + res.token
-                request.setValue(tokenString, forHTTPHeaderField: "Authorization")
-                urlS(request: request)
-            }
-            auth()
-        } else {
-            urlS(request: request)
-        }
-    }
-    
-    func urlS(request: URLRequest) {
         let session2 = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
         
         self.isCertificatePinning = true
@@ -345,14 +296,26 @@ class digiliraPayApi: NSObject {
                     let jsonResponse = try JSONSerialization.jsonObject(with: dataResponse) as! Dictionary<String, AnyObject>
                     self.onResponse!(jsonResponse, httpResponse?.statusCode)
                     
-                } catch let parsingError {
-                    print("Error", parsingError)
-                    self.onResponse!([:], httpResponse?.statusCode)
+                } catch {
+                    if let h = httpResponse {
+                        switch h.statusCode {
+                        case 502:
+                            self.onError!(digilira.NAError.E_502, h.statusCode)
+                        default:
+                            self.onError!(digilira.NAError.anErrorOccured, h.statusCode)
+                        }
+                        
+                        
+                    }
+                    
+                    
+                    
                 }
             }
             
         }
         task2.resume()
+        
     }
     
     func isLoggedIn() -> Bool {
@@ -366,8 +329,7 @@ class digiliraPayApi: NSObject {
         DispatchQueue.global(qos: .background).async  { [self] in
             request(rURL: getApiURL() + digilira.api.transferNew,
                     JSON: JSON,
-                    METHOD: digilira.requestMethod.post,
-                    AUTH: true
+                    METHOD: digilira.requestMethod.post
             ) { (json, statusCode) in
                 print(json)
             }
@@ -509,64 +471,6 @@ class digiliraPayApi: NSObject {
     }
     
     
-    func isOurMember(external: digilira.externalTransaction) {
-        
-        let normalizedAddress = external.address?.components(separatedBy: "?")
-        let croppedAddress = normalizedAddress?.first
-        
-        let user = digilira.externalTransaction.init(
-            network: external.network,
-            address: external.address
-        )
-        
-        let encoder = JSONEncoder()
-        let data = try? encoder.encode(user)
-        
-        crud.onResponse = { [self] res, sts in
-            if (sts == 200) {
-                
-                do {
-                    let ourMember = try decodeDefaults(forKey: res, conformance: TransferDestination.self)
-               
-                    let response = digilira.externalTransaction.init(network: external.network,
-                                                                     address: external.address,
-                                                                     amount: external.amount,
-                                                                     owner: ourMember.owner,
-                                                                     wallet: ourMember.wallet,
-                                                                     assetId: external.assetId,
-                                                                     destination: ourMember.destination
-                    )
-                    
-                    self.onMember!(true, response)
-                
-                
-                } catch  {
-                    print(error)
-                }
-                
- 
-            }else {
-                
-                //-TODO check withdraw address
-                
-                let response = digilira.externalTransaction.init(network: external.network,
-                                                                 address: croppedAddress,
-                                                                 amount: 0,
-                                                                 owner: croppedAddress,
-                                                                 wallet: digilira.gatewayAddress,
-                                                                 assetId: external.assetId,
-                                                                 destination: digilira.transactionDestination.foreign
-                )
-                self.onMember!(false, response)
-            }
-        }
-        
-        onAuth = { [self] res, sts in
-            crud.request(rURL: getApiURL() + digilira.api.isOurMember, postData: data, method: digilira.requestMethod.post, token: res.token )
-        }
-        auth()
-    }
-    
     func wipeOut () {
         do {
             try Locksmith.deleteDataForUserAccount(userAccount: bex.bexApiDefaultKey.key)
@@ -608,71 +512,6 @@ class digiliraPayApi: NSObject {
         }
     }
     
-    
-    struct JwtAlg: Codable {
-        let alg, typ: String
-    }
-    
-    struct JwtPayload: Codable {
-        let sub: String
-        let def: Int
-        let m: String
-        let iat, exp: Int64
-    }
-    
-    func isTokenOK(token:String) -> Bool {
-        let jwt = token.split(separator: ".")
-        if let decodedData = Data(base64Encoded: String(jwt[1])) {
-            do {
-                let jwtPayload = try decodeDefaults(forKey: decodedData, conformance: JwtPayload.self)
-                let now = Date().millisecondsSince1970
-                let then : Int64 = jwtPayload.exp * Int64(1000)
-                let diff = ((then - now) / Int64(1000)) / 60
-                print("token süresi: ", diff)
-                if diff == 0 {
-                    return false
-                }
-                return true
-            } catch {
-                return false
-            }
-        }
-        return false
-    }
-    
-    func auth() {
-       
-        var authenticateSource = "authenticate"
-        
-        if let environment = UserDefaults.standard.value(forKey: "environment") {
-            if environment as! Bool {
-                authenticateSource = "authenticateMainnet"
-            }
-        }
-        
-        do {
-            let loginCredits = try secretKeys.LocksmithLoad(forKey: authenticateSource, conformance: digilira.auth.self)
-            
-            if !isTokenOK(token: loginCredits.token) {
-                throwEngine.waitPlease()
-                self.onLogin2 = { [self] user, status in
-                    DispatchQueue.main.sync {
-                        self.throwEngine.removeWait()
-                        onAuth!(loginCredits, 200)
-                    }
-                }
-                
-                self.login2()
-            }else {
-                onAuth!(loginCredits, 200)
-            }
-            
-        } catch  {
-            
-        }
-        
-    }
-    
     func encode2<T>(jsonData: T) -> Data? where T: Encodable {
         let encoder = JSONEncoder()
         do {
@@ -681,7 +520,6 @@ class digiliraPayApi: NSObject {
         } catch  {
             return nil
         }
-        
     }
     
     func getApiURL() -> String {
@@ -691,114 +529,6 @@ class digiliraPayApi: NSObject {
             }
         }
         return digilira.api.url
-    }
-    
-    func login2() {
-        
-        var sensitiveSource = "sensitive"
-        var authenticateSource = "authenticate"
-        
-        if let environment = UserDefaults.standard.value(forKey: "environment") {
-            if environment as! Bool {
-                sensitiveSource = "sensitiveMainnet"
-                authenticateSource = "authenticateMainnet"
-            }
-        }
-        
-        
-        do {
-            let loginCredits = try secretKeys.LocksmithLoad(forKey: sensitiveSource, conformance: digilira.log.self)
-            
-            if let json = encode2(jsonData: loginCredits) {
-                
-                crud.onResponse = { [self] res, sts in
-                    
-                    switch (sts) {
-                    
-                    case 503, 502:
-                        onError!(digilira.NAError.E_502, sts)
-                        break;
-                        
-                    case 400, 404:
-//                        do {
-//                            try Locksmith.deleteDataForUserAccount(userAccount: sensitiveSource)
-//                        } catch  {
-//                            onError!(digilira.NAError.seed404, sts)
-//                        }
-//
-//                        do {
-//                            try Locksmith.deleteDataForUserAccount(userAccount: authenticateSource)
-//                        } catch  {
-//                            onError!(digilira.NAError.user404, sts)
-//                        }
-                        onError!(digilira.NAError.E_404, sts)
-                        
-                        break;
-                        
-                    case 200:
-                        if secretKeys.LocksmithSave(forKey: authenticateSource, data: res) {
-                            do {
-                                let user = try self.decodeDefaults(forKey: res, conformance: digilira.auth.self)
-                                
-                                if let latestApp = user.appV {
-                                    if let appVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
-                                        if let appV = Double(appVersion) {
-                                            if latestApp > appV {
-                                                self.onError!(digilira.NAError.updateAPP,0)
-                                                return
-                                            }
-                                        }
-                                    }
-                                }
-                                
-                                onLogin2!(user, sts)
-                                DispatchQueue.main.async {
-                                    let defaults = UserDefaults.standard
-                                    if let savedApnToken = defaults.object(forKey: "deviceToken") as? String {
-                                        if savedApnToken != user.apnToken {
-                                            let user = digilira.exUser.init(
-                                                apnToken:savedApnToken
-                                            )
-                                            
-                                            let encoder = JSONEncoder()
-                                            let data = try? encoder.encode(user)
-                                            self.onUpdate = { res in
-                                                print(res)
-                                            }
-                                            self.updateUser(user: data)
-                                        }
-                                    }
-                                    
-                                }
-                                
-                            } catch {
-                                print(error)
-                            }
-                            
-                        }
-                        break;
-                        
-                    default:
-                        break;
-                        
-                    }
-                    
-                }
-                
-                crud.onError = { [self] res, sts in
-                    sleep(10)
-                    login2()
-                }
-                
-         
-                
-                crud.request(rURL: getApiURL() + digilira.api.auth, postData: json, method: digilira.requestMethod.post)
-            }
-            
-        } catch  {
-            sleep(3)
-            login2()
-        }
     }
 }
 
@@ -844,8 +574,7 @@ class OpenUrlManager {
                     for case let row as CIQRCodeFeature in features{
                         parseUrlParams(openUrl: URL(string: row.messageString!))
                     }
-                }
-                
+                } 
             }
             break;
         case "digilirapay":
@@ -1068,23 +797,49 @@ class secretKeys: NSObject {
     
     class func LocksmithSave(forKey: String, data: Data, setNil: Bool = false) -> Bool {
         
+        
         if Locksmith.loadDataForUserAccount(userAccount: forKey) != nil {
-            do{
-                try Locksmith.deleteDataForUserAccount(userAccount: String(forKey))
-            } catch let parsingError {
-                print("Error", parsingError)
+            do {
+                let buffer = try secretKeys.userData()
+                do{
+                    try Locksmith.deleteDataForUserAccount(userAccount: String(forKey))
+                    
+                    var jsonResponse = try JSONSerialization.jsonObject(with: data) as! Dictionary<String, AnyObject>
+                    jsonResponse.removeValue(forKey: "id1")
+                    try Locksmith.saveData(data: jsonResponse, forUserAccount: String(forKey))
+                    return true
+                } catch {
+                    print(error)
+                    if Locksmith.loadDataForUserAccount(userAccount: forKey) == nil {
+                        let jsonResponse = try JSONSerialization.jsonObject(with: JSONEncoder().encode(buffer)) as! Dictionary<String, AnyObject>
+                        try Locksmith.saveData(data: jsonResponse, forUserAccount: String(forKey))
+                        return true
+                    }
+                }
+            } catch {
+                print(error)
+                do{
+                    var jsonResponse = try JSONSerialization.jsonObject(with: data) as! Dictionary<String, AnyObject>
+                    jsonResponse.removeValue(forKey: "id1")
+                    try Locksmith.saveData(data: jsonResponse, forUserAccount: String(forKey))
+                    return true
+                } catch {
+                    try? Locksmith.deleteDataForUserAccount(userAccount: String(forKey))
+                    
+                    var jsonResponse = try? (JSONSerialization.jsonObject(with: data) as! Dictionary<String, AnyObject>)
+                    jsonResponse!.removeValue(forKey: "id1")
+                    try? Locksmith.saveData(data: jsonResponse!, forUserAccount: String(forKey))
+                    return true
+                }
             }
-        }
-        
-        do{
-            let jsonResponse = try JSONSerialization.jsonObject(with: data) as! Dictionary<String, AnyObject>
-            try Locksmith.saveData(data: jsonResponse, forUserAccount: String(forKey))
+            
+        } else {
+            var jsonResponse = try? (JSONSerialization.jsonObject(with: data) as! Dictionary<String, AnyObject>)
+            jsonResponse!.removeValue(forKey: "id1")
+            try? Locksmith.saveData(data: jsonResponse!, forUserAccount: String(forKey))
             return true
-        } catch let parsingError {
-            print("Error", parsingError)
-            return false
         }
-        
+        return false
     }
     
 }
@@ -1098,7 +853,7 @@ class centralRequest: NSObject {
     var onError: ((_ result: String, _ statusCode: Int)->())?
     var onResponse: ((_ result: Data, _ statusCode: Int)->())?
     
-    func request(rURL: String, postData: Data? = nil, urlParams: String? = "", method: String, token: String? = "") {
+    func request(rURL: String, postData: Data? = nil, urlParams: String? = "", method: String) {
         
         if let url = URL(string: rURL) {
             var request = URLRequest(url: url)
@@ -1112,11 +867,6 @@ class centralRequest: NSObject {
             
             if urlParams != "" {
                 request.url?.appendPathComponent(urlParams!, isDirectory: true)
-            }
-            
-            if token != "" {
-                let tokenString = "Bearer " + token!
-                request.setValue(tokenString, forHTTPHeaderField: "Authorization")
             }
             
             let session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
