@@ -6,7 +6,6 @@
 //  Copyright © 2019 hiletmis. All rights reserved.
 //
 
-
 import Foundation
 import WavesSDK
 import WavesSDKCrypto
@@ -20,65 +19,13 @@ class digiliraPayApi: NSObject {
     
     var token:String?
     
-    let jsonEncoder = JSONEncoder()
     var onTouchID: ((_ result: Bool, _ status: String)->())?
-    var onError: ((_ result: Error, _ statusCode: Int)->())?
     var onResponse: ((_ result: [String:Any], _ statusCode: Int?)->())?
     var onUpdate: ((_ result: Bool)->())?
     var onTicker: ((_ result: String)->())?
     
     var crud = centralRequest()
     var throwEngine = ErrorHandling()
-    
-    func request(rURL: String, JSON: Data? = nil,
-                 PARAMS: String = "", METHOD: String,
-                 returnCompletion: @escaping ([String:Any], Int?) -> ()) {
-        
-        var request = URLRequest(url: URL(string: rURL)!)
-        
-        request.httpMethod = METHOD
-        
-        if JSON != nil {
-            request.httpBody = JSON
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        }
-        
-        if PARAMS != "" {
-            request.url?.appendPathComponent(PARAMS, isDirectory: true)
-        }
-        
-        let session2 = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
-        
-        self.isCertificatePinning = true
-        
-        let task2 = session2.dataTask(with: request) { (data, response, error) in
-            let httpResponse = response as? HTTPURLResponse
-            if error != nil {
-                
-                //print("error: \(error!.localizedDescription): \(error!)")
-                self.onError!(error!, 0)
-                
-            } else if data != nil {
-                
-                guard let dataResponse = data,
-                      error == nil else {
-                    print(error?.localizedDescription ?? "Response Error")
-                    return }
-                do{
-                    
-                    let jsonResponse = try JSONSerialization.jsonObject(with: dataResponse) as! Dictionary<String, AnyObject>
-                    
-                    returnCompletion(jsonResponse, httpResponse?.statusCode)
-                    
-                } catch let parsingError {
-                    print("Error", parsingError)
-                    returnCompletion([:], httpResponse?.statusCode)
-                }
-            }
-            
-        }
-        task2.resume()
-    }
     
     func decodeDefaults<T>(forKey: Data, conformance: T.Type, setNil: Bool = false ) throws -> T where T: Decodable  {
         do{
@@ -90,7 +37,6 @@ class digiliraPayApi: NSObject {
     }
     
     func touchID(reason: String) {
-        
         let context = LAContext()
         var error: NSError?
         UserDefaults.standard.setValue(true, forKey: "biometrics")
@@ -126,81 +72,10 @@ class digiliraPayApi: NSObject {
         } else {
             self.onTouchID!(false, "Fallback authentication mechanism selected.")
         }
-        
-    }
-    
-    
-    var onGetOrder: ((_ result: PaymentModel)->())?
-    
-    func getOrder(PARAMS: Data) {
-        var request = URLRequest(url: URL(string: getApiURL() + digilira.api.transferGet)!)
-        
-        request.httpMethod = digilira.requestMethod.post
-        
-        request.httpBody = PARAMS
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let session2 = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
-        
-        self.isCertificatePinning = true
-        
-        let task2 = session2.dataTask(with: request) { [self] (data, response, error) in
-            
-            if error != nil {
-                self.onError!(error!, 0)
-                
-            } else if data != nil {
-                
-                do {
-                    let result = try decodeDefaults(forKey: data!, conformance: PaymentModel.self)
-                    DispatchQueue.main.async { // Correct
-                        self.onGetOrder?(result)
-                    }
-                } catch {
-                    onError!(error, 400)
-                }
-            }
-        }
-        task2.resume()
-        
-    }
-    
-    var onGetTransfer: ((_ result: TransferModel)->())?
-    
-    func getTransfer(PARAMS: String) {
-        var request = URLRequest(url: URL(string: getApiURL() + digilira.api.transferGet + digilira.api.transferPrefix + PARAMS)!)
-        
-        request.httpMethod = "GET"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let session2 = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
-        
-        self.isCertificatePinning = true
-        
-        let task2 = session2.dataTask(with: request) { [self] (data, response, error) in
-            
-            if error != nil {
-                self.onError!(error!, 0)
-                
-            } else if data != nil {
-                
-                do {
-                    let result = try decodeDefaults(forKey: data!, conformance: TransferModel.self)
-                    DispatchQueue.main.async { // Correct
-                        self.onGetTransfer?(result)
-                    }
-                } catch {
-                    onError!(error, 400)
-                }
-            }
-        }
-        task2.resume()
-        
     }
     
     func getKeyChainSource() throws -> digilira.keychainData {
         guard let chainId = WavesSDK.shared.enviroment.chainId else { throw digilira.NAError.emptyAuth }
-        
         switch chainId {
         case "T":
             return digilira.keychainData.init(authenticateData: "authenticate", sensitiveData: "sensitive")
@@ -212,12 +87,12 @@ class digiliraPayApi: NSObject {
     }
     
     func updateUser(user: Data?) {
-        self.onResponse = { [self] res, sts in
+        crud.onError = { error, sts in }
+        crud.onResponse = { [self] data, sts in
             switch sts {
             case 200:
                 do {
-                    let j = try  JSONSerialization.data(withJSONObject: res, options: [])
-                    if secretKeys.LocksmithSave(forKey: try! getKeyChainSource().authenticateData, data: j) {
+                    if secretKeys.LocksmithSave(forKey: try getKeyChainSource().authenticateData, data: data) {
                         self.onUpdate!(true)
                     } else {
                         self.onUpdate!(false)
@@ -227,115 +102,27 @@ class digiliraPayApi: NSObject {
                     print(error)
                 }
             default:
-                print(res)
+                print()
             }
         } 
-        request2(rURL: getApiURL() + digilira.api.userUpdate, JSON: user, METHOD: digilira.requestMethod.put)
+        crud.request(rURL: crud.getApiURL() + digilira.api.userUpdate, postData: user, method: req.method.put)
     }
     
     func updateSmartAcountScript(data: NodeService.Query.Transaction) {
-        
-        self.onResponse = { res, sts in
+        crud.onError = { error, sts in }
+        crud.onResponse = { res, sts in
             if (sts == 200) {
                 print(res)
             }else {
                 print("fail")
             }
         }
-        
-        request2(rURL: getApiURL() + digilira.api.userUpdate, JSON: data.data, METHOD: digilira.requestMethod.put)
-        
-    }
-    
-    func getSymbolTicker(symbol:String) {
-        self.onResponse = { res, sts in
-            if (sts == 200) {
-                self.onTicker!(res["price"] as! String)
-                print(res)
-            }else {
-                print("fail")
-            }
-        }
-        
-        request2(rURL: "https://api.binance.com/api/v3/ticker/price?symbol=" + symbol, METHOD: digilira.requestMethod.get)
-        
-    }
-    
-    func request2(rURL: String, JSON: Data? = nil, PARAMS: String = "", METHOD: String) {
-        
-        var request = URLRequest(url: URL(string: rURL)!)
-        
-        request.httpMethod = METHOD
-        
-        if JSON != nil {
-            request.httpBody = JSON
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        }
-        
-        if PARAMS != "" {
-            request.url?.appendPathComponent(PARAMS, isDirectory: true)
-        }
-        
-        let session2 = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
-        
-        self.isCertificatePinning = true
-        
-        let task2 = session2.dataTask(with: request) { (data, response, error) in
-            let httpResponse = response as? HTTPURLResponse
-            if error != nil {
-                //self.onError!("SSL PINNING MISMATCH", 503)
-                
-            } else if data != nil {
-                
-                guard let dataResponse = data,
-                      error == nil else {
-                    print(error?.localizedDescription ?? "Response Error")
-                    return }
-                do{
-                    
-                    let jsonResponse = try JSONSerialization.jsonObject(with: dataResponse) as! Dictionary<String, AnyObject>
-                    self.onResponse!(jsonResponse, httpResponse?.statusCode)
-                    
-                } catch {
-                    if let h = httpResponse {
-                        switch h.statusCode {
-                        case 502:
-                            self.onError!(digilira.NAError.E_502, h.statusCode)
-                        default:
-                            self.onError!(digilira.NAError.anErrorOccured, h.statusCode)
-                        }
-                        
-                        
-                    }
-                    
-                    
-                    
-                }
-            }
-            
-        }
-        task2.resume()
-        
-    }
-    
-    func isLoggedIn() -> Bool {
-        return false
+        crud.request(rURL: crud.getApiURL() + digilira.api.userUpdate, postData: data.data, method: req.method.put)
     }
     
     func saveTransactionTransfer(JSON : Data?) {
-        self.onError = { res, sts in
-            print(res)
-        }
-        DispatchQueue.global(qos: .background).async  { [self] in
-            request(rURL: getApiURL() + digilira.api.transferNew,
-                    JSON: JSON,
-                    METHOD: digilira.requestMethod.post
-            ) { (json, statusCode) in
-                print(json)
-            }
-        }
+        crud.request(rURL: crud.getApiURL() + digilira.api.transferNew, postData: JSON, isReturn: false)
     }
-    
     
     func convertImageToBase64String (img: UIImage) -> String {
         return img.jpegData(compressionQuality: 1)?.base64EncodedString() ?? ""
@@ -348,7 +135,6 @@ class digiliraPayApi: NSObject {
     }
     
     func ticker (ticker: binance.BinanceMarketInfo) -> digilira.ticker {
-        
         var btcUsdtPrice: Double = 0
         var ethUsdtPrice: Double = 0
         var wavesUsdtPrice: Double = 0
@@ -438,9 +224,6 @@ class digiliraPayApi: NSObject {
         default:
             break
         }
-        
-        
-        
         throw digilira.NAError.emptyAuth
     }
     
@@ -463,13 +246,11 @@ class digiliraPayApi: NSObject {
         default:
             throw digilira.NAError.emptyAuth
         }
-        
     }
     
     func isKeyPresentInUserDefaults(key: String) -> Bool {
         return UserDefaults.standard.object(forKey: key) != nil
     }
-    
     
     func wipeOut () {
         do {
@@ -510,25 +291,6 @@ class digiliraPayApi: NSObject {
         dictionary.keys.forEach { key in
             defaults.removeObject(forKey: key)
         }
-    }
-    
-    func encode2<T>(jsonData: T) -> Data? where T: Encodable {
-        let encoder = JSONEncoder()
-        do {
-            let load = try encoder.encode(jsonData)
-            return load
-        } catch  {
-            return nil
-        }
-    }
-    
-    func getApiURL() -> String {
-        if let environment = UserDefaults.standard.value(forKey: "environment") {
-            if environment as! Bool {
-                return digilira.api.urlMainnet
-            }
-        }
-        return digilira.api.url
     }
 }
 
@@ -648,7 +410,6 @@ class OpenUrlManager {
                 UIAlertAction in
             }
             
-            // Add the actions
             picker.delegate = self
             alert.addAction(cameraAction)
             alert.addAction(galleryAction)
@@ -732,21 +493,6 @@ extension digiliraPayApi: URLSessionDelegate {
     
 }
 
-class Utility {
-    
-    class func checkDeviceLockState(completion: @escaping (DeviceLockState) -> Void) {
-        
-        DispatchQueue.main.async {
-            if UIApplication.shared.isProtectedDataAvailable {
-                completion(.unlocked)
-            } else {
-                completion(.locked)
-            }
-        }
-    }
-}
-
-
 class secretKeys: NSObject {
     let jsonEncoder = JSONEncoder()
     
@@ -797,7 +543,6 @@ class secretKeys: NSObject {
     
     class func LocksmithSave(forKey: String, data: Data, setNil: Bool = false) -> Bool {
         
-        
         if Locksmith.loadDataForUserAccount(userAccount: forKey) != nil {
             do {
                 let buffer = try secretKeys.userData()
@@ -844,49 +589,69 @@ class secretKeys: NSObject {
     
 }
 
-
+struct req {
+    struct method {
+        static let put: String = "PUT"
+        static let get: String = "GET"
+        static let post: String = "POST"
+    }
+}
 
 class centralRequest: NSObject {
-    
     private var isCertificatePinning: Bool = true
     
-    var onError: ((_ result: String, _ statusCode: Int)->())?
+    var onError: ((_ result: Error, _ statusCode: Int)->())?
     var onResponse: ((_ result: Data, _ statusCode: Int)->())?
     
-    func request(rURL: String, postData: Data? = nil, urlParams: String? = "", method: String) {
+    func getApiURL() -> String {
+        if let environment = UserDefaults.standard.value(forKey: "environment") {
+            if environment as! Bool {
+                return digilira.api.urlMainnet
+            }
+        }
+        return digilira.api.url
+    }
+    
+    func decodeDefaults<T>(forKey: Data, conformance: T.Type, setNil: Bool = false ) throws -> T where T: Decodable  {
+        do{
+            let type = try JSONDecoder().decode(conformance, from: forKey)
+            return type
+        } catch let parsingError {
+            throw parsingError
+        }
+    }
+    
+    func request(rURL: String, postData: Data? = nil, urlParams: String? = "", method: String = req.method.post, isReturn: Bool = true) {
         
         if let url = URL(string: rURL) {
             var request = URLRequest(url: url)
-            
             request.httpMethod = method
-            
             if let json = postData {
                 request.httpBody = json
                 request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             }
-            
             if urlParams != "" {
                 request.url?.appendPathComponent(urlParams!, isDirectory: true)
             }
-            
             let session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
-            
             isCertificatePinning = true
-            
             let task = session.dataTask(with: request) { (data, response, error) in
+                if !isReturn {return}
                 if let httpResponse = response as? HTTPURLResponse {
                     if error != nil {
-                        
-                        //print("error: \(error!.localizedDescription): \(error!)")
-                        self.onError!("error: \(error!.localizedDescription): \(error!)", 0)
-                        
+                        self.onError!(digilira.NAError.anErrorOccured, 555)
                     } else if data != nil {
-                        
                         guard let dataResponse = data,
                               error == nil else {
-                            self.onError!(error!.localizedDescription, httpResponse.statusCode)
+                            switch httpResponse.statusCode {
+                            case 400:
+                                self.onError!(digilira.NAError.E_400, httpResponse.statusCode)
+                            case 502:
+                                self.onError!(digilira.NAError.E_502, httpResponse.statusCode)
+                            default:
+                                self.onError!(digilira.NAError.anErrorOccured, 555)
+                            }
                             return }
-                        
                         self.onResponse!(dataResponse, httpResponse.statusCode)
                     }
                 }
@@ -894,7 +659,6 @@ class centralRequest: NSObject {
             task.resume()
         }
     }
-    
 }
 
 
@@ -910,20 +674,17 @@ extension centralRequest: URLSessionDelegate {
         if self.isCertificatePinning {
             
             let certificate = SecTrustGetCertificateAtIndex(serverTrust, 0)
-            // SSL Policies for domain name check
+            
             let policy = NSMutableArray()
             policy.add(SecPolicyCreateSSL(true, challenge.protectionSpace.host as CFString))
             
-            //evaluate server certifiacte
             let isServerTrusted = SecTrustEvaluateWithError(serverTrust, nil)
             
-            //Local and Remote certificate Data
             let remoteCertificateData:NSData =  SecCertificateCopyData(certificate!)
-            //let LocalCertificate = Bundle.main.path(forResource: "github.com", ofType: "cer")
+            
             let pathToCertificate = Bundle.main.path(forResource: digilira.sslPinning.cert, ofType: digilira.sslPinning.fileType)
             let localCertificateData:NSData = NSData(contentsOfFile: pathToCertificate!)!
             
-            //Compare certificates
             if(isServerTrusted && remoteCertificateData.isEqual(to: localCertificateData as Data)){
                 let credential:URLCredential =  URLCredential(trust:serverTrust)
                 

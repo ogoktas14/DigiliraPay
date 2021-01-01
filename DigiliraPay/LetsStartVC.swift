@@ -2,7 +2,7 @@
 //  LetsStartVC.swift
 //  DigiliraPay
 //
-//  Created by Yusuf Özgül on 15.08.2019.
+//  Created by Hayrettin İletmiş on 15.08.2019.
 //  Copyright © 2019 DigiliraPay. All rights reserved.
 //
 
@@ -21,7 +21,6 @@ class LetsStartVC: UIViewController {
     var isKeyWordView = false
     
     var gotoSeedRecover = false
-    let digiliraPay = digiliraPayApi()
     let BC = Blockchain()
     
     private func initial() {

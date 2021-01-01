@@ -2,7 +2,7 @@
 //  sendWithQR.swift
 //  DigiliraPay
 //
-//  Created by Yusuf Özgül on 5.09.2019.
+//  Created by Hayrettin İletmiş on 5.09.2019.
 //  Copyright © 2019 DigiliraPay. All rights reserved.
 //
 
@@ -21,7 +21,6 @@ class sendWithQR: UIView {
     var qrCodeFrameView: UIView?
     
     var qrverisi:String?
-    let digiliraPay = digiliraPayApi()
     
     private let supportedCodeTypes = [AVMetadataObject.ObjectType.qr]
     weak var delegate: SendWithQrDelegate?
@@ -61,7 +60,6 @@ class sendWithQR: UIView {
             // Set delegate and use the default dispatch queue to execute the call back
             captureMetadataOutput.setMetadataObjectsDelegate(self as AVCaptureMetadataOutputObjectsDelegate, queue: DispatchQueue.main)
             captureMetadataOutput.metadataObjectTypes = supportedCodeTypes
-            //            captureMetadataOutput.metadataObjectTypes = [AVMetadataObject.ObjectType.qr]
             
         } catch {
             // If any error occurs, simply print it out and don't continue any more.
@@ -150,26 +148,6 @@ class sendWithQR: UIView {
             myView.addSubview(myLogo2)
               
         }
-        
-        
- 
-//        let headerView = DLGradient(frame: CGRect(x: 0,
-//                                                    y: 0,
-//                                                    width: screenSize.width, height:150))
-//
-//        let headerLabel = UILabel(frame: headerView.frame)
-//        headerLabel.text = "QR Kodu Okutunuz"
-//        headerLabel.textColor = .white
-//        headerLabel.textAlignment = .center
-//        headerLabel.font = UIFont(name: "Avenir-Black", size: 22)
-//        headerView.addSubview(headerLabel)
-//
-//
-//        headerView.backgroundColor = .white
-//        headerView.layer.cornerRadius = 0
-//        myView.addSubview(headerView)
-
-        
     }
     
     func animate(view: UIView, bounds: CGRect, inits: TimeInterval = 1) {

@@ -25,8 +25,8 @@ struct digilira {
     }
     struct api {
         static let sslpin = "https://pay.digilirapay.com/"
-        static let url = "https://server1.digilirapay.com/v4"
-        static let urlMainnet = "https://server1.digilirapay.com/v7"
+        static let url = "https://pay.digilirapay.com/v4"
+        static let urlMainnet = "https://pay.digilirapay.com/v7"
                 
         static let transferGet = "/transfer/get"
         static let transferPrefix = "transfer/"
@@ -318,14 +318,13 @@ struct digilira {
         var chainId: Int64?
     }
     struct transfer: Encodable {
-        var type: Int64?
+        var type: Int?
         var id: String?
         var sender: String?
         var senderPublicKey: String?
         var fee: Int64
         var timestamp: String?
         var version: Int?
-        var height:Int64?
         var recipient: String?
         var amount: Int64
         var assetId: String?

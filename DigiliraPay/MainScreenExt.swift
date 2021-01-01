@@ -287,12 +287,11 @@ extension MainScreen: PinViewDelegate
                                                  timestamp: timestamp
                 )
               
-                digiliraPay.onResponse = { res, sts in
+                crud.onResponse = { data, sts in
                     DispatchQueue.main.async { [self] in
                         
                         if sts == 200 {
-                            let j = try? JSONSerialization.data(withJSONObject: res, options: [])
-                            if secretKeys.LocksmithSave(forKey: try! BC.getKeyChainSource().authenticateData, data: j!) {
+                            if secretKeys.LocksmithSave(forKey: try! BC.getKeyChainSource().authenticateData, data: data) {
                                 self.throwEngine.alertWarning(title: "Pin Kodu Güncellendi", message: "Pin kodunuzu unutmayın, cüzdanınızı başka bir cihaza aktarırken ihtiyacınız olacaktır.", error: false)
                                 
                                 self.profileMenuView.pinWarning.isHidden = true
@@ -303,7 +302,8 @@ extension MainScreen: PinViewDelegate
                         }
                     }
                 }
-                digiliraPay.request2(rURL: digiliraPay.getApiURL() + digilira.api.userUpdate, JSON: try? digiliraPay.jsonEncoder.encode(user), METHOD: digilira.requestMethod.put)
+                crud.request(rURL: crud.getApiURL() + digilira.api.userUpdate, postData: try? JSONEncoder().encode(user), method: req.method.put)
+
             }
         } catch {
             print(error)

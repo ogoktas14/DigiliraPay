@@ -2,7 +2,7 @@
 //  MainScreen.swift
 //  DigiliraPay
 //
-//  Created by Yusuf Özgül on 25.08.2019.
+//  Created by Hayrettin İletmiş on 25.08.2019.
 //  Copyright © 2019 DigiliraPay. All rights reserved.
 //
 
@@ -156,7 +156,8 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
     let throwEngine = ErrorHandling()
     
     let digiliraPay = digiliraPayApi()
-    
+    var crud = centralRequest()
+
     func checkEssentials() {
         do {
             kullanici = try secretKeys.userData()
@@ -294,18 +295,35 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         }
         
         BC.onTransferTransaction = { res, t in
-            //            let attachment = String(decoding: (WavesCrypto.shared.base58decode( input: res.dictionary["attachment"] as! String)!), as: UTF8.self)
-            let txid = res.dictionary["id"] as? String
-            
-            DispatchQueue.global(qos: .background).async  {
-                self.BC.verifyTrx(txid: txid!, t: t) 
+   
+            do {
+                let data = try JSONEncoder().encode(res)
+                let type = try JSONDecoder().decode(TransactionType.self, from: data)
+                print(type.type)
+                if type.type == 4 {
+                    let transaction = try JSONDecoder().decode(TransferTransactionModel.self, from: data)
+
+                    DispatchQueue.global(qos: .background).async  {
+                        self.BC.verifyTrx(txid: transaction.id, t: t)
+                    }
+                    
+                    DispatchQueue.main.async {
+                        do {
+                            let value = try JSONDecoder().decode(TransferTransactionModel.self, from: res.data!)
+                            self.showSuccess(mode: 1, transaction: value)
+
+                        }catch {
+                            print(error)
+                        }
+                    }
+                    self.bottomView.isHidden = true
+                    self.goHomeScreen()
+                }
+            }catch{
+                
             }
             
-            DispatchQueue.main.async {
-                self.showSuccess(mode: 1, transaction: res.dictionary)
-            }
-            self.bottomView.isHidden = true
-            self.goHomeScreen()
+            
         }
         
         BC.onVerified = { res, t in
@@ -315,15 +333,14 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                 self.showSuccess(mode: 2, transaction: res)
             }
             
-//            let id = res["id"] as? String
-            switch res["type"] as? Int {
+            switch res.type {
             case 11:
                 return
             default:
-                let attachment = String(decoding: (WavesCrypto.shared.base58decode( input: res["attachment"] as! String)!), as: UTF8.self)
+                let attachment = String(decoding: (WavesCrypto.shared.base58decode( input: res.attachment!)!), as: UTF8.self)
                 
                 do {
-                    let json = try self.digiliraPay.jsonEncoder.encode(t)
+                    let json = try JSONEncoder().encode(t)
                     self.digiliraPay.saveTransactionTransfer(JSON: json)
                 } catch {
                     print(error)
@@ -336,8 +353,8 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
             } 
         }
         
-        digiliraPay.onError = { res, sts in
-            self.throwEngine.evaluateError(error: res)            
+        crud.onError = { res, sts in
+            self.throwEngine.evaluateError(error: res)
         }
         
         BC.onError = { [self] res in
@@ -348,7 +365,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         }
         
         bitexenSign.onBitexenError = { res, sts in
-            self.throwEngine.alertWarning(title: "Bitexen API", message: "Bitexen API bilgileriniz hatalıdır.", error: true)
+            self.throwEngine.alertWarning(title: "Bitexen API", message: "Bitexen API bilgileriniz doğrulanamadı.", error: true)
         }
         refreshControl.alpha = 0
         refreshControl.attributedTitle = NSAttributedString(string: "Güncellemek için çekiniz..")
@@ -359,18 +376,12 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(onDidCompleteTask(_:)), name: .didCompleteTask, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(onDidReceiveData(_:)), name: .didReceiveData, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(onTrxCompleted), name: .didCompleteTask, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(onOrderClicked), name: .orderClick, object: nil)
          
         if #available(iOS 13.0, *), traitCollection.userInterfaceStyle == .dark{
-            
-            //            IQKeyboardManager.shared.keyboardAppearance = .dark
-            mainView.backgroundColor = UIColor.black
+            mainView.backgroundColor = UIColor.white
         }
         
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
-        
-        //Uncomment the line below if you want the tap not not interfere and cancel other interactions.
-        //tap.cancelsTouchesInView = false
         
         view.addGestureRecognizer(tap)
         
@@ -607,7 +618,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
     
     func getOrder(address: digilira.QR) {
                  
-        guard let a = address.address else { return }
+        guard let adres = address.address else { return }
             switch address.network {
             
             case digilira.bitcoin.network:
@@ -623,40 +634,41 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                 sendBTCETH(external: external, ticker:digiliraPay.ticker(ticker: Ticker))
                 break
             default:
-                digiliraPay.onGetOrder = { [self] res in
-                    
-                    if res.status == 2 {
-                        errorCaution(message: "Bu ödeme kodu daha önce kullanılmış. Lütfen yeni bir QR kod okutunuz.", title: "Hatalı QR Kod")
-                    } else {
-                        self.goPageCardView(ORDER: res)
+                crud.onResponse = { [self] data, sts in
+                    DispatchQueue.main.async {
+                        do {
+                            let pm = try crud.decodeDefaults(forKey: data, conformance: PaymentModel.self)
+                            if pm.status == 2 {
+                                self.errorCaution(message: "Bu ödeme kodu daha önce kullanılmış. Lütfen yeni bir QR kod okutunuz.", title: "Hatalı QR Kod")
+                            } else {
+                                self.goPageCardView(ORDER: pm)
+                            }
+                            
+                        } catch {
+                            self.evaluate(error: digilira.NAError.anErrorOccured)
+                        }
                     }
                 }
-                
-                
-                let timestamp = Int64(Date().timeIntervalSince1970) * 1000
-                
-                if let sign = try? BC.bytization(["payment", a, kullanici.id], timestamp) {
+                do {
+                    let timestamp = Int64(Date().timeIntervalSince1970) * 1000
+                    
+                    let sign = try BC.bytization(["payment", adres, kullanici.id], timestamp)
                     
                     let data = digilira.transferGetModel.init(mode: "payment",
                                                               user: kullanici.id,
-                                                              transactionId: a,
+                                                              transactionId: adres,
                                                               signed: sign.signature,
                                                               publicKey: sign.publicKey,
                                                               timestamp: timestamp,
                                                               wallet: sign.wallet)
-                
-                
-                    do {
-                        try digiliraPay.getOrder(PARAMS: digiliraPay.jsonEncoder.encode(data))
-                    } catch {
-                        print (error)
-                    }
+                    
+                    crud.request(rURL: crud.getApiURL() + digilira.api.transferGet, postData: try JSONEncoder().encode(data))
+                } catch {
+                    self.evaluate(error: digilira.NAError.anErrorOccured)
                 }
             }
         }
-        
-   
-    
+       
     @objc func onDidReceiveData(_ sender: Notification) {
         // Do what you need, including updating IBOutlets
         
@@ -680,41 +692,6 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
 
     }
     
-    @objc func onOrderClicked(_ sender: Notification) {
-
-        if let ifQR = (sender.userInfo!["qr"]) {
-            
-            digiliraPay.onGetOrder = { res in
-                self.throwEngine.alertOrder(order: res)
-            }
-            
-            let timestamp = Int64(Date().timeIntervalSince1970) * 1000
-            
-            if let sign = try? BC.bytization(["payment", ifQR as! String, kullanici.id], timestamp) {
-                
-                let data = digilira.transferGetModel.init(mode: "payment",
-                                                          user: kullanici.id,
-                                                          transactionId: ifQR as! String,
-                                                          signed: sign.signature,
-                                                          publicKey: sign.publicKey,
-                                                          timestamp: timestamp,
-                                                          wallet: sign.wallet)
-            
-            
-                let j = try? JSONSerialization.data(withJSONObject: data, options: [])
-                digiliraPay.getOrder(PARAMS: j!)
-            }
-             
-             
-            DispatchQueue.main.async {
-                self.throwEngine.alertTransaction(title: "Sipariş detayları", message:"Sipariş detaylarınız yükleniyor...", verifying: true)
-
-            }
-        }
-        
-  
-    }
-  
     @objc func keyboardWillShow(notification: NSNotification) {
         if !isKeyboard {
             isKeyboard = true
@@ -1928,12 +1905,12 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
     
  
     
-    func showSuccess(mode: Int, transaction: [String : Any]) {
+    func showSuccess(mode: Int, transaction: TransferTransactionModel) {
         do {
-            let asset = try BC.returnAsset(assetId: (transaction["assetId"] as?  String)!)
+            let asset = try BC.returnAsset(assetId: (transaction.assetID!))
             let double = Double(truncating: pow(10,asset.decimal) as NSNumber)
             
-            let amount:String = String((transaction["amount"] as? Float64)! / double)
+            let amount:String = (Double(transaction.amount) / double).description
 
             let message = amount + " " + asset.tokenName + " Gönderiliyor."
             switch mode {

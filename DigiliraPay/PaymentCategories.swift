@@ -22,9 +22,6 @@ class PaymentCat: WalletView1, ColoredCardViewDelegate {
     var cardCount = 1
     var cards: [digilira.cardData] = []
     
-
-    let digiliraPay = digiliraPayApi()
-
     var ViewOriginMaxXValue: CGPoint = CGPoint(x: 0, y: 0)
 
     override func awakeFromNib() {

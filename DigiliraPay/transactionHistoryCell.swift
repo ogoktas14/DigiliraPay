@@ -2,7 +2,7 @@
 //  transactionHistoryCell.swift
 //  DigiliraPay
 //
-//  Created by Yusuf Özgül on 30.08.2019.
+//  Created by Hayrettin İletmiş on 30.08.2019.
 //  Copyright © 2019 DigiliraPay. All rights reserved.
 //
 

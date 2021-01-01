@@ -2,7 +2,7 @@
 //  WalletView.swift
 //  DigiliraPay
 //
-//  Created by Yusuf Özgül on 30.08.2019.
+//  Created by Hayrettin İletmiş on 30.08.2019.
 //  Copyright © 2019 DigiliraPay. All rights reserved.
 //
 
@@ -73,9 +73,7 @@ class WalletView: UIView {
         tableView.dataSource = self
         
         transactionHistory.addSubview(tableView)
-        
         readHistory(coin: coin)
-        
         emptyView.alpha = 0
         
     }
@@ -95,7 +93,7 @@ class WalletView: UIView {
         }
         
         refreshControl.isHidden = true
-
+        
         tableView.isUserInteractionEnabled = false
         self.trxs.removeAll()
         if let walletAddress = wallet {
@@ -103,103 +101,48 @@ class WalletView: UIView {
             BC.checkTransactions(address: walletAddress){ (data) in
                 DispatchQueue.main.async { [self] in
                     data.forEach { trx in
-                        
-                        let dateWaves = (978307200 + (trx["timestamp"] as! Int)) * 1000
-                        
-                        let dateFormatter = DateFormatter()
-                        dateFormatter.locale = NSLocale.current
-                        dateFormatter.dateFormat = "dd-MM-yyyy HH:mm" //Specify your format that you want
-                        let strDate = dateFormatter.string(from: Date(milliseconds: Int64(dateWaves)) )
-                        var attachment: String?
-                        if attachment == "null" {
-                            
-                        }
-                        if (trx["type"] as? Int64 == 4) {
-                            if (trx["assetId"] as? String != nil) {
-                                if (trx["attachment"] as? String != "") {
-                                    attachment = self.BC.base58(data: (trx["attachment"] as? String)!)
+                        if let d = trx.data {
+                            do {
+                                let type = try JSONDecoder().decode(TransactionType.self, from: d)
+                                print(type.type)
+                                if type.type == 4 {
+                                    let value = try JSONDecoder().decode(TransferTransactionModel.self, from: d)
+                                    
+                                    let dateWaves = (978307200 + (value.timestamp)) * 1000
+                                    
+                                    let dateFormatter = DateFormatter()
+                                    dateFormatter.locale = NSLocale.current
+                                    dateFormatter.dateFormat = "dd-MM-yyyy HH:mm"
+                                    let strDate = dateFormatter.string(from: Date(milliseconds: Int64(dateWaves)) )
+                                    let remarks = self.BC.base58(data: value.attachment ?? "Qmxva3ppbmNpciBUcmFuc2Zlcmk=")
+                                                    
+                                    guard value.assetID != digilira.sponsorToken else { return }
+                                    guard value.assetID != nil else { return }
+
+                                    self.trxs.append (digilira.transfer.init(type: value.type,
+                                                                             id: value.id,
+                                                                             sender: value.sender,
+                                                                             senderPublicKey: value.senderPublicKey,
+                                                                             fee: value.fee,
+                                                                             timestamp: strDate,
+                                                                             version: value.version,
+                                                                             recipient: value.recipient,
+                                                                             amount: value.amount,
+                                                                             assetId: value.assetID,
+                                                                             attachment:remarks
+                                    ))
                                 }
-                                
-                                do {
-                                    let asset = try self.BC.returnAsset(assetId: trx["assetId"] as! String)
-                                    
-                                    var isOK = false
-                                    if coin == "" {
-                                        isOK = true
-                                    }
-                                    
-                                    if asset.tokenName == coin {
-                                        isOK = true
-                                    }
-                                    
-                                    if isOK {
-                                        self.trxs.append (digilira.transfer.init(type: trx["type"] as? Int64,
-                                                                                 id: trx["id"] as? String,
-                                                                                 sender: trx["sender"] as? String,
-                                                                                 senderPublicKey: trx["senderPublicKey"] as? String,
-                                                                                 fee: trx["fee"] as! Int64,
-                                                                                 timestamp: strDate,
-                                                                                 version: trx["version"] as? Int,
-                                                                                 height: trx["height"] as? Int64,
-                                                                                 recipient: trx["recipient"] as? String,
-                                                                                 amount: (trx["amount"] as! Int64),
-                                                                                 assetId: asset.token,
-                                                                                 attachment: attachment
-                                        ))
-                                        
-                                    }
-                                } catch  {
-                                    throwEngine.evaluateError(error: error)
-                                }
+                            } catch {
+                                print(error)
                             }
                         }
                         
-                        if (trx["type"] as? Int64 == 11) {
-                            if (trx["assetId"] as? String != nil) {
-                                if (trx["attachment"] as? String != "") {
-                                    attachment = self.BC.base58(data: (trx["attachment"] as? String)!)
-                                }
-                                
-                                do {
-                                    let asset = try self.BC.returnAsset(assetId: trx["assetId"] as! String)
-                                    
-                                    var isOK = false
-                                    if coin == "" {
-                                        isOK = true
-                                    }
-                                    
-                                    if asset.tokenName == coin {
-                                        isOK = true
-                                    }
-                                    if isOK == true {
-                                        self.trxs.append (digilira.transfer.init(type: trx["type"] as? Int64,
-                                                                                 id: trx["id"] as? String,
-                                                                                 sender: trx["sender"] as? String,
-                                                                                 senderPublicKey: trx["senderPublicKey"] as? String,
-                                                                                 fee: trx["fee"] as! Int64,
-                                                                                 timestamp: strDate,
-                                                                                 version: trx["version"] as? Int,
-                                                                                 height: trx["height"] as? Int64,
-                                                                                 recipient: "not",
-                                                                                 amount: (trx["totalAmount"] as! Int64),
-                                                                                 assetId: asset.token,
-                                                                                 attachment: attachment
-                                        ))
-                                    }
-                                    
-                                    
-                                } catch  {
-                                    
-                                }
-                            }
-                        }
                     }
                     self.tableView.reloadData()
                     self.removeDetail()
                     self.refreshControl.endRefreshing()
                     throwEngine.removeAlert()
                     self.tableView.isUserInteractionEnabled = true
-                    //self.loading.isHidden = true
                 }
             }
         }
@@ -237,7 +180,6 @@ class WalletView: UIView {
                         self.transactionHistory.frame.origin.y = CGFloat(self.transactionHistoryOrigin.y)
                     }
                 }
-                
                 transactionHistoryOriginLast = transactionHistory.frame.origin
             }
         }
@@ -277,14 +219,11 @@ extension WalletView: UITableViewDelegate, UITableViewDataSource
                 if let walletAddress = wallet {
                     
                     if (trxs[indexPath[1]].recipient == walletAddress) {
-                        //trxs[indexPath[1]].recipient = ad_soyad
                         cell.operationImage.image = UIImage(named: "receive")
                         
                     }
                     if (trxs[indexPath[1]].sender == walletAddress) {
                         cell.operationImage.image = UIImage(named: "send")
-                        //trxs[indexPath[1]].recipient = ad_soyad
-                        
                     }
                 }
                 
@@ -306,7 +245,6 @@ extension WalletView: UITableViewDelegate, UITableViewDataSource
     {
         transactionDetailView.originValue.y = 0
         transactionDetailView.originValueLast = transactionDetailView.originValue
-        
     }
     
     

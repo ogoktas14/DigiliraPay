@@ -33,7 +33,6 @@ class ParaYatirView:UIView {
     weak var errors: ErrorsDelegate?
     
     var Filtered: [digilira.coin] = []
-    let digiliraPay = digiliraPayApi()
     let BC = Blockchain()
     
     private var selectedCoinX: digilira.coin?

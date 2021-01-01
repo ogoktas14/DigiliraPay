@@ -2,7 +2,7 @@
 //  OnBoardingVC.swift
 //  DigiliraPay
 //
-//  Created by Yusuf Özgül on 8.08.2019.
+//  Created by Hayrettin İletmiş on 8.08.2019.
 //  Copyright © 2019 DigiliraPay. All rights reserved.
 //
 
@@ -32,7 +32,6 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
     var warningView = WarningView()
 
     var onBoardingScrollView = UIScrollView()
-    let digiliraPay = digiliraPayApi()
     let BC = Blockchain()
 
     var QR:digilira.QR = digilira.QR.init()
@@ -43,47 +42,6 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
         pageControl.isHidden = true
         
         UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
-        
-        digiliraPay.onError = { res, sts in
-            DispatchQueue.main.async {
-                
-                switch sts {
-                
-                case 0:
-                    let alert = UIAlertController(title: "Uygulamanızı Güncelleyin", message: "DigiliraPAY uygulamasını kullanmaya devam edebilmek için lütfen uygulamanızı güncelleyin.", preferredStyle: .alert)
-                    
-                    alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
-                        exit(1)
-                    }))
-                    self.present(alert, animated: true)
-                    break
-                case 503:
-                    let alert = UIAlertController(title: "Bir Hata Oluştu", message: "Şu anda hizmet veremiyoruz. Lütfen daha sonra yeniden deneyin.", preferredStyle: .alert)
-                    
-                    alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
-                        exit(1)
-                    }))
-                    self.present(alert, animated: true)
-                    
-                    break;
-                case 400, 404:
-                    
-                    self.checkSeed()
-                    break
-                    
-                default:
-                    
-                    let alert = UIAlertController(title: "Bir Hata Oluştu..", message: "Maalesef şu an işleminizi gerçekleştiremiyoruz. Lütfen birazdan tekrar deneyin.", preferredStyle: UIAlertController.Style.alert)
-                    alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: { action in
-                        exit(1)
-                    }))
-                    self.present(alert, animated: true, completion: nil)
-                    break
-                    
-                }
-            }
-        }
-        
         
         if BC.checkIfUser() {
 
@@ -396,8 +354,6 @@ class DynamicViewController: UIViewController, LegalDelegate {
     
     var m: String?
     var v: Int?
-    let BC = Blockchain()
-    
     
     func showLegal(mode: digilira.terms) {
         

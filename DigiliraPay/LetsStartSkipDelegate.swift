@@ -2,7 +2,7 @@
 //  LetsStartSkipDelegate.swift
 //  DigiliraPay
 //
-//  Created by Yusuf Özgül on 7.09.2019.
+//  Created by Hayrettin İletmiş on 7.09.2019.
 //  Copyright © 2019 DigiliraPay. All rights reserved.
 //
 

@@ -9,11 +9,10 @@
 import Foundation
 import CommonCrypto
 
-
 class bex: NSObject {
     
     private var isCertificatePinning: Bool = true
-
+    
     var onBitexenBalance: ((_ result: bexBalance, _ statusCode: Int?)->())?
     var onBitexenTicker: ((_ result: bexAllTicker, _ statusCode: Int?)->())?
     var onBitexenTickerCoin: ((_ result: bexTicker, _ statusCode: Int?)->())?
@@ -23,7 +22,7 @@ class bex: NSObject {
     struct bexApiDefaultKey {
         static let key = "bitexenAPI2"
     }
-      
+    
     struct bitexenAPICred: Codable {
         var apiKey: String
         var apiSecret: String
@@ -37,7 +36,7 @@ class bex: NSObject {
         let status: String
         let data: DataClass
     }
-
+    
     // MARK: - DataClass
     struct DataClass: Codable {
         let ticker: Ticker
@@ -53,15 +52,15 @@ class bex: NSObject {
     struct AllDataClass: Codable {
         let ticker: [String: Ticker]
     }
-
-
+    
+    
     // MARK: - Ticker
     struct Ticker: Codable {
         let market: Market
         let bid, ask, lastPrice, lastSize: String
         let volume24H, change24H, low24H, high24H: String
         let avg24H, timestamp: String
-
+        
         enum CodingKeys: String, CodingKey {
             case market, bid, ask
             case lastPrice = "last_price"
@@ -74,11 +73,11 @@ class bex: NSObject {
             case timestamp
         }
     }
-
+    
     // MARK: - Market
     struct Market: Codable {
         let marketCode, baseCurrencyCode, counterCurrencyCode: String
-
+        
         enum CodingKeys: String, CodingKey {
             case marketCode = "market_code"
             case baseCurrencyCode = "base_currency_code"
@@ -91,16 +90,16 @@ class bex: NSObject {
         let status: String
         let data: DataClassBalance
     }
-
+    
     // MARK: - DataClass
     struct DataClassBalance: Codable {
         let balances: [String: BalanceValue]
     }
-
+    
     // MARK: - BalanceValue
     struct BalanceValue: Codable {
         let currencyCode, balance, availableBalance: String
-
+        
         enum CodingKeys: String, CodingKey {
             case currencyCode = "currency_code"
             case balance
@@ -120,12 +119,12 @@ class bex: NSObject {
         let status: String
         let data: MarketDataClass
     }
-
+    
     // MARK: - DataClass
     struct MarketDataClass: Codable {
         let markets: [Markets]
     }
-
+    
     // MARK: - Market
     struct Markets: Codable {
         let marketCode, urlSymbol, baseCurrency: String
@@ -133,7 +132,7 @@ class bex: NSObject {
         let minimumOrderAmount, maximumOrderAmount: String
         let baseCurrencyDecimal, counterCurrencyDecimal, presentationDecimal: Int
         let resellMarket: Bool
-
+        
         enum CodingKeys: String, CodingKey {
             case marketCode = "market_code"
             case urlSymbol = "url_symbol"
@@ -147,14 +146,13 @@ class bex: NSObject {
             case resellMarket = "resell_market"
         }
     }
-
+    
     enum CounterCurrency: String, Codable {
         case btc = "BTC"
         case counterCurrencyTRY = "TRY"
         case usdt = "USDT"
     }
-
-
+    
     var apiLogin: bitexenAPICred?
     
     func loginInit(params: bitexenAPICred) -> bitexenAPICred{
@@ -177,43 +175,42 @@ class bex: NSObject {
         let apiURL = digilira.bexURL.baseUrl + digilira.bexURL.ticker + coin
         
         request(rURL: apiURL,
-                METHOD: digilira.requestMethod.get, returnCompletion: { (json, statusCode) in
-            DispatchQueue.main.async {
-                
-                switch coin {
-                case "":
-                    if let marketInfo = self.decodeDefaults(forKey: json!, conformance: bexAllTicker.self) {
-                        self.onBitexenTicker!(marketInfo, statusCode)
-                        return
+                METHOD: req.method.get, returnCompletion: { (json, statusCode) in
+                    DispatchQueue.main.async {
+                        
+                        switch coin {
+                        case "":
+                            if let marketInfo = self.decodeDefaults(forKey: json!, conformance: bexAllTicker.self) {
+                                self.onBitexenTicker!(marketInfo, statusCode)
+                                return
+                            }
+                            break
+                        default:
+                            
+                            if let marketInfo = self.decodeDefaults(forKey: json!, conformance: bexTicker.self) {
+                                self.onBitexenTickerCoin!(marketInfo, statusCode)
+                                return
+                            }
+                            break
+                        }
+                        self.onBitexenError!("parsingError", statusCode)
                     }
-                    break
-                default:
-                    
-                    if let marketInfo = self.decodeDefaults(forKey: json!, conformance: bexTicker.self) {
-                        self.onBitexenTickerCoin!(marketInfo, statusCode)
-                        return
-                    }
-                    break
-                }
-                self.onBitexenError!("parsingError", statusCode)
-                 
-            }
-        })
+                })
     }
     
     public func getMarketInfo() {
         let apiURL = digilira.bexURL.baseUrl + digilira.bexURL.marketInfo
         
         request(rURL: apiURL,
-                METHOD: digilira.requestMethod.get, returnCompletion: { (json, statusCode) in
-            DispatchQueue.main.async {
-                if let marketInfo = self.decodeDefaults(forKey: json!, conformance: bexMarketInfo.self) {
-                    self.onBitexenMarketInfo!(marketInfo, statusCode)
-                    return
-                }
-                self.onBitexenError!("parsingError", statusCode)
-            }
-        })
+                METHOD: req.method.get, returnCompletion: { (json, statusCode) in
+                    DispatchQueue.main.async {
+                        if let marketInfo = self.decodeDefaults(forKey: json!, conformance: bexMarketInfo.self) {
+                            self.onBitexenMarketInfo!(marketInfo, statusCode)
+                            return
+                        }
+                        self.onBitexenError!("parsingError", statusCode)
+                    }
+                })
     }
     
     public func getBalances(keys: bitexenAPICred) {
@@ -221,20 +218,20 @@ class bex: NSObject {
         let (hmac, timestamp) = signHmac(keys: keys, params: "{}")
         
         request(rURL: digilira.bexURL.baseUrl + digilira.bexURL.balances,
-                METHOD: digilira.requestMethod.get,
+                METHOD: req.method.get,
                 AUTH: keys,
                 TIMESTAMP: timestamp,
                 HMAC: hmac,
                 returnCompletion: { (json, statusCode) in
-            
-            DispatchQueue.main.async {
-                if let ticker = self.decodeDefaults(forKey: json!, conformance: bexBalance.self) {
-                    self.onBitexenBalance!(ticker, statusCode)
-                    return
-                }
-                self.onBitexenError!("parsingError", statusCode)
-            }
-        })
+                    
+                    DispatchQueue.main.async {
+                        if let ticker = self.decodeDefaults(forKey: json!, conformance: bexBalance.self) {
+                            self.onBitexenBalance!(ticker, statusCode)
+                            return
+                        }
+                        self.onBitexenError!("parsingError", statusCode)
+                    }
+                })
     }
     
     func decodeDefaults<T>(forKey: Data, conformance: T.Type, setNil: Bool = false ) -> T? where T: Decodable  {
@@ -245,7 +242,6 @@ class bex: NSObject {
             print("Error", parsingError)
             return nil
         }
-        
     }
     
     func request(rURL: String,
@@ -279,37 +275,31 @@ class bex: NSObject {
             request.url?.appendPathComponent(PARAMS, isDirectory: true)
         }
         
-        
-        let session2 = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
+        let session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
         
         self.isCertificatePinning = true
         
-        let task2 = session2.dataTask(with: request) { (data, response, error) in
+        let task = session.dataTask(with: request) { (data, response, error) in
             let httpResponse = response as? HTTPURLResponse
             if error != nil {
-//                print("error: \(error!.localizedDescription): \(error!)")
                 self.onBitexenError!("SSL PINNING MISMATCH", httpResponse?.statusCode)
-                
             } else if data != nil {
-  
-                 guard let dataResponse = data,
+                
+                guard let dataResponse = data,
                       error == nil else {
                     print(error?.localizedDescription ?? "Response Error")
                     return }
                 
-                    returnCompletion(dataResponse, httpResponse?.statusCode)
-                
+                returnCompletion(dataResponse, httpResponse?.statusCode)
             }
-      
         }
-        task2.resume()
+        task.resume()
     }
-    
 }
 
 enum CryptoAlgorithm {
     case MD5, SHA1, SHA224, SHA256, SHA384, SHA512
-
+    
     var HMACAlgorithm: CCHmacAlgorithm {
         var result: Int = 0
         switch self {
@@ -322,7 +312,7 @@ enum CryptoAlgorithm {
         }
         return CCHmacAlgorithm(result)
     }
-
+    
     var digestLength: Int {
         var result: Int32 = 0
         switch self {
@@ -345,13 +335,13 @@ extension String {
         let result = UnsafeMutablePointer<CUnsignedChar>.allocate(capacity: digestLen)
         let keyStr = key.cString(using: String.Encoding.utf8)
         let keyLen = Int(key.lengthOfBytes(using: String.Encoding.utf8))
-
+        
         CCHmac(algorithm.HMACAlgorithm, keyStr!, keyLen, str!, strLen, result)
-
+        
         let digest = stringFromResult(result: result, length: digestLen)
-
+        
         result.deallocate()
-
+        
         return digest
     }
     private func stringFromResult(result: UnsafeMutablePointer<CUnsignedChar>, length: Int) -> String {
@@ -364,40 +354,35 @@ extension String {
 }
 
 extension bex: URLSessionDelegate {
-   
-   func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
-       
-       guard let serverTrust = challenge.protectionSpace.serverTrust else {
-           completionHandler(.cancelAuthenticationChallenge, nil);
-           return
-       }
-       
-       if self.isCertificatePinning {
+    
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        
+        guard let serverTrust = challenge.protectionSpace.serverTrust else {
+            completionHandler(.cancelAuthenticationChallenge, nil);
+            return
+        }
+        
+        if self.isCertificatePinning {
             
-           let certificate = SecTrustGetCertificateAtIndex(serverTrust, 0)
-           // SSL Policies for domain name check
-           let policy = NSMutableArray()
-           policy.add(SecPolicyCreateSSL(true, challenge.protectionSpace.host as CFString))
-           
-           //evaluate server certifiacte
-           let isServerTrusted = SecTrustEvaluateWithError(serverTrust, nil)
-           
-           //Local and Remote certificate Data
-           let remoteCertificateData:NSData =  SecCertificateCopyData(certificate!)
-           //let LocalCertificate = Bundle.main.path(forResource: "github.com", ofType: "cer")
+            let certificate = SecTrustGetCertificateAtIndex(serverTrust, 0)
+            
+            let policy = NSMutableArray()
+            policy.add(SecPolicyCreateSSL(true, challenge.protectionSpace.host as CFString))
+            let isServerTrusted = SecTrustEvaluateWithError(serverTrust, nil)
+            let remoteCertificateData:NSData =  SecCertificateCopyData(certificate!)
             let pathToCertificate = Bundle.main.path(forResource: digilira.sslPinning.bexCert, ofType: digilira.sslPinning.fileType)
-           let localCertificateData:NSData = NSData(contentsOfFile: pathToCertificate!)!
-           
-           //Compare certificates
-           if(isServerTrusted && remoteCertificateData.isEqual(to: localCertificateData as Data)){
-               let credential:URLCredential =  URLCredential(trust:serverTrust)
-
-            completionHandler(.useCredential,credential)
-           }
-           else{
-               completionHandler(.cancelAuthenticationChallenge,nil)
-           }
-       }
-   }
-   
+            let localCertificateData:NSData = NSData(contentsOfFile: pathToCertificate!)!
+            
+            //Compare certificates
+            if(isServerTrusted && remoteCertificateData.isEqual(to: localCertificateData as Data)){
+                let credential:URLCredential =  URLCredential(trust:serverTrust)
+                
+                completionHandler(.useCredential,credential)
+            }
+            else{
+                completionHandler(.cancelAuthenticationChallenge,nil)
+            }
+        }
+    }
+    
 }

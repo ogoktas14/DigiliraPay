@@ -2,8 +2,8 @@
 //  HighlightedButton.swift
 //  WavesWallet-iOS
 //
-//  Created by Pavel Gubin on 8/23/18.
-//  Copyright © 2018 Waves Platform. All rights reserved.
+//  Created by Hayrettin İletmiş on 24.12.2020.
+//  Copyright © 2020 DigiliraPay. All rights reserved.
 //
 
 import UIKit

@@ -2,7 +2,7 @@
 //  TransactionDetailView.swift
 //  DigiliraPay
 //
-//  Created by Yusuf Özgül on 31.08.2019.
+//  Created by Hayrettin İletmiş on 31.08.2019.
 //  Copyright © 2019 DigiliraPay. All rights reserved.
 //
 
@@ -19,8 +19,9 @@ class TransactionDetailView: UIView
     var originValue: CGPoint = CGPoint(x: 0, y: 0)
     var originValueLast: CGPoint = CGPoint(x: 0, y: 0)
     
+    var crud = centralRequest()
     var transaction:digilira.transfer?
-    let digiliraPay = digiliraPayApi()
+
     let BC = Blockchain()
     
     var fetching: Bool = false
@@ -96,8 +97,8 @@ class TransactionDetailView: UIView
             generator.notificationOccurred(.error)
         }
         
-        digiliraPay.onError = { [self] res, sts in
-            delegate?.alertEr(error: res)
+        crud.onError = { [self] error, sts in
+            delegate?.alertEr(error: error)
         }
         
         let timestamp = Int64(Date().timeIntervalSince1970) * 1000
@@ -119,39 +120,36 @@ class TransactionDetailView: UIView
                                                           publicKey: sign.publicKey,
                                                           timestamp: timestamp, wallet: sign.wallet)
                 
-                digiliraPay.onResponse = { res, sts in
+                crud.onResponse = { data, sts in
                     DispatchQueue.main.async { [self] in
-                        if let j = try? JSONSerialization.data(withJSONObject: res, options: []) {
-                            
-                            switch recognizer.assetName {
-                            case "transfer":
-                                do {
-                                    let tm2 = try digiliraPay.decodeDefaults(forKey: j, conformance: TransferModel.self)
-                                    
-                                    delegate?.alertTransfer(order: tm2)
-                                    generator.notificationOccurred(.success)
-                                    
-                                } catch {
-                                    print (error)
-                                }
-                            case "payment":
-                                do {
-                                    let tm1 = try digiliraPay.decodeDefaults(forKey: j, conformance: PaymentModel.self)
-                                    
-                                    delegate?.alertO(order: tm1)
-                                    generator.notificationOccurred(.success)
-                                    
-                                } catch {
-                                    print (error)
-                                }
-                            default:
-                                break
+                        switch recognizer.assetName {
+                        case "transfer":
+                            do {
+                                let tm2 = try crud.decodeDefaults(forKey: data, conformance: TransferModel.self)
+                                
+                                delegate?.alertTransfer(order: tm2)
+                                generator.notificationOccurred(.success)
+                                
+                            } catch {
+                                print (error)
                             }
+                        case "payment":
+                            do {
+                                let tm1 = try crud.decodeDefaults(forKey: data, conformance: PaymentModel.self)
+                                
+                                delegate?.alertO(order: tm1)
+                                generator.notificationOccurred(.success)
+                                
+                            } catch {
+                                print (error)
+                            }
+                        default:
+                            break
                         }
                     }
                 }
                 
-                digiliraPay.request2(rURL: digiliraPay.getApiURL() + digilira.api.transferGet, JSON: try? digiliraPay.jsonEncoder.encode(data), METHOD: digilira.requestMethod.post)
+                crud.request(rURL: crud.getApiURL() + digilira.api.transferGet, postData: try? JSONEncoder().encode(data))
                 
                 DispatchQueue.main.async { [self] in
                     delegate?.alertT(message: "Transder detaylarınız yükleniyor...", title: "Detaylar")
@@ -160,23 +158,7 @@ class TransactionDetailView: UIView
             }
         }
     }
-    
-    @objc func handleTap (recognizer: MyTapGesture) {
-        if recognizer.qrAttachment == "-" {
-            generator.notificationOccurred(.error)
-        }
-        if fetching {
-            return
-        }
-        fetching = true
-        generator.notificationOccurred(.success)
-        
-        let QrDict:[String: String] = ["qr": recognizer.qrAttachment]
-        NotificationCenter.default.post(name: .orderClick, object: nil, userInfo: QrDict )
-        fetching = false
-        
-    }
-    
+
     @IBAction func slideGesture(_ sender: UIPanGestureRecognizer)
     {
         self.translatesAutoresizingMaskIntoConstraints = true

@@ -70,3 +70,44 @@ struct TransferModel: Codable {
         case transferModelID = "id"
     }
 }
+
+struct ConfirmationModelElement: Codable {
+    let status: String
+    let height, confirmations: Int?
+    let applicationStatus, id: String?
+}
+
+typealias ConfirmationModel = [ConfirmationModelElement]
+
+// MARK: - TransferTransactionModel
+struct TransactionType: Codable {
+    let type: Int
+    enum CodingKeys: String, CodingKey {
+        case type
+    }
+}
+
+struct TransferTransactionModel: Codable {
+    let type: Int
+    let id, sender, senderPublicKey: String
+    let fee: Int64
+    let feeAssetID: String?
+    let timestamp: Int
+    let proofs: [String]
+    let version: Int
+    let assetID: String?
+    let recipient: String
+    let feeAsset: String?
+    let amount: Int64
+    let attachment: String?
+    let height: Int?
+    let applicationStatus: String?
+
+    enum CodingKeys: String, CodingKey {
+        case type, id, sender, senderPublicKey, fee
+        case feeAssetID = "feeAssetId"
+        case timestamp, proofs, version, recipient
+        case assetID = "assetId"
+        case feeAsset, amount, attachment, height, applicationStatus
+    }
+}

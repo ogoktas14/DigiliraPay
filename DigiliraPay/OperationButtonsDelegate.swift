@@ -2,13 +2,13 @@
 //  OperationButtonsDelegate.swift
 //  DigiliraPay
 //
-//  Created by Yusuf Özgül on 1.09.2019.
+//  Created by Hayrettin İletmiş on 1.09.2019.
 //  Copyright © 2019 DigiliraPay. All rights reserved.
 //
 
 import Foundation
 
-    struct SendTrx {
+struct SendTrx: Codable {
         var merchant:String?
         var recipient: String?
         var assetId: String?
@@ -26,7 +26,6 @@ import Foundation
         var me: String
         var blockchainFee: Int64
         var merchantId: String?
-
    }
 
 

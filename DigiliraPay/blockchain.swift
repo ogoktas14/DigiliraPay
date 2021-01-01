@@ -26,6 +26,42 @@ class Blockchain: NSObject {
     
     private var isCertificatePinning: Bool = true
     
+    struct DataTransationModelElement: Codable {
+        let type: String
+        let value: Value
+        let key: String
+    }
+    
+    enum Value: Codable {
+        case integer(Int)
+        case string(String)
+        
+        init(from decoder: Decoder) throws {
+            let container = try decoder.singleValueContainer()
+            if let x = try? container.decode(Int.self) {
+                self = .integer(x)
+                return
+            }
+            if let x = try? container.decode(String.self) {
+                self = .string(x)
+                return
+            }
+            throw DecodingError.typeMismatch(Value.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Wrong type for Value"))
+        }
+        
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.singleValueContainer()
+            switch self {
+            case .integer(let x):
+                try container.encode(x)
+            case .string(let x):
+                try container.encode(x)
+            }
+        }
+    }
+    
+    typealias DataTransationModel = [DataTransationModelElement]
+    
     // MARK: - GetCurrencies
     struct GetCurrencies: Codable {
         let type: String
@@ -142,7 +178,6 @@ class Blockchain: NSObject {
     
     private var balances: NodeService.DTO.AddressAssetsBalance?
     private var disposeBag: DisposeBag = DisposeBag()
-    private var disposeBag2: DisposeBag = DisposeBag()
     
     private let wavesCrypto: WavesCrypto = WavesCrypto()
     
@@ -157,7 +192,7 @@ class Blockchain: NSObject {
     
     var onAssetBalance: ((_ result: NodeService.DTO.AddressAssetsBalance)->())?
     var onTransferTransaction: ((_ result: NodeService.DTO.Transaction, _ verifyData: TransferOnWay )->())?
-    var onVerified: ((_ result: [String : AnyObject], _ verifyData: TransferOnWay)->())?
+    var onVerified: ((_ result: TransferTransactionModel, _ verifyData: TransferOnWay)->())?
     var onSensitive: ((_ result: digilira.wallet, _ err: String)->())?
     var onError: ((_ result: Error)->())?
     var onPinSuccess: ((_ result: Bool)->())?
@@ -168,6 +203,7 @@ class Blockchain: NSObject {
     
     var onWavesApiError: ((_ result: String, _ statusCode: Int, _ path: String)->())?
     var onWavesTokenResponse: ((_ result: Data, _ statusCode: Int) ->())?
+    var onWavesNodeResponse: ((_ result: Data, _ statusCode: Int) ->())?
     
     func checkAssetBalance(address: String ) {
         
@@ -210,63 +246,70 @@ class Blockchain: NSObject {
                                                                 senderPublicKey: senderPublicKey, chainId: chainId)
         
         
-        // sign transfer transaction using seed
         queryModel.sign(seed: wallet.seed)
         
         let send = NodeService.Query.Transaction.transfer(queryModel)
         
         WavesSDK.shared.services
-            .nodeServices // You can choose different Waves services: node, matcher and data service
-            .transactionNodeService // Here methods of service
+            .nodeServices
+            .transactionNodeService
             .transactions(query: send)
             .observeOn(MainScheduler.asyncInstance)
             .subscribe(onNext: { [self] (tx) in
-                if let txid = tx.dictionary["id"] as? String {
-                    var external = "N/A"
-                    var merchantId = "N/A"
-                    
-                    switch blob.destination {
-                    case digilira.transactionDestination.foreign:
-                        external = blob.externalAddress!
-                        break
-                    case digilira.transactionDestination.domestic:
-                        merchantId = blob.merchantId!
-                        break
-                    default:
-                        break
-                    }
-                    if blob.destination != digilira.transactionDestination.foreign {
-                        if blob.externalAddress != nil {
-                            external = blob.externalAddress!
-                        }
-                    }
-                    
-                    let v:[String] = [amount.description, assetId.description, attachmentValidation, blob.blockchainFee.description, blob.destination, external, fee.description, feeAssetId, merchantId, blob.me, recipient, name, blob.fiat.description, 0.description, txid]
-                    let sign1 = try? bytization(v, timestamp)
-                    
-                    let t = TransferOnWay.init(recipientName: name,
-                                               recipient: recipient,
-                                               myName: blob.me,
-                                               wallet: address,
-                                               amount: amount,
-                                               assetId: assetId,
-                                               tickerTl: blob.fiat,
-                                               tickerUsd: 0,
-                                               fee: fee,
-                                               feeAssetId: feeAssetId,
-                                               blockchainFee: blob.blockchainFee,
-                                               transactionID: txid,
-                                               destination: blob.destination,
-                                               externalAddress: external,
-                                               attachment: attachmentValidation,
-                                               merchantId: merchantId,
-                                               publicKey: sign1!.publicKey,
-                                               signed: sign1!.signature,
-                                               timestamp: timestamp)
-                    
-                    self.onTransferTransaction?(tx, t)
-                }
                 
+                do {
+                    let data = try JSONEncoder().encode(tx)
+                    let type = try JSONDecoder().decode(TransactionType.self, from: data)
+                    print(type.type)
+                    if type.type == 4 {
+                        let transaction = try JSONDecoder().decode(TransferTransactionModel.self, from: data)
+                        var external = "N/A"
+                        var merchantId = "N/A"
+                        
+                        switch blob.destination {
+                        case digilira.transactionDestination.foreign:
+                            external = blob.externalAddress!
+                            break
+                        case digilira.transactionDestination.domestic:
+                            merchantId = blob.merchantId!
+                            break
+                        default:
+                            break
+                        }
+                        if blob.destination != digilira.transactionDestination.foreign {
+                            if blob.externalAddress != nil {
+                                external = blob.externalAddress!
+                            }
+                        }
+                        
+                        let v:[String] = [amount.description, assetId.description, attachmentValidation, blob.blockchainFee.description, blob.destination, external, fee.description, feeAssetId, merchantId, blob.me, recipient, name, blob.fiat.description, 0.description, transaction.id]
+                        let sign = try bytization(v, timestamp)
+                        
+                        let t = TransferOnWay.init(recipientName: name,
+                                                   recipient: recipient,
+                                                   myName: blob.me,
+                                                   wallet: address,
+                                                   amount: amount,
+                                                   assetId: assetId,
+                                                   tickerTl: blob.fiat,
+                                                   tickerUsd: 0,
+                                                   fee: fee,
+                                                   feeAssetId: feeAssetId,
+                                                   blockchainFee: blob.blockchainFee,
+                                                   transactionID: transaction.id,
+                                                   destination: blob.destination,
+                                                   externalAddress: external,
+                                                   attachment: attachmentValidation,
+                                                   merchantId: merchantId,
+                                                   publicKey: sign.publicKey,
+                                                   signed: sign.signature,
+                                                   timestamp: timestamp)
+                        
+                        self.onTransferTransaction?(tx, t)
+                    }
+                }catch{
+                    print(error)
+                }
             }, onError: { (error ) -> Void in
                 
                 if let s = error as? NetworkError{
@@ -287,13 +330,11 @@ class Blockchain: NSObject {
     }
     
     func massTransferTx(name:String, recipient: String, fee: Int64, amount:Int64, assetId:String, attachment:String, wallet:digilira.wallet, blob: SendTrx) {
-         
         sendTransaction2(name:name, recipient: recipient, fee: fee, amount:amount, assetId:assetId, attachment:attachment, wallet:wallet, blob: blob)
     }
-     
+    
     func verifyTrx(txid: String, t: TransferOnWay) {
-        getTransactionId(rURL: WavesSDK.shared.enviroment.nodeUrl.description + "/transactions/info/" + txid, t:t)
-        
+        getTransactionId(rURL: WavesSDK.shared.enviroment.nodeUrl.description + "/transactions/status?id=" + txid, t:t)
     }
     
     func decodeDefaults<T>(forKey: Data, conformance: T.Type, setNil: Bool = false ) -> T? where T: Decodable  {
@@ -304,7 +345,6 @@ class Blockchain: NSObject {
             print("Error", parsingError)
             return nil
         }
-        
     }
     
     private func wavesApi(seed: String) {
@@ -331,7 +371,7 @@ class Blockchain: NSObject {
         
         let array: [UInt8] = Array(byteString.utf8)
         bytes.append(contentsOf: array)
-                
+        
         if let preSign = wavesCrypto.signBytes(bytes: bytes, seed: seed) {
             if let bs58 = WavesCrypto.shared.base58encode(input: preSign) {
                 let params = digilira.authTokenWaves.init(
@@ -364,8 +404,6 @@ class Blockchain: NSObject {
             }
         }
     }
-    
-    
     
     func getWavesToken(wallet: digilira.wallet) {
         
@@ -411,7 +449,6 @@ class Blockchain: NSObject {
         self.onSensitive = { wallet, error in
             self.wavesApiRequest(auth: nil, endpoint:digilira.wavesApiEndpoints.getWithdraw, currency: currency, withdrawAddress: address, token: token.accessToken, sender: WithdrawAddresses.self) { [self] (address, statusCode) in
                 
-                //Make Sure Gateway is active
                 if address.currency.status == "active" {
                     let minAmount = MainScreen.decimal2Int64(address.currency.allowedAmount.min, digits: address.currency.decimals)
                     let maxAmount = MainScreen.decimal2Int64(address.currency.allowedAmount.max, digits: address.currency.decimals)
@@ -419,9 +456,8 @@ class Blockchain: NSObject {
                     guard amount < maxAmount else { return }
                     guard amount > minAmount else { return }
                     
-                    //External address gateway
                     let proxyAddress = address.proxyAddresses[0]
-                    //Asset will be transfered
+
                     let assetId = address.currency.wavesAssetID
                     let blockchainFee: Int64 = 1000
                     let me = digilira.dummyName
@@ -433,7 +469,7 @@ class Blockchain: NSObject {
         
         getSensitive(pin: true)
     }
-     
+    
     func wavesApiRequest<T>(auth: digilira.authTokenWaves? = nil, endpoint: String, currency: String? = "", withdrawAddress: String? = "", token: String? = "", sender: T.Type, returnCompletion: @escaping (T, Int) -> ()) where T: Decodable  {
         
         guard let chainId = WavesSDK.shared.enviroment.chainId else { return }
@@ -448,7 +484,7 @@ class Blockchain: NSObject {
             switch endpoint {
             case digilira.wavesApiEndpoints.getToken:
                 if let auth = auth {
-                    request.httpMethod = digilira.requestMethod.post
+                    request.httpMethod = req.method.post
                     
                     var requestBody = URLComponents()
                     
@@ -467,7 +503,7 @@ class Blockchain: NSObject {
                 }
                 break
             case digilira.wavesApiEndpoints.getDeposit:
-                request.httpMethod = digilira.requestMethod.get
+                request.httpMethod = req.method.get
                 if currency != "" {
                     if let currency = currency {
                         request.url!.appendPathComponent(currency, isDirectory: false)
@@ -480,7 +516,7 @@ class Blockchain: NSObject {
                 
                 break
             case digilira.wavesApiEndpoints.getWithdraw:
-                request.httpMethod = digilira.requestMethod.get
+                request.httpMethod = req.method.get
                 if currency != "" {
                     if let currency = currency {
                         request.url!.appendPathComponent(currency, isDirectory: true)
@@ -498,7 +534,7 @@ class Blockchain: NSObject {
                 }
                 break
             case digilira.wavesApiEndpoints.getCurrencies:
-                request.httpMethod = digilira.requestMethod.get
+                request.httpMethod = req.method.get
                 break
             default:
                 break
@@ -530,50 +566,97 @@ class Blockchain: NSObject {
         }
     }
     
+    
+    func decodeDefauleets<T>(forKey: Data, conformance: T.Type, setNil: Bool = false ) -> T? where T: Decodable  {
+        do{
+            let ticker = try JSONDecoder().decode(conformance, from: forKey)
+            return ticker
+        } catch let parsingError {
+            print("Error", parsingError)
+            return nil
+        }
+    }
+    
+    func wavesNodeRequests(url: String) {
+        
+        var request = URLRequest(url: URL(string: url)!)
+        request.httpMethod = req.method.get
+        
+        let session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
+        
+        self.isCertificatePinning = true
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let httpResponse = response as? HTTPURLResponse {
+                if error != nil {
+                    self.onError!(error!)
+                } else if data != nil {
+                    
+                    guard let dataResponse = data,
+                          error == nil else {
+                        print(error?.localizedDescription ?? "Response Error")
+                        return }
+                    self.onWavesNodeResponse!(dataResponse, httpResponse.statusCode)
+                }
+            }
+        }
+        task.resume()
+        
+    }
+    
     func getTransactionId(rURL: String, t: TransferOnWay) {
         
         let url = rURL
         
         var request = URLRequest(url: URL(string: rURL)!)
-        request.httpMethod = digilira.requestMethod.get
+        request.httpMethod = req.method.get
         
-        let session2 = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
+        let session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
         
         self.isCertificatePinning = true
         
-        let task2 = session2.dataTask(with: request) { (data, response, error) in
-            let httpResponse = response as? HTTPURLResponse
-            
+        let task = session.dataTask(with: request) { [self] (data, response, error) in
             if error != nil {
-                //                print("error: \(error!.localizedDescription): \(error!)")
                 self.onError!(error!)
                 
             } else if data != nil {
-                
-                if httpResponse!.statusCode == 404 {
-                    sleep(1)
-                    print("control")
-                    self.getTransactionId(rURL: url, t:t)
-                    return
-                }else{
-                    guard let dataResponse = data,
-                          error == nil else {
-                        print(error?.localizedDescription ?? "Response Error")
-                        return }
-                    do{
-                        let jsonResponse = try JSONSerialization.jsonObject(with: dataResponse) as! Dictionary<String, AnyObject>
-                        self.onVerified!(jsonResponse, t)
-                    } catch let parsingError {
-                        print("Error", parsingError)
+                guard let dataResponse = data,
+                      error == nil else {
+                    print(error?.localizedDescription ?? "Response Error")
+                    return }
+                do{
+                    let confirmationModel = try JSONDecoder().decode(ConfirmationModel.self, from: dataResponse)
+                    if let c = confirmationModel.first {
+                        switch c.status {
+                        case "confirmed":
+                            onWavesNodeResponse = { result, statusCode in
+                                do {
+                                    let trxModel = try JSONDecoder().decode(TransferTransactionModel.self, from: result)
+                                    self.onVerified!(trxModel, t)
+                                } catch  {
+                                    print(error)
+                                }
+                            }
+                            wavesNodeRequests(url: WavesSDK.shared.enviroment.nodeUrl.description + "/transactions/info/" + c.id!)
+                            break
+                        case "unconfirmed":
+                            sleep(1)
+                            print("control")
+                            self.getTransactionId(rURL: url, t:t)
+                            break
+                        default:
+                            break
+                        }
                     }
+                } catch let parsingError {
+                    print("Error", parsingError)
                 }
             }
             
         }
-        task2.resume()
+        task.resume()
         
     }
-    
     
     func returnCoin(tokenName: String) throws -> digilira.coin {
         
@@ -609,7 +692,7 @@ class Blockchain: NSObject {
             throw digilira.NAError.notListedToken
         }
     }
-     
+    
     func returnCoins() -> [digilira.coin] {
         
         var result: [digilira.coin] = []
@@ -663,16 +746,18 @@ class Blockchain: NSObject {
         } 
     }
     
-    func base58 (data:String) -> String{
+    func base58 (data:String) -> String {
         let attachment =  WavesCrypto.shared.base58decode(input: data)
-        let string = String(bytes: attachment!, encoding: .utf8)
-        return string ?? "empty"
+        if let a = attachment {
+            if let string = String(bytes: a, encoding: .utf8) {
+                return string
+            }
+        }
+        return "Blokzincir İşlemi"
     }
     
     func smartD(initial: Bool) {
-        
         do {
-            
             let wallet = try getSeed()
             
             guard let chainId = WavesSDK.shared.enviroment.chainId else { return }
@@ -696,10 +781,11 @@ class Blockchain: NSObject {
                     .transactionNodeService
                     .transactions(query: send)
                     .subscribe(onNext: {(tx) in
-                        print(tx) // Do something on success, now we have wavesBalance.balance in satoshi in Long
+                        print(tx)
                     }, onError: {(error) in
                         self.onError!(error)
                     })
+                    .disposed(by: self.disposeBag)
             } else {
                 digiliraPay.updateSmartAcountScript(data: send)
             }
@@ -770,7 +856,7 @@ class Blockchain: NSObject {
                 print(error)
             }
         }
-         
+        
         digiliraPay.onTouchID = { res, err in
             if res == true {
                 
@@ -781,7 +867,7 @@ class Blockchain: NSObject {
                 } catch {
                     print(error)
                 }
-                 
+                
             } else {
                 self.onSensitive!(digilira.wallet.init(seed: ""), err)
             }
@@ -843,11 +929,18 @@ class Blockchain: NSObject {
             let encoder = JSONEncoder()
             let data = try? encoder.encode(user)
             
+            
+            crud.onError = { error, sts in
+            
+            }
+            
+            
             crud.onResponse = { [self] res, sts in
+                print(sts)
                 if (sts == 200) {
                     
                     do {
-                        let ourMember = try digiliraPay.decodeDefaults(forKey: res, conformance: TransferDestination.self)
+                        let ourMember = try crud.decodeDefaults(forKey: res, conformance: TransferDestination.self)
                         
                         let response = digilira.externalTransaction.init(network: external.network,
                                                                          address: external.address,
@@ -870,23 +963,89 @@ class Blockchain: NSObject {
                     
                     //-TODO check withdraw address
                     
-                    let response = digilira.externalTransaction.init(network: external.network,
-                                                                     address: croppedAddress,
-                                                                     amount: 0,
-                                                                     owner: croppedAddress,
-                                                                     wallet: digilira.gatewayAddress,
-                                                                     assetId: external.assetId,
-                                                                     destination: digilira.transactionDestination.foreign
-                    )
-                    self.onMember!(false, response)
+                    switch sts {
+                    case 404:
+                        let response = digilira.externalTransaction.init(network: external.network,
+                                                                         address: croppedAddress,
+                                                                         amount: 0,
+                                                                         owner: croppedAddress,
+                                                                         wallet: digilira.gatewayAddress,
+                                                                         assetId: external.assetId,
+                                                                         destination: digilira.transactionDestination.foreign
+                        )
+                        self.onMember!(false, response)
+                        break
+                    case 502:
+                        //server is down
+                        self.onWavesNodeResponse = { result, statusCode in
+                            switch statusCode {
+                            case 200:
+                                if let dataTransationModel = try? JSONDecoder().decode(DataTransationModelElement.self, from: result) {
+                                    if dataTransationModel.type == "integer" {
+                                        do {
+                                            let value = try JSONDecoder().decode(Int.self, from: dataTransationModel.value.data!)
+                                            if value == 2 {
+                                                let response = digilira.externalTransaction.init(network: external.network,
+                                                                                                 address: croppedAddress,
+                                                                                                 amount: 0,
+                                                                                                 owner: croppedAddress,
+                                                                                                 wallet: croppedAddress,
+                                                                                                 assetId: external.assetId,
+                                                                                                 destination: digilira.transactionDestination.interwallets
+                                                )
+                                                self.onMember!(true, response)
+                                            }
+                                        } catch  {
+                                            break
+                                        }
+                                        
+                                        
+                                        
+                                    } else if dataTransationModel.type == "string" {
+                                        do {
+                                            let wallet = try JSONDecoder().decode(String.self, from: dataTransationModel.value.data!)
+                                            let response = digilira.externalTransaction.init(network: external.network,
+                                                                                             address: croppedAddress,
+                                                                                             amount: 0,
+                                                                                             owner: croppedAddress,
+                                                                                             wallet: wallet,
+                                                                                             assetId: external.assetId,
+                                                                                             destination: digilira.transactionDestination.interwallets
+                                            )
+                                            self.onMember!(true, response)
+                                        } catch  {
+                                            
+                                        }
+                                    }
+                                }
+                            case 404:
+                                let response = digilira.externalTransaction.init(network: external.network,
+                                                                                 address: croppedAddress,
+                                                                                 amount: 0,
+                                                                                 owner: croppedAddress,
+                                                                                 wallet: digilira.gatewayAddress,
+                                                                                 assetId: external.assetId,
+                                                                                 destination: digilira.transactionDestination.foreign
+                                )
+                                self.onMember!(false, response)
+                                break
+                            default:
+                                break
+                            }
+                            
+                        }
+                        let StringUrl = WavesSDK.shared.enviroment.nodeUrl.description + "/addresses/data/" + digilira.gatewayAddress + "/" + croppedAddress!
+                        wavesNodeRequests(url: StringUrl)
+                        break
+                    default:
+                        break
+                    }
                 }
             }
             
-            crud.request(rURL: digiliraPay.getApiURL() + digilira.api.isOurMember, postData: data, method: digilira.requestMethod.post)
+            crud.request(rURL: crud.getApiURL() + digilira.api.isOurMember, postData: data)
         }
     }
-    
-    
     
     func bytization(_ array: [String]?, _ timestamp: Int64, _ seed: String = "N/A") throws -> signData {
         var s = seed
@@ -926,9 +1085,7 @@ class Blockchain: NSObject {
                     return signD
                 }
             }
-            
         }
-        
         throw digilira.NAError.emptyPassword
         
     }
@@ -947,7 +1104,6 @@ class Blockchain: NSObject {
     }
     
     func createUser(seed: String) {
-        
         guard let chainId = WavesSDK.shared.enviroment.chainId else { return }
         
         do {
@@ -1012,64 +1168,45 @@ class Blockchain: NSObject {
             }
             
             do {
-                let postdata = try digiliraPay.jsonEncoder.encode(user)
+                crud.onError = { error, sts in
                 
-                digiliraPay.request(rURL: digiliraPay.getApiURL() + digilira.api.userRegister,
-                                    JSON:  postdata,
-                                    METHOD: digilira.requestMethod.post
-                ) { (json, statusCode) in
+                }
+                crud.onResponse = { [self] data, statusCode in
                     DispatchQueue.main.async  { [self] in
-                        
                         if statusCode == 200 {
                             do {
-                                let j = try JSONSerialization.data(withJSONObject: json, options: [])
-                                
-                                if secretKeys.LocksmithSave(forKey: source.authenticateData, data: j) {
+                                if secretKeys.LocksmithSave(forKey: source.authenticateData, data: data) {
                                     if imported {
                                         
                                         try Locksmith.deleteDataForUserAccount(userAccount: source.sensitiveData)
-                                        try Locksmith.saveData(
-                                            data: [
-                                                "seed": seed
-                                            ],
-                                            forUserAccount: source.sensitiveData)
-                                        
-                                        self.onComplete!(true, statusCode!)
+                                        try Locksmith.saveData(data: ["seed": seed], forUserAccount: source.sensitiveData)
+                                        self.onComplete!(true, statusCode)
                                         
                                     }else {
-                                        
-                                        try Locksmith.saveData(
-                                            data: [
-                                                "seed": seed
-                                            ],
-                                            forUserAccount: source.sensitiveData)
-                                        self.onComplete!(true, statusCode!)
+                                        try Locksmith.saveData(data: ["seed": seed], forUserAccount: source.sensitiveData)
+                                        self.onComplete!(true, statusCode)
                                     }
                                 }
-                                
                             }catch {
                                 if (error as! LocksmithError == LocksmithError.duplicate ) {
                                     try? Locksmith.deleteDataForUserAccount(userAccount: source.sensitiveData)
                                 }
-                                try? Locksmith.saveData(
-                                    data: [
-                                        "seed": seed
-                                    ],
-                                    forUserAccount: source.sensitiveData)
-                                self.onComplete!(true, statusCode!)
+                                try? Locksmith.saveData(data: ["seed": seed], forUserAccount: source.sensitiveData)
+                                
+                                self.onComplete!(true, statusCode)
                             }
                         } else {
-                            if let s = statusCode {
-                                switch s {
+                                switch statusCode {
                                 case 502:
                                     self.onComplete!(false, 502)
                                 default:
                                     self.onComplete!(false, 502)
                                 }
-                            }
+                            
                         }
                     }
                 }
+                crud.request(rURL: crud.getApiURL() + digilira.api.userRegister, postData: try JSONEncoder().encode(user))
             } catch  {
                 print(error)
             }
@@ -1146,7 +1283,7 @@ class Blockchain: NSObject {
         }
     }
 }
- 
+
 extension Blockchain: URLSessionDelegate {
     
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {

@@ -31,11 +31,11 @@ class binance: NSObject {
         
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        let session2 = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
+        let session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
         
         self.isCertificatePinning = true
         
-        let task2 = session2.dataTask(with: request) { (data, response, error) in
+        let task = session.dataTask(with: request) { (data, response, error) in
             let httpResponse = response as? HTTPURLResponse
             if error != nil {
 //                print("error: \(error!.localizedDescription): \(error!)")
@@ -51,7 +51,7 @@ class binance: NSObject {
                     returnCompletion(dataResponse, httpResponse?.statusCode)
             }
         }
-        task2.resume()
+        task.resume()
     }
         
     func decodeDefaults<T>(forKey: Data, conformance: T.Type, setNil: Bool = false ) -> T? where T: Decodable  {
@@ -69,7 +69,7 @@ class binance: NSObject {
         let apiURL = digilira.binanceURL.baseUrl + digilira.binanceURL.ticker
         
         request(rURL: apiURL,
-                METHOD: digilira.requestMethod.get, returnCompletion: { (json, statusCode) in
+                METHOD: req.method.get, returnCompletion: { (json, statusCode) in
             DispatchQueue.main.async {
                 
                 if let marketInfo = self.decodeDefaults(forKey: json!, conformance: BinanceMarketInfo.self) {
