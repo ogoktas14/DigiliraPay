@@ -122,6 +122,7 @@ class TransactionDetailView: UIView
                 
                 crud.onResponse = { data, sts in
                     DispatchQueue.main.async { [self] in
+                        
                         switch recognizer.assetName {
                         case "transfer":
                             do {
@@ -202,11 +203,10 @@ extension TransactionDetailView: UITableViewDelegate, UITableViewDataSource
                     do {
                         let coin = try BC.returnAsset(assetId: t.assetId!)
                         
-                        let double = Double(truncating: pow(10,coin.decimal) as NSNumber)
                         cell.cellImage.image = UIImage(named: coin.tokenSymbol)
                         
                         cell.cellTitle.text = coin.tokenName
-                        cell.cellAmount.text = (Double(t.amount) / double).description
+                        cell.cellAmount.text = MainScreen.int2so(t.amount, digits: coin.decimal)
                         
                     } catch  {
                     }

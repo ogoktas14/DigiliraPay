@@ -131,7 +131,13 @@ class newSendView: UIView {
     
     func checkAddress(network: String, address: String) -> Bool {
         
-        let bitcoinSegwit = "^(bc1|[13])[a-zA-HJ-NP-Z0-9]{25,39}$"
+        let env = BC.returnEnv()
+        
+        var bitcoinSegwit = "^(bc1|[13])[a-zA-HJ-NP-Z0-9]{25,39}$"
+        if env == "testnet" {
+            bitcoinSegwit = "^(tb1|[13])[a-zA-HJ-NP-Z0-9]{25,39}$"
+        }
+
         let bitcoinReg = "^[13][a-km-zA-HJ-NP-Z0-9]{26,33}$"
         let ethereumReg = "^0x[a-fA-F0-9]{40}$"
         let wavesreg = "^[3][a-zA-Z0-9]{34}"
@@ -269,9 +275,7 @@ class newSendView: UIView {
         }
         if let t = transaction {
             
-            let double = Double(truncating: pow(10, coin.decimal) as NSNumber)
             guard let m = t.amount else {return}
-            let miktar: Double = Double(m) / double
             
             var komisyon:Double = 0
             var komisyonText = "Blokzincir komisyon ücreti DigiliraPay tarafından karşılanmaktadır."
@@ -285,9 +289,9 @@ class newSendView: UIView {
                 title: "Transfer Onayı",
                 message: "Bilgileri Kontrol Edin",
                 l1: "Alıcı: " + t.merchant!,
-                l2: "Miktar: " +  miktar.description + " " + coin.tokenSymbol ,
-                l3: "Blokzincir Komisyonu: " + komisyon.description + " " + coin.tokenSymbol  ,
-                l4: "",
+                l2: "Miktar: " +  MainScreen.int2so(m, digits: coin.decimal) + " " + coin.tokenSymbol,
+                l3: "TL Karşılığı: ₺" + MainScreen.df2so(t.fiat),
+                l4: "Blokzincir Komisyonu: " + komisyon.description + " " + coin.tokenSymbol,
                 l5: "",
                 l6: komisyonText,
                 yes: "Onayla",

@@ -104,7 +104,7 @@ class WalletView: UIView {
                         if let d = trx.data {
                             do {
                                 let type = try JSONDecoder().decode(TransactionType.self, from: d)
-                                print(type.type)
+
                                 if type.type == 4 {
                                     let value = try JSONDecoder().decode(TransferTransactionModel.self, from: d)
                                     
@@ -203,16 +203,15 @@ extension WalletView: UITableViewDelegate, UITableViewDataSource
         cell.layoutMargins = UIEdgeInsets.zero
         
         if trxs.count == 0 {
-            
-            
+             
             return cell
         }
         
         if let assetId = trxs[indexPath[1]].assetId  {
             do {
                 let coin = try BC.returnAsset(assetId: assetId)
-                let double = Double(truncating: pow(10,coin.decimal) as NSNumber)
-                cell.operationAmount.text = (Double(trxs[indexPath[1]].amount) / double).description
+                
+                cell.operationAmount.text = MainScreen.int2so(trxs[indexPath[1]].amount, digits: coin.decimal)
                 cell.operationTitle.text = coin.tokenName
                 cell.operationDate.text = trxs[indexPath[1]].timestamp!
                 
@@ -304,19 +303,21 @@ extension WalletView: TransactionDetailCloseDelegate
     }
     
     func alertTransfer(order: TransferModel) {
-        let asset = try? BC.returnAsset(assetId: order.assetID)
-        let t = digilira.txConfMsg.init(title: "Transfer Detayları",
-                                        message: "Hesabınıza gelen transfer detayları",
-                                        l1: "Gönderici: " + order.myName,
-                                        l2: "Token: " + asset!.tokenSymbol,
-                                        l3: "Miktar: " + order.amount.description,
-                                        l4: "",
-                                        l5: "",
-                                        l6: "",
-                                        yes: "Tamam",
-                                        no: "",
-                                        icon: "success")
-        throwEngine.transferConfirmation(txConMsg: t, destination: .trxConfirm)
+        if let coin = try? BC.returnAsset(assetId: order.assetID) {
+                        
+            let t = digilira.txConfMsg.init(title: "Transfer Detayları",
+                                            message: "Hesabınıza gelen transfer detayları",
+                                            l1: "Gönderici: " + order.myName,
+                                            l2: "Alıcı: " + order.recipientName,
+                                            l3: "Token: " + coin.tokenSymbol,
+                                            l4: "Miktar: " + MainScreen.int2so(order.amount, digits: coin.decimal),
+                                            l5: "TL Karşılığı: ₺" + order.tickerTl,
+                                            l6: "",
+                                            yes: "Tamam",
+                                            no: "",
+                                            icon: "success")
+            throwEngine.transferConfirmation(txConMsg: t, destination: .trxConfirm)
+        }
     }
 }
 

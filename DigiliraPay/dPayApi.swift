@@ -27,15 +27,6 @@ class digiliraPayApi: NSObject {
     var crud = centralRequest()
     var throwEngine = ErrorHandling()
     
-    func decodeDefaults<T>(forKey: Data, conformance: T.Type, setNil: Bool = false ) throws -> T where T: Decodable  {
-        do{
-            let ticker = try JSONDecoder().decode(conformance, from: forKey)
-            return ticker
-        } catch let parsingError {
-            throw parsingError
-        }
-    }
-    
     func touchID(reason: String) {
         let context = LAContext()
         var error: NSError?
@@ -78,16 +69,18 @@ class digiliraPayApi: NSObject {
         guard let chainId = WavesSDK.shared.enviroment.chainId else { throw digilira.NAError.emptyAuth }
         switch chainId {
         case "T":
-            return digilira.keychainData.init(authenticateData: "authenticate", sensitiveData: "sensitive")
+            return digilira.keychainData.init(authenticateData: "authenticate", sensitiveData: "sensitive", wavesToken: "wavesToken")
         case "W":
-            return digilira.keychainData.init(authenticateData: "authenticateMainnet", sensitiveData: "sensitiveMainnet")
+            return digilira.keychainData.init(authenticateData: "authenticateMainnet", sensitiveData: "sensitiveMainnet", wavesToken: "wavesTokenMainnet")
         default:
             throw digilira.NAError.emptyAuth
         }
     }
     
     func updateUser(user: Data?) {
-        crud.onError = { error, sts in }
+        crud.onError = { error, sts in
+            self.onUpdate!(false)
+        }
         crud.onResponse = { [self] data, sts in
             switch sts {
             case 200:
@@ -101,8 +94,12 @@ class digiliraPayApi: NSObject {
                 } catch  {
                     print(error)
                 }
+                break
+            case 502:
+                self.onUpdate!(false)
+                break
             default:
-                print()
+                self.onUpdate!(false)
             }
         } 
         crud.request(rURL: crud.getApiURL() + digilira.api.userUpdate, postData: user, method: req.method.put)

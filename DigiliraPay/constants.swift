@@ -25,8 +25,8 @@ struct digilira {
     }
     struct api {
         static let sslpin = "https://pay.digilirapay.com/"
-        static let url = "https://pay.digilirapay.com/v4"
-        static let urlMainnet = "https://pay.digilirapay.com/v7"
+        static let url = "https://server1.digilirapay.com/v4"
+        static let urlMainnet = "https://server1.digilirapay.com/v7"
                 
         static let transferGet = "/transfer/get"
         static let transferPrefix = "transfer/"
@@ -147,6 +147,7 @@ struct digilira {
     struct keychainData {
         var authenticateData: String
         var sensitiveData: String
+        var wavesToken: String
     }
     
     static var demo = ["Bitcoin", "Ethereum", "Waves"]
@@ -415,6 +416,7 @@ struct digilira {
     
     struct wallet: Encodable {
         var seed: String
+        var wavesToken: String
     }
 
     struct txConfMsg: Encodable {

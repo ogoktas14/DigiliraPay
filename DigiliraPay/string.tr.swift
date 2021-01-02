@@ -45,6 +45,19 @@ struct turkish {
         apiSet: false
         
     )
+     
+    static let pepCard = digilira.cardData.init(
+        org: "PeP",
+        bgColor:  UIColor(red: 0.1804, green: 0.7725, blue: 0.6902, alpha: 1.0), /* #2ec5b0 */
+        logoName: "peppara",
+        cardHolder:  "",
+        cardNumber: "PeP Card",
+        line1: "PeP hesabınızı tanımlayın.",
+        apiSet: false,
+        bg: "footer-logo"
+
+        
+    )
     
     struct messages {
         static let touchIDAuthorization = ""

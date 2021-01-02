@@ -26,15 +26,13 @@ extension MainScreen: NewCoinSendDelegate
         
     }
     
-    func sendCoinNew(params:SendTrx) // gelen parametrelerle birlikte gönder butonuna basıldı.
+    func sendCoinNew(params:SendTrx)
     {
         let ifPin = kullanici.pincode
         
         if ifPin == "-1" {
             openPinView()
         }else {
-            
-            
             BC.onSensitive = { [self] wallet, err in
                 switch err {
                 case "ok":
@@ -44,15 +42,14 @@ extension MainScreen: NewCoinSendDelegate
                         BC.sendTransaction2(name: params.merchant!, recipient: params.recipient!, fee: digilira.sponsorTokenFee, amount: params.amount!, assetId: params.assetId!, attachment: params.attachment, wallet:wallet, blob: params)
                         break
                     case digilira.transactionDestination.foreign:
-                        
-                        BC.getWavesToken(wallet:wallet)
-                        
-                        BC.massTransferTx(name: params.merchant!, recipient: params.recipient!, fee: digilira.sponsorTokenFeeMass, amount: params.amount!, assetId: params.assetId!, attachment: "", wallet: wallet, blob: params)
-                        
+                        BC.createWithdrawRequest(wallet: wallet,
+                                                 address: params.externalAddress!,
+                                                 currency: params.assetId!,
+                                                 amount: params.amount!,
+                                                 blob: params)
                         break
                     case digilira.transactionDestination.interwallets:
                         BC.massTransferTx(name: params.merchant!, recipient: params.recipient!, fee: digilira.sponsorTokenFeeMass, amount: params.amount!, assetId: params.assetId!, attachment: "", wallet: wallet, blob: params)
-                        
                         break
                     default:
                         return
@@ -62,8 +59,6 @@ extension MainScreen: NewCoinSendDelegate
                 case "Canceled by user.":
                     self.shake()
                     self.throwEngine.alertWarning(title: "Dikkat", message: "İşleminiz iptal edilmiştir.", error: true)
-                    
-                    //self.dismissNewSend()
                     return
                     
                 case "Fallback authentication mechanism selected.":
@@ -71,11 +66,8 @@ extension MainScreen: NewCoinSendDelegate
                     self.openPinView()
                     break
                 default: break
-                    
                 }
-                
             }
-            
             self.onPinSuccess = { [self] res in
                 switch res {
                 case true:
@@ -88,25 +80,15 @@ extension MainScreen: NewCoinSendDelegate
                     }
                     break
                 }
-                
             }
-            
-            
             BC.getSensitive(pin:false)
-            
         }
-        
-        
-        
     }
-    
     func readAddressQR() {
         goQRScreen()
     }
-    
 }
-
-
+ 
 extension MainScreen: PageCardViewDeleGate
 {
     func cancel1(id: String) {
@@ -120,8 +102,8 @@ extension MainScreen: PageCardViewDeleGate
             for subView in self.sendWithQRView.subviews
             { subView.removeFromSuperview() }
         })
-        
     }
+    
     func dismissNewSend1(params: PaymentModel) {
         //fetch()
         isNewSendScreen = false
@@ -134,7 +116,6 @@ extension MainScreen: PageCardViewDeleGate
                 name = f + " " + l
             }
         }
-        
         let data = SendTrx.init(merchant: params.merchant,
                                 recipient: digilira.gatewayAddress,
                                 assetId: params.currency,
@@ -148,17 +129,13 @@ extension MainScreen: PageCardViewDeleGate
                                 me: name,
                                 blockchainFee: 0,
                                 merchantId: params.user
-                                
         )
-        
         sendCoinNew(params: data)
-        
     }
     
     func selectCoin1(params: String) {
         print(params)
     }
-    
 }
 
 extension MainScreen: PinViewDelegate

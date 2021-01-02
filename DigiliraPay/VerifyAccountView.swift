@@ -135,8 +135,6 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
                         guard let dataResponse = data,
                               error == nil else {
                             return }
-                        let dataString = NSString(data: dataResponse, encoding: String.Encoding.utf8.rawValue)
-                        print(dataString!)
                         
                         let parser = XMLParser(data: dataResponse)
                         parser.delegate = self
@@ -152,9 +150,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
             if string == "true" {
                 sts = 1
                 enterInfoView.alpha = 0
-                
-                errors?.errorHandler(message: "Kimlik bilgileriniz doğrulandı, ancak KYC sürecini tamamlamak için kimliğinizin ön yüzü görünecek biçimde boş bir kağıda günün tarihini ve DigiliraPay yazarak Profil Onayı sayfasına yükleyin.", title: "Profiliniz Güncellendi", error: false)
-                
+                errors?.waitPlease()
                 delegate?.dismissVErifyAccountView()
             }else {
                 errors?.evaluate(error: digilira.NAError.missingParameters)
@@ -165,7 +161,16 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
             let BC = Blockchain()
             
             digiliraPay.onUpdate = { res in
-                delegate?.loadEssentials()
+                errors?.removeWait()
+
+                if !res {
+                    errors?.evaluate(error: digilira.NAError.missingParameters)
+                    
+                } else {
+                    errors?.errorHandler(message: "Kimlik bilgileriniz doğrulandı, ancak KYC sürecini tamamlamak için kimliğinizin ön yüzü görünecek biçimde boş bir kağıda günün tarihini ve DigiliraPay yazarak Profil Onayı sayfasına yükleyin.", title: "Profiliniz Güncellendi", error: false)
+                    
+                    delegate?.loadEssentials()
+                }
             }
             delegate?.dismissKeyboard()
             

@@ -64,7 +64,8 @@ class TransferConfirmationView: UIView {
         
         ok.layer.cornerRadius = 25
         ok.isUserInteractionEnabled = true
-        ok.addGestureRecognizer(tapNo)
+        let tapOk: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(exitView(_:)))
+        ok.addGestureRecognizer(tapOk)
         
         self.frame.size.width = 0
         self.frame.size.height = 0

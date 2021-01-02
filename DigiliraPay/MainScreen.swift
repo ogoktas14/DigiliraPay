@@ -31,7 +31,6 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
     //@IBOutlet weak var profileMenuButton: UIImageView!
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var homeAmountLabel: UILabel!
-    @IBOutlet weak var serverLabel: UILabel!
     @IBOutlet weak var profileSettingsView: UIView!
     @IBOutlet weak var qrView: UIView!
     @IBOutlet weak var accountButton: UIImageView!
@@ -208,15 +207,6 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         coinTableView.showsVerticalScrollIndicator = false
         menuView.isUserInteractionEnabled = false
         
-        switch WavesSDK.shared.enviroment.server {
-        case .mainNet:
-            serverLabel.text = "MainNet"
-            break
-        default:
-            serverLabel.text = "TestNet"
-            break
-        }
-         
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .light
         } else {
@@ -643,8 +633,8 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                             } else {
                                 self.goPageCardView(ORDER: pm)
                             }
-                            
                         } catch {
+                            print(error)
                             self.evaluate(error: digilira.NAError.anErrorOccured)
                         }
                     }
@@ -973,6 +963,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         var bitexen = turkish.bitexenCard
         let kizilay = turkish.kizilayCard
         let okex = turkish.okexCard
+        let pep = turkish.pepCard
         
         if let api = decodeDefaults(forKey: bex.bexApiDefaultKey.key, conformance: bex.bitexenAPICred.self) {
             bitexen.cardNumber = "Hesap Bilgilerini Düzenle"
@@ -984,6 +975,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         }
         
         cards.append(bitexen)
+        cards.append(pep)
         cards.append(okex)
         cards.append(kizilay)
         
@@ -1509,7 +1501,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
     } 
 }
 
-extension MainScreen: OperationButtonsDelegate // Wallet ekranındaki gönder yükle butonlarının tetiklenmesi ve işlemleri
+extension MainScreen: OperationButtonsDelegate
 {
     func send(params: SendTrx)
     {

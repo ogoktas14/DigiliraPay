@@ -26,7 +26,6 @@ protocol ErrorsDelegate: class {
     
 }
 
-
 protocol NewCoinSendDelegate: class {
     func readAddressQR()
     func dismissNewSend()

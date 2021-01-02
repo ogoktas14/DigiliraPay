@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="17506" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
+    <device id="watch44"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="17500"/>
+    </dependencies>
+    <scenes>
+        <!--Interface Controller-->
+        <scene sceneID="aou-V4-d1y">
+            <objects>
+                <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModule="WatchDP" customModuleProvider="target">
+                    <items>
+                        <button width="100" height="100" alignment="center" backgroundImage="btc" id="dcv-k5-EEt">
+                            <connections>
+                                <segue destination="qhL-LH-Hjc" kind="modal" id="0rM-6n-2Qb"/>
+                            </connections>
+                        </button>
+                        <separator alignment="left" id="xcq-be-wMQ"/>
+                        <button width="100" height="100" alignment="center" backgroundImage="ethereum" id="ONw-W6-XfE">
+                            <connections>
+                                <segue destination="qhL-LH-Hjc" kind="modal" id="Soz-nd-BTW"/>
+                            </connections>
+                        </button>
+                        <separator alignment="left" id="XnW-i7-r2J"/>
+                        <button width="100" height="100" alignment="center" backgroundImage="waves" id="8A1-3F-pd0">
+                            <connections>
+                                <segue destination="qhL-LH-Hjc" kind="modal" id="smc-qA-NPD"/>
+                            </connections>
+                        </button>
+                        <separator alignment="left" id="MOl-Yd-phb"/>
+                        <button width="100" height="100" alignment="center" backgroundImage="tether" id="ILI-BY-FA6">
+                            <connections>
+                                <segue destination="qhL-LH-Hjc" kind="modal" id="KDP-Jn-NGb"/>
+                            </connections>
+                        </button>
+                    </items>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="12.565217391304348" y="84.241071428571431"/>
+        </scene>
+        <!--Static Notification Interface Controller-->
+        <scene sceneID="AEw-b0-oYE">
+            <objects>
+                <notificationController id="YCC-NB-fut">
+                    <items>
+                        <label alignment="left" text="Alert Label" numberOfLines="0" id="IdU-wH-bcW"/>
+                    </items>
+                    <notificationCategory key="notificationCategory" identifier="myCategory" id="JfB-70-Muf"/>
+                    <connections>
+                        <outlet property="notificationAlertLabel" destination="IdU-wH-bcW" id="JKC-fr-R95"/>
+                        <segue destination="4sK-HA-Art" kind="relationship" relationship="dynamicNotificationInterface" id="kXh-Jw-8B1"/>
+                        <segue destination="eXb-UN-Cd0" kind="relationship" relationship="dynamicInteractiveNotificationInterface" id="mpB-YA-K8N"/>
+                    </connections>
+                </notificationController>
+            </objects>
+            <point key="canvasLocation" x="143" y="643"/>
+        </scene>
+        <!--Notification Controller-->
+        <scene sceneID="ZPc-GJ-vnh">
+            <objects>
+                <controller id="4sK-HA-Art" customClass="NotificationController" customModule="WatchDP" customModuleProvider="target"/>
+            </objects>
+            <point key="canvasLocation" x="515" y="643"/>
+        </scene>
+        <!--Controller-->
+        <scene sceneID="K2E-Uo-dGR">
+            <objects>
+                <controller id="qhL-LH-Hjc" customClass="QRController" customModule="WatchDP_Extension">
+                    <items>
+                        <imageView alignment="center" verticalAlignment="center" image="pay" contentMode="scaleAspectFill" id="CdC-BF-KwO"/>
+                        <label alignment="left" verticalAlignment="bottom" text="QR Kodunuzu okutarak hesabınıza transfer yapabilirsiniz." numberOfLines="0" id="pqe-la-VGV"/>
+                    </items>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <connections>
+                        <outlet property="imgView" destination="CdC-BF-KwO" id="lVZ-gu-W2h"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="297.86956521739131" y="133.57142857142858"/>
+        </scene>
+        <!--Notification Controller-->
+        <scene sceneID="Niz-AI-uX2">
+            <objects>
+                <controller id="eXb-UN-Cd0" customClass="NotificationController" customModule="WatchDP" customModuleProvider="target"/>
+            </objects>
+            <point key="canvasLocation" x="515" y="345"/>
+        </scene>
+    </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="Soz-nd-BTW"/>
+    </inferredMetricsTieBreakers>
+    <resources>
+        <image name="btc" width="48" height="48"/>
+        <image name="ethereum" width="48" height="48"/>
+        <image name="pay" width="150" height="150"/>
+        <image name="tether" width="48" height="48"/>
+        <image name="waves" width="48" height="48"/>
+    </resources>
+</document>

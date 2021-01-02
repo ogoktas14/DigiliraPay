@@ -28,19 +28,16 @@ struct SendTrx: Codable {
         var merchantId: String?
    }
 
-
 protocol OperationButtonsDelegate: class
 {
     func send(params: SendTrx)
     func load()
 }
 
-
 protocol PaymentCatViewsDelegate: class {
     func dismiss()
     func passData(data: String)
 }
-
 
 protocol ColoredCardViewDelegate: class {
     func passData(data: String)

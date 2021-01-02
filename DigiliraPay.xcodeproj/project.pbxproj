@@ -106,6 +106,15 @@
 		93A3CC33258C7F5900E89E6E /* TransferConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A3CC32258C7F5900E89E6E /* TransferConfirmationView.swift */; };
 		93B7A11B252F0D8000C89E66 /* PaymentCategories.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93B7A11A252F0D8000C89E66 /* PaymentCategories.xib */; };
 		93B7A11E252F0F0A00C89E66 /* PaymentCategories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93B7A11D252F0F0A00C89E66 /* PaymentCategories.swift */; };
+		93BB06D2259FD6E2000E4BBB /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 93BB06D0259FD6E2000E4BBB /* Interface.storyboard */; };
+		93BB06D4259FD6E4000E4BBB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 93BB06D3259FD6E4000E4BBB /* Assets.xcassets */; };
+		93BB06DB259FD6E4000E4BBB /* WatchDP Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 93BB06DA259FD6E4000E4BBB /* WatchDP Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		93BB06E0259FD6E4000E4BBB /* InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93BB06DF259FD6E4000E4BBB /* InterfaceController.swift */; };
+		93BB06E2259FD6E4000E4BBB /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93BB06E1259FD6E4000E4BBB /* ExtensionDelegate.swift */; };
+		93BB06E4259FD6E4000E4BBB /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93BB06E3259FD6E4000E4BBB /* NotificationController.swift */; };
+		93BB06E6259FD6E4000E4BBB /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93BB06E5259FD6E4000E4BBB /* ComplicationController.swift */; };
+		93BB06E8259FD6E5000E4BBB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 93BB06E7259FD6E5000E4BBB /* Assets.xcassets */; };
+		93BB06ED259FD6E5000E4BBB /* WatchDP.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 93BB06CE259FD6E2000E4BBB /* WatchDP.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		93CAC397259225B9006B8FB7 /* PaymentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CAC396259225B9006B8FB7 /* PaymentModel.swift */; };
 		93E9D552257A930D00FE19D8 /* ErrorHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E9D551257A930D00FE19D8 /* ErrorHandling.swift */; };
 		93F79FD3257E0D48006DC148 /* ParaYatirView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93F79FD2257E0D48006DC148 /* ParaYatirView.xib */; };
@@ -117,6 +126,48 @@
 		93FC66C02562AB4E00E42AAC /* binance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93FC66BF2562AB4E00E42AAC /* binance.swift */; };
 		93FC66C32562ABAB00E42AAC /* binance.com.cer in Resources */ = {isa = PBXBuildFile; fileRef = 93FC66C22562AB9400E42AAC /* binance.com.cer */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		93BB06DC259FD6E4000E4BBB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 882AAAF722FC96DD004CDAA6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 93BB06D9259FD6E4000E4BBB;
+			remoteInfo = "WatchDP Extension";
+		};
+		93BB06EB259FD6E5000E4BBB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 882AAAF722FC96DD004CDAA6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 93BB06CD259FD6E2000E4BBB;
+			remoteInfo = WatchDP;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		93BB06BC259FD183000E4BBB /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				93BB06ED259FD6E5000E4BBB /* WatchDP.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		93BB06F1259FD6E5000E4BBB /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				93BB06DB259FD6E4000E4BBB /* WatchDP Extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0023C0FB2517C92B0042B50C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -229,6 +280,18 @@
 		93A3CC32258C7F5900E89E6E /* TransferConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferConfirmationView.swift; sourceTree = "<group>"; };
 		93B7A11A252F0D8000C89E66 /* PaymentCategories.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentCategories.xib; sourceTree = "<group>"; };
 		93B7A11D252F0F0A00C89E66 /* PaymentCategories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCategories.swift; sourceTree = "<group>"; };
+		93BB06CE259FD6E2000E4BBB /* WatchDP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WatchDP.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		93BB06D1259FD6E2000E4BBB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
+		93BB06D3259FD6E4000E4BBB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		93BB06D5259FD6E4000E4BBB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		93BB06DA259FD6E4000E4BBB /* WatchDP Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "WatchDP Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		93BB06DF259FD6E4000E4BBB /* InterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceController.swift; sourceTree = "<group>"; };
+		93BB06E1259FD6E4000E4BBB /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
+		93BB06E3259FD6E4000E4BBB /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
+		93BB06E5259FD6E4000E4BBB /* ComplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationController.swift; sourceTree = "<group>"; };
+		93BB06E7259FD6E5000E4BBB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		93BB06E9259FD6E5000E4BBB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		93BB06EA259FD6E5000E4BBB /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
 		93CAC396259225B9006B8FB7 /* PaymentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentModel.swift; sourceTree = "<group>"; };
 		93E9D551257A930D00FE19D8 /* ErrorHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorHandling.swift; sourceTree = "<group>"; };
 		93F79FD2257E0D48006DC148 /* ParaYatirView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ParaYatirView.xib; sourceTree = "<group>"; };
@@ -248,6 +311,13 @@
 			files = (
 				00608083237B404F006FFBD2 /* LocalAuthentication.framework in Frameworks */,
 				28AA4F6D6F9B6977B988457B /* Pods_DigiliraPay.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		93BB06D7259FD6E4000E4BBB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -292,6 +362,8 @@
 			isa = PBXGroup;
 			children = (
 				882AAB0122FC96DD004CDAA6 /* DigiliraPay */,
+				93BB06CF259FD6E2000E4BBB /* WatchDP */,
+				93BB06DE259FD6E4000E4BBB /* WatchDP Extension */,
 				882AAB0022FC96DD004CDAA6 /* Products */,
 				9D9CFF69165CF1FB51D08BF6 /* Pods */,
 				8F72ADF997802C10AF217F7C /* Frameworks */,
@@ -302,6 +374,8 @@
 			isa = PBXGroup;
 			children = (
 				882AAAFF22FC96DD004CDAA6 /* DigiliraPay.app */,
+				93BB06CE259FD6E2000E4BBB /* WatchDP.app */,
+				93BB06DA259FD6E4000E4BBB /* WatchDP Extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -482,6 +556,30 @@
 			name = SSLPinning;
 			sourceTree = "<group>";
 		};
+		93BB06CF259FD6E2000E4BBB /* WatchDP */ = {
+			isa = PBXGroup;
+			children = (
+				93BB06D0259FD6E2000E4BBB /* Interface.storyboard */,
+				93BB06D3259FD6E4000E4BBB /* Assets.xcassets */,
+				93BB06D5259FD6E4000E4BBB /* Info.plist */,
+			);
+			path = WatchDP;
+			sourceTree = "<group>";
+		};
+		93BB06DE259FD6E4000E4BBB /* WatchDP Extension */ = {
+			isa = PBXGroup;
+			children = (
+				93BB06DF259FD6E4000E4BBB /* InterfaceController.swift */,
+				93BB06E1259FD6E4000E4BBB /* ExtensionDelegate.swift */,
+				93BB06E3259FD6E4000E4BBB /* NotificationController.swift */,
+				93BB06E5259FD6E4000E4BBB /* ComplicationController.swift */,
+				93BB06E7259FD6E5000E4BBB /* Assets.xcassets */,
+				93BB06E9259FD6E5000E4BBB /* Info.plist */,
+				93BB06EA259FD6E5000E4BBB /* PushNotificationPayload.apns */,
+			);
+			path = "WatchDP Extension";
+			sourceTree = "<group>";
+		};
 		93D3FF74257613860088CC9E /* unused */ = {
 			isa = PBXGroup;
 			children = (
@@ -511,15 +609,51 @@
 				882AAAFC22FC96DD004CDAA6 /* Frameworks */,
 				882AAAFD22FC96DD004CDAA6 /* Resources */,
 				01EB1E1FBB66A80400364167 /* [CP] Embed Pods Frameworks */,
+				93BB06BC259FD183000E4BBB /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				93BB06EC259FD6E5000E4BBB /* PBXTargetDependency */,
 			);
 			name = DigiliraPay;
 			productName = DigiliraPay;
 			productReference = 882AAAFF22FC96DD004CDAA6 /* DigiliraPay.app */;
 			productType = "com.apple.product-type.application";
+		};
+		93BB06CD259FD6E2000E4BBB /* WatchDP */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 93BB06F2259FD6E5000E4BBB /* Build configuration list for PBXNativeTarget "WatchDP" */;
+			buildPhases = (
+				93BB06CC259FD6E2000E4BBB /* Resources */,
+				93BB06F1259FD6E5000E4BBB /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				93BB06DD259FD6E4000E4BBB /* PBXTargetDependency */,
+			);
+			name = WatchDP;
+			productName = WatchDP;
+			productReference = 93BB06CE259FD6E2000E4BBB /* WatchDP.app */;
+			productType = "com.apple.product-type.application.watchapp2";
+		};
+		93BB06D9259FD6E4000E4BBB /* WatchDP Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 93BB06EE259FD6E5000E4BBB /* Build configuration list for PBXNativeTarget "WatchDP Extension" */;
+			buildPhases = (
+				93BB06D6259FD6E4000E4BBB /* Sources */,
+				93BB06D7259FD6E4000E4BBB /* Frameworks */,
+				93BB06D8259FD6E4000E4BBB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "WatchDP Extension";
+			productName = "WatchDP Extension";
+			productReference = 93BB06DA259FD6E4000E4BBB /* WatchDP Extension.appex */;
+			productType = "com.apple.product-type.watchkit2-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -527,12 +661,18 @@
 		882AAAF722FC96DD004CDAA6 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1100;
+				LastSwiftUpdateCheck = 1220;
 				LastUpgradeCheck = 1210;
 				ORGANIZATIONNAME = DigiliraPay;
 				TargetAttributes = {
 					882AAAFE22FC96DD004CDAA6 = {
 						CreatedOnToolsVersion = 11.0;
+					};
+					93BB06CD259FD6E2000E4BBB = {
+						CreatedOnToolsVersion = 12.2;
+					};
+					93BB06D9259FD6E4000E4BBB = {
+						CreatedOnToolsVersion = 12.2;
 					};
 				};
 			};
@@ -552,6 +692,8 @@
 			projectRoot = "";
 			targets = (
 				882AAAFE22FC96DD004CDAA6 /* DigiliraPay */,
+				93BB06CD259FD6E2000E4BBB /* WatchDP */,
+				93BB06D9259FD6E4000E4BBB /* WatchDP Extension */,
 			);
 		};
 /* End PBXProject section */
@@ -602,6 +744,23 @@
 				88A6BA4723203570002640D6 /* LegalView.xib in Resources */,
 				88114F622321602800AB3B5A /* ProfileUpgradeView.xib in Resources */,
 				939FD249258BA69D00964E97 /* TransferConfirmationView.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		93BB06CC259FD6E2000E4BBB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93BB06D4259FD6E4000E4BBB /* Assets.xcassets in Resources */,
+				93BB06D2259FD6E2000E4BBB /* Interface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		93BB06D8259FD6E4000E4BBB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93BB06E8259FD6E5000E4BBB /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -723,7 +882,31 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		93BB06D6259FD6E4000E4BBB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93BB06E4259FD6E4000E4BBB /* NotificationController.swift in Sources */,
+				93BB06E6259FD6E4000E4BBB /* ComplicationController.swift in Sources */,
+				93BB06E2259FD6E4000E4BBB /* ExtensionDelegate.swift in Sources */,
+				93BB06E0259FD6E4000E4BBB /* InterfaceController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		93BB06DD259FD6E4000E4BBB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 93BB06D9259FD6E4000E4BBB /* WatchDP Extension */;
+			targetProxy = 93BB06DC259FD6E4000E4BBB /* PBXContainerItemProxy */;
+		};
+		93BB06EC259FD6E5000E4BBB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 93BB06CD259FD6E2000E4BBB /* WatchDP */;
+			targetProxy = 93BB06EB259FD6E5000E4BBB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		0023C0FA2517C92B0042B50C /* Main.storyboard */ = {
@@ -742,6 +925,14 @@
 				882AAB0E22FC96DE004CDAA6 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		93BB06D0259FD6E2000E4BBB /* Interface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				93BB06D1259FD6E2000E4BBB /* Base */,
+			);
+			name = Interface.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -874,7 +1065,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 77;
+				CURRENT_PROJECT_VERSION = 78;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;
@@ -899,7 +1090,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPayRelease.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 77;
+				CURRENT_PROJECT_VERSION = 78;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;
@@ -914,6 +1105,94 @@
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		93BB06EF259FD6E5000E4BBB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 78;
+				DEVELOPMENT_TEAM = 3543QJXWHA;
+				INFOPLIST_FILE = "WatchDP Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.digilirapay.gateway.watchkitapp.watchkitextension;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 7.1;
+			};
+			name = Debug;
+		};
+		93BB06F0259FD6E5000E4BBB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 78;
+				DEVELOPMENT_TEAM = 3543QJXWHA;
+				INFOPLIST_FILE = "WatchDP Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.digilirapay.gateway.watchkitapp.watchkitextension;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 7.1;
+			};
+			name = Release;
+		};
+		93BB06F3259FD6E5000E4BBB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 78;
+				DEVELOPMENT_TEAM = 3543QJXWHA;
+				IBSC_MODULE = WatchDP_Extension;
+				INFOPLIST_FILE = WatchDP/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.digilirapay.gateway.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 7.1;
+			};
+			name = Debug;
+		};
+		93BB06F4259FD6E5000E4BBB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 78;
+				DEVELOPMENT_TEAM = 3543QJXWHA;
+				IBSC_MODULE = WatchDP_Extension;
+				INFOPLIST_FILE = WatchDP/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.digilirapay.gateway.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 7.1;
 			};
 			name = Release;
 		};
@@ -934,6 +1213,24 @@
 			buildConfigurations = (
 				882AAB1422FC96DE004CDAA6 /* Debug */,
 				882AAB1522FC96DE004CDAA6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		93BB06EE259FD6E5000E4BBB /* Build configuration list for PBXNativeTarget "WatchDP Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				93BB06EF259FD6E5000E4BBB /* Debug */,
+				93BB06F0259FD6E5000E4BBB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		93BB06F2259FD6E5000E4BBB /* Build configuration list for PBXNativeTarget "WatchDP" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				93BB06F3259FD6E5000E4BBB /* Debug */,
+				93BB06F4259FD6E5000E4BBB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
