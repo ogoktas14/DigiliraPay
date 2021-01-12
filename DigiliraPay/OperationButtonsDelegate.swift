@@ -26,6 +26,7 @@ struct SendTrx: Codable {
         var me: String
         var blockchainFee: Int64
         var merchantId: String?
+        var feeAssetId: String?
    }
 
 protocol OperationButtonsDelegate: class

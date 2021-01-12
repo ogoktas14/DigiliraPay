@@ -51,6 +51,20 @@ class ErrorHandling: NSObject {
         case NetworkError.internetNotWorking:
             alertWarning(title: "Bağlantı Hatası", message: "İnternet bağlantınızın olduğundan emin olup tekrar deneyiniz.")
             break
+        case NetworkError.message("Error while executing token-script: The recipient is not authorized to possess this SmartAsset!"):
+            alertWarning(title: "Yetkisiz İşlem", message: "Göndermeye çalıştığınız akıllı token bu adrese gönderilememektedir.")
+            break
+            
+        case NetworkError.message("This asset has special requirements 2"):
+            alertWarning(title: "Yetkisiz İşlem", message: "Bu token ile ödeme yapabilmeniz için. Kullanıcı onayından geçmeniz gerekmektedir.")
+            break
+        case NetworkError.message("Error while executing account-script: Can not transfer this asset 4"):
+            alertWarning(title: "Yetkisiz İşlem", message: "Bu token ile ödeme yapamazsınız.")
+            break
+            
+        case NetworkError.message("Error while executing account-script: Cannot use this token for none DigiliraPay users transfers."):
+            alertWarning(title: "Yetkisiz İşlem", message: "Akıllı kontrat bu işleme izin vermemektedir.")
+            break
         case NetworkError.scriptError:
             alertWarning(title: "Yetkisiz İşlem", message: "Akıllı kontrat bu işleme izin vermemektedir.")
             break

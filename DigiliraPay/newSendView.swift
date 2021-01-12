@@ -39,6 +39,8 @@ class newSendView: UIView {
     var address1: String?
     var assetId: String?
     
+    var isWavesNetwork: Bool = false
+    
     var Filtered: [digilira.DigiliraPayBalance] = []
     var Coins: [digilira.coin] = []
     let BC = Blockchain()
@@ -73,14 +75,23 @@ class newSendView: UIView {
             return
         }
         
-        if t.destination == digilira.transactionDestination.foreign {
-            if let coin = selectedCoinX {
-                if !checkAddress(network: coin.network, address: recipientText.title(for: .normal)!) {
-                    recipientText.setTitleColor(.red, for: .normal)
-                    isMissing = true
+        if !isWavesNetwork {
+            if t.destination == digilira.transactionDestination.foreign {
+                if let coin = selectedCoinX {
+                    if !checkAddress(network: coin.network, address: recipientText.title(for: .normal)!) {
+                        recipientText.setTitleColor(.red, for: .normal)
+                        isMissing = true
+                    }
                 }
             }
+        } else {
+            if t.destination == digilira.transactionDestination.foreign {
+                t.destination = digilira.transactionDestination.unregistered
+                t.recipient = t.externalAddress
+                transaction = t
+            }
         }
+       
         
         if isMissing {
             shake()
@@ -130,7 +141,7 @@ class newSendView: UIView {
     }
     
     func checkAddress(network: String, address: String) -> Bool {
-        
+        isWavesNetwork = false
         let env = BC.returnEnv()
         
         var bitcoinSegwit = "^(bc1|[13])[a-zA-HJ-NP-Z0-9]{25,39}$"
@@ -141,7 +152,7 @@ class newSendView: UIView {
         let bitcoinReg = "^[13][a-km-zA-HJ-NP-Z0-9]{26,33}$"
         let ethereumReg = "^0x[a-fA-F0-9]{40}$"
         let wavesreg = "^[3][a-zA-Z0-9]{34}"
-        
+
         var regexString = wavesreg
         
         switch network {
@@ -164,6 +175,7 @@ class newSendView: UIView {
             
             if wavresult {
                 getPage(x: digilira.waves.tokenName)
+                isWavesNetwork = true
                 return true
             }
             
@@ -323,12 +335,19 @@ class newSendView: UIView {
         
         findToken( tokenName: params.assetId! )
         
+        recipientText.isEnabled = true
+        textAmount.isEnabled = true
+        scrollAreaView.isUserInteractionEnabled = false
+        
         switch params.network! {
         case digilira.bitcoin.network:
             selectedCoinX = digilira.bitcoin
         case digilira.ethereum.network:
             selectedCoinX = digilira.ethereum
         case digilira.waves.network, "domestic":
+            isWavesNetwork = true
+            scrollAreaView.isUserInteractionEnabled = true
+
             switch params.assetId {
             case digilira.bitcoin.token:
                 selectedCoinX = digilira.bitcoin
@@ -344,12 +363,11 @@ class newSendView: UIView {
                     setCoinPrice()
             }
         default:
+            scrollAreaView.isUserInteractionEnabled = true
             return
         }
         
-        recipientText.isEnabled = false
-        textAmount.isEnabled = true
-        scrollAreaView.isUserInteractionEnabled = false
+
 
         
         if let coin = selectedCoinX {
@@ -375,11 +393,11 @@ class newSendView: UIView {
             
             if params.destination == digilira.transactionDestination.interwallets {
                 
-                recipientText.isEnabled = false
+                recipientText.isEnabled = true
             }
             if params.destination == digilira.transactionDestination.domestic {
                 
-                recipientText.isEnabled = false
+                recipientText.isEnabled = true
                 textAmount.isEnabled = false
             }
             
@@ -482,8 +500,13 @@ class newSendView: UIView {
         if let coin = selectedCoinX {
             if checkAddress(network: coin.network, address: text) {
                 recipientText.setTitle(text, for: .normal)
+                
                 scrollAreaView.isUserInteractionEnabled = false
-             
+
+                if isWavesNetwork {
+                    scrollAreaView.isUserInteractionEnabled = true
+                }
+                  
                 memCheck()
                 
             } else {
@@ -531,6 +554,15 @@ class newSendView: UIView {
                             t.massWallet = data.wallet
                             t.memberCheck = true
                             recipientText.setTitle(data.owner, for: .normal)
+                            
+                            if data.destination == digilira.transactionDestination.interwallets {
+                                t.feeAssetId = digilira.sponsorToken
+                            }
+                             
+                            if data.destination == digilira.transactionDestination.foreign {
+                                t.feeAssetId = ""
+                            }
+                            
                             transaction = t
                         }
                     case false:
@@ -612,7 +644,9 @@ class newSendView: UIView {
     
     @objc func handleSwipes(_ sender: UISwipeGestureRecognizer)
     {
-        recipientText.setTitle("", for: .normal)
+        if !isWavesNetwork {
+            recipientText.setTitle("", for: .normal)
+        }
         direction = sender.direction
         if sender.direction == .right
         {
@@ -694,6 +728,14 @@ class newSendView: UIView {
         do {
             let c = try BC.returnCoin(tokenName: Filtered[currentPage].tokenName)
             selectedCoinX = c
+             
+            if var t = transaction {
+                
+                t.assetId = c.token
+                t.network = c.network
+                
+                transaction = t
+            }
         } catch {
             print(error)
         }

@@ -218,112 +218,160 @@ class Blockchain: NSObject {
             .disposed(by: disposeBag)
     }
     
-    func sendTransaction2(name: String, recipient: String, fee: Int64, amount:Int64, assetId:String, attachment:String, wallet:digilira.wallet, blob: SendTrx) {
+    func getFeeAssetId(destination: String) -> String {
+        switch destination {
+        case digilira.transactionDestination.domestic:
+            return digilira.paymentToken
+        case digilira.transactionDestination.interwallets:
+            return digilira.sponsorToken
+        case digilira.transactionDestination.foreign:
+            return digilira.sponsorToken
+        default:
+            return ""
+        }
+    }
+    
+    func sendTransaction2(name: String, recipient: String, amount:Int64, assetId:String, attachment:String, wallet:digilira.wallet, blob: SendTrx) {
         guard let chainId = WavesSDK.shared.enviroment.chainId else { return }
         guard let address = WavesCrypto.shared.address(seed: wallet.seed, chainId: chainId) else { return }
         guard let senderPublicKey = WavesCrypto.shared.publicKey(seed: wallet.seed) else { return }
         guard wallet.seed != "" else { return }
-        
-        let feeAssetId = digilira.sponsorToken
-        
-        var attachmentValidation = attachment
-        if attachmentValidation == "" {
-            attachmentValidation = "DIGILIRAPAY TRANSFER"
+         
+        self.onWavesApiError = { res, sts, path in
+            self.onError!(digilira.NAError.anErrorOccured)
         }
-        
-        let buf: [UInt8] = Array(attachmentValidation.utf8)
-        let attachment58 = WavesCrypto.shared.base58encode(input: buf)
-        let timestamp = Int64(Date().timeIntervalSince1970) * 1000
-        
-        var queryModel = NodeService.Query.Transaction.Transfer(recipient: recipient,
-                                                                assetId: assetId,
-                                                                amount: amount,
-                                                                fee: fee,
-                                                                attachment: attachment58!,
-                                                                feeAssetId: feeAssetId,
-                                                                timestamp: timestamp,
-                                                                senderPublicKey: senderPublicKey, chainId: chainId)
-        
-        
-        queryModel.sign(seed: wallet.seed)
-        
-        let send = NodeService.Query.Transaction.transfer(queryModel)
-        
-        WavesSDK.shared.services
-            .nodeServices
-            .transactionNodeService
-            .transactions(query: send)
-            .observeOn(MainScheduler.asyncInstance)
-            .subscribe(onNext: { [self] (tx) in
-                if let data = tx.data {
-                    do {
-                        if let type = try decodeDefaults(forKey: data, conformance: TransactionType.self) {
-                            switch type.type {
-                            case 4:
-                                if let transaction = try decodeDefaults(forKey: data, conformance: TransferTransactionModel.self) {
-                                    var external = "N/A"
-                                    var merchantId = "N/A"
-                                    
-                                    switch blob.destination {
-                                    case digilira.transactionDestination.foreign:
-                                        external = blob.externalAddress!
-                                        break
-                                    case digilira.transactionDestination.domestic:
-                                        merchantId = blob.merchantId!
-                                        break
-                                    default:
-                                        break
-                                    }
-                                    if blob.destination != digilira.transactionDestination.foreign {
-                                        if blob.externalAddress != nil {
-                                            external = blob.externalAddress!
+        self.onWavesNodeResponse = { [self] result, status in
+            do {
+                
+                if let feeAssetResponse = try decodeDefaults(forKey: result, conformance: FeeCalculateResponse.self)
+                {
+                    
+                    var attachmentValidation = attachment
+                    if attachmentValidation == "" {
+                        attachmentValidation = "DIGILIRAPAY TRANSFER"
+                    }
+                    
+                    var feeAsset = ""
+                    
+                    if let f =  feeAssetResponse.feeAssetID {
+                        feeAsset = f
+                    }
+                    
+                    let buf: [UInt8] = Array(attachmentValidation.utf8)
+                    let attachment58 = WavesCrypto.shared.base58encode(input: buf)
+                    let timestamp = Int64(Date().timeIntervalSince1970) * 1000
+                    
+                    var queryModel = NodeService.Query.Transaction.Transfer(recipient: recipient,
+                                                                            assetId: assetId,
+                                                                            amount: amount,
+                                                                            fee: feeAssetResponse.feeAmount,
+                                                                            attachment: attachment58!,
+                                                                            feeAssetId: feeAsset,
+                                                                            timestamp: timestamp,
+                                                                            senderPublicKey: senderPublicKey, chainId: chainId)
+                    
+                    
+                    queryModel.sign(seed: wallet.seed)
+                    
+                    let send = NodeService.Query.Transaction.transfer(queryModel)
+                    
+                    WavesSDK.shared.services
+                        .nodeServices
+                        .transactionNodeService
+                        .transactions(query: send)
+                        .observeOn(MainScheduler.asyncInstance)
+                        .subscribe(onNext: { [self] (tx) in
+                            if let data = tx.data {
+                                do {
+                                    if let type = try decodeDefaults(forKey: data, conformance: TransactionType.self) {
+                                        switch type.type {
+                                        case 4:
+                                            if let transaction = try decodeDefaults(forKey: data, conformance: TransferTransactionModel.self) {
+                                                var external = "N/A"
+                                                var merchantId = "N/A"
+                                                
+                                                switch blob.destination {
+                                                case digilira.transactionDestination.foreign:
+                                                    if let e = blob.externalAddress {
+                                                        external = e
+                                                    }
+                                                    break
+                                                case digilira.transactionDestination.domestic:
+                                                    if let m = blob.merchantId {
+                                                        merchantId = m
+                                                    }
+                                                    break
+                                                default:
+                                                    break
+                                                }
+                                                if blob.destination != digilira.transactionDestination.foreign {
+                                                    if let e = blob.externalAddress {
+                                                        external = e
+                                                    }
+                                                }
+                                                
+                                                if feeAsset == "" {
+                                                    feeAsset = "WAVES"
+                                                }
+                                                
+                                                let v:[String] = [amount.description, assetId.description, attachmentValidation, blob.blockchainFee.description, blob.destination, external, feeAssetResponse.feeAmount.description, feeAsset, merchantId, blob.me, recipient, name, MainScreen.df2so(blob.fiat), 0.description, transaction.id]
+                                                let sign = try bytization(v, timestamp)
+                                                
+                                                let t = TransferOnWay.init(recipientName: name,
+                                                                           recipient: recipient,
+                                                                           myName: blob.me,
+                                                                           wallet: address,
+                                                                           amount: amount,
+                                                                           assetId: assetId,
+                                                                           tickerTl: MainScreen.df2so(blob.fiat),
+                                                                           tickerUsd: 0,
+                                                                           fee: feeAssetResponse.feeAmount,
+                                                                           feeAssetId: feeAsset,
+                                                                           blockchainFee: blob.blockchainFee,
+                                                                           transactionID: transaction.id,
+                                                                           destination: blob.destination,
+                                                                           externalAddress: external,
+                                                                           attachment: attachmentValidation,
+                                                                           merchantId: merchantId,
+                                                                           publicKey: sign.publicKey,
+                                                                           signed: sign.signature,
+                                                                           timestamp: timestamp)
+                                                
+                                                self.onTransferTransaction?(tx, t)
+                                            }
+                                            break
+                                        default:
+                                            break
                                         }
                                     }
-                                    
-                                    let v:[String] = [amount.description, assetId.description, attachmentValidation, blob.blockchainFee.description, blob.destination, external, fee.description, feeAssetId, merchantId, blob.me, recipient, name, MainScreen.df2so(blob.fiat), 0.description, transaction.id]
-                                    let sign = try bytization(v, timestamp)
-                                    
-                                    let t = TransferOnWay.init(recipientName: name,
-                                                               recipient: recipient,
-                                                               myName: blob.me,
-                                                               wallet: address,
-                                                               amount: amount,
-                                                               assetId: assetId,
-                                                               tickerTl: MainScreen.df2so(blob.fiat),
-                                                               tickerUsd: 0,
-                                                               fee: fee,
-                                                               feeAssetId: feeAssetId,
-                                                               blockchainFee: blob.blockchainFee,
-                                                               transactionID: transaction.id,
-                                                               destination: blob.destination,
-                                                               externalAddress: external,
-                                                               attachment: attachmentValidation,
-                                                               merchantId: merchantId,
-                                                               publicKey: sign.publicKey,
-                                                               signed: sign.signature,
-                                                               timestamp: timestamp)
-                                    
-                                    self.onTransferTransaction?(tx, t)
+                                } catch{
+                                    print(error)
                                 }
-                                break
-                            default:
-                                break
                             }
-                        }
-                    } catch{
-                        print(error)
-                    }
+                        }, onError: { (error ) -> Void in
+                            if let s = error as? NetworkError{
+                                self.onError!(s)
+                            }
+                        })
+                        .disposed(by: disposeBag)
+                    
                 }
-            }, onError: { (error ) -> Void in
-                if let s = error as? NetworkError{
-                    self.onError!(s)
-                }
-            })
-            .disposed(by: disposeBag)
-    }
-    
-    func massTransferTx(name:String, recipient: String, fee: Int64, amount:Int64, assetId:String, attachment:String, wallet:digilira.wallet, blob: SendTrx) {
-        sendTransaction2(name:name, recipient: recipient, fee: fee, amount:amount, assetId:assetId, attachment:attachment, wallet:wallet, blob: blob)
+                
+            } catch {
+                print(error)
+            }
+            
+        }
+        
+        let feeParams = FeeCalculate.init(type: 4,
+                                          senderPublicKey: senderPublicKey,
+                                          feeAssetID: getFeeAssetId(destination: blob.destination),
+                                          assetID: assetId,
+                                          recipient: recipient,
+                                          amount: amount)
+        
+        wavesNodeRequests(path: "/transactions/calculateFee", method: digilira.requestMethod.post, postData: try? JSONEncoder().encode(feeParams))
+        
     }
     
     func verifyTrx(txid: String, t: TransferOnWay) {
@@ -388,22 +436,22 @@ class Blockchain: NSObject {
     }
     
     func getWavesToken(seed: String) {
-        do {
-            let source = try getKeyChainSource().wavesToken
-            if let data = Locksmith.loadDataForUserAccount(userAccount: source) {
-                let jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
-                do {
-                    let token = try JSONDecoder().decode(WavesToken.self, from: jsonData)
-                    if token.expiresIn > 1000 {
-                        return
-                    }
-                } catch {
-                    print("ERROR:", error)
-                }
-            }
-        } catch {
-            print("N/A")
-        }
+//        do {
+//            let source = try getKeyChainSource().wavesToken
+//            if let data = Locksmith.loadDataForUserAccount(userAccount: source) {
+//                let jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
+//                do {
+//                    let token = try JSONDecoder().decode(WavesToken.self, from: jsonData)
+//                    if token.expiresIn > 1000 {
+//                        return
+//                    }
+//                } catch {
+//                    print("ERROR:", error)
+//                }
+//            }
+//        } catch {
+//            print("N/A")
+//        }
 
         self.onWavesApiError = { res, sts, path in
             print(res,sts, path)
@@ -453,6 +501,10 @@ class Blockchain: NSObject {
             throwEngine.evaluateError(error: error)
         }
         guard let symbol = try? returnAsset(assetId: currency) else { return }
+         
+        self.onWavesApiError = { res, sts, path in
+            print(res,sts, path)
+        }
         
         self.wavesApiRequest(auth: nil, endpoint:digilira.wavesApiEndpoints.getWithdraw, currency: symbol.symbol, withdrawAddress: address, token: wallet.wavesToken, sender: WithdrawAddresses.self) { [self] (result, statusCode) in
                 
@@ -474,7 +526,7 @@ class Blockchain: NSObject {
                     
                     let me = digilira.dummyName
                     
-                    sendTransaction2(name: me, recipient: proxyAddress, fee: digilira.sponsorTokenFee, amount: amount, assetId: assetId, attachment: "", wallet: wallet, blob: blob)
+                    sendTransaction2(name: me, recipient: proxyAddress, amount: amount, assetId: assetId, attachment: "", wallet: wallet, blob: blob)
                 }
             }
     }
@@ -562,6 +614,21 @@ class Blockchain: NSObject {
                             return }
                         
                         do{
+                            var jsonResponse = try? (JSONSerialization.jsonObject(with: dataResponse) as! Dictionary<String, AnyObject>)
+
+                            let ifError = try? JSONDecoder().decode(WavesTokenError.self, from: dataResponse)
+                            let ifApiError = try? JSONDecoder().decode(WavesAPIError.self, from: dataResponse)
+
+                            if let isError = ifError {
+                                self.onWavesApiError!(isError.errors.first!.message, httpResponse.statusCode, endpoint)
+                                return
+                            }
+                             
+                            if let isError = ifApiError {
+                                self.onWavesApiError!(isError.errors.first!.message, httpResponse.statusCode, endpoint)
+                                return
+                            }
+                             
                             let ticker = try JSONDecoder().decode(T.self, from: dataResponse)
                             returnCompletion(ticker, httpResponse.statusCode)
                         } catch let parsingError {
@@ -585,30 +652,38 @@ class Blockchain: NSObject {
         }
     }
     
-    func wavesNodeRequests(url: String) {
+    func wavesNodeRequests(path: String, method:String = digilira.requestMethod.get, postData: Data? = nil) {
+        let url = WavesSDK.shared.enviroment.nodeUrl.description
         
-        var request = URLRequest(url: URL(string: url)!)
-        request.httpMethod = req.method.get
-        
-        let session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
-        
-        self.isCertificatePinning = true
-        
-        let task = session.dataTask(with: request) { (data, response, error) in
-            if let httpResponse = response as? HTTPURLResponse {
-                if error != nil {
-                    self.onError!(error!)
-                } else if data != nil {
-                    
-                    guard let dataResponse = data,
-                          error == nil else {
-                        print(error?.localizedDescription ?? "Response Error")
-                        return }
-                    self.onWavesNodeResponse!(dataResponse, httpResponse.statusCode)
+        if let url = URL(string: url) {
+            var request = URLRequest(url: url)
+            request.httpMethod = method
+            if let json = postData {
+                request.httpBody = json
+                request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            }
+            if path != "" {
+                request.url?.appendPathComponent(path, isDirectory: false)
+            }
+            let session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
+            isCertificatePinning = true
+            let task = session.dataTask(with: request) { (data, response, error) in
+          
+                if let httpResponse = response as? HTTPURLResponse {
+                    if error != nil {
+                        self.onWavesApiError!(error!.localizedDescription, httpResponse.statusCode, path)
+                    } else if data != nil {
+                        guard let dataResponse = data,
+                              error == nil else {
+                           
+                            return }
+                        self.onWavesNodeResponse!(dataResponse, httpResponse.statusCode)
+                    }
                 }
             }
+            task.resume()
         }
-        task.resume()
+ 
     }
     
     func getTransactionId(rURL: String, t: TransferOnWay) {
@@ -644,7 +719,7 @@ class Blockchain: NSObject {
                                     print(error)
                                 }
                             }
-                            wavesNodeRequests(url: WavesSDK.shared.enviroment.nodeUrl.description + "/transactions/info/" + c.id!)
+                            wavesNodeRequests(path: "/transactions/info/" + c.id!)
                             break
                         case "unconfirmed":
                             sleep(1)
@@ -675,7 +750,7 @@ class Blockchain: NSObject {
             return "-"
         }
     }
-    
+     
     func returnCoin(tokenName: String) throws -> digilira.coin {
         
         switch WavesSDK.shared.enviroment.server {
@@ -742,11 +817,24 @@ class Blockchain: NSObject {
         switch assetId {
         case digilira.bitcoin.token:
             return digilira.bitcoin //digilirapay wrapped
+        
         case digilira.ethereum.token:
             return digilira.ethereum
+            
         case digilira.waves.token:
             return digilira.waves
             
+        case digilira.waves.token:
+            return digilira.waves
+            
+        case "8yMtER9Nh37WkhpW4BnnNky8dSBPDE2HU6MSRBHRwvxs":
+            return digilira.waves
+            
+        case "6QmYoze6nnexnKc23ATdXQYZgqtfdMZrm3oQXn4E2SvQ":
+            return digilira.waves
+            
+        case "GnBdiwTQ1Pkxs3YkcpdQMSaboofDyczhhLGgghaviwQU":
+            return digilira.waves
             
         case digilira.tetherWaves.token: //waves wrapped
             return digilira.tetherWaves
@@ -757,7 +845,7 @@ class Blockchain: NSObject {
         case digilira.litecoinWaves.token: //waves wrapped
             return digilira.litecoinWaves
             
-        case digilira.sponsorToken:
+        case digilira.sponsorToken, digilira.paymentToken:
             throw digilira.NAError.sponsorToken
         default:
             throw digilira.NAError.notListedToken
@@ -766,6 +854,16 @@ class Blockchain: NSObject {
     
     func base58 (data:String) -> String {
         let attachment =  WavesCrypto.shared.base58decode(input: data)
+        if let a = attachment {
+            if let string = String(bytes: a, encoding: .utf8) {
+                return string
+            }
+        }
+        return "Blokzincir İşlemi"
+    }
+    
+    func base64 (data:String) -> String {
+        let attachment =  WavesCrypto.shared.base64decode(input: data)
         if let a = attachment {
             if let string = String(bytes: a, encoding: .utf8) {
                 return string
@@ -790,8 +888,33 @@ class Blockchain: NSObject {
                                                                           senderPublicKey: senderPublicKey,
                                                                           script: digilira.smartAccount.script)
             
+            
+            let v:[String] = [chainId, fee.description, digilira.smartAccount.script]
+            let sign = try bytization(v, timestamp)
+            
+            struct scriptSend: Codable {
+                let chainId: String
+                let fee: String
+                let timestamp: Int64
+                let publicKey: String
+                let signed: String
+                let wallet: String
+                let setScript: NodeService.Query.Transaction.SetScript
+                let script: String
+            }
+
+             
             queryModel.sign(seed: wallet.seed)
             let send = NodeService.Query.Transaction.setScript(queryModel)
+            
+            let t = scriptSend.init(chainId: chainId,
+                                    fee: fee.description,
+                                    timestamp: timestamp,
+                                    publicKey: sign.publicKey,
+                                    signed: sign.signature,
+                                    wallet: sign.wallet,
+                                    setScript: queryModel,
+                                    script: digilira.smartAccount.script)
             
             if initial {
                 WavesSDK.shared.services
@@ -805,7 +928,7 @@ class Blockchain: NSObject {
                     })
                     .disposed(by: self.disposeBag)
             } else {
-                digiliraPay.updateSmartAcountScript(data: send)
+                digiliraPay.updateSmartAcountScript(data: t.data!)
             }
         } catch {
             print (error)
@@ -940,7 +1063,7 @@ class Blockchain: NSObject {
         
         let timestamp = Int64(Date().timeIntervalSince1970) * 1000
         
-        let v:[String] = [address, "externalTransaction", external.network!]
+        let v:[String] = [address, "DIGILIRAPAY TRANSFER", external.network!]
         
         if let sign = try? bytization(v, timestamp) {
             let user = digilira.externalTransaction.init(
@@ -1058,8 +1181,8 @@ class Blockchain: NSObject {
                             }
                             
                         }
-                        let StringUrl = WavesSDK.shared.enviroment.nodeUrl.description + "/addresses/data/" + digilira.gatewayAddress + "/" + croppedAddress!
-                        wavesNodeRequests(url: StringUrl)
+                        let StringUrl = "/addresses/data/" + digilira.gatewayAddress + "/" + croppedAddress!
+                        wavesNodeRequests(path: StringUrl)
                         break
                     default:
                         break
@@ -1134,6 +1257,7 @@ class Blockchain: NSObject {
             guard let btc = UserDefaults.standard.value(forKey: "btcAddress") as? String  else { return }
             guard let eth = UserDefaults.standard.value(forKey: "ethAddress") as? String else { return }
             guard let ltc = UserDefaults.standard.value(forKey: "ltcAddress") as? String else { return }
+            
             if chainId != "T" {
                 guard UserDefaults.standard.value(forKey: "usdtAddress") != nil  else { return }
             }
@@ -1141,16 +1265,25 @@ class Blockchain: NSObject {
             guard let senderPublicKey = WavesCrypto.shared.publicKey(seed: seed) else { return }
             guard let wallet = WavesCrypto.shared.address(seed: seed, chainId: chainId) else { return }
             
-            let timestamp = Int64(Date().timeIntervalSince1970) + 1000 * 60
+            let timestamp = Int64(Date().timeIntervalSince1970) * 1000
             
-            let v = [btc, eth, imported.description, ltc]
+            var devToken = "N/A"
+            if let deviceToken = UserDefaults.standard.value(forKey: "deviceToken") as? String
+            {
+                devToken = deviceToken
+            }
+            
+            let v = [devToken, btc, eth, imported.description, ltc]
             guard let signed = try? bytization( v, timestamp, seed) else {return}
+            
+
             
             var user = digilira.exUser.init(btcAddress: btc,
                                             ethAddress: eth,
                                             ltcAddress: ltc,
                                             wallet: wallet,
                                             imported: imported,
+                                            apnToken: devToken,
                                             signed: signed.signature,
                                             publicKey: senderPublicKey,
                                             timestamp: timestamp
@@ -1159,7 +1292,7 @@ class Blockchain: NSObject {
             if chainId != "T" {
                 guard let usd = UserDefaults.standard.value(forKey: "usdtAddress") as? String else { return }
                 user.tetherAddress = usd
-                let v = [btc, eth, imported.description, ltc, usd]
+                let v = [devToken, btc, eth, imported.description, ltc, usd]
                 guard let signed = try? bytization( v, timestamp, seed) else {return}
                 user.signed = signed.signature
             }
@@ -1250,8 +1383,9 @@ class Blockchain: NSObject {
         UserDefaults.standard.removeObject(forKey: "ltcAddress")
         UserDefaults.standard.removeObject(forKey: "usdtAddress")
         
-        self.onWavesApiError = { res, sts, path in
+        self.onWavesApiError = { [self] res, sts, path in
             print(res,sts, path)
+            createUser(seed: seed)
         }
         
         guard let chainId = WavesSDK.shared.enviroment.chainId else { return }

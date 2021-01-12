@@ -79,7 +79,6 @@ class TransferConfirmationView: UIView {
         }, completion: {_ in
 
         })
-        
     }
     
     @objc func exitView(_ sender: UIView) {
@@ -136,10 +135,5 @@ class TransferConfirmationView: UIView {
         }
         
         icon.image = UIImage(named: p.icon)
-        
-        
-        
     }
-    
-    
 }

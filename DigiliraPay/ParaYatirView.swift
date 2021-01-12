@@ -116,7 +116,7 @@ class ParaYatirView:UIView {
             self.copyView.isUserInteractionEnabled = false
         }, completion: { [self]_ in
             if address1 == nil {return}
-            imgCopy.image = UIImage(named: "checkImg")
+            imgCopy.image = UIImage(named: "success")
             
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
@@ -124,8 +124,6 @@ class ParaYatirView:UIView {
                 
             }
             pasteboard.string = address1
-            
-            errors?.errorHandler(message: "Cüzdan adresiniz kopyalandı: " + address1!, title: "Başarılı", error: false)
             
             self.copyView.alpha = 1
             self.copyView.isUserInteractionEnabled = true

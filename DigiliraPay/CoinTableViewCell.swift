@@ -10,12 +10,14 @@ import UIKit
 
 class CoinTableViewCell: UITableViewCell {
 
+    @IBOutlet weak var emptyIcon: UIView!
     @IBOutlet weak var BGView: UIView!
     @IBOutlet weak var coinIcon: UIImageView!
     @IBOutlet weak var coinName: UILabel!
     @IBOutlet weak var coinAmount: UILabel!
     @IBOutlet weak var type: UILabel!
-    
+    @IBOutlet weak var emptyCoin: UILabel!
+
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -23,6 +25,7 @@ class CoinTableViewCell: UITableViewCell {
         coinName.textColor = .darkGray
         type.textColor = .lightGray
         coinAmount.textColor = .darkGray
+        emptyIcon.layer.cornerRadius = emptyIcon.frame.size.height / 2
     }
 
 }

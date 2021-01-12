@@ -105,7 +105,7 @@ class digiliraPayApi: NSObject {
         crud.request(rURL: crud.getApiURL() + digilira.api.userUpdate, postData: user, method: req.method.put)
     }
     
-    func updateSmartAcountScript(data: NodeService.Query.Transaction) {
+    func updateSmartAcountScript(data: Data) {
         crud.onError = { error, sts in }
         crud.onResponse = { res, sts in
             if (sts == 200) {
@@ -114,7 +114,7 @@ class digiliraPayApi: NSObject {
                 print("fail")
             }
         }
-        crud.request(rURL: crud.getApiURL() + digilira.api.userUpdate, postData: data.data, method: req.method.put)
+        crud.request(rURL: crud.getApiURL() + digilira.api.userUpdate, postData: data, method: req.method.put)
     }
     
     func saveTransactionTransfer(JSON : Data?) {

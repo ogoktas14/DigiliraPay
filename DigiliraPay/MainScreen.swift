@@ -160,40 +160,86 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
     func checkEssentials() {
         do {
             kullanici = try secretKeys.userData()
+            
+            if let deviceToken = UserDefaults.standard.value(forKey: "deviceToken") as? String
+            {
+                if deviceToken != "" {
+                    if kullanici.apnToken != deviceToken {
+                        
+                        digiliraPay.onUpdate = {_ in}
+                        
+                        let timestamp = Int64(Date().timeIntervalSince1970) * 1000
+
+                        do {
+                            let sign = try BC.bytization([deviceToken], timestamp)
+                                let user = digilira.exUser.init(
+                                    wallet: sign.wallet,
+                                    apnToken: deviceToken,
+                                    signed: sign.signature,
+                                    publicKey: sign.publicKey,
+                                    timestamp: timestamp
+                                )
+                                  
+                                digiliraPay.updateUser(user: try JSONEncoder().encode(user))
+                        } catch { print(error) }
+                    }
+                }
+               
+            }
+            
+            if let versionLegal = UserDefaults.standard.value(forKey: "isLegalView") as? Int {
+                let v = digilira.legalView.version
+                if (versionLegal < v) {
+                    throwEngine.alertWarning(title: digilira.messages.newLegalViewTitle, message: digilira.messages.newLegalViewMessage, error: false)
+                    profileMenuView.legalViewWarning.isHidden = false
+                    showLegalText()
+                    return
+                }
+                profileMenuView.legalViewWarning.isHidden = true
+            }
+            
+            if let versionTerms = UserDefaults.standard.value(forKey: "isTermsOfUse") as? Int {
+                let v = digilira.termsOfUse.version
+                if (versionTerms < v) {
+                    throwEngine.alertWarning(title: digilira.messages.newTermsOfUseTitle, message: digilira.messages.newTermsOfUseMessage, error: false)
+                    profileMenuView.termsViewWarning.isHidden = false
+                    showTermsofUse()
+                    return
+                }
+                profileMenuView.termsViewWarning.isHidden = true
+            }
+            
+            if let isVerified = UserDefaults.standard.value(forKey: "seedRecovery") as? Bool {
+                if isVerified {
+                    profileMenuView.seedBackupWarning.isHidden = true
+                }
+            }
+            
+            switch kullanici.status {
+            case 0:
+                profileMenuView.progressView.progress = 0.2
+                profileMenuView.profileWarning.image = UIImage(named: "warning")
+                break
+            case 1:
+                profileMenuView.progressView.progress = 0.5
+                profileMenuView.profileWarning.image = UIImage(named: "success")
+                break
+            case 2:
+                profileMenuView.progressView.progress = 0.8
+                profileMenuView.profileWarning.image = UIImage(named: "success")
+                break
+            case 3:
+                profileMenuView.progressView.progress = 1
+                profileMenuView.profileWarning.image = UIImage(named: "success")
+                profileMenuView.profileVerifyLabel.text = "Profilim"
+                break
+            default:
+                profileMenuView.progressView.progress = 0.2
+                break
+            }
+            
         } catch {
             print(error)
-        }
-        
-        if let versionLegal = UserDefaults.standard.value(forKey: "isLegalView") as? Int {
-            let v = digilira.legalView.version
-            if (versionLegal < v) {
-                throwEngine.alertWarning(title: digilira.messages.newLegalViewTitle, message: digilira.messages.newLegalViewMessage, error: false)
-                profileMenuView.legalViewWarning.isHidden = false
-                showLegalText()
-                return
-            }
-            profileMenuView.legalViewWarning.isHidden = true
-        }
-        
-        if let versionTerms = UserDefaults.standard.value(forKey: "isTermsOfUse") as? Int {
-            let v = digilira.termsOfUse.version
-            if (versionTerms < v) {
-                throwEngine.alertWarning(title: digilira.messages.newTermsOfUseTitle, message: digilira.messages.newTermsOfUseMessage, error: false)
-                profileMenuView.termsViewWarning.isHidden = false
-                showTermsofUse()
-                return
-            }
-            profileMenuView.termsViewWarning.isHidden = true
-        }
-        
-        if let isVerified = UserDefaults.standard.value(forKey: "seedRecovery") as? Bool {
-            if isVerified {
-                profileMenuView.seedBackupWarning.isHidden = true
-            }
-        }
-        
-        if kullanici.status != 0 {
-            profileMenuView.profileWarning.image = UIImage(named: "success")
         }
     }
     
@@ -1169,7 +1215,17 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
             if Filtered.count > 0 {
                 
                 let asset = Filtered[indexPath[1]]
-                cell.coinIcon.image = UIImage(named: asset.tokenSymbol)
+                
+                if ((UIImage(named: asset.tokenSymbol) == nil)) {
+                    cell.emptyIcon.isHidden = false
+                    cell.emptyCoin.text = asset.tokenSymbol.first?.description
+                    cell.emptyIcon.backgroundColor = .random()
+                } else {
+                    cell.coinIcon.isHidden = false
+                    cell.coinIcon.image = UIImage(named: asset.tokenSymbol)
+                }
+                
+                
                 cell.coinName.text = asset.tokenName
                 cell.type.text = "₺" + MainScreen.df2so(asset.tlExchange)
                 tapped.assetName = asset.tokenName
@@ -1214,6 +1270,23 @@ extension UIView {
         animation.type = CATransitionType.fade
         animation.duration = duration
         layer.add(animation, forKey: CATransitionType.fade.rawValue)
+    }
+}
+
+extension CGFloat {
+    static func random() -> CGFloat {
+        return CGFloat(arc4random()) / CGFloat(UInt32.max)
+    }
+}
+
+extension UIColor {
+    static func random() -> UIColor {
+        return UIColor(
+            red:   CGFloat.random(in: 0.5...0.9),
+           green: CGFloat.random(in: 0.5...0.9),
+           blue:  CGFloat.random(in: 0.5...0.9),
+           alpha: 1.0
+        )
     }
 }
 
@@ -1405,7 +1478,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         walletView.onSight = true
         menuXib.wallet()
         walletView.coin = coin
-        walletView.readHistory(coin: coin)
+        walletView.readHistory()
         
         dismissLoadView()
         dismissProfileMenu()
@@ -1553,7 +1626,7 @@ extension MainScreen: OperationButtonsDelegate
         newSendMoneyView.transaction = params
         newSendMoneyView.setQR()
         if params.destination == digilira.transactionDestination.interwallets {
-            newSendMoneyView.recipientText.isEnabled = false
+            newSendMoneyView.recipientText.isEnabled = true
         }
         
         
@@ -1713,7 +1786,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         //profil onay sureci
         
         switch kullanici.status {
-        case 0:
+        case 0, 3:
             let verifyProfileXib = UIView().loadNib(name: "VerifyAccountView") as! VerifyAccountView
             
             verifyProfileXib.frame = CGRect(x: 0,
@@ -1725,6 +1798,20 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
             verifyProfileXib.errors = self
             for subView in qrView.subviews
             { subView.removeFromSuperview() }
+            
+            if kullanici.status == 3 {
+                verifyProfileXib.descLabel.text =  "Profiliniz Onaylanmıştır."
+                verifyProfileXib.titleLabel.text = "Profilim"
+                verifyProfileXib.nameText.isEnabled = false
+                verifyProfileXib.surnameText.isEnabled = false
+                verifyProfileXib.tcText.isEnabled = false
+                verifyProfileXib.telText.isEnabled = false
+                verifyProfileXib.mailText.isEnabled = false
+                verifyProfileXib.dogum.isEnabled = false
+                verifyProfileXib.sendAndContiuneView.isHidden = true
+                verifyProfileXib.remarksView.isHidden = true
+
+            }
  
             qrView.addSubview(verifyProfileXib)
             qrView.isHidden = false
@@ -1764,10 +1851,6 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
             }
         case 2:
             throwEngine.alertWarning(title: "Profil Onayı", message: "Gönderdiğiniz bilgiler kontrol edilmektedir.", error: false)
-            
-            break
-        case 3:
-            throwEngine.alertWarning(title: "Onaylı Profil", message: "Profiliniz onaylanmıştır. Kripto paralarınızla alışveriş yapabilirsiniz", error: false)
             
             break
         default:
@@ -2103,28 +2186,43 @@ extension MainScreen: UIImagePickerControllerDelegate {
         
             throwEngine.alertTransaction(title: "Yükleniyor...", message: "Fotoğrafınız yükleniyor lütfen bekleyin.", verifying: true)
             
-            let b64 = digiliraPay.convertImageToBase64String(img: image)
+            
+            if let img = image.resizeWithWidth(width: 700) {
+                if let compressData = img.jpegData(compressionQuality: 0.5) {
+                    if let compressedImage = UIImage(data: compressData) {
+                        let b64 = digiliraPay.convertImageToBase64String(img: compressedImage)
 
-            let idHash = b64.hash256()
-            let timestamp = Int64(Date().timeIntervalSince1970) * 1000
+                        let idHash = b64.hash256()
+                        let timestamp = Int64(Date().timeIntervalSince1970) * 1000
 
-            if let sign = try? BC.bytization([kullanici.id, idHash, 2.description], timestamp) {
-                let user = digilira.exUser.init(
-                    id: kullanici.id,
-                    wallet: sign.wallet, status:2,
-                    id1: b64,
-                    signed: sign.signature,
-                    publicKey: sign.publicKey,
-                    timestamp: timestamp
-                )
-                
-                let encoder = JSONEncoder()
-                let data = try? encoder.encode(user)
-                
-                digiliraPay.updateUser(user: data)
+                        if let sign = try? BC.bytization([kullanici.id, idHash, 2.description], timestamp) {
+                            let user = digilira.exUser.init(
+                                id: kullanici.id,
+                                wallet: sign.wallet, status:2,
+                                id1: b64,
+                                signed: sign.signature,
+                                publicKey: sign.publicKey,
+                                timestamp: timestamp
+                            )
+                            
+                            let encoder = JSONEncoder()
+                            let data = try? encoder.encode(user)
+                            
+                            digiliraPay.updateUser(user: data)
+                        }
+                    } else {
+                        throwEngine.alertWarning(title: "Bir Hata Oluştu", message: "Dosya yüklenemedi. Lütfen tekrar deneyin. Sıkıştırma Hatası", error: true)
+                        return
+                    }
+                } else {
+                    throwEngine.alertWarning(title: "Bir Hata Oluştu", message: "Dosya yüklenemedi. Lütfen tekrar deneyin. Düzenleme Hatası", error: true)
+                    return
+                }
+            } else {
+                throwEngine.alertWarning(title: "Bir Hata Oluştu", message: "Dosya yüklenemedi. Lütfen tekrar deneyin.", error: true)
+                return
             }
-             
-
+  
         }else {
             if let features = detectQRCode(image), !features.isEmpty{
                 for case let row as CIQRCodeFeature in features{

@@ -37,7 +37,7 @@ class WalletView: UIView {
     var wallet: String?
     var ad_soyad: String?
     
-    var coin: String = ""
+    var coin: String?
     var onSight:Bool = false
     
     override func awakeFromNib()
@@ -73,7 +73,7 @@ class WalletView: UIView {
         tableView.dataSource = self
         
         transactionHistory.addSubview(tableView)
-        readHistory(coin: coin)
+        readHistory()
         emptyView.alpha = 0
         
     }
@@ -83,10 +83,10 @@ class WalletView: UIView {
             refreshControl.endRefreshing()
         }
         tableView.isUserInteractionEnabled = false
-        readHistory(coin: coin)
+        readHistory()
     }
     
-    func readHistory (coin: String) {
+    func readHistory () {
         
         if onSight{
             throwEngine.waitPlease()
@@ -98,53 +98,93 @@ class WalletView: UIView {
         self.trxs.removeAll()
         if let walletAddress = wallet {
             
-            BC.checkTransactions(address: walletAddress){ (data) in
-                DispatchQueue.main.async { [self] in
-                    data.forEach { trx in
-                        if let d = trx.data {
-                            do {
-                                let type = try JSONDecoder().decode(TransactionType.self, from: d)
-
-                                if type.type == 4 {
-                                    let value = try JSONDecoder().decode(TransferTransactionModel.self, from: d)
-                                    
-                                    let dateWaves = (978307200 + (value.timestamp)) * 1000
-                                    
-                                    let dateFormatter = DateFormatter()
-                                    dateFormatter.locale = NSLocale.current
-                                    dateFormatter.dateFormat = "dd-MM-yyyy HH:mm"
-                                    let strDate = dateFormatter.string(from: Date(milliseconds: Int64(dateWaves)) )
-                                    let remarks = self.BC.base58(data: value.attachment ?? "Qmxva3ppbmNpciBUcmFuc2Zlcmk=")
-                                                    
-                                    guard value.assetID != digilira.sponsorToken else { return }
-                                    guard value.assetID != nil else { return }
-
-                                    self.trxs.append (digilira.transfer.init(type: value.type,
-                                                                             id: value.id,
-                                                                             sender: value.sender,
-                                                                             senderPublicKey: value.senderPublicKey,
-                                                                             fee: value.fee,
-                                                                             timestamp: strDate,
-                                                                             version: value.version,
-                                                                             recipient: value.recipient,
-                                                                             amount: value.amount,
-                                                                             assetId: value.assetID,
-                                                                             attachment:remarks
-                                    ))
+            BC.wavesNodeRequests(path: "/addresses/data/" + digilira.gatewayAddress + "/ListedTokens")
+            
+            BC.onWavesNodeResponse = { [self] result, status in
+                do {
+                    let type = try JSONDecoder().decode(WavesDataTransaction.self, from: result)
+                   
+                    let data = type.value.components(separatedBy: "base64:")
+                    let b64 = BC.base64(data: data[1].description)
+                    let jsonData = b64.data(using: .utf8)!
+                    let decoder = JSONDecoder()
+                    let myStruct = try! decoder.decode([WavesListedToken].self, from: jsonData)
+                     
+                    BC.checkTransactions(address: walletAddress){ (data) in
+                        DispatchQueue.main.async { [self] in
+                            data.forEach { trx in
+                                if let d = trx.data {
+                                    do {
+                                        let type = try JSONDecoder().decode(TransactionType.self, from: d)
+                                        
+                                        if type.type == 4 {
+                                            
+                                            let value = try JSONDecoder().decode(TransferTransactionModel.self, from: d)
+                                            
+                                            guard value.assetID != digilira.sponsorToken else { return }
+                                            guard value.assetID != digilira.paymentToken else { return }
+                                            
+                                            guard value.assetID != nil else { return }
+                                            
+                                            if coin != "" {
+                                                do {
+                                                    let tokenName = try BC.returnAsset(assetId: value.assetID!)
+                                                    if coin != tokenName.tokenName {return}
+                                                } catch {
+                                                    print(error)
+                                                }
+                                            }
+                                            
+                                            let dateWaves = (978307200 + (value.timestamp)) * 1000
+                                            
+                                            let dateFormatter = DateFormatter()
+                                            dateFormatter.locale = NSLocale.current
+                                            dateFormatter.dateFormat = "dd-MM-yyyy HH:mm"
+                                            let strDate = dateFormatter.string(from: Date(milliseconds: Int64(dateWaves)) )
+                                            let remarks = self.BC.base58(data: value.attachment ?? "Qmxva3ppbmNpciBUcmFuc2Zlcmk=")
+                                            
+                                            self.trxs.append (digilira.transfer.init(type: value.type,
+                                                                                     id: value.id,
+                                                                                     sender: value.sender,
+                                                                                     senderPublicKey: value.senderPublicKey,
+                                                                                     fee: value.fee,
+                                                                                     timestamp: strDate,
+                                                                                     version: value.version,
+                                                                                     recipient: value.recipient,
+                                                                                     amount: value.amount,
+                                                                                     assetId: value.assetID,
+                                                                                     attachment:remarks
+                                            ))
+                                        }
+                                    } catch {
+                                        print(error)
+                                    }
                                 }
-                            } catch {
-                                print(error)
+                                
                             }
+                            self.tableView.reloadData()
+                            self.removeDetail()
+                            self.refreshControl.endRefreshing()
+                            throwEngine.removeAlert()
+                            self.tableView.isUserInteractionEnabled = true
                         }
-                        
                     }
-                    self.tableView.reloadData()
-                    self.removeDetail()
-                    self.refreshControl.endRefreshing()
-                    throwEngine.removeAlert()
-                    self.tableView.isUserInteractionEnabled = true
+                    
+                    
+                    
+                    
+                    
+                } catch  {
+                    print(error)
                 }
+                
+
+                
+                
             }
+            
+            
+            
         }
     }
     
@@ -203,7 +243,7 @@ extension WalletView: UITableViewDelegate, UITableViewDataSource
         cell.layoutMargins = UIEdgeInsets.zero
         
         if trxs.count == 0 {
-             
+            
             return cell
         }
         
@@ -223,6 +263,10 @@ extension WalletView: UITableViewDelegate, UITableViewDataSource
                     }
                     if (trxs[indexPath[1]].sender == walletAddress) {
                         cell.operationImage.image = UIImage(named: "send")
+                    }
+                    
+                    if (trxs[indexPath[1]].sender == trxs[indexPath[1]].recipient) {
+                        cell.operationImage.image = UIImage(named: "receive")
                     }
                 }
                 
@@ -304,9 +348,13 @@ extension WalletView: TransactionDetailCloseDelegate
     
     func alertTransfer(order: TransferModel) {
         if let coin = try? BC.returnAsset(assetId: order.assetID) {
-                        
+            var m = "Gelen Transfer"
+            if wallet == order.wallet {
+                m = "Giden Transfer"
+            }
+            
             let t = digilira.txConfMsg.init(title: "Transfer Detayları",
-                                            message: "Hesabınıza gelen transfer detayları",
+                                            message: m,
                                             l1: "Gönderici: " + order.myName,
                                             l2: "Alıcı: " + order.recipientName,
                                             l3: "Token: " + coin.tokenSymbol,

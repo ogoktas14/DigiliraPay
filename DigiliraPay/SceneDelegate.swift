@@ -112,6 +112,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, UNUserNotificationCente
     print("Device Token: \(token)")
     let bundleID = Bundle.main.bundleIdentifier;
         print("Bundle ID: \(token) \(String(describing: bundleID))");
+        
+        let defaults = UserDefaults.standard
+        defaults.set(token, forKey: "deviceToken")
+        
     // 3. Save the token to local storeage and post to app server to generate Push Notification. ...
     }
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {

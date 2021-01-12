@@ -15,9 +15,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     @IBOutlet weak var descLabel: UILabel!
     
     @IBOutlet weak var sendAndContiuneView: UIView!
-    @IBOutlet weak var cameraButtonView: UIView!
-    @IBOutlet weak var galleryButtonView: UIView!
-    @IBOutlet weak var goHomeView: UIView!
+    @IBOutlet weak var remarksView: UIView!
     @IBOutlet weak var scrollAres: UIScrollView!
     
     @IBOutlet weak var enterInfoView: UIView!
@@ -152,59 +150,62 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
                 enterInfoView.alpha = 0
                 errors?.waitPlease()
                 delegate?.dismissVErifyAccountView()
+                
+                let BC = Blockchain()
+                
+                digiliraPay.onUpdate = { res in
+                    errors?.removeWait()
+
+                    if !res {
+                        errors?.evaluate(error: digilira.NAError.missingParameters)
+                        
+                    } else {
+                        errors?.errorHandler(message: "Kimlik bilgileriniz doğrulandı, ancak KYC sürecini tamamlamak için kimliğinizin ön yüzü görünecek biçimde boş bir kağıda günün tarihini ve DigiliraPay yazarak Profil Onayı sayfasına yükleyin.", title: "Profiliniz Güncellendi", error: false)
+                        
+                        delegate?.loadEssentials()
+                    }
+                }
+                delegate?.dismissKeyboard()
+                
+                let timestamp = Int64(Date().timeIntervalSince1970) * 1000
+                
+                guard let name = nameText.text else {return}
+                guard let surname = surnameText.text else {return}
+                guard let tel = telText.text else {return}
+                guard let tcno = tcText.text else {return}
+                guard let mail = mailText.text else {return}
+
+                if let k = kullanici {
+                    if let sign = try? BC.bytization([dogum.date.description, name, k.id, surname, mail, sts.description, tcno, tel], timestamp) {
+                        let user = digilira.exUser.init(
+                            id:k.id,
+                            firstName: name,
+                            lastName: surnameText.text,
+                            tcno: tcText.text,
+                            dogum: dogum.date.description,
+                            tel: telText.text,
+                            mail: mailText.text,
+                            wallet: sign.wallet,
+                            status: sts,
+                            signed: sign.signature,
+                            publicKey: sign.publicKey,
+                            timestamp: timestamp
+                        )
+                        
+                        let encoder = JSONEncoder()
+                        let data = try? encoder.encode(user)
+                        
+                        digiliraPay.updateUser(user: data)
+                    }
+                } 
+                
+                
+                
             }else {
                 errors?.evaluate(error: digilira.NAError.missingParameters)
                 understand.isEnabled = true
                 understand.isOn = false
             }
-            
-            let BC = Blockchain()
-            
-            digiliraPay.onUpdate = { res in
-                errors?.removeWait()
-
-                if !res {
-                    errors?.evaluate(error: digilira.NAError.missingParameters)
-                    
-                } else {
-                    errors?.errorHandler(message: "Kimlik bilgileriniz doğrulandı, ancak KYC sürecini tamamlamak için kimliğinizin ön yüzü görünecek biçimde boş bir kağıda günün tarihini ve DigiliraPay yazarak Profil Onayı sayfasına yükleyin.", title: "Profiliniz Güncellendi", error: false)
-                    
-                    delegate?.loadEssentials()
-                }
-            }
-            delegate?.dismissKeyboard()
-            
-            let timestamp = Int64(Date().timeIntervalSince1970) * 1000
-            
-            guard let name = nameText.text else {return}
-            guard let surname = surnameText.text else {return}
-            guard let tel = telText.text else {return}
-            guard let tcno = tcText.text else {return}
-            guard let mail = mailText.text else {return}
-
-            if let k = kullanici {
-                if let sign = try? BC.bytization([dogum.date.description, name, k.id, surname, mail, sts.description, tcno, tel], timestamp) {
-                    let user = digilira.exUser.init(
-                        id:k.id,
-                        firstName: name,
-                        lastName: surnameText.text,
-                        tcno: tcText.text,
-                        dogum: dogum.date.description,
-                        tel: telText.text,
-                        mail: mailText.text,
-                        wallet: sign.wallet,
-                        status: sts,
-                        signed: sign.signature,
-                        publicKey: sign.publicKey,
-                        timestamp: timestamp
-                    )
-                    
-                    let encoder = JSONEncoder()
-                    let data = try? encoder.encode(user)
-                    
-                    digiliraPay.updateUser(user: data)
-                }
-            } 
         }
     }
     
@@ -217,6 +218,21 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+
+        if textField.tag == 4 {
+            guard let text = textField.text else { return false }
+                let newString = (text as NSString).replacingCharacters(in: range, with: string)
+                textField.text = format(with: "X (XXX) XXX-XX-XX", phone: newString)
+                return false
+        }
+        
+        if textField.tag == 3 {
+            guard let text = textField.text else { return false }
+                let newString = (text as NSString).replacingCharacters(in: range, with: string)
+                textField.text = format(with: "XXXXXXXXXXX", phone: newString)
+                return false
+        }
+        
         guard let textFieldText = textField.text,
               let rangeOfTextToReplace = Range(range, in: textFieldText) else {
             return false
@@ -303,6 +319,29 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
             }
         }
     }
+    
+    /// mask example: `+X (XXX) XXX-XXXX`
+    func format(with mask: String, phone: String) -> String {
+        let numbers = phone.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
+        var result = ""
+        var index = numbers.startIndex // numbers iterator
+
+        // iterate over the mask characters until the iterator of numbers ends
+        for ch in mask where index < numbers.endIndex {
+            if ch == "X" {
+                // mask requires a number in this place, so take the next one
+                result.append(numbers[index])
+
+                // move numbers iterator to the next index
+                index = numbers.index(after: index)
+
+            } else {
+                result.append(ch) // just append a mask character
+            }
+        }
+        return result
+    }
+    
     
     @objc func sendAndContiune()
     {

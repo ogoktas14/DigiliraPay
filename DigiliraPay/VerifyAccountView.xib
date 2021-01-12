@@ -38,7 +38,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4Uf-ML-kbQ">
-                                            <rect key="frame" x="5" y="17.333333333333371" width="361" height="35"/>
+                                            <rect key="frame" x="5" y="17.333333333333371" width="361" height="32"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="22"/>
@@ -62,15 +62,12 @@
                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="EuO-gN-eh3">
-                                            <rect key="frame" x="5" y="18" width="361" height="35"/>
+                                        <textField opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="0 (XXX) XXX-XX-XX" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="EuO-gN-eh3">
+                                            <rect key="frame" x="5" y="18" width="361" height="32"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" secondItem="EuO-gN-eh3" secondAttribute="height" multiplier="308:30" id="nkU-8I-yef"/>
-                                            </constraints>
                                             <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="22"/>
-                                            <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="phonePad" returnKeyType="next" textContentType="tel"/>
+                                            <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="phonePad" returnKeyType="next"/>
                                         </textField>
                                     </subviews>
                                     <constraints>
@@ -117,8 +114,8 @@
                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="g5z-i2-1vs">
-                                            <rect key="frame" x="5" y="17.333333333333314" width="361" height="35"/>
+                                        <textField opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="g5z-i2-1vs">
+                                            <rect key="frame" x="5" y="17.333333333333314" width="361" height="32"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="22"/>
@@ -142,8 +139,8 @@
                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Gk1-ac-RfA">
-                                            <rect key="frame" x="5" y="18.000000000000004" width="361" height="35.333333333333343"/>
+                                        <textField opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Gk1-ac-RfA">
+                                            <rect key="frame" x="5" y="18" width="361" height="32"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="22"/>
@@ -161,7 +158,7 @@
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BPa-mJ-Nky" userLabel="adview" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                                     <rect key="frame" x="24.666666666666657" y="19.999999999999996" width="371" height="60.666666666666657"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AD" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k7q-x9-6m4">
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AD" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k7q-x9-6m4">
                                             <rect key="frame" x="4.9999999999999964" y="0.0" width="18" height="15"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="15" id="Laj-cM-c1H"/>
@@ -171,7 +168,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <textField opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="751" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="anA-Tm-0CD">
-                                            <rect key="frame" x="5" y="16" width="361" height="35"/>
+                                            <rect key="frame" x="5" y="16" width="361" height="32"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="22"/>
@@ -242,14 +239,11 @@
                             <constraints>
                                 <constraint firstItem="UCe-2b-dmy" firstAttribute="height" secondItem="ej8-EE-jIN" secondAttribute="height" id="2Zb-fG-Pr1"/>
                                 <constraint firstItem="ej8-EE-jIN" firstAttribute="height" secondItem="BPa-mJ-Nky" secondAttribute="height" id="3xw-bf-I3t"/>
-                                <constraint firstItem="EuO-gN-eh3" firstAttribute="height" secondItem="g5z-i2-1vs" secondAttribute="height" id="4B7-EM-BAQ"/>
                                 <constraint firstItem="eR5-yL-lw5" firstAttribute="height" secondItem="BPa-mJ-Nky" secondAttribute="height" id="6AY-b1-zTU"/>
-                                <constraint firstItem="EuO-gN-eh3" firstAttribute="height" secondItem="anA-Tm-0CD" secondAttribute="height" id="6oU-DF-KZ8"/>
                                 <constraint firstItem="BPa-mJ-Nky" firstAttribute="leading" secondItem="eR5-yL-lw5" secondAttribute="leading" id="7it-yB-cWQ"/>
                                 <constraint firstItem="Epr-7L-uMC" firstAttribute="height" secondItem="dvd-tE-Gbg" secondAttribute="height" multiplier="2.5" id="BsX-sZ-8RV"/>
                                 <constraint firstItem="cn8-1W-mMo" firstAttribute="top" secondItem="Epr-7L-uMC" secondAttribute="bottom" constant="8" id="Cj5-zB-YQB"/>
                                 <constraint firstItem="BPa-mJ-Nky" firstAttribute="trailing" secondItem="eR5-yL-lw5" secondAttribute="trailing" id="Htr-r7-3CJ"/>
-                                <constraint firstItem="EuO-gN-eh3" firstAttribute="width" secondItem="anA-Tm-0CD" secondAttribute="width" id="NtY-31-cpn"/>
                                 <constraint firstItem="UCe-2b-dmy" firstAttribute="leading" secondItem="ej8-EE-jIN" secondAttribute="leading" id="RHb-9h-dXO"/>
                                 <constraint firstItem="ej8-EE-jIN" firstAttribute="top" secondItem="cn8-1W-mMo" secondAttribute="bottom" constant="8" id="RQk-iA-oAf"/>
                                 <constraint firstItem="Epr-7L-uMC" firstAttribute="width" secondItem="dvd-tE-Gbg" secondAttribute="width" id="Ros-Vo-MpB"/>
@@ -258,9 +252,7 @@
                                 <constraint firstItem="BPa-mJ-Nky" firstAttribute="leading" secondItem="k7v-AV-PAr" secondAttribute="leading" constant="24.5" id="Tji-02-HSV"/>
                                 <constraint firstItem="eR5-yL-lw5" firstAttribute="leading" secondItem="dvd-tE-Gbg" secondAttribute="leading" id="Ugv-V0-gCF"/>
                                 <constraint firstItem="dvd-tE-Gbg" firstAttribute="trailing" secondItem="cn8-1W-mMo" secondAttribute="trailing" id="VBI-N3-9hd"/>
-                                <constraint firstItem="EuO-gN-eh3" firstAttribute="width" secondItem="Gk1-ac-RfA" secondAttribute="width" id="VyM-tN-j8O"/>
                                 <constraint firstItem="3be-1k-nDH" firstAttribute="top" secondItem="ZsM-Uo-ije" secondAttribute="bottom" constant="50" id="WfM-Fc-Vps"/>
-                                <constraint firstItem="4Uf-ML-kbQ" firstAttribute="height" secondItem="EuO-gN-eh3" secondAttribute="height" id="bEF-7N-1Xd"/>
                                 <constraint firstItem="Epr-7L-uMC" firstAttribute="top" secondItem="dvd-tE-Gbg" secondAttribute="bottom" constant="8" id="ejs-Fk-qD6"/>
                                 <constraint firstItem="UCe-2b-dmy" firstAttribute="top" secondItem="ej8-EE-jIN" secondAttribute="bottom" constant="20" id="ewG-vx-uA7"/>
                                 <constraint firstAttribute="bottom" secondItem="3be-1k-nDH" secondAttribute="bottom" constant="200" id="fCb-Ie-1sY"/>
@@ -268,10 +260,8 @@
                                 <constraint firstItem="ZsM-Uo-ije" firstAttribute="width" secondItem="UCe-2b-dmy" secondAttribute="width" multiplier="0.8" id="g22-sI-nbr"/>
                                 <constraint firstAttribute="trailing" secondItem="3be-1k-nDH" secondAttribute="trailing" constant="80" id="ghO-aK-cqY"/>
                                 <constraint firstItem="UCe-2b-dmy" firstAttribute="width" secondItem="ej8-EE-jIN" secondAttribute="width" id="hGA-Bk-tEH"/>
-                                <constraint firstItem="EuO-gN-eh3" firstAttribute="height" secondItem="Gk1-ac-RfA" secondAttribute="height" id="jGn-zT-bVU"/>
                                 <constraint firstItem="cn8-1W-mMo" firstAttribute="trailing" secondItem="ej8-EE-jIN" secondAttribute="trailing" id="kNH-br-NK4"/>
                                 <constraint firstItem="dvd-tE-Gbg" firstAttribute="height" secondItem="BPa-mJ-Nky" secondAttribute="height" id="l3M-hS-HIf"/>
-                                <constraint firstItem="EuO-gN-eh3" firstAttribute="width" secondItem="g5z-i2-1vs" secondAttribute="width" id="lHV-z2-Kcw"/>
                                 <constraint firstItem="Epr-7L-uMC" firstAttribute="leading" secondItem="gZC-Lu-7lZ" secondAttribute="leading" constant="24" id="lw3-Qb-Zm2"/>
                                 <constraint firstItem="3be-1k-nDH" firstAttribute="centerX" secondItem="gZC-Lu-7lZ" secondAttribute="centerX" id="mkM-p4-1ti"/>
                                 <constraint firstItem="dvd-tE-Gbg" firstAttribute="top" secondItem="eR5-yL-lw5" secondAttribute="bottom" constant="8" id="o8P-MO-Z20"/>
@@ -282,7 +272,6 @@
                                 <constraint firstItem="eR5-yL-lw5" firstAttribute="trailing" secondItem="dvd-tE-Gbg" secondAttribute="trailing" id="unZ-6r-Yoe"/>
                                 <constraint firstItem="eR5-yL-lw5" firstAttribute="top" secondItem="BPa-mJ-Nky" secondAttribute="bottom" constant="8" id="uxp-jA-fmd"/>
                                 <constraint firstItem="ej8-EE-jIN" firstAttribute="top" secondItem="cn8-1W-mMo" secondAttribute="bottom" constant="8" id="v0a-vt-1eS"/>
-                                <constraint firstItem="4Uf-ML-kbQ" firstAttribute="width" secondItem="EuO-gN-eh3" secondAttribute="width" id="xCG-0e-k0y"/>
                                 <constraint firstItem="dvd-tE-Gbg" firstAttribute="leading" secondItem="cn8-1W-mMo" secondAttribute="leading" id="xK0-yO-Ke6"/>
                                 <constraint firstItem="3be-1k-nDH" firstAttribute="width" secondItem="gZC-Lu-7lZ" secondAttribute="width" multiplier="0.181445" id="y70-E1-wly"/>
                             </constraints>
@@ -346,6 +335,7 @@
                 <outlet property="enterInfoView" destination="Zj3-7D-wIQ" id="SZQ-NV-J52"/>
                 <outlet property="mailText" destination="4Uf-ML-kbQ" id="g9n-7h-pxy"/>
                 <outlet property="nameText" destination="anA-Tm-0CD" id="9m3-E1-KNB"/>
+                <outlet property="remarksView" destination="UCe-2b-dmy" id="QXX-L7-X0o"/>
                 <outlet property="scrollAres" destination="gZC-Lu-7lZ" id="6er-aX-WSb"/>
                 <outlet property="sendAndContiuneView" destination="ZsM-Uo-ije" id="Lbd-3g-Ksf"/>
                 <outlet property="surnameText" destination="Gk1-ac-RfA" id="7Zr-Aa-sRR"/>

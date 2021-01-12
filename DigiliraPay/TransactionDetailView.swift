@@ -153,7 +153,7 @@ class TransactionDetailView: UIView
                 crud.request(rURL: crud.getApiURL() + digilira.api.transferGet, postData: try? JSONEncoder().encode(data))
                 
                 DispatchQueue.main.async { [self] in
-                    delegate?.alertT(message: "Transder detaylarınız yükleniyor...", title: "Detaylar")
+                    delegate?.alertT(message: "Transfer detaylarınız yükleniyor...", title: "Detaylar")
                     
                 }
             }

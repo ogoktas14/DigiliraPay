@@ -45,7 +45,8 @@ struct TransferOnWay: Codable {
  
 // MARK: - TransferModel
 struct TransferModel: Codable {
-    let id, myName: String
+    let id: String?
+    let myName: String
     let amount: Int64
     let feeAssetID: String
     let blockchainFee, tickerUsd, fee: Int64

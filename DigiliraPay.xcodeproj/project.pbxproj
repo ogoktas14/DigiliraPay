@@ -74,6 +74,7 @@
 		88F4A1BF2312AF7B007172A6 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F4A1BE2312AF7B007172A6 /* MenuView.swift */; };
 		88F4A1C42312CA56007172A6 /* MockImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 88F4A1C32312CA56007172A6 /* MockImages.xcassets */; };
 		9317703225946CB400A6EC5F /* TransferModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9317703125946CB400A6EC5F /* TransferModel.swift */; };
+		931A08D425A2F29F003AD083 /* WavesModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 931A08D325A2F29F003AD083 /* WavesModels.swift */; };
 		932A59C02584FA1900B64EA9 /* warningView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 932A59BF2584FA1900B64EA9 /* warningView.xib */; };
 		932A59C32584FA6200B64EA9 /* warningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932A59C22584FA6200B64EA9 /* warningView.swift */; };
 		93390886255A76D40005B64A /* cloudflaressl.cer in Resources */ = {isa = PBXBuildFile; fileRef = 93390885255A76CD0005B64A /* cloudflaressl.cer */; };
@@ -246,6 +247,7 @@
 		88F4A1BE2312AF7B007172A6 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		88F4A1C32312CA56007172A6 /* MockImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = MockImages.xcassets; sourceTree = "<group>"; };
 		9317703125946CB400A6EC5F /* TransferModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferModel.swift; sourceTree = "<group>"; };
+		931A08D325A2F29F003AD083 /* WavesModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WavesModels.swift; sourceTree = "<group>"; };
 		932A59BF2584FA1900B64EA9 /* warningView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = warningView.xib; sourceTree = "<group>"; };
 		932A59C22584FA6200B64EA9 /* warningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = warningView.swift; sourceTree = "<group>"; };
 		93390885255A76CD0005B64A /* cloudflaressl.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = cloudflaressl.cer; sourceTree = "<group>"; };
@@ -541,6 +543,7 @@
 			children = (
 				93CAC396259225B9006B8FB7 /* PaymentModel.swift */,
 				9317703125946CB400A6EC5F /* TransferModel.swift */,
+				931A08D325A2F29F003AD083 /* WavesModels.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -872,6 +875,7 @@
 				936F25B725323B3900C5FA85 /* UIViewExtension.swift in Sources */,
 				93534F1E2549958C0000329F /* bitexenSignature.swift in Sources */,
 				93534039253C528600FFEA4D /* newSendView.swift in Sources */,
+				931A08D425A2F29F003AD083 /* WavesModels.swift in Sources */,
 				88A6BA4B232039D7002640D6 /* LegalDelegate.swift in Sources */,
 				88CA9372231A475F008F894B /* TransactionDetailView.swift in Sources */,
 				88CA937B231A48A0008F894B /* TransactionHistoryDetailCellDeatils.swift in Sources */,
@@ -1065,7 +1069,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 78;
+				CURRENT_PROJECT_VERSION = 83;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;
@@ -1090,7 +1094,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPayRelease.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 78;
+				CURRENT_PROJECT_VERSION = 83;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;
@@ -1113,8 +1117,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 78;
+				CURRENT_PROJECT_VERSION = 83;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
+				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = "WatchDP Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1136,8 +1141,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 78;
+				CURRENT_PROJECT_VERSION = 83;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
+				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = "WatchDP Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1161,8 +1167,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 78;
+				CURRENT_PROJECT_VERSION = 83;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
+				ENABLE_BITCODE = YES;
 				IBSC_MODULE = WatchDP_Extension;
 				INFOPLIST_FILE = WatchDP/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.digilirapay.gateway.watchkitapp;
@@ -1182,8 +1189,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 78;
+				CURRENT_PROJECT_VERSION = 83;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
+				ENABLE_BITCODE = YES;
 				IBSC_MODULE = WatchDP_Extension;
 				INFOPLIST_FILE = WatchDP/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.digilirapay.gateway.watchkitapp;

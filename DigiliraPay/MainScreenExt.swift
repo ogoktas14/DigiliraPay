@@ -38,18 +38,26 @@ extension MainScreen: NewCoinSendDelegate
                 case "ok":
                     self.dismissNewSend()
                     switch params.destination {
-                    case digilira.transactionDestination.domestic:
-                        BC.sendTransaction2(name: params.merchant!, recipient: params.recipient!, fee: digilira.sponsorTokenFee, amount: params.amount!, assetId: params.assetId!, attachment: params.attachment, wallet:wallet, blob: params)
+                    case digilira.transactionDestination.domestic, digilira.transactionDestination.unregistered:
+                        BC.sendTransaction2(name: params.merchant!, recipient: params.recipient!, amount: params.amount!, assetId: params.assetId!, attachment: params.attachment, wallet:wallet, blob: params)
                         break
                     case digilira.transactionDestination.foreign:
-                        BC.createWithdrawRequest(wallet: wallet,
-                                                 address: params.externalAddress!,
-                                                 currency: params.assetId!,
-                                                 amount: params.amount!,
-                                                 blob: params)
+                        
+                        if params.network == digilira.waves.network {
+                            BC.sendTransaction2(name: params.merchant!, recipient: params.recipient!, amount: params.amount!, assetId: params.assetId!, attachment: params.attachment, wallet:wallet, blob: params)
+                        } else {
+                            BC.createWithdrawRequest(wallet: wallet,
+                                                     address: params.externalAddress!,
+                                                     currency: params.assetId!,
+                                                     amount: params.amount!,
+                                                     blob: params)
+                        }
+                        
+
                         break
                     case digilira.transactionDestination.interwallets:
-                        BC.massTransferTx(name: params.merchant!, recipient: params.recipient!, fee: digilira.sponsorTokenFeeMass, amount: params.amount!, assetId: params.assetId!, attachment: "", wallet: wallet, blob: params)
+                        BC.sendTransaction2(name: params.merchant!, recipient: params.recipient!, amount: params.amount!, assetId: params.assetId!, attachment: params.attachment, wallet:wallet, blob: params)
+                         
                         break
                     default:
                         return
@@ -128,7 +136,8 @@ extension MainScreen: PageCardViewDeleGate
                                 products: params.products,
                                 me: name,
                                 blockchainFee: 0,
-                                merchantId: params.user
+                                merchantId: params.user,
+                                feeAssetId: digilira.paymentToken
         )
         sendCoinNew(params: data)
     }
@@ -233,8 +242,9 @@ extension MainScreen: PinViewDelegate
  
         do {
             let u = try secretKeys.userData()
- 
-            if let sign = try? BC.bytization([u.btcAddress ?? "",
+            
+            if let sign = try? BC.bytization([u.apnToken,
+                                              u.btcAddress ?? "",
                                               u.dogum ?? "",
                                               u.ethAddress ?? "",
                                               u.firstName ?? "",
@@ -259,6 +269,7 @@ extension MainScreen: PinViewDelegate
                                                  wallet: sign.wallet,
                                                  status: u.status,
                                                  pincode: code.description,
+                                                 apnToken: u.apnToken,
                                                  signed: sign.signature,
                                                  publicKey: sign.publicKey,
                                                  timestamp: timestamp
