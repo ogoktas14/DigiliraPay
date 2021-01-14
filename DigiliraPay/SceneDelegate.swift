@@ -65,32 +65,35 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, UNUserNotificationCente
     func sceneWillResignActive(_ scene: UIScene) {
         // Called when the scene will move from an active state to an inactive state.
         // This may occur due to temporary interruptions (ex. an incoming phone call).
-        let screenSize: CGRect = UIScreen.main.bounds
         
-        guard let isBiometrics = UserDefaults.standard.value(forKey: "isSecure") as? Bool  else { return }
+        if UserDefaults.standard.value(forKey: "isSecure") == nil {
+            blur()
+            return
+        }
         guard let isOnScreen = UserDefaults.standard.value(forKey: "biometrics") as? Bool  else { return }
-        
-        if isBiometrics && isOnScreen {return}
-        
-            if let img = UIImage(named: "appLogoWhite") {
-                let myView = DLGradient(frame: CGRect(x: 0, y: 0, width: screenSize.width, height: screenSize.height))
-                let myLogo = UIImageView(frame: CGRect(x: (screenSize.width/2) - (img.size.width / 2),
-                                                       y: (screenSize.height/2) - (img.size.height / 2),
-                                                       width: img.size.width,
-                                                       height: img.size.height))
-             
-                myLogo.image = img
-                
-                myView.addSubview(myLogo)
-                myView.tag = 74396893368329
-                 
-                self.window?.addSubview(myView)
-            }
-
-        
-        
+        if isOnScreen {return}
+        blur()
     } 
 
+    func blur() {
+        let screenSize: CGRect = UIScreen.main.bounds
+
+        if let img = UIImage(named: "appLogoWhite") {
+            let myView = DLGradient(frame: CGRect(x: 0, y: 0, width: screenSize.width, height: screenSize.height))
+            let myLogo = UIImageView(frame: CGRect(x: (screenSize.width/2) - (img.size.width / 2),
+                                                   y: (screenSize.height/2) - (img.size.height / 2),
+                                                   width: img.size.width,
+                                                   height: img.size.height))
+         
+            myLogo.image = img
+            
+            myView.addSubview(myLogo)
+            myView.tag = 74396893368329
+             
+            self.window?.addSubview(myView)
+        }
+    }
+    
     func sceneWillEnterForeground(_ scene: UIScene) {
         // Called as the scene transitions from the background to the foreground.
         // Use this method to undo the changes made on entering the background.

@@ -42,7 +42,7 @@ class newSendView: UIView {
     var isWavesNetwork: Bool = false
     
     var Filtered: [digilira.DigiliraPayBalance] = []
-    var Coins: [digilira.coin] = []
+    var Coins: [WavesListedToken] = []
     let BC = Blockchain()
     
     var transaction: SendTrx?
@@ -59,7 +59,7 @@ class newSendView: UIView {
     
     public var address: String?
     
-    private var selectedCoinX: digilira.coin?
+    private var selectedCoinX: WavesListedToken?
     private var selectedIndex: Int = 0
     
     let digiliraPay = digiliraPayApi()
@@ -156,12 +156,12 @@ class newSendView: UIView {
         var regexString = wavesreg
         
         switch network {
-        case digilira.bitcoin.network:
+        case digilira.bitcoinNetwork:
             regexString = bitcoinReg
-        case digilira.ethereum.network:
+        case digilira.ethereumNetwork:
             regexString = ethereumReg
             break
-        case digilira.waves.network:
+        case digilira.wavesNetwork:
             regexString = wavesreg
             break
         default:
@@ -174,7 +174,7 @@ class newSendView: UIView {
             let wavresult = eval(template: wavesreg, address: address)
             
             if wavresult {
-                getPage(x: digilira.waves.tokenName)
+                getPage(x: digilira.wavesNetwork)
                 isWavesNetwork = true
                 return true
             }
@@ -182,26 +182,27 @@ class newSendView: UIView {
             let btcresult = eval(template: bitcoinReg, address: address)
             
             if btcresult {
-                getPage(x: digilira.bitcoin.tokenName)
+                getPage(x: digilira.bitcoinNetwork)
                 return true
             }
             
             let btcresultSegwit = eval(template: bitcoinSegwit, address: address)
             
             if btcresultSegwit {
-                getPage(x: digilira.bitcoin.tokenName)
+                getPage(x: digilira.bitcoinNetwork)
                 return true
             }
             
             let ethresult = eval(template: ethereumReg, address: address)
             
             if ethresult {
-                getPage(x: digilira.ethereum.tokenName)
+                getPage(x: digilira.ethereumNetwork)
                 return true
             }
         }
         
         if result {
+            getPage(x: network)
             recipientText.setTitleColor(.black, for: .normal)
         }
         return result
@@ -333,43 +334,17 @@ class newSendView: UIView {
             scrollAreaView.isUserInteractionEnabled = false
         }
         
+        if params.recipient == "" {
+            scrollAreaView.isUserInteractionEnabled = true
+        } else {
+            scrollAreaView.isUserInteractionEnabled = false
+        }
+        
         findToken( tokenName: params.assetId! )
         
         recipientText.isEnabled = true
         textAmount.isEnabled = true
-        scrollAreaView.isUserInteractionEnabled = false
-        
-        switch params.network! {
-        case digilira.bitcoin.network:
-            selectedCoinX = digilira.bitcoin
-        case digilira.ethereum.network:
-            selectedCoinX = digilira.ethereum
-        case digilira.waves.network, "domestic":
-            isWavesNetwork = true
-            scrollAreaView.isUserInteractionEnabled = true
 
-            switch params.assetId {
-            case digilira.bitcoin.token:
-                selectedCoinX = digilira.bitcoin
-                break
-            case digilira.ethereum.token:
-                selectedCoinX = digilira.ethereum
-                break
-            case digilira.waves.token:
-                selectedCoinX = digilira.waves
-                break
-            default:
-                return
-                    setCoinPrice()
-            }
-        default:
-            scrollAreaView.isUserInteractionEnabled = true
-            return
-        }
-        
-
-
-        
         if let coin = selectedCoinX {
             let double = Double(truncating: pow(10,coin.decimal) as NSNumber)
             amount = (Double(params.amount!) / double)
@@ -411,8 +386,19 @@ class newSendView: UIView {
     }
     
     func getPage(x: String) {
+        var X = x
+        if let au = assetId {
+            X = au
+            isWavesNetwork = false
+        }
+        
         do {
-            let y = try BC.returnCoin(tokenName: x)
+            let y = try BC.returnAsset(assetId: X)
+            
+            if y.network == "waves" {
+                isWavesNetwork = true
+                scrollAreaView.isUserInteractionEnabled = true
+            }
             for (i, c) in Filtered.enumerated() {
                 if y.tokenName == c.tokenName
                 {
@@ -422,7 +408,10 @@ class newSendView: UIView {
                     return
                 }
             }
-            errors?.errorHandler(message: y.tokenName + " bakiyeniz bulunmamaktadır.", title: "Bir Hata Oluştu", error: true)
+            DispatchQueue.main.async { [self] in
+                
+                errors?.errorHandler(message: y.tokenName + " bakiyeniz bulunmamaktadır.", title: "Bir Hata Oluştu", error: true)
+            }
         } catch  {
             print(error)
         }
@@ -498,8 +487,20 @@ class newSendView: UIView {
         recipientText.setTitleColor(.black, for: .normal)
         
         if let coin = selectedCoinX {
-            if checkAddress(network: coin.network, address: text) {
-                recipientText.setTitle(text, for: .normal)
+            var adres = text
+            
+            let isWavesAsset = text.components(separatedBy: "&assetId=")
+            
+            if isWavesAsset.count > 1 {
+                assetId = isWavesAsset[1].description
+            
+                let wavesAddress = isWavesAsset[0].components(separatedBy: "?amount=")
+         
+                adres = wavesAddress[0]
+            }
+            
+            if checkAddress(network: coin.network, address: adres) {
+                recipientText.setTitle(adres, for: .normal)
                 
                 scrollAreaView.isUserInteractionEnabled = false
 
@@ -693,7 +694,6 @@ class newSendView: UIView {
     }
     
     func setBalanceView(index:Int) {
-        
         if Filtered.count >= currentPage {
             UIView.animate(withDuration: 0.5,
                            animations: {
@@ -726,7 +726,7 @@ class newSendView: UIView {
     
     func setAdress()  {
         do {
-            let c = try BC.returnCoin(tokenName: Filtered[currentPage].tokenName)
+            let c = try BC.returnAsset(assetId: Filtered[currentPage].tokenName)
             selectedCoinX = c
              
             if var t = transaction {
@@ -746,7 +746,7 @@ class newSendView: UIView {
         let ticker = digiliraPay.ticker(ticker: Ticker)
         
         do {
-            let (_, asset, tlfiyat) = try digiliraPay.ratePrice(price: amount, asset: coin.tokenName, symbol: ticker, digits: coin.decimal, network: coin.network)
+            let (_, asset, tlfiyat) = try digiliraPay.ratePrice(price: amount, asset: coin, symbol: ticker)
             
             balanceCardView.setView(desc: coin.tokenName,
                                     tl: MainScreen.df2so(tlfiyat),
@@ -831,26 +831,26 @@ class newSendView: UIView {
             if let fiyatlama = ticker {
                 
                 switch coin.network {
-                case digilira.bitcoin.network:
+                case digilira.bitcoinNetwork:
                     coinPrice = (fiyatlama.btcUSDPrice)! * (fiyatlama.usdTLPrice)!
                     break
-                case digilira.ethereum.network:
+                case digilira.ethereumNetwork:
                     coinPrice = (fiyatlama.ethUSDPrice)! * (fiyatlama.usdTLPrice)!
                     break
-                case digilira.waves.network:
+                case digilira.wavesNetwork:
                     switch coin.tokenName {
                     case digilira.waves.tokenName:
                         coinPrice = (fiyatlama.wavesUSDPrice)! * (fiyatlama.usdTLPrice)!
                         break
                     default:
-                        coinPrice = 0
+                        coinPrice = 1
                     }
                     break
                 case "digilira":
-                    coinPrice = 0
+                    coinPrice = 1
                     break
                 default:
-                    coinPrice = 0
+                    coinPrice = 1
                     break
                 }
                 calcPrice(text: textAmount.text!)
@@ -872,7 +872,8 @@ class newSendView: UIView {
                 decimal: digilira.demoCoin.decimal,
                 balance: 0,
                 tlExchange: 0,
-                network: ""
+                network: "",
+                wallet: kullanici!.wallet
             )
             
             balanceCardView = UIView().loadNib(name: "BalanceCard") as! BalanceCard

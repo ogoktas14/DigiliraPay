@@ -212,7 +212,7 @@ class PageCardView: UIView {
         if let order = Order {
             let fiyat = order.totalPrice
                 do {
-                    let (amount, asset, tlfiyat) = try digiliraPay.ratePrice(price: fiyat, asset: coin.tokenName, symbol: ticker, digits: coin.decimal, network: coin.network)
+                    let (amount, asset, tlfiyat) = try digiliraPay.ratePrice(price: fiyat, asset: coin, symbol: ticker)
                     
                     balanceCardView.setView(desc: coin.tokenName,
                                             tl: MainScreen.df2so(tlfiyat),
@@ -224,19 +224,16 @@ class PageCardView: UIView {
                     if coin.availableBalance >= (Int64(amount)) {
                         Order?.currency = asset
                         Order?.rate = (Int64(amount))
-                        payButton.isHidden = false
+                        payButton.isUserInteractionEnabled = true
+                        payButton.alpha = 1
                     } else {
-                        balanceCardView.willPaidCoin.textColor = .systemPink
-                        balanceCardView.paidCoin.textColor = .systemPink
-                        balanceCardView.balanceCoin.textColor = .systemPink
-                        payButton.isHidden = true
+                        payButton.isUserInteractionEnabled = false
+                        payButton.alpha = 0.4
                     }
                     
                     if (asset == "TL") {
-                        balanceCardView.willPaidCoin.textColor = .systemPink
-                        balanceCardView.paidCoin.textColor = .systemPink
-                        balanceCardView.balanceCoin.textColor = .systemPink
-                        payButton.isHidden = true
+                        payButton.isUserInteractionEnabled = false
+                        payButton.alpha = 0.4
                         shake()
                     }
                 } catch  {
@@ -331,7 +328,8 @@ class PageCardView: UIView {
                     decimal: digilira.demoCoin.decimal,
                     balance: 0,
                     tlExchange: 0,
-                    network: ""
+                    network: "",
+                    wallet: ""
                 )
                 
                 balanceCardView = UIView().loadNib(name: "BalanceCard") as! BalanceCard
@@ -397,7 +395,6 @@ extension PageCardView: UITableViewDelegate, UITableViewDataSource {
                     }
                 }
             }
-                
                 
                 if  let kargo = order.orderShipping {
                     shoppingCart.append(digilira.shoppingCart.init(label: "Kargo Ücreti", price: kargo, mode: 1))

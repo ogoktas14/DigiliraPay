@@ -43,7 +43,7 @@ extension MainScreen: NewCoinSendDelegate
                         break
                     case digilira.transactionDestination.foreign:
                         
-                        if params.network == digilira.waves.network {
+                        if params.network == digilira.wavesNetwork {
                             BC.sendTransaction2(name: params.merchant!, recipient: params.recipient!, amount: params.amount!, assetId: params.assetId!, attachment: params.attachment, wallet:wallet, blob: params)
                         } else {
                             BC.createWithdrawRequest(wallet: wallet,
@@ -290,7 +290,7 @@ extension MainScreen: PinViewDelegate
                         }
                     }
                 }
-                crud.request(rURL: crud.getApiURL() + digilira.api.userUpdate, postData: try? JSONEncoder().encode(user), method: req.method.put)
+                crud.request(rURL: crud.getApiURL() + digilira.api.userUpdate, postData: try? JSONEncoder().encode(user), method: req.method.put, signature: sign.signature)
 
             }
         } catch {

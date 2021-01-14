@@ -42,6 +42,8 @@ class ErrorHandling: NSObject {
             break
         case digilira.NAError.sponsorToken:
             return
+        case digilira.NAError.tokenNotFound:
+            return
         case digilira.NAError.noAmount:
             alertWarning(title: "Miktar Giriniz", message: "Gödermek istediğiniz miktarı giriniz.")
             return
@@ -105,6 +107,7 @@ class ErrorHandling: NSObject {
     func alertWarning (title: String, message: String, error: Bool = true) {
         DispatchQueue.main.async { [self] in
             if let w = win {
+                removeWait()
                 orderDetailView.removeFromSuperview()
                 warningView.removeFromSuperview()
                 transferConfirmationView.removeFromSuperview()

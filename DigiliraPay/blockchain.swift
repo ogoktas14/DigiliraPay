@@ -181,6 +181,7 @@ class Blockchain: NSObject {
     
     private let wavesCrypto: WavesCrypto = WavesCrypto()
     
+    var listedTokens = ListedTokens()
     let digiliraPay = digiliraPayApi()
     let throwEngine = ErrorHandling()
     var crud = centralRequest()
@@ -189,8 +190,8 @@ class Blockchain: NSObject {
         let b: [UInt8] = Array(s.utf8)
         return toByteArray(Int16(b.count)) + b
     }
-    
-    var onAssetBalance: ((_ result: NodeService.DTO.AddressAssetsBalance)->())?
+    var onWavesBalance: ((_ result: NodeService.DTO.AddressBalance)->())?
+    var onAssetBalance: ((_ assets: NodeService.DTO.AddressAssetsBalance, _ waves: NodeService.DTO.AddressBalance)->())?
     var onTransferTransaction: ((_ result: NodeService.DTO.Transaction, _ verifyData: TransferOnWay )->())?
     var onVerified: ((_ result: TransferTransactionModel, _ verifyData: TransferOnWay)->())?
     var onSensitive: ((_ result: digilira.wallet, _ err: String)->())?
@@ -204,18 +205,33 @@ class Blockchain: NSObject {
     var onWavesApiError: ((_ result: String, _ statusCode: Int, _ path: String)->())?
     var onWavesTokenResponse: ((_ result: Data, _ statusCode: Int) ->())?
     var onWavesNodeResponse: ((_ result: Data, _ statusCode: Int) ->())?
+    var onWavesDataResponse: ((_ result: Data, _ statusCode: Int) ->())?
+
+    
+    func checkWavesBalance(address: String) {
+        WavesSDK.shared.services
+            .nodeServices
+            .addressesNodeService
+            .addressBalance(address: address)
+            .subscribe(onNext: { (balances) in
+                self.onWavesBalance!(balances)
+            })
+            .disposed(by: self.disposeBag)
+    }
     
     func checkAssetBalance(address: String ) {
-        
-        WavesSDK.shared.services.nodeServices.assetsNodeService
-            .assetsBalances(address: address)
-            .observeOn(MainScheduler.asyncInstance)
-            .subscribe(onNext: { (balances) in
-                self.onAssetBalance?(balances)
-            }, onError: {_ in
-                self.onError!(digilira.NAError.noBalance)
-            })
-            .disposed(by: disposeBag)
+        onWavesBalance = { [self] wavesBalance in
+            WavesSDK.shared.services.nodeServices.assetsNodeService
+                .assetsBalances(address: address)
+                .observeOn(MainScheduler.asyncInstance)
+                .subscribe(onNext: { (balances) in
+                    self.onAssetBalance?(balances, wavesBalance)
+                }, onError: {_ in
+                    self.onError!(digilira.NAError.noBalance)
+                })
+                .disposed(by: disposeBag)
+        }
+        checkWavesBalance(address: address)
     }
     
     func getFeeAssetId(destination: String) -> String {
@@ -614,7 +630,7 @@ class Blockchain: NSObject {
                             return }
                         
                         do{
-                            var jsonResponse = try? (JSONSerialization.jsonObject(with: dataResponse) as! Dictionary<String, AnyObject>)
+                            //var jsonResponse = try? (JSONSerialization.jsonObject(with: dataResponse) as! Dictionary<String, AnyObject>)
 
                             let ifError = try? JSONDecoder().decode(WavesTokenError.self, from: dataResponse)
                             let ifApiError = try? JSONDecoder().decode(WavesAPIError.self, from: dataResponse)
@@ -750,106 +766,31 @@ class Blockchain: NSObject {
             return "-"
         }
     }
-     
-    func returnCoin(tokenName: String) throws -> digilira.coin {
-        
-        switch WavesSDK.shared.enviroment.server {
-        case .mainNet:
-            
-            switch tokenName {
-            case digilira.wavesWaves.tokenName:
-                return digilira.wavesWaves
-            case digilira.tetherWaves.tokenName:
-                return digilira.tetherWaves
-            case digilira.bitcoinWaves.tokenName:
-                return digilira.bitcoinWaves
-            case digilira.ethereumWaves.tokenName:
-                return digilira.ethereumWaves
-            case digilira.litecoinWaves.tokenName:
-                return digilira.litecoinWaves
-            default:
-                throw digilira.NAError.notListedToken
-            }
-        case .testNet:
-            switch tokenName {
-            case digilira.waves.tokenName:
-                return digilira.waves
-            case digilira.bitcoin.tokenName:
-                return digilira.bitcoin
-            case digilira.ethereum.tokenName:
-                return digilira.ethereum
-            default:
-                throw digilira.NAError.notListedToken
-            }
-        default:
+    
+    func returnNetworks() throws -> [WavesListedToken] {
+        do {
+            let tokens = try listedTokens.returnCoins()
+            return tokens
+        } catch {
             throw digilira.NAError.notListedToken
         }
     }
     
-    func returnCoins() -> [digilira.coin] {
-        
-        var result: [digilira.coin] = []
-        
-        switch WavesSDK.shared.enviroment.server {
-        case .mainNet:
-            result = [
-                digilira.wavesWaves,
-                digilira.tetherWaves,
-                digilira.bitcoinWaves,
-                digilira.ethereumWaves,
-                digilira.litecoinWaves,
-            ]
-            return result
-        case .testNet:
-            result = [
-                digilira.waves,
-                digilira.bitcoin,
-                digilira.ethereum
-            ]
-            return result
-        default:
-            return result
+    func returnCoins() throws -> [WavesListedToken] {
+        do {
+            let tokens = try listedTokens.returnCoins()
+            return tokens
+        } catch {
+            throw digilira.NAError.notListedToken
         }
     }
     
-    func returnAsset (assetId: String) throws -> digilira.coin {
-        
-        switch assetId {
-        case digilira.bitcoin.token:
-            return digilira.bitcoin //digilirapay wrapped
-        
-        case digilira.ethereum.token:
-            return digilira.ethereum
-            
-        case digilira.waves.token:
-            return digilira.waves
-            
-        case digilira.waves.token:
-            return digilira.waves
-            
-        case "8yMtER9Nh37WkhpW4BnnNky8dSBPDE2HU6MSRBHRwvxs":
-            return digilira.waves
-            
-        case "6QmYoze6nnexnKc23ATdXQYZgqtfdMZrm3oQXn4E2SvQ":
-            return digilira.waves
-            
-        case "GnBdiwTQ1Pkxs3YkcpdQMSaboofDyczhhLGgghaviwQU":
-            return digilira.waves
-            
-        case digilira.tetherWaves.token: //waves wrapped
-            return digilira.tetherWaves
-        case digilira.bitcoinWaves.token: //waves wrapped
-            return digilira.bitcoinWaves
-        case digilira.ethereumWaves.token: //waves wrapped
-            return digilira.ethereumWaves
-        case digilira.litecoinWaves.token: //waves wrapped
-            return digilira.litecoinWaves
-            
-        case digilira.sponsorToken, digilira.paymentToken:
-            throw digilira.NAError.sponsorToken
-        default:
+    func returnAsset (assetId: String?) throws -> WavesListedToken {
+        do {
+            return try listedTokens.returnAsset(assetId:assetId)
+        } catch {
             throw digilira.NAError.notListedToken
-        } 
+        }
     }
     
     func base58 (data:String) -> String {
@@ -928,11 +869,52 @@ class Blockchain: NSObject {
                     })
                     .disposed(by: self.disposeBag)
             } else {
-                digiliraPay.updateSmartAcountScript(data: t.data!)
+                digiliraPay.updateSmartAcountScript(data: t.data!, signature: sign.signature)
             }
         } catch {
             print (error)
         }
+    }
+    
+    func getWalletAddress(address: String) {
+        onWavesApiError = { error, status, path in
+            
+        }
+        
+        DispatchQueue.global(qos: .background).async  {
+            self.onWavesNodeResponse = { result, status in
+                let defaults = UserDefaults.standard
+                defaults.set(result, forKey: "walletStatus")
+            }
+            
+            self.wavesNodeRequests(path: "/addresses/data/" + digilira.gatewayAddress + "/" + address)
+            }
+
+
+    }
+    
+    func getDataTrx(key:String, address:String = digilira.gatewayAddress) {
+        onWavesApiError = { error, status, path in
+            self.onWavesDataResponse!(error.data!,status)
+        }
+        
+        self.onWavesNodeResponse = { result, status in
+            self.onWavesDataResponse!(result,status)
+        }
+        
+        wavesNodeRequests(path: "/addresses/data/" + address + "/" + key)
+    }
+    
+    func checkListedTokens() {
+        onWavesApiError = { error, status, path in
+            
+        }
+        self.onWavesNodeResponse = { result, status in
+            let defaults = UserDefaults.standard
+            defaults.set(result, forKey: "listedTokens")
+        }
+        wavesNodeRequests(path: "/addresses/data/" + digilira.gatewayAddress + "/ListedTokens")
+
     }
     
     func checkBalance(account: NodeService.DTO.AddressScriptInfo) {
@@ -973,6 +955,7 @@ class Blockchain: NSObject {
     }
     
     func checkSmart(address: String) {
+        checkListedTokens()
         WavesSDK.shared.services
             .nodeServices
             .addressesNodeService
@@ -1189,7 +1172,7 @@ class Blockchain: NSObject {
                     }
                 }
             }
-            crud.request(rURL: crud.getApiURL() + digilira.api.isOurMember, postData: data)
+            crud.request(rURL: crud.getApiURL() + digilira.api.isOurMember, postData: data, signature: sign.signature)
         }
     }
     
@@ -1256,7 +1239,8 @@ class Blockchain: NSObject {
             
             guard let btc = UserDefaults.standard.value(forKey: "btcAddress") as? String  else { return }
             guard let eth = UserDefaults.standard.value(forKey: "ethAddress") as? String else { return }
-            guard let ltc = UserDefaults.standard.value(forKey: "ltcAddress") as? String else { return }
+let ltc = "mvQ7SzU6xEXChpuGEFsqPHpzK29vAvnDwA"
+            //            guard let ltc = UserDefaults.standard.value(forKey: "ltcAddress") as? String else { return }
             
             if chainId != "T" {
                 guard UserDefaults.standard.value(forKey: "usdtAddress") != nil  else { return }
@@ -1360,7 +1344,7 @@ class Blockchain: NSObject {
                         }
                     }
                 }
-                crud.request(rURL: crud.getApiURL() + digilira.api.userRegister, postData: try JSONEncoder().encode(user))
+                crud.request(rURL: crud.getApiURL() + digilira.api.userRegister, postData: try JSONEncoder().encode(user), signature: signed.signature)
             } catch  {
                 print(error)
             }
@@ -1423,7 +1407,7 @@ class Blockchain: NSObject {
                     }
                     wavesApiRequest(auth: nil, endpoint:digilira.wavesApiEndpoints.getDeposit, currency: digilira.wavesApiEndpoints.LTC, token: token.accessToken, sender: DepositeAddresses.self) { (address, statusCode) in
                         UserDefaults.standard.set(address.depositAddresses[0], forKey: "ltcAddress")
-                        createUser(seed: seed)
+                        //createUser(seed: seed)
                         print(address.depositAddresses)
                     }
                     if chainId != "T" {

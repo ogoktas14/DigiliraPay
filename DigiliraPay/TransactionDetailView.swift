@@ -150,7 +150,7 @@ class TransactionDetailView: UIView
                     }
                 }
                 
-                crud.request(rURL: crud.getApiURL() + digilira.api.transferGet, postData: try? JSONEncoder().encode(data))
+                crud.request(rURL: crud.getApiURL() + digilira.api.transferGet, postData: try? JSONEncoder().encode(data), signature: data.signed)
                 
                 DispatchQueue.main.async { [self] in
                     delegate?.alertT(message: "Transfer detaylarınız yükleniyor...", title: "Detaylar")
@@ -199,9 +199,9 @@ extension TransactionDetailView: UITableViewDelegate, UITableViewDataSource
             if let cell = UITableViewCell().loadXib(name: "TransactionHistoryDetailCellHeader") as? TransactionHistoryDetailCellHeader {
                 
                 if let t = transaction {
-                    
+                     
                     do {
-                        let coin = try BC.returnAsset(assetId: t.assetId!)
+                        let coin = try BC.returnAsset(assetId: t.assetId)
                         
                         cell.cellImage.image = UIImage(named: coin.tokenSymbol)
                         

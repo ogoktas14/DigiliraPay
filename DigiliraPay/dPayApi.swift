@@ -26,26 +26,29 @@ class digiliraPayApi: NSObject {
     
     var crud = centralRequest()
     var throwEngine = ErrorHandling()
-    
+    var listedTokens = ListedTokens()
+
     func touchID(reason: String) {
         let context = LAContext()
         var error: NSError?
-        UserDefaults.standard.setValue(true, forKey: "biometrics")
+        
         if let isSecure = UserDefaults.standard.value(forKey: "isSecure") as? Bool
         {
             if isSecure == false {
+                UserDefaults.standard.setValue(false, forKey: "biometrics")
                 DispatchQueue.main.async {
                     self.onTouchID!(false, "Fallback authentication mechanism selected.")
                 }
                 return
             }
         } else {
+            UserDefaults.standard.setValue(false, forKey: "biometrics")
             DispatchQueue.main.async {
                 self.onTouchID!(false, "Fallback authentication mechanism selected.")
             }
             return
         }
-        
+        UserDefaults.standard.setValue(true, forKey: "biometrics")
         if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
             context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) {
                 [weak self] success, authenticationError in
@@ -62,6 +65,7 @@ class digiliraPayApi: NSObject {
             }
         } else {
             self.onTouchID!(false, "Fallback authentication mechanism selected.")
+            UserDefaults.standard.setValue(false, forKey: "biometrics")
         }
     }
     
@@ -77,7 +81,7 @@ class digiliraPayApi: NSObject {
         }
     }
     
-    func updateUser(user: Data?) {
+    func updateUser(user: Data?, signature: String) {
         crud.onError = { error, sts in
             self.onUpdate!(false)
         }
@@ -102,10 +106,10 @@ class digiliraPayApi: NSObject {
                 self.onUpdate!(false)
             }
         } 
-        crud.request(rURL: crud.getApiURL() + digilira.api.userUpdate, postData: user, method: req.method.put)
+        crud.request(rURL: crud.getApiURL() + digilira.api.userUpdate, postData: user, method: req.method.put, signature: signature)
     }
     
-    func updateSmartAcountScript(data: Data) {
+    func updateSmartAcountScript(data: Data, signature: String) {
         crud.onError = { error, sts in }
         crud.onResponse = { res, sts in
             if (sts == 200) {
@@ -117,8 +121,8 @@ class digiliraPayApi: NSObject {
         crud.request(rURL: crud.getApiURL() + digilira.api.userUpdate, postData: data, method: req.method.put)
     }
     
-    func saveTransactionTransfer(JSON : Data?) {
-        crud.request(rURL: crud.getApiURL() + digilira.api.transferNew, postData: JSON, isReturn: false)
+    func saveTransactionTransfer(JSON : Data?, signature: String) {
+        crud.request(rURL: crud.getApiURL() + digilira.api.transferNew, postData: JSON, isReturn: false, signature: signature)
     }
     
     func convertImageToBase64String (img: UIImage) -> String {
@@ -172,73 +176,86 @@ class digiliraPayApi: NSObject {
         return res
     }
     
-    func ratePrice(price: Double, asset: String, symbol: digilira.ticker, digits: Int, network: String) throws -> (Double, String, Double) {
-        let double = Double(truncating: pow(10,digits) as NSNumber)
+    func ratePrice(price: Double, asset: digilira.DigiliraPayBalance, symbol: digilira.ticker) throws -> (Double, String, Double) {
+
+        let double = Double(truncating: pow(10,asset.decimal) as NSNumber)
         
-        switch network {
-        case "waves":
-            switch asset {
-            case digilira.bitcoin.tokenName:
+        do {
+            let tokens = try listedTokens.returnAsset(assetId: asset.tokenName)
+            switch asset.network {
+            case "waves":
+                switch tokens.network {
+                case digilira.bitcoinNetwork:
+                    
+                    if let tl = symbol.usdTLPrice {
+                        if let btc = symbol.btcUSDPrice {
+                            let tick = (btc * tl)
+                            let result = price / tick
+                            return (Double(round(double * result)), tokens.token, tick)
+                        }
+                    }
+                case digilira.ethereumNetwork:
+                    if let tl = symbol.usdTLPrice {
+                        if let eth = symbol.ethUSDPrice {
+                            let tick = (eth * tl)
+                            let result = price / tick
+                            return (Double(round(double * result)), tokens.token, tick)
+                        }
+                    }
+                case digilira.wavesNetwork:
+                    
+                    switch tokens.token {
+                    case "WAVES":
+                        if let tl = symbol.usdTLPrice {
+                            if let waves = symbol.wavesUSDPrice {
+                                let tick = (waves * tl)
+                                let result = price / tick
+                                return (Double(round(double * result)), tokens.token, tick)
+                            }
+                        }
+                    default:
+                        let tick = (1.0)
+                        let result = price / tick
+                        return (Double(round(double * result)), tokens.token, tick)
+                    }
+                default:
+                    let tick = (1.0)
+                    let result = price / tick
+                    return (Double(round(double * result)), tokens.token, tick)
+                }
                 
-                if let tl = symbol.usdTLPrice {
-                    if let btc = symbol.btcUSDPrice {
-                        let tick = (btc * tl)
-                        let result = price / tick
-                        return (Double(round(double * result)), digilira.bitcoin.token, tick)
-                    }
-                }
-            case digilira.ethereum.tokenName:
-                if let tl = symbol.usdTLPrice {
-                    if let eth = symbol.ethUSDPrice {
-                        let tick = (eth * tl)
-                        let result = price / tick
-                        return (Double(round(double * result)), digilira.ethereum.token, tick)
-                    }
-                }
-            case digilira.waves.tokenName:
-                if let tl = symbol.usdTLPrice {
-                    if let waves = symbol.wavesUSDPrice {
-                        let tick = (waves * tl)
-                        let result = price / tick
-                        return (Double(round(double * result)), digilira.waves.token, tick)
-                    }
-                }
-            case digilira.tetherWaves.tokenName:
+            case "bitexen":
                 if let usdt = symbol.usdTLPrice {
                     let result = price / usdt
-                    return (Double(round(double * result)), digilira.tetherWaves.token, usdt)
+                    return (Double(round(double * result)), tokens.token, usdt)
                 }
+                break
             default:
-                throw digilira.NAError.emptyAuth
+                break
             }
-            
-        case "bitexen":
-            if let usdt = symbol.usdTLPrice {
-                let result = price / usdt
-                return (Double(round(double * result)), digilira.tetherWaves.token, usdt)
-            }
-            break
-        default:
-            break
+            throw digilira.NAError.emptyAuth
+  
+        } catch {
+            throw digilira.NAError.emptyAuth
         }
-        throw digilira.NAError.emptyAuth
+         throw digilira.NAError.emptyAuth
     }
     
-    func exchange(amount: Int64, coin:digilira.coin, symbol:digilira.ticker) throws -> Double {
+    func exchange(amount: Int64, coin:WavesListedToken, symbol:digilira.ticker) throws -> Double {
         let double = Double(truncating: pow(10,coin.decimal) as NSNumber)
         let amountFloat = Double.init(Double.init(amount) / double)
         
         switch coin.network {
-        case digilira.bitcoin.network:
+        case digilira.bitcoinNetwork:
             return amountFloat  * symbol.btcUSDPrice! * symbol.usdTLPrice!
-        case digilira.ethereum.network:
+        case digilira.ethereumNetwork:
             return amountFloat * symbol.ethUSDPrice! * symbol.usdTLPrice!
-        case digilira.waves.network:
+        case digilira.wavesNetwork:
             switch coin.token {
-            case digilira.waves.token:
+            case "WAVES":
                 return amountFloat * symbol.wavesUSDPrice! * symbol.usdTLPrice!
             default:
-                throw digilira.NAError.emptyAuth
+                return amountFloat * 1
             }
         default:
             throw digilira.NAError.emptyAuth
@@ -490,6 +507,63 @@ extension digiliraPayApi: URLSessionDelegate {
     
 }
 
+class ListedTokens: NSObject {
+    
+    func base64 (data:String) -> String {
+        let attachment =  WavesCrypto.shared.base64decode(input: data)
+        if let a = attachment {
+            if let string = String(bytes: a, encoding: .utf8) {
+                return string
+            }
+        }
+        return "DIGILIRAPAY TRANSFER"
+    }
+    
+    func returnAsset (assetId: String?) throws -> WavesListedToken {
+        
+        var assetId = assetId
+        if assetId == nil {
+            assetId = "WAVES"
+        }
+         
+        do {
+            let tokens = try returnCoins()
+            if let i = tokens.firstIndex(where: { $0.token == assetId || $0.tokenName == assetId || $0.network == assetId }) {
+                let token = tokens[i]
+                return token
+            }
+            throw digilira.NAError.tokenNotFound
+        } catch {
+            throw digilira.NAError.notListedToken
+        }
+    }
+    
+    func returnCoins() throws -> [WavesListedToken] {
+        
+        guard let result = UserDefaults.standard.value(forKey: "listedTokens") as? Data else {
+            throw digilira.NAError.tokenNotFound
+        }
+        
+        let type = try JSONDecoder().decode(WavesDataTransaction.self, from: result)
+       
+        if type.type == "binary" {
+            let d = try JSONDecoder().decode(String.self, from: type.value.data!)
+            let data = d.components(separatedBy: "base64:")
+            let b64 = base64(data: data[1].description)
+            let jsonData = b64.data(using: .utf8)!
+            let decoder = JSONDecoder()
+            
+            do {
+                let wavesListedTokens = try decoder.decode([WavesListedToken].self, from: jsonData)
+                return wavesListedTokens
+            } catch {
+                throw digilira.NAError.tokenNotFound
+            }
+        }
+        throw digilira.NAError.tokenNotFound
+    }
+}
+
 class secretKeys: NSObject {
     let jsonEncoder = JSONEncoder()
     
@@ -618,7 +692,7 @@ class centralRequest: NSObject {
         }
     }
     
-    func request(rURL: String, postData: Data? = nil, urlParams: String? = "", method: String = req.method.post, isReturn: Bool = true) {
+    func request(rURL: String, postData: Data? = nil, urlParams: String? = "", method: String = req.method.post, isReturn: Bool = true, signature: String = "NO-SIG") {
         
         if let url = URL(string: rURL) {
             var request = URLRequest(url: url)
@@ -626,6 +700,8 @@ class centralRequest: NSObject {
             if let json = postData {
                 request.httpBody = json
                 request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+                request.addValue(signature, forHTTPHeaderField: "X-Signature")
+
             }
             if urlParams != "" {
                 request.url?.appendPathComponent(urlParams!, isDirectory: true)

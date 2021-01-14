@@ -32,10 +32,10 @@ class ParaYatirView:UIView {
     weak var delegate: LoadCoinDelegate?
     weak var errors: ErrorsDelegate?
     
-    var Filtered: [digilira.coin] = []
+    var Filtered: [WavesListedToken] = []
     let BC = Blockchain()
     
-    private var selectedCoinX: digilira.coin?
+    private var selectedCoinX: WavesListedToken?
     
     var direction: UISwipeGestureRecognizer.Direction?
     private var decimal: Bool = false
@@ -239,7 +239,6 @@ class ParaYatirView:UIView {
         
     }
     
-    
     @objc func letsGO()
     {
         delegate?.dismissLoadView()
@@ -253,34 +252,10 @@ class ParaYatirView:UIView {
         print(currentPage)
         currentPage = sender.currentPage
         setBalanceView(index: sender.currentPage)
-        setAdress()
+
     }
     
-    func setAdress()  {
-        do {
-            let user = try secretKeys.userData()
-            let coin = Filtered[currentPage].tokenName
-            switch coin {
-            case digilira.bitcoin.tokenName:
-                address1 = user.btcAddress
-                break
-            case digilira.ethereum.tokenName:
-                address1 = user.ethAddress
-                break
-            case digilira.waves.tokenName:
-                address1 = user.wallet
-                assetId = digilira.waves.token
-                break
-            case "digilira":
-                break
-            default:
-                break
-            }
-        } catch {
-            print(error)
-        }
-        
-    }
+
     
     @objc func handleSwipes(_ sender: UISwipeGestureRecognizer)
     {
@@ -317,32 +292,24 @@ class ParaYatirView:UIView {
     func setCoin() throws -> String? {
         let coin = Filtered[currentPage]
         
-        switch coin.tokenName {
-        case digilira.bitcoin.tokenName:
+        switch coin.network {
+        case digilira.bitcoinNetwork:
             let address = kullanici?.btcAddress
             return address
-        case digilira.ethereum.tokenName:
+        case digilira.ethereumNetwork:
             let address = kullanici?.ethAddress
             return address
-        case digilira.waves.tokenName:
-            let address = kullanici?.wallet
-            return address
-        case digilira.litecoinWaves.tokenName:
-            let address = kullanici?.ltcAddress
-            return address
-        case digilira.tetherWaves.tokenName:
-            let address = kullanici?.tetherAddress
-            return address
-        case digilira.wavesWaves.tokenName:
+        case digilira.wavesNetwork:
             let address = kullanici?.wallet
             return address
         default:
-            throw digilira.NAError.notListedToken
+            let address = kullanici?.wallet
+            return address
         }
         
     }
     
-    func setCoinCard(scrollViewSize: UIView, layer: CGFloat, coin:digilira.coin) throws -> UIView {
+    func setCoinCard(scrollViewSize: UIView, layer: CGFloat, coin:WavesListedToken) throws -> UIView {
         ccView = UIView().loadNib(name: "CreditCardView") as! CreditCardView
         let ad = "Satoshi"
         let soyad = "Nakamoto"
@@ -353,14 +320,12 @@ class ParaYatirView:UIView {
             let t = coin.symbol
             
             l1.text = "Minimum yatırma tutarı " + c.description + " "  + t + "'dir. Bu tutarın altındaki yatırma işlemleri iade edilmeyecektir."
-            
-            self.address1 = address
+             
             if let kullanici = kullanici {
                 let name = kullanici.firstName ?? ad
                 let surname =  kullanici.lastName ?? soyad
                 let isim = name + " " + surname
                 if let adres = address {
-                    
                     if let a = generateQRCode(from: coin.network, network: coin.network, address: adres, amount: "0", assetId: coin.token) {
                         ccView.setView(tokenName: coin.tokenName, wallet: address!, qr: a, ad:isim)
                     }
@@ -462,9 +427,14 @@ class ParaYatirView:UIView {
         let assetIdPrefix = "&assetId=".data(using: String.Encoding.ascii)
         var data = string.data(using: String.Encoding.ascii)! + doubleStop! + address.data(using: String.Encoding.ascii)!
         
+        self.address1 = address
+        
         if network == "waves" {
             let assetIdData = assetId.data(using: String.Encoding.ascii)
             data = data + amountPrefix! + miktar.data(using: String.Encoding.ascii)! + assetIdPrefix! + assetIdData!
+            if assetId != "WAVES" {
+                self.address1 = address + "?amount=0&assetId=" + assetId
+            }
         }
         if let filter = CIFilter(name: "CIQRCodeGenerator") {
             filter.setValue(data, forKey: "inputMessage")
@@ -474,12 +444,8 @@ class ParaYatirView:UIView {
                 return UIImage(ciImage: output)
             }
         }
-        
         return nil
     }
-    
-    
-    
 }
 
 class ImageSaver: NSObject {
@@ -491,9 +457,7 @@ class ImageSaver: NSObject {
         print("Save finished!")
     }
 }
-
-
-
+ 
 extension UIView {
     
     func takeScreenshot() -> UIImage {
@@ -515,8 +479,7 @@ extension UIView {
         return UIImage()
     }
 }
-
-
+ 
 extension UITextField {
     func addDoneCancelToolbar(onDone: (target: Any, action: Selector)? = nil, onCancel: (target: Any, action: Selector)? = nil) {
         let onDone = onDone ?? (target: self, action: #selector(doneButtonTapped))
@@ -567,13 +530,10 @@ extension Data {
         return nil
         
     }
-    
-    
+     
     func getDocumentsDirectory() -> NSString {
         let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         let documentsDirectory = paths[0]
         return documentsDirectory as NSString
     }
-    
-    
 }

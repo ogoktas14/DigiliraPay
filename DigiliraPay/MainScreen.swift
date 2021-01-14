@@ -159,12 +159,31 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
 
     func checkEssentials() {
         do {
-            kullanici = try secretKeys.userData()
+            let k = try secretKeys.userData()
+             
+            BC.onWavesDataResponse = { [self] res, sts in
+                switch sts {
+                case 200:
+                    
+                    do {
+                        let dataKey = try crud.decodeDefaults(forKey: res, conformance: WavesDataTransaction.self)
+                        let isauthorized = try crud.decodeDefaults(forKey: dataKey.value.data!, conformance: Int.self)
+                        UserDefaults.standard.set(isauthorized, forKey: "isAuthorized")
+                    } catch {
+                        print(error)
+                    }
+                default:
+                    throwEngine.evaluateError(error: digilira.NAError.anErrorOccured)
+                }
+                print(res,sts)
+            }
+            
+            BC.getDataTrx(key: k.wallet)
             
             if let deviceToken = UserDefaults.standard.value(forKey: "deviceToken") as? String
             {
                 if deviceToken != "" {
-                    if kullanici.apnToken != deviceToken {
+                    if k.apnToken != deviceToken {
                         
                         digiliraPay.onUpdate = {_ in}
                         
@@ -180,11 +199,10 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                                     timestamp: timestamp
                                 )
                                   
-                                digiliraPay.updateUser(user: try JSONEncoder().encode(user))
+                            digiliraPay.updateUser(user: try JSONEncoder().encode(user), signature: sign.signature)
                         } catch { print(error) }
                     }
                 }
-               
             }
             
             if let versionLegal = UserDefaults.standard.value(forKey: "isLegalView") as? Int {
@@ -215,7 +233,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                 }
             }
             
-            switch kullanici.status {
+            switch k.status {
             case 0:
                 profileMenuView.progressView.progress = 0.2
                 profileMenuView.profileWarning.image = UIImage(named: "warning")
@@ -305,7 +323,8 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                                     availableBalance: Int64(Double(bakiye.value.availableBalance)! * double),
                                     decimal: 8,
                                     balance: Int64(Double(bakiye.value.balance)! * double),
-                                    tlExchange: lastPrice, network: "bitexen")
+                                    tlExchange: lastPrice, network: "bitexen",
+                                    wallet: "")
                                 
                                 bitexenBalance += lastPrice
 
@@ -326,8 +345,8 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
             }
         }
         
-        BC.onAssetBalance = { [self] result in
-            construct(result: result)
+        BC.onAssetBalance = { [self] assets, waves in
+            construct(assets: assets, waves:waves)
         }
         
         BC.onTransferTransaction = { res, t in
@@ -377,7 +396,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                 
                 do {
                     let json = try JSONEncoder().encode(t)
-                    self.digiliraPay.saveTransactionTransfer(JSON: json)
+                    self.digiliraPay.saveTransactionTransfer(JSON: json, signature: t.signed)
                 } catch {
                     print(error)
                 }
@@ -423,59 +442,85 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         
     }
     
-    func construct(result: NodeService.DTO.AddressAssetsBalance) {
+    func construct(assets: NodeService.DTO.AddressAssetsBalance, waves: NodeService.DTO.AddressBalance) {
         let ticker = digiliraPay.ticker(ticker: Ticker)
         totalBalance = 0
         Waves.removeAll()
-
-        for asset1 in result.balances {
+        
+        do {
+            let k = try secretKeys.userData()
             
-            do {
-                let asset = try BC.returnAsset(assetId: asset1.assetId)
-                
-                var coinPrice:Double = 0
-                let double = Double(truncating: pow(10,asset.decimal) as NSNumber)
-                
-                switch asset.tokenName {
-                case "Bitcoin":
-                    coinPrice = (ticker.btcUSDPrice)! * (ticker.usdTLPrice)! * Double(asset1.balance) / double
-                    break
-                case "Ethereum":
-                    coinPrice = (ticker.ethUSDPrice)! * (ticker.usdTLPrice)! * Double(asset1.balance) / double
-                    break
-                case "Kızılay":
-                    coinPrice = 1 * Double(asset1.balance) / double
-                    break
-                case "Waves":
-                    coinPrice = (ticker.wavesUSDPrice)! * (ticker.usdTLPrice)! * Double(asset1.balance) / double
-                    break
-                case "Tether USDT":
-                    coinPrice = (ticker.usdTLPrice)! * Double(asset1.balance) / double
-                    break
-                default:
-                    coinPrice = 0
-                    break
+            var wallet = k.wallet
+            let double = Double(truncating: pow(10,8) as NSNumber)
+            let coinPrice = (ticker.wavesUSDPrice)! * (ticker.usdTLPrice)! * Double(waves.balance) / double
+            
+            let digiliraBalance = digilira.DigiliraPayBalance.init(
+                tokenName: "Waves",
+                tokenSymbol: "Waves",
+                availableBalance: waves.balance,
+                decimal: 8,
+                balance: waves.balance,
+                tlExchange: coinPrice,
+                network: "waves",
+                wallet: wallet)
+            
+            totalBalance += coinPrice
+            
+            Waves.append(digiliraBalance)
+
+            for asset1 in assets.balances {
+                do {
+                    let asset = try BC.returnAsset(assetId: asset1.assetId)
+                    var coinPrice:Double = 0
+                    let double = Double(truncating: pow(10,asset.decimal) as NSNumber)
+                    
+                    switch asset.tokenName {
+                    case "Bitcoin":
+                        coinPrice = (ticker.btcUSDPrice)! * (ticker.usdTLPrice)! * Double(asset1.balance) / double
+                        if let w = k.btcAddress {
+                            wallet = w
+                        }
+                        break
+                    case "Ethereum":
+                        coinPrice = (ticker.ethUSDPrice)! * (ticker.usdTLPrice)! * Double(asset1.balance) / double
+                        if let w = k.ethAddress {
+                            wallet = w
+                        }
+                        break
+                    case "Tether US":
+                        coinPrice = (ticker.usdTLPrice)! * Double(asset1.balance) / double
+                        if let w = k.tetherAddress {
+                            wallet = w
+                        }
+                        break
+                    default:
+                        coinPrice = 1
+                        break
+                    }
+                    
+                    let digiliraBalance = digilira.DigiliraPayBalance.init(
+                        tokenName: asset.tokenName,
+                        tokenSymbol: asset1.issueTransaction.name,
+                        availableBalance: asset1.balance,
+                        decimal: asset.decimal,
+                        balance: asset1.balance,
+                        tlExchange: coinPrice,
+                        network: "waves",
+                        wallet: wallet)
+                    
+                    totalBalance += coinPrice
+                    
+                    Waves.append(digiliraBalance)
+                } catch {
+                    throwEngine.evaluateError(error: error)
                 }
                 
-                let digiliraBalance = digilira.DigiliraPayBalance.init(
-                    tokenName: asset.tokenName,
-                    tokenSymbol: asset1.issueTransaction.name,
-                    availableBalance: asset1.balance,
-                    decimal: asset.decimal,
-                    balance: asset1.balance,
-                    tlExchange: coinPrice,
-                    network: "waves")
-                
-                totalBalance += coinPrice
-                
-                Waves.append(digiliraBalance)
-            } catch {
-                throwEngine.evaluateError(error: error)
             }
             
+            loadScreen()
+        } catch  {
+            throwEngine.evaluateError(error: digilira.NAError.anErrorOccured)
         }
-        
-        loadScreen()
     }
     
     func loadScreen() {
@@ -655,54 +700,65 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
     func getOrder(address: digilira.QR) {
                  
         guard let adres = address.address else { return }
-            switch address.network {
-            
-            case digilira.bitcoin.network:
-                let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!, assetId:digilira.bitcoin.token)
-                sendBTCETH(external: external, ticker:digiliraPay.ticker(ticker: Ticker))
-                break
-            case digilira.waves.network:
-                let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!, assetId: address.assetId!)
-                sendBTCETH(external: external, ticker:digiliraPay.ticker(ticker: Ticker))
-                break
-            case digilira.ethereum.network:
-                let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!, assetId:digilira.ethereum.token)
-                sendBTCETH(external: external, ticker:digiliraPay.ticker(ticker: Ticker))
-                break
-            default:
-                crud.onResponse = { [self] data, sts in
-                    DispatchQueue.main.async {
-                        do {
-                            let pm = try crud.decodeDefaults(forKey: data, conformance: PaymentModel.self)
-                            if pm.status == 2 {
-                                self.errorCaution(message: "Bu ödeme kodu daha önce kullanılmış. Lütfen yeni bir QR kod okutunuz.", title: "Hatalı QR Kod")
-                            } else {
-                                self.goPageCardView(ORDER: pm)
-                            }
-                        } catch {
-                            print(error)
-                            self.evaluate(error: digilira.NAError.anErrorOccured)
+        
+        if address.network == "digilirapay" {
+            crud.onResponse = { [self] data, sts in
+                DispatchQueue.main.async {
+                    do {
+                        let pm = try crud.decodeDefaults(forKey: data, conformance: PaymentModel.self)
+                        if pm.status == 2 {
+                            self.errorCaution(message: "Bu ödeme kodu daha önce kullanılmış. Lütfen yeni bir QR kod okutunuz.", title: "Hatalı QR Kod")
+                        } else {
+                            self.goPageCardView(ORDER: pm)
                         }
+                    } catch {
+                        print(error)
+                        self.evaluate(error: digilira.NAError.anErrorOccured)
                     }
                 }
-                do {
-                    let timestamp = Int64(Date().timeIntervalSince1970) * 1000
-                    
-                    let sign = try BC.bytization(["payment", adres, kullanici.id], timestamp)
-                    
-                    let data = digilira.transferGetModel.init(mode: "payment",
-                                                              user: kullanici.id,
-                                                              transactionId: adres,
-                                                              signed: sign.signature,
-                                                              publicKey: sign.publicKey,
-                                                              timestamp: timestamp,
-                                                              wallet: sign.wallet)
-                    
-                    crud.request(rURL: crud.getApiURL() + digilira.api.transferGet, postData: try JSONEncoder().encode(data))
-                } catch {
-                    self.evaluate(error: digilira.NAError.anErrorOccured)
-                }
             }
+            do {
+                let timestamp = Int64(Date().timeIntervalSince1970) * 1000
+                
+                let sign = try BC.bytization(["payment", adres, kullanici.id], timestamp)
+                
+                let data = digilira.transferGetModel.init(mode: "payment",
+                                                          user: kullanici.id,
+                                                          transactionId: adres,
+                                                          signed: sign.signature,
+                                                          publicKey: sign.publicKey,
+                                                          timestamp: timestamp,
+                                                          wallet: sign.wallet)
+                
+                crud.request(rURL: crud.getApiURL() + digilira.api.transferGet, postData: try JSONEncoder().encode(data), signature: sign.signature)
+            } catch {
+                self.evaluate(error: digilira.NAError.anErrorOccured)
+            }
+        } else {
+            do {
+                let token = try BC.returnAsset(assetId: address.network)
+                switch address.network {
+                case digilira.bitcoinNetwork:
+                    let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!, assetId:token.token)
+                    sendBTCETH(external: external, ticker:digiliraPay.ticker(ticker: Ticker))
+                    break
+                case digilira.wavesNetwork:
+                    let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!, assetId: address.assetId!)
+                    sendBTCETH(external: external, ticker:digiliraPay.ticker(ticker: Ticker))
+                    break
+                case digilira.ethereumNetwork:
+                    let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!, assetId:token.token)
+                    sendBTCETH(external: external, ticker:digiliraPay.ticker(ticker: Ticker))
+                    break
+                default:
+                    break
+                }
+            } catch  {
+                print(error)
+            }
+            
+        }
+         
         }
        
     @objc func onDidReceiveData(_ sender: Notification) {
@@ -943,17 +999,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         
         walletView.wallet = kullanici.wallet
         
-        if let isim = kullanici.firstName {
-            walletView.ad_soyad = isim
-            if let soyisim = kullanici.lastName {
-                walletView.ad_soyad = isim + " " + soyisim
-            } else {
-                walletView.ad_soyad = digilira.dummyName
-            } 
-        }else {
-            walletView.ad_soyad = digilira.dummyName
-        }
-        
+        walletView.ad_soyad = getName()
         //walletView.layer.zPosition = 0
         
         walletView.frameValue = walletView.frame
@@ -993,13 +1039,18 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
     func getName() -> String {
         var name: String = digilira.dummyName
         
-        if let n = kullanici.firstName {
-            name = n
-            if let s = kullanici.lastName {
-                name = n + " " + s
+        do {
+            let k = try secretKeys.userData()
+            if let n = k.firstName {
+                name = n
+                if let s = k.lastName {
+                    name = n + " " + s
+                }
             }
+        }catch{
+            return name
         }
-        return name
+        return name 
     }
     
     func setPaymentView() // payments ekranı
@@ -1601,34 +1652,36 @@ extension MainScreen: OperationButtonsDelegate
         newSendMoneyView.delegate = self
         
         newSendMoneyView.Filtered = Waves
-        newSendMoneyView.Coins = BC.returnCoins()
+        
+        do {
+            newSendMoneyView.Coins = try BC.returnCoins()
+        } catch {
+            throwEngine.evaluateError(error: digilira.NAError.tokenNotFound)
+            return
+        }
+        
         newSendMoneyView.Ticker = Ticker
         newSendMoneyView.set()
         
         newSendMoneyView.recipientText.setTitle(transactionRecipient, for: .normal)
-        
-        if let assetId = params.assetId {
-            do {
-                let coin = try BC.returnAsset(assetId: assetId)
-                let double = Double(truncating: pow(10,coin.decimal) as NSNumber)
-                if params.amount != 0 {
-                    newSendMoneyView.textAmount.text = (Double(params.amount!) / double).description
-                }else{
-                    newSendMoneyView.textAmount.text = ""
-                }
-
-            } catch  {
-                print (error)
+         
+        do {
+            let coin = try BC.returnAsset(assetId:  params.assetId)
+            let double = Double(truncating: pow(10,coin.decimal) as NSNumber)
+            if params.amount != 0 {
+                newSendMoneyView.textAmount.text = (Double(params.amount!) / double).description
+            }else{
+                newSendMoneyView.textAmount.text = ""
             }
+        } catch  {
+            print (error)
         }
-        
         
         newSendMoneyView.transaction = params
         newSendMoneyView.setQR()
         if params.destination == digilira.transactionDestination.interwallets {
             newSendMoneyView.recipientText.isEnabled = true
         }
-        
         
         for subView in sendWithQRView.subviews
         { subView.removeFromSuperview() }
@@ -1663,7 +1716,30 @@ extension MainScreen: OperationButtonsDelegate
                                     height: view.frame.height)
         paraYatirView.delegate = self
         paraYatirView.errors = self
-        paraYatirView.Filtered = BC.returnCoins()
+        
+        do {
+            let coins = try BC.returnCoins()
+            var arr:[WavesListedToken] = []
+            
+            if let result = UserDefaults.standard.value(forKey: "isAuthorized") as? Int {
+                for coin in coins {
+                    if coin.role <= result {
+                        arr.append(coin)
+                    }
+                }
+            } else {
+                for coin in coins {
+                    if coin.role <= 200 {
+                        arr.append(coin)
+                    }
+                }
+            }
+            paraYatirView.Filtered = arr
+
+        } catch {
+            throwEngine.evaluateError(error: digilira.NAError.tokenNotFound)
+            return
+        }
         paraYatirView.Ticker = Ticker
         
         for subView in qrView.subviews
@@ -1702,22 +1778,18 @@ extension MainScreen: BitexenAPIDelegate
         menuView.isHidden = false
         dismissKeyboard()
         setPaymentView()
-    }
-    
-    
+    } 
 }
 
 extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları gibi yan menü işlemleri
 {
-    
     func showBitexenView() {
         
         if  !digiliraPay.isKeyPresentInUserDefaults(key: bex.bexApiDefaultKey.key) {
             self.bitexenScreen()
             return
         }
-        
-        
+         
         self.onPinSuccess = { [self] res in
             switch res {
             case true:
@@ -1945,7 +2017,40 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
                                     height: view.frame.height)
         pageCardView.errors = self
         pageCardView.delegate = self
-        pageCardView.Filtered = self.Filtered
+        
+        var doesHave = true
+        var tokenName = ""
+        
+        if let coin = ORDER.currency {
+            doesHave = false
+            do {
+                let asset = try BC.returnAsset(assetId: coin)
+                
+                for item in Filtered {
+                    tokenName = asset.tokenName
+                    if asset.tokenName == item.tokenName {
+                        doesHave = true
+                        let balance = item
+                        pageCardView.Filtered = [balance]
+                    }
+                }
+            } catch {
+                DispatchQueue.main.async { [self] in
+                    errorHandler(message: "Token Desteklenmemektedir.", title: "Token Hatalı", error: true)
+                    return
+                }
+            }
+           
+
+        } else {
+            pageCardView.Filtered = self.Filtered
+        }
+        
+        if !doesHave {
+            errorHandler(message: "Bu ödeme sadece " + tokenName +  " ile yapılabilir. Hesabınızda " + tokenName + " bulunmadığı için ödeme yapamazsınız.", title: "Yetersiz Bakiye", error: true)
+            return
+        }
+         
         pageCardView.Ticker = Ticker
         pageCardView.Order = ORDER
         pageCardView.setTableView()
@@ -1976,13 +2081,10 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         }
         
     }
-    
-    
- 
-    
+     
     func showSuccess(mode: Int, transaction: TransferTransactionModel) {
         do {
-            let asset = try BC.returnAsset(assetId: (transaction.assetID!))
+            let asset = try BC.returnAsset(assetId: transaction.assetID)
             let double = Double(truncating: pow(10,asset.decimal) as NSNumber)
             
             let amount:String = (Double(transaction.amount) / double).description
@@ -2023,7 +2125,6 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         {
             self.shake()
             self.throwEngine.alertWarning(title: "Dikkat", message: "Galeriye erişim izniniz bulunmamaktadır", error: true)
-        
         }
     }
     
@@ -2055,10 +2156,9 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
     }
     
     func sendBTCETH (external: digilira.externalTransaction, ticker: digilira.ticker) {
-        
-        if let asset = external.assetId {
+         
             do {
-                let coin = try BC.returnAsset(assetId: asset)
+                let coin = try BC.returnAsset(assetId: external.assetId)
                 do {
                     let exchange = try digiliraPay.exchange(amount: external.amount!, coin: coin, symbol: digiliraPay.ticker(ticker: Ticker))
                     
@@ -2111,7 +2211,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
             } catch  {
                 print (error)
             }
-        }
+       
         
         
         
@@ -2208,7 +2308,7 @@ extension MainScreen: UIImagePickerControllerDelegate {
                             let encoder = JSONEncoder()
                             let data = try? encoder.encode(user)
                             
-                            digiliraPay.updateUser(user: data)
+                            digiliraPay.updateUser(user: data, signature: sign.signature)
                         }
                     } else {
                         throwEngine.alertWarning(title: "Bir Hata Oluştu", message: "Dosya yüklenemedi. Lütfen tekrar deneyin. Sıkıştırma Hatası", error: true)

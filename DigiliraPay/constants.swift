@@ -141,7 +141,7 @@ struct digilira {
          var decimal: Int
          var network: String
          var tokenSymbol: String
-        var gatewayFee: Double
+         var gatewayFee: Double
     }
     
     struct keychainData {
@@ -152,7 +152,12 @@ struct digilira {
     
     static var demo = ["Bitcoin", "Ethereum", "Waves"]
     static var demoIcon = ["Bitcoin", "Ethereum", "Waves"]
+ 
     
+    static var bitcoinNetwork = "bitcoin"
+    static var ethereumNetwork = "ethereum"
+    static var wavesNetwork = "waves"
+
     static var sponsorToken = "7GnHzTaDe3YbDiCD9rueHiSfPB7hdanPpN4Ab79fJGtD"
     static var paymentToken = "FLsa9hfu1jvXC6jhDP2x6DHHQHK2qiKPtS7D74ZFNsE1"
     static var sponsorTokenFee:Int64 = 9
@@ -178,44 +183,6 @@ struct digilira {
         gatewayFee: 0
     )
     
-    static var ethereumWaves = coin.init(
-        token: "BrmjyAWT5jjr3Wpsiyivyvg5vDuzoX2s93WgiexXetB3",
-        symbol: "ETH",
-        tokenName: "Ethereum",
-        decimal: 8,
-        network: "ethereum",
-        tokenSymbol: "WETH",
-        gatewayFee: 0.01
-    )
-    static var bitcoinWaves = coin.init(
-        token: "DWgwcZTMhSvnyYCoWLRUXXSH1RSkzThXLJhww9gwkqdn",
-        symbol: "BTC",
-        tokenName: "Bitcoin",
-        decimal: 8,
-        network: "bitcoin",
-        tokenSymbol: "WBTC",
-        gatewayFee: 0.001
-    )
-    static var tetherWaves = coin.init(
-        token: "5Sh9KghfkZyhjwuodovDhB6PghDUGBHiAPZ4MkrPgKtX",
-        symbol: "USDT",
-        tokenName: "Tether USD",
-        decimal: 6,
-        network: "ethereum",
-        tokenSymbol: "USDT",
-        gatewayFee: 5
-    )
-    
-    static var litecoinWaves = coin.init(
-        token: "BNdAstuFogzSyN2rY3beJbnBYwYcu7RzTHFjW88g8roK",
-        symbol: "LTC",
-        tokenName: "Litecoin",
-        decimal: 8,
-        network: "litecoin",
-        tokenSymbol: "WLTC",
-        gatewayFee: 0.01
-    )
-    
     static var wavesWaves = coin.init(
         token: "",
         symbol: "Waves",
@@ -228,36 +195,14 @@ struct digilira {
      
     static var gatewayAddress = "3NCpyPuNzUaB7LFS4KBzwzWVnXmjur582oy"
      
-    static var bitcoin = coin.init(token: "EH2Vf6CMjUXht2DxpVdW93eQ53BFeXH3jLxZ8Mtr9bbc",
-                            symbol: "BTC",
-                            tokenName: "Bitcoin",
-                            decimal: 8,
-                            network: "bitcoin",
-                            tokenSymbol: "Bitcoin",
-                            gatewayFee: 0.001)
-    
-    static var ethereum = coin.init(token: "3JjZyNi8YmCjV4dpxeBjEZWDbLBZDbwLTYCak29TRG3N",
-                            symbol: "ETH",
-                            tokenName: "Ethereum",
-                            decimal: 8,
-                            network: "ethereum",
-                            tokenSymbol: "Ethereum",
-                            gatewayFee: 0.01)
-     
-    static var waves = coin.init(token: "HBWKvaSEkqmL9u7emE5Hqp5NtSuCLTBANtF1csS3vHvV",
+    static var waves = coin.init(token: "",
                             symbol: "WAVES",
                             tokenName: "Waves",
                             decimal: 8,
                             network: "waves",
                             tokenSymbol: "Waves",
                             gatewayFee: 0)
-//    
-//    static var charity = coin.init(token: "2CrDXATWpvrriHHr1cVpQM65CaP3m7MJ425xz3tn9zMr",
-//                            symbol: "KZY",
-//                            tokenName: "Kızılay",
-//                            decimal: 8,
-//                            network: "waves",
-//                            tokenSymbol: "D-Aid") 
+//
  
     struct transactionDestination {
         static let domestic = "domestic"
@@ -404,11 +349,12 @@ struct digilira {
         let v: Int?
         let appV: Double?
         let id1: String?
+        var isAuthorized: Int?
 
         enum CodingKeys: String, CodingKey {
             case userRole, status, pincode, imported, apnToken
             case id = "_id"
-            case lastName, firstName, wallet, btcAddress, ethAddress, tetherAddress, ltcAddress, createdDate, appV, id1, dogum, tcno, tel, mail
+            case lastName, firstName, wallet, btcAddress, ethAddress, tetherAddress, ltcAddress, createdDate, appV, id1, dogum, tcno, tel, mail, isAuthorized
             case v = "__v"
         }
     }
@@ -440,6 +386,7 @@ struct digilira {
         let balance: Int64
         let tlExchange: Double
         let network: String
+        let wallet: String
     }
  
     

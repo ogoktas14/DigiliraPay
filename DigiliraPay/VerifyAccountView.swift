@@ -195,7 +195,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
                         let encoder = JSONEncoder()
                         let data = try? encoder.encode(user)
                         
-                        digiliraPay.updateUser(user: data)
+                        digiliraPay.updateUser(user: data, signature: sign.signature)
                     }
                 } 
                 

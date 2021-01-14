@@ -12,7 +12,7 @@ import UIKit
 
 class BalanceCard: UIView {
     
-   @IBOutlet weak var onBoardingDesc: UILabel!
+    @IBOutlet weak var onBoardingDesc: UILabel!
     @IBOutlet weak var balanceTL: UILabel!
     @IBOutlet weak var balanceTLicon: UILabel!
     @IBOutlet weak var totalTitle: UILabel!
