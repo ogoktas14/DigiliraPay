@@ -93,16 +93,17 @@ class TransactionDetailView: UIView
     }
     
     @objc func getOr(recognizer: MyTapGesture) {
-        if recognizer.qrAttachment == "-" {
+        if recognizer.qrAttachment == "Diğer" {
             generator.notificationOccurred(.error)
+            return
         }
         
         crud.onError = { [self] error, sts in
             delegate?.alertEr(error: error)
         }
-        
         let timestamp = Int64(Date().timeIntervalSince1970) * 1000
-        if let kullanici = try? secretKeys.userData() {
+        do {
+            let k = try secretKeys.userData()
             
             var tid = recognizer.qrAttachment
             if recognizer.qrAttachment == "DIGILIRAPAY TRANSFER" {
@@ -110,11 +111,11 @@ class TransactionDetailView: UIView
                 recognizer.assetName = "transfer"
             }
             
-            if let sign = try? BC.bytization([recognizer.assetName, tid, kullanici.id], timestamp) {
+            let sign = try BC.bytization([recognizer.assetName, tid, k.id], timestamp)
                 
                 generator.notificationOccurred(.success)
                 let data = digilira.transferGetModel.init(mode: recognizer.assetName,
-                                                          user: kullanici.id,
+                                                          user: k.id,
                                                           transactionId: tid,
                                                           signed: sign.signature,
                                                           publicKey: sign.publicKey,
@@ -122,7 +123,7 @@ class TransactionDetailView: UIView
                 
                 crud.onResponse = { data, sts in
                     DispatchQueue.main.async { [self] in
-                        
+
                         switch recognizer.assetName {
                         case "transfer":
                             do {
@@ -143,6 +144,7 @@ class TransactionDetailView: UIView
                                 
                             } catch {
                                 print (error)
+                                delegate?.alertEr(error: digilira.NAError.anErrorOccured)
                             }
                         default:
                             break
@@ -154,10 +156,13 @@ class TransactionDetailView: UIView
                 
                 DispatchQueue.main.async { [self] in
                     delegate?.alertT(message: "Transfer detaylarınız yükleniyor...", title: "Detaylar")
-                    
-                }
+                
             }
+        } catch {
+            delegate?.alertEr(error: digilira.NAError.anErrorOccured)
         }
+        
+
     }
 
     @IBAction func slideGesture(_ sender: UIPanGestureRecognizer)
@@ -240,10 +245,14 @@ extension TransactionDetailView: UITableViewDelegate, UITableViewDataSource
                     case 3:
                         cell.setView(image: UIImage(named: "time")!, title: "İşlem Zamanı", detail: t.timestamp!)
                     case 4:
-                        cell.setView(image: UIImage(named: "verifying")!, title: "Detaylar", detail: t.attachment ?? "-" )
+                        cell.setView(image: UIImage(named: "verifying")!, title: "Detaylar İçin Tıklayın", detail: t.attachment ?? "Diğer" )
+                        
+                        if (t.attachment == "Diğer") {
+                            cell.setView(image: UIImage(named: "verifying")!, title: "İşlem Türü", detail: t.attachment ?? "Diğer" )
+                        }
                         
                         let tapped = MyTapGesture.init(target: self, action: #selector(getOr))
-                        tapped.qrAttachment = t.attachment ?? "-"
+                        tapped.qrAttachment = t.attachment ?? "Diğer"
                         
                         tapped.trxId = t.id!
                         if t.attachment == "DIGILIRA TRANSFER" {
@@ -251,7 +260,6 @@ extension TransactionDetailView: UITableViewDelegate, UITableViewDataSource
                         }
                         tapped.assetName = "payment"
                         cell.addGestureRecognizer(tapped)
-                        
                         
                     case 5:
                         break

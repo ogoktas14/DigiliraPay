@@ -21,12 +21,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="378" height="25"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Semaver" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aXv-E5-Y25">
-                                <rect key="frame" x="20" y="3" width="54" height="19.5"/>
+                                <rect key="frame" x="20" y="3" width="277" height="19.5"/>
                                 <fontDescription key="fontDescription" name="Avenir-Light" family="Avenir" pointSize="14"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="₺129.90" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wUk-6N-Ykj">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="₺129.90" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wUk-6N-Ykj">
                                 <rect key="frame" x="307" y="3" width="51" height="19.5"/>
                                 <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="14"/>
                                 <nil key="textColor"/>
@@ -45,6 +45,7 @@
                             <constraint firstItem="aXv-E5-Y25" firstAttribute="centerY" secondItem="hFG-hZ-8lP" secondAttribute="centerY" id="36b-Z3-Tev"/>
                             <constraint firstItem="dxq-Ji-tiO" firstAttribute="centerX" secondItem="hFG-hZ-8lP" secondAttribute="centerX" id="Kad-oB-k5e"/>
                             <constraint firstAttribute="trailing" secondItem="wUk-6N-Ykj" secondAttribute="trailing" constant="20" id="LSy-Fm-PGO"/>
+                            <constraint firstItem="wUk-6N-Ykj" firstAttribute="leading" secondItem="aXv-E5-Y25" secondAttribute="trailing" constant="10" id="MtA-aT-gRs"/>
                             <constraint firstItem="wUk-6N-Ykj" firstAttribute="centerY" secondItem="aXv-E5-Y25" secondAttribute="centerY" id="U1g-ID-Lhp"/>
                             <constraint firstItem="dxq-Ji-tiO" firstAttribute="centerY" secondItem="aXv-E5-Y25" secondAttribute="centerY" id="cZ2-KB-iSw"/>
                             <constraint firstItem="aXv-E5-Y25" firstAttribute="leading" secondItem="hFG-hZ-8lP" secondAttribute="leading" constant="20" id="g2u-fL-4Cc"/>

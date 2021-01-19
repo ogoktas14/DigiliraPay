@@ -29,14 +29,11 @@ struct digilira {
         static let urlMainnet = "https://server1.digilirapay.com/v7"
                 
         static let transferGet = "/transfer/get"
-        static let transferPrefix = "transfer/"
-        static let paymentPrefix = "payment/"
         static let isOurMember = "/transfer/recipient"
         static let transferNew = "/transfer/create/new"
-        static let userRegister =  "/users/register"
         
+        static let userRegister =  "/users/register"
         static let userUpdate =  "/users/update/me"
-        static let auth =  "/users/authenticate" 
     }
     
     struct node {
@@ -182,17 +179,7 @@ struct digilira {
         tokenSymbol: "D-Pay",
         gatewayFee: 0
     )
-    
-    static var wavesWaves = coin.init(
-        token: "",
-        symbol: "Waves",
-        tokenName: "Waves",
-        decimal: 8,
-        network: "waves",
-        tokenSymbol: "WAVES",
-        gatewayFee: 0
-    )
-     
+
     static var gatewayAddress = "3NCpyPuNzUaB7LFS4KBzwzWVnXmjur582oy"
      
     static var waves = coin.init(token: "",

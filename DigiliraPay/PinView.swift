@@ -23,7 +23,8 @@ class PinView: UIView {
     @IBOutlet weak var pinArea2Label: UILabel!
     @IBOutlet weak var pinArea3Label: UILabel!
     @IBOutlet weak var pinArea4Label: UILabel!
-    
+    @IBOutlet weak var entryAreaView: UIStackView!
+
     @IBOutlet weak var goBackButtonView: UIView!
     
     let generator = UINotificationFeedbackGenerator()
@@ -50,12 +51,57 @@ class PinView: UIView {
         
     var QR:String?
     let BC = Blockchain()
+    
+    func compareHashPressed(pin: String, bcrypt: String) -> Bool {
+        if firstCode == lastCode
+        {
+            do {
+                let bcrpyt = try createHashPressed(pin: lastCode)
+                delegate?.updatePinCode(code: bcrpyt)
+            } catch  {
+                print (error)
+            }
+            delegate?.closePinView()
+            return true
+        }
+        
+        if let compare = BCryptSwift.verifyPassword(pin, matchesHash: bcrypt) {
+                if compare {
+                    return true
+                }
+                else {
+                    return false
+                }
+            }
+            else {
+                return false
+            }
+        }
 
+    func generateSalt() -> String {
+        let rounds : Int = Int(5)
+        
+        var salt : String
+        if rounds >= 4 && rounds <= 31 {
+            salt = BCryptSwift.generateSaltWithNumberOfRounds(UInt(rounds))
+        }
+        else {
+            salt = BCryptSwift.generateSalt()
+        }
+        
+        return salt
+    }
+    
+    func createHashPressed(pin: String) throws -> String {
+        if let hash = BCryptSwift.hashPassword(pin, withSalt: self.generateSalt()) {
+            return hash
+        }
+        throw digilira.NAError.anErrorOccured
+    }
 
     override func awakeFromNib()
     { 
         setView()
-        
         digiliraPay.onTouchID = { res, err in
             if res == true {
                 self.delegate?.closePinView()
@@ -140,16 +186,24 @@ class PinView: UIView {
         else if !entered[3]
         {
             pinArea4Label.text = String(number)
-            UIView.animate(withDuration: 0.3) {
-                self.pinArea4.alpha = 0
-                self.pinArea4Label.isHidden = false
+            entryAreaView.isUserInteractionEnabled = false
+
+            UIView.animate(withDuration: 0.3, animations: {
+                self.pinArea4.alpha = 1
+                self.pinArea4.backgroundColor = self.enteredColor
+
+                self.pinArea4Label.isHidden = true
                 
                 self.pinArea3.backgroundColor = self.enteredColor
                 self.pinArea3.alpha = 1
                 self.pinArea3Label.isHidden = true
-            }
-            entered[3] = true
-            if isVerify { checkVerify() }
+            }, completion: { [self]_ in
+                entered[3] = true
+                if isVerify {
+                    checkVerify()
+                }
+            })
+
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 if self.entered[3] { self.goVerify() }
                 
@@ -192,6 +246,8 @@ class PinView: UIView {
     func goVerify()
     {
         if !isVerify {
+            entryAreaView.isUserInteractionEnabled = true
+
             titleLabel.text = "Pini Doğrulayın"
         }
         entered = [false, false, false, false]
@@ -227,8 +283,8 @@ class PinView: UIView {
    
         
         }
-        if firstCode == lastCode
-        {
+        
+        if compareHashPressed(pin: firstCode, bcrypt: lastCode) {
             if (isTouchIDCanceled) {
                 isTouchIDCanceled = false
                 isUpdateMode = false
@@ -241,14 +297,13 @@ class PinView: UIView {
                 delegate?.closePinView()
             } else {
                 if !isUpdateMode {
-                    delegate?.closePinView()
-                    delegate?.updatePinCode(code: Int32(lastCode)!)
                     return
                 }
             }
             
             if isUpdateMode {
                 goVerify()
+                entryAreaView.isUserInteractionEnabled = true
 
                 firstCode.removeAll()
                 titleLabel.text = "Yeni Pin Belirleyin"
@@ -256,10 +311,9 @@ class PinView: UIView {
                 lastCode.removeAll()
                 isUpdateMode=false
             }
-            
-        }
-        else
-        {
+        } else {
+            entryAreaView.isUserInteractionEnabled = true
+
             if wrongEntry > 4 {
                     wrongEntry = 0
                     if (!isTouchIDCanceled) {
@@ -273,7 +327,7 @@ class PinView: UIView {
                                 self.isVerify = false
                                 self.lastCode.removeAll()
                                 self.isUpdateMode=false
-                            } 
+                            }
                         }
                         
                         digiliraPay.touchID(reason: "Transferin gerçekleşebilmesi için biometrik onayınız gerekmektedir!")
@@ -300,6 +354,7 @@ class PinView: UIView {
              
             }
         }
+ 
     }
     
     func deletePin()

@@ -360,6 +360,7 @@
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="VT8-xU-4Ke" secondAttribute="trailing" constant="40" id="xP1-xj-xpK"/>
             </constraints>
             <connections>
+                <outlet property="entryAreaView" destination="VT8-xU-4Ke" id="kPy-eG-U67"/>
                 <outlet property="goBackButtonView" destination="6y4-Hf-T5V" id="Al6-aZ-haa"/>
                 <outlet property="pinArea1" destination="9o2-eB-b19" id="hVN-l9-0su"/>
                 <outlet property="pinArea1Label" destination="F86-oS-Mfz" id="JSN-fy-aTo"/>

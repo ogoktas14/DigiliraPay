@@ -96,8 +96,8 @@ class LetsStartWordsView: UIView {
         do {
             let loginCredits = try secretKeys.LocksmithLoad(forKey: sensitiveSource, conformance: digilira.login.self)
             let seed = loginCredits.seed
-            let fullNameArr : [String] = seed.components(separatedBy: " ")
-            
+            var fullNameArr : [String] = seed.components(separatedBy: " ")
+            fullNameArr.shuffle()
             for i in 0..<15 {
                 self.labelArray[i].text = fullNameArr[i]
             }

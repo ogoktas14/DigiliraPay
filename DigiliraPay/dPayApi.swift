@@ -122,7 +122,18 @@ class digiliraPayApi: NSObject {
     }
     
     func saveTransactionTransfer(JSON : Data?, signature: String) {
-        crud.request(rURL: crud.getApiURL() + digilira.api.transferNew, postData: JSON, isReturn: false, signature: signature)
+        crud.onError = { error, sts in }
+        crud.onResponse = { res, sts in
+            if (sts == 200) {
+                var jsonResponse = try! JSONSerialization.jsonObject(with: res) as! Dictionary<String, AnyObject>
+
+                print(jsonResponse)
+            }else {
+                print("fail")
+            }
+        }
+        
+        crud.request(rURL: crud.getApiURL() + digilira.api.transferNew, postData: JSON, isReturn: true, signature: signature)
     }
     
     func convertImageToBase64String (img: UIImage) -> String {

@@ -103,8 +103,11 @@
 		93757C2E256E55AF0066A7B9 /* BalanceCard.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93757C2D256E55AF0066A7B9 /* BalanceCard.xib */; };
 		93757C31256E560B0066A7B9 /* BalanceCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93757C30256E560B0066A7B9 /* BalanceCard.swift */; };
 		938BC119258FB4FB007DAC3B /* MainScreenExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938BC118258FB4FB007DAC3B /* MainScreenExt.swift */; };
+		9392BABB25B30FF10003EED7 /* SecurityMeasures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9392BABA25B30FF10003EED7 /* SecurityMeasures.swift */; };
 		939FD249258BA69D00964E97 /* TransferConfirmationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 939FD248258BA69D00964E97 /* TransferConfirmationView.xib */; };
 		93A3CC33258C7F5900E89E6E /* TransferConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A3CC32258C7F5900E89E6E /* TransferConfirmationView.swift */; };
+		93ADF2A425B08ED3006978DF /* BCryptSwiftRandom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93ADF2A325B08ED3006978DF /* BCryptSwiftRandom.swift */; };
+		93ADF2A925B08EFC006978DF /* BCrpytSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93ADF2A825B08EFC006978DF /* BCrpytSwift.swift */; };
 		93B7A11B252F0D8000C89E66 /* PaymentCategories.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93B7A11A252F0D8000C89E66 /* PaymentCategories.xib */; };
 		93B7A11E252F0F0A00C89E66 /* PaymentCategories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93B7A11D252F0F0A00C89E66 /* PaymentCategories.swift */; };
 		93BB06D2259FD6E2000E4BBB /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 93BB06D0259FD6E2000E4BBB /* Interface.storyboard */; };
@@ -278,8 +281,11 @@
 		93757C2D256E55AF0066A7B9 /* BalanceCard.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BalanceCard.xib; sourceTree = "<group>"; };
 		93757C30256E560B0066A7B9 /* BalanceCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceCard.swift; sourceTree = "<group>"; };
 		938BC118258FB4FB007DAC3B /* MainScreenExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenExt.swift; sourceTree = "<group>"; };
+		9392BABA25B30FF10003EED7 /* SecurityMeasures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityMeasures.swift; sourceTree = "<group>"; };
 		939FD248258BA69D00964E97 /* TransferConfirmationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransferConfirmationView.xib; sourceTree = "<group>"; };
 		93A3CC32258C7F5900E89E6E /* TransferConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferConfirmationView.swift; sourceTree = "<group>"; };
+		93ADF2A325B08ED3006978DF /* BCryptSwiftRandom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BCryptSwiftRandom.swift; sourceTree = "<group>"; };
+		93ADF2A825B08EFC006978DF /* BCrpytSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BCrpytSwift.swift; sourceTree = "<group>"; };
 		93B7A11A252F0D8000C89E66 /* PaymentCategories.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentCategories.xib; sourceTree = "<group>"; };
 		93B7A11D252F0F0A00C89E66 /* PaymentCategories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCategories.swift; sourceTree = "<group>"; };
 		93BB06CE259FD6E2000E4BBB /* WatchDP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WatchDP.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -330,6 +336,9 @@
 			isa = PBXGroup;
 			children = (
 				006B1EE5234CC25B0045B6B4 /* custom.swift */,
+				93ADF2A325B08ED3006978DF /* BCryptSwiftRandom.swift */,
+				93ADF2A825B08EFC006978DF /* BCrpytSwift.swift */,
+				9392BABA25B30FF10003EED7 /* SecurityMeasures.swift */,
 			);
 			name = custom;
 			sourceTree = "<group>";
@@ -830,6 +839,7 @@
 				936F25B425323B2E00C5FA85 /* ColoredCardView.swift in Sources */,
 				93F79FD7257E1139006DC148 /* ParaYatirView.swift in Sources */,
 				93F79FE62580F89D006DC148 /* HeaderExitView.swift in Sources */,
+				93ADF2A425B08ED3006978DF /* BCryptSwiftRandom.swift in Sources */,
 				9317703225946CB400A6EC5F /* TransferModel.swift in Sources */,
 				882AAB0722FC96DD004CDAA6 /* OnBoardingVC.swift in Sources */,
 				934F3C4825889950007CFC19 /* string.tr.swift in Sources */,
@@ -843,6 +853,7 @@
 				934F3C53258A4C37007CFC19 /* SendMoneyCard.swift in Sources */,
 				889F2A272316D8D400ACD656 /* Languages.swift in Sources */,
 				88CA9377231A488A008F894B /* TransactionHistoryDetailCellHeader.swift in Sources */,
+				9392BABB25B30FF10003EED7 /* SecurityMeasures.swift in Sources */,
 				93757C2B256E3FDC0066A7B9 /* PageCardView.swift in Sources */,
 				888F26B3233E9DF700AB7E4C /* PinViewDelegate.swift in Sources */,
 				93A3CC33258C7F5900E89E6E /* TransferConfirmationView.swift in Sources */,
@@ -861,6 +872,7 @@
 				88CA9381231A4B04008F894B /* UIScrollViewExtensions.swift in Sources */,
 				93534F1B2549851A0000329F /* BitexenAPIView.swift in Sources */,
 				889F2A2523158D5400ACD656 /* ProfileMenuView.swift in Sources */,
+				93ADF2A925B08EFC006978DF /* BCrpytSwift.swift in Sources */,
 				88114F6A2321703800AB3B5A /* SendWithQrDelegate.swift in Sources */,
 				88CA93612319741A008F894B /* MenuViewDelegate.swift in Sources */,
 				880664EF22FEFF5B00C4DF69 /* OnBoardingView.swift in Sources */,
@@ -946,6 +958,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				APPLICATION_EXTENSION_API_ONLY = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1009,6 +1022,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				APPLICATION_EXTENSION_API_ONLY = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1069,7 +1083,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 86;
+				CURRENT_PROJECT_VERSION = 87;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;
@@ -1094,7 +1108,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPayRelease.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 86;
+				CURRENT_PROJECT_VERSION = 87;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;
@@ -1117,7 +1131,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 86;
+				CURRENT_PROJECT_VERSION = 87;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = "WatchDP Extension/Info.plist";
@@ -1141,7 +1155,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 86;
+				CURRENT_PROJECT_VERSION = 87;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = "WatchDP Extension/Info.plist";
@@ -1167,7 +1181,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 86;
+				CURRENT_PROJECT_VERSION = 87;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				ENABLE_BITCODE = YES;
 				IBSC_MODULE = WatchDP_Extension;
@@ -1189,7 +1203,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 86;
+				CURRENT_PROJECT_VERSION = 87;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				ENABLE_BITCODE = YES;
 				IBSC_MODULE = WatchDP_Extension;

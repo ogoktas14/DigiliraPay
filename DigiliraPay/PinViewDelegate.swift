@@ -10,7 +10,7 @@ import Foundation
 
 protocol PinViewDelegate: class {
     func closePinView()
-    func updatePinCode(code:Int32)
+    func updatePinCode(code:String)
     func pinSuccess(res:Bool)
 }
 

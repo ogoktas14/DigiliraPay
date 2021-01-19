@@ -15,22 +15,30 @@ private enum Constants {
 
 
 class trxLabel: UILabel {
-    
-    
-    
+     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         initializeLabel()
     }
     
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        initializeLabel()
+    }
+    
     func initializeLabel() {
-        
-        let radius = CGFloat(10)
-        
-        self.layer.masksToBounds = false
-        self.layer.cornerRadius = radius
+         
+                
+        self.layer.masksToBounds = true
+         
+        self.layer.shadowColor = UIColor.gray.cgColor
+        self.layer.backgroundColor = UIColor.lightGray.cgColor
+        self.layer.shadowRadius = 2.0
+        self.layer.shadowOpacity = 0.3
+        self.layer.shadowOffset = CGSize(width: 1, height: 1)
+        self.layer.masksToBounds = true
+        self.layer.cornerRadius = 10
 
-        
         
     }
     

@@ -168,17 +168,7 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
     }
     override func viewDidAppear(_ animated: Bool) {
         setScrollView()
-        setLetsGoView()
-        self.onBoardingScrollView.scrollToPage(index: 2)
-
-        UIView.animate(withDuration: 1, delay: 2, animations: {
-            self.onBoardingScrollView.scrollToPage(index: 0)
-
-        }, completion: {_ in
-
-        })
-       
-         
+        setLetsGoView()         
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle

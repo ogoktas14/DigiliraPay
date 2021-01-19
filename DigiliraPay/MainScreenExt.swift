@@ -10,6 +10,35 @@ import Foundation
 import UIKit
 
 
+extension MainScreen: SeedBackupDelegate
+{
+    func dismissSeedBackup() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.sendWithQRView.frame.origin.y = self.view.frame.height
+        }, completion: {_ in
+            for subView in self.sendWithQRView.subviews
+            { subView.removeFromSuperview() }
+        })
+    }
+    
+    func seedBackedUp() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.sendWithQRView.frame.origin.y = self.view.frame.height
+        }, completion: { [self]_ in
+            for subView in self.sendWithQRView.subviews
+            { subView.removeFromSuperview() }
+            throwEngine.alertWarning(title: "Yedekleme Tamamlandı", message: "Anahtar kelimeleriniz başarıyla yedeklendi.", error: false)
+            UserDefaults.standard.set(true, forKey: "seedRecovery")
+            checkEssentials()
+        })
+    }
+    
+    func alertSomething(title: String, message: String) {
+        throwEngine.alertCaution(title: title, message: message)
+    }
+    
+}
+
 extension MainScreen: NewCoinSendDelegate
 {
     func dismissNewSend()
@@ -151,52 +180,60 @@ extension MainScreen: PinViewDelegate
 {
     func openPinView()
     {
-        closeProfileView()
-        for view in sendWithQRView.subviews
-        { view.removeFromSuperview() }
-        sendWithQRView.translatesAutoresizingMaskIntoConstraints = true
-        let pinView = UIView().loadNib(name: "PinView") as! PinView
         
-        if isTouchIDCanceled {
-            pinView.isTouchIDCanceled = true
-            self.isTouchIDCanceled = false
-        }
-        
-        if !isNewPin {
+        do {
+            let k: digilira.auth = try secretKeys.userData()
             
-            if kullanici.pincode != "-1" {
+            closeProfileView()
+            for view in sendWithQRView.subviews
+            { view.removeFromSuperview() }
+            sendWithQRView.translatesAutoresizingMaskIntoConstraints = true
+            let pinView = UIView().loadNib(name: "PinView") as! PinView
+            
+            if isTouchIDCanceled {
+                pinView.isTouchIDCanceled = true
+                self.isTouchIDCanceled = false
+            }
+            
+            if !isNewPin {
                 
-                pinView.isEntryMode = true
+                if k.pincode != "-1" {
+                    
+                    pinView.isEntryMode = true
+                }else {
+                    self.throwEngine.alertWarning(title: "Pin Oluşturun", message: "Ödeme yapabilmek ve kripto varlıklarınızı transfer edebilmek için bir pin kodu oluşturmanız gerekmektedir.", error: false)
+                    
+                    pinView.isInit = true
+                }
             }else {
-                self.throwEngine.alertWarning(title: "Pin Oluşturun", message: "Ödeme yapabilmek ve kripto varlıklarınızı transfer edebilmek için bir pin kodu oluşturmanız gerekmektedir.", error: false)
                 
-                pinView.isInit = true
-            }
-        }else {
-            
-            if kullanici.pincode != "-1" {
-                pinView.isEntryMode = false
-                pinView.isUpdateMode = true
-            }else{
-                self.throwEngine.alertWarning(title: "Pin Oluşturun", message: "Ödeme yapabilmek ve kripto varlıklarınızı transfer edebilmek için bir pin kodu oluşturmanız gerekmektedir.", error: false)
+                if k.pincode != "-1" {
+                    pinView.isEntryMode = false
+                    pinView.isUpdateMode = true
+                }else{
+                    self.throwEngine.alertWarning(title: "Pin Oluşturun", message: "Ödeme yapabilmek ve kripto varlıklarınızı transfer edebilmek için bir pin kodu oluşturmanız gerekmektedir.", error: false)
+                    
+                    pinView.isInit = true
+                }
                 
-                pinView.isInit = true
             }
+            pinView.setCode()
             
+            pinView.delegate = self
+            pinView.frame = CGRect(x: 0,
+                                   y: 0,
+                                   width: sendWithQRView.frame.width,
+                                   height: sendWithQRView.frame.height)
+            sendWithQRView.addSubview(pinView)
+            sendWithQRView.isHidden = false
+            UIView.animate(withDuration: 0.4) {
+                self.sendWithQRView.frame.origin.y = 0
+                self.sendWithQRView.alpha = 1
+            }
+        } catch {
+            throwEngine.evaluateError(error: digilira.NAError.emptyAuth)
         }
-        pinView.setCode()
         
-        pinView.delegate = self
-        pinView.frame = CGRect(x: 0,
-                               y: 0,
-                               width: sendWithQRView.frame.width,
-                               height: sendWithQRView.frame.height)
-        sendWithQRView.addSubview(pinView)
-        sendWithQRView.isHidden = false
-        UIView.animate(withDuration: 0.4) {
-            self.sendWithQRView.frame.origin.y = 0
-            self.sendWithQRView.alpha = 1
-        }
     }
     
     func pinSuccess(res: Bool) {
@@ -204,7 +241,7 @@ extension MainScreen: PinViewDelegate
     }
     
     func closePinView() {
-        curtain.isHidden = true
+        
         
         self.isPinEntered = true
         self.onB!()
@@ -237,7 +274,7 @@ extension MainScreen: PinViewDelegate
         menuView.isHidden = false
     }
     
-    func updatePinCode (code:Int32) {
+    func updatePinCode (code:String) {
         let timestamp = Int64(Date().timeIntervalSince1970) * 1000
  
         do {
@@ -526,6 +563,7 @@ extension MainScreen: LetsStartSkipDelegate {
             self.sendWithQRView.frame.origin.y = self.self.view.frame.height
             self.sendWithQRView.alpha = 0
         }
+        
     }
     
     

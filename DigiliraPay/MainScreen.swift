@@ -175,7 +175,6 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                 default:
                     throwEngine.evaluateError(error: digilira.NAError.anErrorOccured)
                 }
-                print(res,sts)
             }
             
             BC.getDataTrx(key: k.wallet)
@@ -290,11 +289,16 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         self.onB = { [self] in
             if (isBitexenReload && isWavesReloaded && isPinEntered) {
                 
+                if let isVerified = UserDefaults.standard.value(forKey: "seedRecovery") as? Bool {
+                    if !isVerified {
+                        throwEngine.alertCaution(title: "Anahtar Kelimeler", message: "Anahtar kelimelerinizi sizden başka kimse bilemez. Buna biz de dahiliz. Lütfen anahtar kelimelerinizi yedekleyin. Bu uyarıyı almak istemiyorsanız anahtar kelimelerinizi yedeklemeniz gerekmektedir.")
+                    }
+                }
                 if let qr = decodeDefaults(forKey: "QRARRAY2", conformance: digilira.QR.self, setNil: true) {
                     QR = qr
                     self.getOrder(address: QR)
                 }
-                
+                curtain.isHidden = true
                 isBitexenReload = false
                 isWavesReloaded = false
                 Filtered.removeAll()
@@ -996,7 +1000,6 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                                   width: contentView.frame.width,
                                   height: contentView.frame.height)
         
-        
         walletView.wallet = kullanici.wallet
         
         walletView.ad_soyad = getName()
@@ -1601,17 +1604,22 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         { view.removeFromSuperview() }
         self.sendWithQRView.translatesAutoresizingMaskIntoConstraints = true
 
-        let letsStartView4: Verify_StartView = UIView().loadNib(name: "Verify&StartView") as! Verify_StartView
+        let headerExitView: HeaderExitView = UIView().loadNib(name: "HeaderExitView") as! HeaderExitView
 
-        letsStartView4.delegate = self
-        letsStartView4.frame = CGRect(x: 0,
+        headerExitView.delegate = self
+        headerExitView.frame = CGRect(x: 0,
                                       y: 0,
                                       width: self.view.frame.width,
                                       height: self.view.frame.height)
         
-        letsStartView4.backgroundColor = UIColor.white
+        headerExitView.backgroundColor = UIColor.white
+        
+        if let isBackuped = UserDefaults.standard.value(forKey: "seedRecovery") as? Bool {
+            headerExitView.isVerified = isBackuped
+        }
 
-        self.sendWithQRView.addSubview(letsStartView4)
+        headerExitView.start()
+        self.sendWithQRView.addSubview(headerExitView)
         self.sendWithQRView.isHidden = false
         UIView.animate(withDuration: 0.4) {
             self.sendWithQRView.frame.origin.y = 0
@@ -1868,6 +1876,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
             
             verifyProfileXib.delegate = self
             verifyProfileXib.errors = self
+            
             for subView in qrView.subviews
             { subView.removeFromSuperview() }
             
@@ -1882,7 +1891,6 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
                 verifyProfileXib.dogum.isEnabled = false
                 verifyProfileXib.sendAndContiuneView.isHidden = true
                 verifyProfileXib.remarksView.isHidden = true
-
             }
  
             qrView.addSubview(verifyProfileXib)

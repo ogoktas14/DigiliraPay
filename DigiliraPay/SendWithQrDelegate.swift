@@ -14,4 +14,11 @@ protocol SendWithQrDelegate: class
     func sendWithQRError(error: Error)
 
 }
+
+protocol SeedBackupDelegate: class
+{
+    func dismissSeedBackup()
+    func seedBackedUp()
+    func alertSomething(title: String, message:String)
+}
  

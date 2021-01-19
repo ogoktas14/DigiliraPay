@@ -800,7 +800,7 @@ class Blockchain: NSObject {
                 return string
             }
         }
-        return "Blokzincir İşlemi"
+        return "Diğer"
     }
     
     func base64 (data:String) -> String {
@@ -810,7 +810,7 @@ class Blockchain: NSObject {
                 return string
             }
         }
-        return "Blokzincir İşlemi"
+        return "Diğer"
     }
     
     func smartD(initial: Bool) {
@@ -1239,8 +1239,7 @@ class Blockchain: NSObject {
             
             guard let btc = UserDefaults.standard.value(forKey: "btcAddress") as? String  else { return }
             guard let eth = UserDefaults.standard.value(forKey: "ethAddress") as? String else { return }
-let ltc = "mvQ7SzU6xEXChpuGEFsqPHpzK29vAvnDwA"
-            //            guard let ltc = UserDefaults.standard.value(forKey: "ltcAddress") as? String else { return }
+            guard let ltc = UserDefaults.standard.value(forKey: "ltcAddress") as? String else { return }
             
             if chainId != "T" {
                 guard UserDefaults.standard.value(forKey: "usdtAddress") != nil  else { return }
@@ -1259,8 +1258,6 @@ let ltc = "mvQ7SzU6xEXChpuGEFsqPHpzK29vAvnDwA"
             
             let v = [devToken, btc, eth, imported.description, ltc]
             guard let signed = try? bytization( v, timestamp, seed) else {return}
-            
-
             
             var user = digilira.exUser.init(btcAddress: btc,
                                             ethAddress: eth,
@@ -1407,7 +1404,7 @@ let ltc = "mvQ7SzU6xEXChpuGEFsqPHpzK29vAvnDwA"
                     }
                     wavesApiRequest(auth: nil, endpoint:digilira.wavesApiEndpoints.getDeposit, currency: digilira.wavesApiEndpoints.LTC, token: token.accessToken, sender: DepositeAddresses.self) { (address, statusCode) in
                         UserDefaults.standard.set(address.depositAddresses[0], forKey: "ltcAddress")
-                        //createUser(seed: seed)
+                        createUser(seed: seed)
                         print(address.depositAddresses)
                     }
                     if chainId != "T" {

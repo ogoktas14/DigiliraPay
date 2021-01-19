@@ -91,7 +91,7 @@ class newSendView: UIView {
                 transaction = t
             }
         }
-       
+        
         
         if isMissing {
             shake()
@@ -148,11 +148,11 @@ class newSendView: UIView {
         if env == "testnet" {
             bitcoinSegwit = "^(tb1|[13])[a-zA-HJ-NP-Z0-9]{25,39}$"
         }
-
+        
         let bitcoinReg = "^[13][a-km-zA-HJ-NP-Z0-9]{26,33}$"
         let ethereumReg = "^0x[a-fA-F0-9]{40}$"
         let wavesreg = "^[3][a-zA-Z0-9]{34}"
-
+        
         var regexString = wavesreg
         
         switch network {
@@ -344,7 +344,7 @@ class newSendView: UIView {
         
         recipientText.isEnabled = true
         textAmount.isEnabled = true
-
+        
         if let coin = selectedCoinX {
             let double = Double(truncating: pow(10,coin.decimal) as NSNumber)
             amount = (Double(params.amount!) / double)
@@ -413,7 +413,10 @@ class newSendView: UIView {
                 errors?.errorHandler(message: y.tokenName + " bakiyeniz bulunmamaktadır.", title: "Bir Hata Oluştu", error: true)
             }
         } catch  {
-            print(error)
+            DispatchQueue.main.async { [self] in
+                errors?.errorHandler(message: "Token desteklenmemektedir.", title: "Bir Hata Oluştu", error: true)
+            }
+            return
         }
     }
     
@@ -472,7 +475,7 @@ class newSendView: UIView {
                 if t.destination == digilira.transactionDestination.foreign {
                     commissionLabel.text = "Blokzincir transfer ücreti: " + coin.gatewayFee.description + " " + coin.tokenName
                     commissionLabel.isHidden = false
-
+                    
                 } else {
                     commissionLabel.isHidden = true
                 }
@@ -493,9 +496,9 @@ class newSendView: UIView {
             
             if isWavesAsset.count > 1 {
                 assetId = isWavesAsset[1].description
-            
+                
                 let wavesAddress = isWavesAsset[0].components(separatedBy: "?amount=")
-         
+                
                 adres = wavesAddress[0]
             }
             
@@ -503,11 +506,11 @@ class newSendView: UIView {
                 recipientText.setTitle(adres, for: .normal)
                 
                 scrollAreaView.isUserInteractionEnabled = false
-
+                
                 if isWavesNetwork {
                     scrollAreaView.isUserInteractionEnabled = true
                 }
-                  
+                
                 memCheck()
                 
             } else {
@@ -559,7 +562,7 @@ class newSendView: UIView {
                             if data.destination == digilira.transactionDestination.interwallets {
                                 t.feeAssetId = digilira.sponsorToken
                             }
-                             
+                            
                             if data.destination == digilira.transactionDestination.foreign {
                                 t.feeAssetId = ""
                             }
@@ -728,7 +731,7 @@ class newSendView: UIView {
         do {
             let c = try BC.returnAsset(assetId: Filtered[currentPage].tokenName)
             selectedCoinX = c
-             
+            
             if var t = transaction {
                 
                 t.assetId = c.token

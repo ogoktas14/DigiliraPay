@@ -100,7 +100,6 @@ class WalletView: UIView {
             var notlisted = false
             BC.checkTransactions(address: walletAddress){ (data) in
                 DispatchQueue.main.async { [self] in
-                    print(data)
                     data.forEach { trx in
                         if let d = trx.data {
                             do {
@@ -119,12 +118,11 @@ class WalletView: UIView {
                                             if coin != tokenName.tokenName {return}
                                         }
                                     } catch {
-                                        print(error)
                                         switch error {
                                         case digilira.NAError.notListedToken:
                                             notlisted = true
                                         default:
-                                            print(error)
+                                            break
                                         }
                                     }
                                     
@@ -151,7 +149,7 @@ class WalletView: UIView {
                                     ))
                                 }
                             } catch {
-                                print(error)
+
                             }
                         }
                         
