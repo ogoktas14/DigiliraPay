@@ -95,6 +95,7 @@ struct WavesListedToken: Codable {
     let symbol: String
     let decimal: Int
     let gatewayFee: Double
+    let wavesFee: Double
     let role: Int
 }
 

@@ -16,6 +16,7 @@ struct TransferDestination: Codable {
     let wallet: String
     let owner: String
     let destination: String
+    let isTether: Bool?
 }
 
 // MARK: - TransferOnWay

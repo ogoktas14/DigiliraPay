@@ -22,13 +22,19 @@ class BalanceCard: UIView {
     @IBOutlet weak var imgCoin: UIImageView!
     @IBOutlet weak var container: UIView! 
     
-    func setView(desc: String, tl: String, amount: String, price: String, symbol: String)
+    func setView(desc: String, tl: String, amount: String, price: String, symbol: String, icon: UIImage!)
     {
+        var coinIcon = icon
+        if coinIcon == nil {
+            coinIcon = UIImage(named: "ico2")
+        }
         onBoardingDesc.text = desc
         balanceTL.text = tl
         balanceCoin.text = amount
         willPaidCoin.text = price
         paidCoin.text = symbol
+        imgCoin.image = coinIcon
+        
     }
     
     override func awakeFromNib() {

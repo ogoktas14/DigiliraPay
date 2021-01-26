@@ -94,6 +94,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
     
     var isFetching = false
     var headerAnimation = false
+    var isInformed = false
     
     var lastBitexenCheck: Date = Date()
     var lastBinanceCheck: Date = Date()
@@ -128,6 +129,8 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
     var Balances: NodeService.DTO.AddressAssetsBalance?
     var Ticker: binance.BinanceMarketInfo = []
     var Filtered: [digilira.DigiliraPayBalance] = []
+    
+    var tableViewFiltered: [digilira.DigiliraPayBalance] = []
         
     var Bitexen: [digilira.DigiliraPayBalance] = []
     var Waves: [digilira.DigiliraPayBalance] = []
@@ -161,6 +164,16 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         do {
             let k = try secretKeys.userData()
              
+            if k.status == 403000 {
+                throwEngine.alertWarning(title: "Hesabınız Bloke Edildi", message: "Pin kodunuzu sıfırlamak için www.digilirapay.com/pin adresini ziyaret ediniz.", error: true)
+            }
+            
+            if let selfied = UserDefaults.standard.value(forKey: "isSelfied") as? Bool {
+                if selfied {
+                    checkStatus()
+                }
+            }
+            
             BC.onWavesDataResponse = { [self] res, sts in
                 switch sts {
                 case 200:
@@ -207,23 +220,23 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
             if let versionLegal = UserDefaults.standard.value(forKey: "isLegalView") as? Int {
                 let v = digilira.legalView.version
                 if (versionLegal < v) {
-                    throwEngine.alertWarning(title: digilira.messages.newLegalViewTitle, message: digilira.messages.newLegalViewMessage, error: false)
+                    isInformed = true
                     profileMenuView.legalViewWarning.isHidden = false
                     showLegalText()
-                    return
+                } else {
+                    profileMenuView.legalViewWarning.isHidden = true
                 }
-                profileMenuView.legalViewWarning.isHidden = true
             }
             
             if let versionTerms = UserDefaults.standard.value(forKey: "isTermsOfUse") as? Int {
                 let v = digilira.termsOfUse.version
                 if (versionTerms < v) {
-                    throwEngine.alertWarning(title: digilira.messages.newTermsOfUseTitle, message: digilira.messages.newTermsOfUseMessage, error: false)
+                    isInformed = true
                     profileMenuView.termsViewWarning.isHidden = false
                     showTermsofUse()
-                    return
+                }else {
+                    profileMenuView.termsViewWarning.isHidden = true
                 }
-                profileMenuView.termsViewWarning.isHidden = true
             }
             
             if let isVerified = UserDefaults.standard.value(forKey: "seedRecovery") as? Bool {
@@ -234,24 +247,24 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
             
             switch k.status {
             case 0:
-                profileMenuView.progressView.progress = 0.2
+           
                 profileMenuView.profileWarning.image = UIImage(named: "warning")
                 break
             case 1:
-                profileMenuView.progressView.progress = 0.5
+   
                 profileMenuView.profileWarning.image = UIImage(named: "success")
                 break
             case 2:
-                profileMenuView.progressView.progress = 0.8
+          
                 profileMenuView.profileWarning.image = UIImage(named: "success")
                 break
             case 3:
-                profileMenuView.progressView.progress = 1
+       
                 profileMenuView.profileWarning.image = UIImage(named: "success")
                 profileMenuView.profileVerifyLabel.text = "Profilim"
                 break
             default:
-                profileMenuView.progressView.progress = 0.2
+             
                 break
             }
             
@@ -291,7 +304,15 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                 
                 if let isVerified = UserDefaults.standard.value(forKey: "seedRecovery") as? Bool {
                     if !isVerified {
-                        throwEngine.alertCaution(title: "Anahtar Kelimeler", message: "Anahtar kelimelerinizi sizden başka kimse bilemez. Buna biz de dahiliz. Lütfen anahtar kelimelerinizi yedekleyin. Bu uyarıyı almak istemiyorsanız anahtar kelimelerinizi yedeklemeniz gerekmektedir.")
+                        if !isInformed {
+                            isInformed = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [self] in
+                                throwEngine.alertCaution(title: "Anahtar Kelimeler", message: "Anahtar kelimelerinizi sizden başka kimse bilemez. Buna biz de dahiliz. Lütfen anahtar kelimelerinizi yedekleyin. Bu uyarıyı almak istemiyorsanız anahtar kelimelerinizi yedeklemeniz gerekmektedir.")
+                            }
+                             
+                            
+                        }
+                        
                     }
                 }
                 if let qr = decodeDefaults(forKey: "QRARRAY2", conformance: digilira.QR.self, setNil: true) {
@@ -301,9 +322,43 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                 curtain.isHidden = true
                 isBitexenReload = false
                 isWavesReloaded = false
+                
                 Filtered.removeAll()
+
                 Filtered.append(contentsOf: Waves)
                 Filtered.append(contentsOf: Bitexen)
+                
+                let seperatorBalanceBitexen = digilira.DigiliraPayBalance.init(tokenName: "Seperator",
+                                                                        tokenSymbol: "",
+                                                                        availableBalance: 0,
+                                                                        decimal: 0,
+                                                                        balance: 0,
+                                                                        tlExchange: 0.0,
+                                                                        network: "Bitexen",
+                                                                        wallet:"")
+                let seperatorBalanceWaves = digilira.DigiliraPayBalance.init(tokenName: "Seperator",
+                                                                        tokenSymbol: "",
+                                                                        availableBalance: 0,
+                                                                        decimal: 0,
+                                                                        balance: 0,
+                                                                        tlExchange: 0.0,
+                                                                        network: "DigiliraPay",
+                                                                        wallet:"")
+                
+                if Bitexen.count > 0 {
+                    tableViewFiltered.removeAll()
+                    tableViewFiltered.append(seperatorBalanceWaves)
+                    tableViewFiltered.append(contentsOf: Waves)
+                    tableViewFiltered.append(seperatorBalanceBitexen)
+                    tableViewFiltered.append(contentsOf: Bitexen)
+                } else {
+                    
+                    tableViewFiltered.removeAll()
+                    tableViewFiltered.append(contentsOf: Waves)
+                }
+                
+
+                
                 self.checkHeaderExist()
             }
         }
@@ -314,29 +369,49 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                 Bitexen.removeAll()
                 for bakiye in balances.data.balances {
                     if Double(bakiye.value.balance)! > 0 {
-                        for mrkt in (bexMarketInfo?.data.markets)! {
+                        if bakiye.value.currencyCode == "TRY" {
+                            let lastPrice = Double(bakiye.value.availableBalance)! * 1
                             
-                            if bakiye.value.currencyCode == mrkt.baseCurrency {
-                                let coinPrice = bexTicker?.data.ticker[mrkt.marketCode]
-                                let lastPrice = Double(bakiye.value.availableBalance)! * Double(coinPrice!.lastPrice)!
-                                
-                                let double = Double(truncating: pow(10,8) as NSNumber) 
-                                let digiliraBalance = digilira.DigiliraPayBalance.init(
-                                    tokenName: bakiye.value.currencyCode,
-                                    tokenSymbol: "Bitexen " + bakiye.value.currencyCode,
-                                    availableBalance: Int64(Double(bakiye.value.availableBalance)! * double),
-                                    decimal: 8,
-                                    balance: Int64(Double(bakiye.value.balance)! * double),
-                                    tlExchange: lastPrice, network: "bitexen",
-                                    wallet: "")
-                                
-                                bitexenBalance += lastPrice
+                            let double = Double(truncating: pow(10,8) as NSNumber)
+                            let digiliraBalance = digilira.DigiliraPayBalance.init(
+                                tokenName: bakiye.value.currencyCode,
+                                tokenSymbol: "Bitexen " + bakiye.value.currencyCode,
+                                availableBalance: Int64(Double(bakiye.value.availableBalance)! * double),
+                                decimal: 8,
+                                balance: Int64(Double(bakiye.value.balance)! * double),
+                                tlExchange: 1, network: "bitexen",
+                                wallet: "")
+                            
+                            bitexenBalance += lastPrice
 
-                                Bitexen.append(digiliraBalance)
-                                
-                                self.BitexenBalances.append(bakiye.value)
+                            Bitexen.append(digiliraBalance)
+                            
+                            self.BitexenBalances.append(bakiye.value)
+                        } else {
+                            for mrkt in (bexMarketInfo?.data.markets)! {
+                                if bakiye.value.currencyCode == mrkt.baseCurrency {
+                                    let coinPrice = bexTicker?.data.ticker[mrkt.marketCode]
+                                    let lastPrice = Double(bakiye.value.availableBalance)! * Double(coinPrice!.lastPrice)!
+                                    
+                                    let double = Double(truncating: pow(10,8) as NSNumber)
+                                    let digiliraBalance = digilira.DigiliraPayBalance.init(
+                                        tokenName: bakiye.value.currencyCode,
+                                        tokenSymbol: "Bitexen " + bakiye.value.currencyCode,
+                                        availableBalance: Int64(Double(bakiye.value.availableBalance)! * double),
+                                        decimal: 8,
+                                        balance: Int64(Double(bakiye.value.balance)! * double),
+                                        tlExchange: lastPrice, network: "bitexen",
+                                        wallet: "")
+                                    
+                                    bitexenBalance += lastPrice
+
+                                    Bitexen.append(digiliraBalance)
+                                    
+                                    self.BitexenBalances.append(bakiye.value)
+                                }
                             }
                         }
+                       
                     }
                 }
                 self.isBitexenReload = true
@@ -425,11 +500,14 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         
         bitexenSign.onBitexenError = { res, sts in
             self.throwEngine.alertWarning(title: "Bitexen API", message: "Bitexen API bilgileriniz doğrulanamadı.", error: true)
+            self.isBitexenReload = true
         }
         refreshControl.alpha = 0
         refreshControl.attributedTitle = NSAttributedString(string: "Güncellemek için çekiniz..")
         refreshControl.addTarget(self, action: #selector(refreshData(_:)), for: UIControl.Event.valueChanged)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(checkStatus), name: Notification.Name(.bar), object: nil)
+
         NotificationCenter.default.addObserver( self, selector: #selector(keyboardWillShow(notification:)), name:  UIResponder.keyboardWillShowNotification, object: nil )
         NotificationCenter.default.addObserver( self, selector: #selector(keyboardWillHide(notification:)), name:  UIResponder.keyboardWillHideNotification, object: nil )
         NotificationCenter.default.addObserver(self, selector: #selector(onDidCompleteTask(_:)), name: .didCompleteTask, object: nil)
@@ -443,6 +521,50 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
         
         view.addGestureRecognizer(tap)
+        
+    }
+    
+    @objc func checkStatus() {
+        
+        if let user = try? secretKeys.userData() {
+            
+            switch user.status {
+            case 2:
+                digiliraPay.onUpdate = { res in
+
+                }
+                
+                let timestamp = Int64(Date().timeIntervalSince1970) * 1000
+
+                if let sign = try? BC.bytization([user.id, 2.description], timestamp) {
+                    let user = digilira.exUser.init(
+                        id: user.id,
+                        wallet: sign.wallet,
+                        status: 2,
+                        signed: sign.signature,
+                        publicKey: sign.publicKey,
+                        timestamp: timestamp
+                    )
+                    
+                    let encoder = JSONEncoder()
+                    let data = try? encoder.encode(user)
+                    
+                    digiliraPay.updateUser(user: data, signature: sign.signature)
+                }
+                return
+                
+            case 3:
+                throwEngine.alertWarning(title: "Hesabınız Onaylandı", message: "Hesabınız Onaylanmıştır", error: false)
+                UserDefaults.standard.set(false, forKey: "isSelfied")
+
+                break
+            default:
+                break
+            }
+      
+             
+        }
+         
         
     }
     
@@ -541,8 +663,9 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
             self.setSettingsView()
         }
         if isFirstLaunch {
-            checkEssentials()
             isFirstLaunch = false
+            checkEssentials()
+            
         }
         
         menuView.isUserInteractionEnabled = true
@@ -607,7 +730,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         
         walletOperationView.frame.origin.y = 0
         walletOperationView.alpha = 0
-        let bakiye = MainScreen.df2so(totalBalance + bitexenBalance)
+        var bakiye = MainScreen.df2so(totalBalance + bitexenBalance)
         
         UIView.animate(withDuration: 0.3, animations: { [self] in
  
@@ -616,6 +739,11 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
             walletOperationView.frame.origin.y = walletY
             walletOperationView.alpha = 1
         }, completion: { [self]_ in
+            let numChars = bakiye.count
+            if numChars > 11 {
+                let w = bakiye.split(separator: ",")
+                bakiye = String(w[0])
+            }
             self.walletOperationView.blnx = "₺" + bakiye
             self.headerAnimation = false
                 if !isHomeScreen {
@@ -708,17 +836,38 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         if address.network == "digilirapay" {
             crud.onResponse = { [self] data, sts in
                 DispatchQueue.main.async {
-                    do {
-                        let pm = try crud.decodeDefaults(forKey: data, conformance: PaymentModel.self)
-                        if pm.status == 2 {
-                            self.errorCaution(message: "Bu ödeme kodu daha önce kullanılmış. Lütfen yeni bir QR kod okutunuz.", title: "Hatalı QR Kod")
-                        } else {
-                            self.goPageCardView(ORDER: pm)
+                    
+                    switch sts {
+                    case 200:
+                        do {
+                            let pm = try crud.decodeDefaults(forKey: data, conformance: PaymentModel.self)
+                            
+                            if pm.status == 2 {
+                                self.errorCaution(message: "Bu ödeme kodu daha önce kullanılmış. Lütfen yeni bir QR kod okutunuz.", title: "Hatalı QR Kod")
+                            } else {
+                                self.goPageCardView(ORDER: pm)
+                            }
+                        } catch {
+                            print(error)
+                            self.evaluate(error: digilira.NAError.anErrorOccured)
                         }
-                    } catch {
-                        print(error)
-                        self.evaluate(error: digilira.NAError.anErrorOccured)
+                        break
+                        
+                    case 400:
+                        do {
+                            let pm = try crud.decodeDefaults(forKey: data, conformance: digilira.NodeError.self)
+                            self.throwEngine.alertCaution(title: "Bir Hata Oluştu", message: pm.message)
+                             
+                        } catch {
+                            print(error)
+                            self.evaluate(error: digilira.NAError.anErrorOccured)
+                        }
+                        break
+                        
+                    default:
+                        break
                     }
+
                 }
             }
             do {
@@ -856,7 +1005,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
             throwEngine.waitPlease()
         }
         
-        if let api = decodeDefaults(forKey: bex.bexApiDefaultKey.key, conformance: bex.bitexenAPICred.self) {
+        if let api = decodeDefaults(forKey: digiliraPay.returnBexChain(), conformance: bex.bitexenAPICred.self) {
             if (api.valid) { // if bitexen api valid
                 bitexenSign.onBitexenMarketInfo = { [self] res, sts in
                     if sts == 200 {
@@ -1065,7 +1214,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         let okex = turkish.okexCard
         let pep = turkish.pepCard
         
-        if let api = decodeDefaults(forKey: bex.bexApiDefaultKey.key, conformance: bex.bitexenAPICred.self) {
+        if let api = decodeDefaults(forKey: digiliraPay.returnBexChain(), conformance: bex.bitexenAPICred.self) {
             bitexen.cardNumber = "Hesap Bilgilerini Düzenle"
             if (api.valid) { // if bitexen api valid
                 bitexen.apiSet = true
@@ -1236,10 +1385,10 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
 extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ayarları, coinlerin listelenmesinde bu fonksiyonlar kullanılır.
 {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if Filtered.count == 0 {
+        if tableViewFiltered.count == 0 {
             return 3
         }
-        return Filtered.count
+        return tableViewFiltered.count
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -1266,9 +1415,18 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
             tapped.floatValue = indexPath[1]
             cell.addGestureRecognizer(tapped)
             
-            if Filtered.count > 0 {
+            if tableViewFiltered.count > 0 {
                 
-                let asset = Filtered[indexPath[1]]
+                if tableViewFiltered[indexPath[1]].tokenName == "Seperator" {
+                    if let seperator = UITableViewCell().loadXib(name: "CoinTableSeperator") as? CoinTableSeperator {
+                    
+                        seperator.network.text = tableViewFiltered[indexPath[1]].network
+                        return seperator
+                        
+                    }
+                }
+                
+                let asset = tableViewFiltered[indexPath[1]]
                 
                 if ((UIImage(named: asset.tokenSymbol) == nil)) {
                     cell.emptyIcon.isHidden = false
@@ -1279,9 +1437,14 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
                     cell.coinIcon.image = UIImage(named: asset.tokenSymbol)
                 }
                 
+                let cp = asset.tlExchange
+                var text = "₺" + MainScreen.df2so(asset.tlExchange)
+                if cp == 1 {
+                    text = "₺"
+                }
                 
                 cell.coinName.text = asset.tokenName
-                cell.type.text = "₺" + MainScreen.df2so(asset.tlExchange)
+                cell.type.text = text
                 tapped.assetName = asset.tokenName
                 
                 let double = MainScreen.int2so(asset.balance, digits: asset.decimal)
@@ -1291,7 +1454,7 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
             }
             
 
-            if Filtered.count == 0 {
+            if tableViewFiltered.count == 0 {
                 let demoin = digilira.demo[indexPath[1]]
                 let demoCoin = digilira.demoIcon[indexPath[1]]
                 cell.coinIcon.image = UIImage(named: demoCoin)
@@ -1793,7 +1956,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
 {
     func showBitexenView() {
         
-        if  !digiliraPay.isKeyPresentInUserDefaults(key: bex.bexApiDefaultKey.key) {
+        if  !digiliraPay.isKeyPresentInUserDefaults(key: digiliraPay.returnBexChain()) {
             self.bitexenScreen()
             return
         }
@@ -1865,78 +2028,86 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         isVerifyAccount = true
         //profil onay sureci
         
-        switch kullanici.status {
-        case 0, 3:
-            let verifyProfileXib = UIView().loadNib(name: "VerifyAccountView") as! VerifyAccountView
+        do {
+            let k = try secretKeys.userData()
             
-            verifyProfileXib.frame = CGRect(x: 0,
-                                            y: 0,
-                                            width: view.frame.width,
-                                            height: view.frame.height)
-            
-            verifyProfileXib.delegate = self
-            verifyProfileXib.errors = self
-            
-            for subView in qrView.subviews
-            { subView.removeFromSuperview() }
-            
-            if kullanici.status == 3 {
-                verifyProfileXib.descLabel.text =  "Profiliniz Onaylanmıştır."
-                verifyProfileXib.titleLabel.text = "Profilim"
-                verifyProfileXib.nameText.isEnabled = false
-                verifyProfileXib.surnameText.isEnabled = false
-                verifyProfileXib.tcText.isEnabled = false
-                verifyProfileXib.telText.isEnabled = false
-                verifyProfileXib.mailText.isEnabled = false
-                verifyProfileXib.dogum.isEnabled = false
-                verifyProfileXib.sendAndContiuneView.isHidden = true
-                verifyProfileXib.remarksView.isHidden = true
+            switch k.status {
+            case 0, 3:
+                let verifyProfileXib = UIView().loadNib(name: "VerifyAccountView") as! VerifyAccountView
+                
+                verifyProfileXib.frame = CGRect(x: 0,
+                                                y: 0,
+                                                width: view.frame.width,
+                                                height: view.frame.height)
+                
+                verifyProfileXib.delegate = self
+                verifyProfileXib.errors = self
+                
+                for subView in qrView.subviews
+                { subView.removeFromSuperview() }
+                
+                if kullanici.status == 3 {
+                    verifyProfileXib.descLabel.text =  "Profiliniz Onaylanmıştır."
+                    verifyProfileXib.titleLabel.text = "Profilim"
+                    verifyProfileXib.nameText.isEnabled = false
+                    verifyProfileXib.surnameText.isEnabled = false
+                    verifyProfileXib.tcText.isEnabled = false
+                    verifyProfileXib.telText.isEnabled = false
+                    verifyProfileXib.mailText.isEnabled = false
+                    verifyProfileXib.dogum.isEnabled = false
+                    verifyProfileXib.sendAndContiuneView.isHidden = true
+                    verifyProfileXib.remarksView.isHidden = true
+                }
+     
+                qrView.addSubview(verifyProfileXib)
+                qrView.isHidden = false
+                qrView.translatesAutoresizingMaskIntoConstraints = true
+                closeProfileView()
+                
+                UIView.animate(withDuration: 0.3)
+                {
+                    self.qrView.frame.origin.y = 0
+                    self.qrView.alpha = 1
+                }
+                
+            case 1:
+                let verifyProfileXib = UIView().loadNib(name: "ProfileUpgradeView") as! ProfilUpgradeView
+                
+                verifyProfileXib.frame = CGRect(x: 0,
+                                                y: 0,
+                                                width: view.frame.width,
+                                                height: view.frame.height)
+                
+                verifyProfileXib.setSendId()
+                verifyProfileXib.delegate = self
+                for subView in qrView.subviews
+                { subView.removeFromSuperview() }
+                
+                menuView.isHidden = true
+                
+                qrView.addSubview(verifyProfileXib)
+                qrView.isHidden = false
+                qrView.translatesAutoresizingMaskIntoConstraints = true
+                closeProfileView()
+                
+                UIView.animate(withDuration: 0.3)
+                {
+                    self.qrView.frame.origin.y = 0
+                    self.qrView.alpha = 1
+                }
+            case 2:
+                throwEngine.alertWarning(title: "Profil Onayı", message: "Gönderdiğiniz bilgiler kontrol edilmektedir.", error: false)
+                
+                break
+            default:
+                print("ok")
+                
             }
- 
-            qrView.addSubview(verifyProfileXib)
-            qrView.isHidden = false
-            qrView.translatesAutoresizingMaskIntoConstraints = true
-            closeProfileView()
-            
-            UIView.animate(withDuration: 0.3)
-            {
-                self.qrView.frame.origin.y = 0
-                self.qrView.alpha = 1
-            }
-            
-        case 1:
-            let verifyProfileXib = UIView().loadNib(name: "ProfileUpgradeView") as! ProfilUpgradeView
-            
-            verifyProfileXib.frame = CGRect(x: 0,
-                                            y: 0,
-                                            width: view.frame.width,
-                                            height: view.frame.height)
-            
-            verifyProfileXib.setSendId()
-            verifyProfileXib.delegate = self
-            for subView in qrView.subviews
-            { subView.removeFromSuperview() }
-            
-            menuView.isHidden = true
-            
-            qrView.addSubview(verifyProfileXib)
-            qrView.isHidden = false
-            qrView.translatesAutoresizingMaskIntoConstraints = true
-            closeProfileView()
-            
-            UIView.animate(withDuration: 0.3)
-            {
-                self.qrView.frame.origin.y = 0
-                self.qrView.alpha = 1
-            }
-        case 2:
-            throwEngine.alertWarning(title: "Profil Onayı", message: "Gönderdiğiniz bilgiler kontrol edilmektedir.", error: false)
-            
-            break
-        default:
-            print("ok")
+        } catch {
             
         }
+        
+        
         
     }
     
@@ -2059,6 +2230,8 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
             return
         }
          
+        pageCardView.bexTicker = bexTicker
+        pageCardView.marketInfo = bexMarketInfo
         pageCardView.Ticker = Ticker
         pageCardView.Order = ORDER
         pageCardView.setTableView()
@@ -2283,7 +2456,8 @@ extension MainScreen: UIImagePickerControllerDelegate {
                 if res {
                     self.throwEngine.warningView.removeFromSuperview()
                     self.throwEngine.alertWarning(title: "Bilgileriniz Yüklendi", message: "Gönderdiğiniz bilgiler kontrol edildikten sonra profiliniz güncellenecektir.", error: false)
-               
+                    UserDefaults.standard.set(true, forKey: "isSelfied")
+
                     checkEssentials()
                 } else {
                     throwEngine.evaluateError(error: digilira.NAError.anErrorOccured)

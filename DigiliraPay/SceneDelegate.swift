@@ -57,7 +57,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, UNUserNotificationCente
     func sceneDidBecomeActive(_ scene: UIScene) {
         // Called when the scene has moved from an inactive state to an active state.
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
+        if let isBlocked = UserDefaults.standard.value(forKey: "isBlocked") as? Bool {
+            if isBlocked {
+                NotificationCenter.default.post(name: Notification.Name(.foo), object: nil)
+                return
+
+            }
+        }
         
+        if let selfied = UserDefaults.standard.value(forKey: "isSelfied") as? Bool {
+            if selfied {
+                NotificationCenter.default.post(name: Notification.Name(.bar), object: nil)
+            }
+        }
         
         
         UIView.animate(withDuration: 0.2, animations: {

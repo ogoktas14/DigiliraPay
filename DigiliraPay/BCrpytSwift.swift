@@ -560,7 +560,7 @@ public class BCryptSwift: NSObject {
         var c2 : UInt8
         var result : String = String()
         
-        var dataArray : [UInt8] = data.map {
+        let dataArray : [UInt8] = data.map {
             UInt8(bitPattern: Int8($0))
         }
         

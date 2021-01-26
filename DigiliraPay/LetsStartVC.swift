@@ -20,6 +20,10 @@ class LetsStartVC: UIViewController {
     var goMainVCGesture = UITapGestureRecognizer()
     var isKeyWordView = false
     
+    var logoAnimation = LogoAnimation()
+    var warningView = WarningView()
+
+
     var gotoSeedRecover = false
     let BC = Blockchain()
     
@@ -30,6 +34,23 @@ class LetsStartVC: UIViewController {
         } catch {
             
         } 
+    }
+    
+    func alertWarning (title: String, message: String, error: Bool = true) {
+        DispatchQueue.main.async { [self] in
+                logoAnimation.removeFromSuperview()
+                
+                warningView = UIView().loadNib(name: "warningView") as! WarningView
+                warningView.frame = self.view.frame
+                
+                warningView.isError = error
+                warningView.title = title
+                warningView.message = message
+                warningView.setMessage()
+                
+            self.view.addSubview(warningView)
+           
+        }
     }
     
     override func viewDidLoad() {
@@ -293,6 +314,10 @@ class LetsStartVC: UIViewController {
 
 extension LetsStartVC: LetsStartSkipDelegate
 {
+    func warnUser() {
+        alertWarning(title: "Dikkat", message: "Ekran görüntüsü olarak anahtar kelimelerinizi yedeklemeniz durumunda, anahtar kelimelerinizin üçüncü şahıslar tarafından görülmesi riskini arttırmaktadır. Lütfen daha güvenli bir yedekleme metodu gerçekleştiriniz.")
+    }
+    
     func skipTap() {
         atla()
         UserDefaults.standard.set(false, forKey: "seedRecovery")

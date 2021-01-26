@@ -12,7 +12,8 @@ import CommonCrypto
 class bex: NSObject {
     
     private var isCertificatePinning: Bool = true
-    
+    private var cert: String = digilira.sslPinning.bexCert
+
     var onBitexenBalance: ((_ result: bexBalance, _ statusCode: Int?)->())?
     var onBitexenTicker: ((_ result: bexAllTicker, _ statusCode: Int?)->())?
     var onBitexenTickerCoin: ((_ result: bexTicker, _ statusCode: Int?)->())?
@@ -21,6 +22,7 @@ class bex: NSObject {
     
     struct bexApiDefaultKey {
         static let key = "bitexenAPI2"
+        static let testKey = "bitexenAPI3"
     }
     
     struct bitexenAPICred: Codable {
@@ -153,6 +155,51 @@ class bex: NSObject {
         case usdt = "USDT"
     }
     
+ 
+
+    // MARK: - Properties
+    struct MakePayment: Codable {
+        let paymentID, amount, currencyCode, counterAmount: String
+        let counterCurrencyCode, merchantCode, merchantMcc, merchantName: String
+
+        enum CodingKeys: String, CodingKey {
+            case paymentID = "payment_id"
+            case amount
+            case currencyCode = "currency_code"
+            case counterAmount = "counter_amount"
+            case counterCurrencyCode = "counter_currency_code"
+            case merchantCode = "merchant_code"
+            case merchantMcc = "merchant_mcc"
+            case merchantName = "merchant_name"
+        }
+    }
+
+    // MARK: - MakePaymentResponse
+    struct MakePaymentResponse: Codable {
+        let status: String
+        let data: MakePaymentDataClass
+    }
+
+    // MARK: - DataClass
+    struct MakePaymentDataClass: Codable {
+        let paymentID: String
+
+        enum CodingKeys: String, CodingKey {
+            case paymentID = "payment_id"
+        }
+    }
+    
+ 
+    // MARK: - CommitPayment
+    struct CommitPayment: Codable {
+        let paymentID: String
+
+        enum CodingKeys: String, CodingKey {
+            case paymentID = "payment_id"
+        }
+    }
+
+
     var apiLogin: bitexenAPICred?
     
     func loginInit(params: bitexenAPICred) -> bitexenAPICred{
@@ -171,9 +218,24 @@ class bex: NSObject {
         return (hmac, timestamp)
     }
     
+    private func getUrl() -> String {
+        let chain = try! digiliraPayApi().getChain()
+        switch chain {
+        case "T":
+            cert = digilira.sslPinning.bexTestCert
+            return digilira.bexURL.baseTestUrl
+        default:
+            cert = digilira.sslPinning.bexCert
+            return digilira.bexURL.baseUrl
+        }
+    }
+    
     public func getTicker(coin: String = "") {
-        let apiURL = digilira.bexURL.baseUrl + digilira.bexURL.ticker + coin
-        
+        var apiURL = getUrl() + digilira.bexURL.ticker + coin
+        if coin != "" {
+            apiURL = apiURL + "/"
+        }
+
         request(rURL: apiURL,
                 METHOD: req.method.get, returnCompletion: { (json, statusCode) in
                     DispatchQueue.main.async {
@@ -197,9 +259,36 @@ class bex: NSObject {
                     }
                 })
     }
+ 
+    
+    public func makePayment(payment: MakePayment, keys: bitexenAPICred) {
+        let encodedData = try? JSONEncoder().encode(payment)
+        let jsonString = String(data: encodedData!,
+                                encoding: .utf8)
+        let (hmac, timestamp) = signHmac(keys: keys, params: jsonString!)
+
+        request(rURL: getUrl() + digilira.bexURL.makePayment,
+                JSON: payment.data, METHOD: req.method.post,
+                AUTH: keys,
+                TIMESTAMP: timestamp,
+                HMAC: hmac,
+                PAYMENT: true,
+                returnCompletion: { (json, statusCode) in
+                    let jsonResponse = try? JSONSerialization.jsonObject(with: JSONEncoder().encode(json)) as! Dictionary<String, AnyObject>
+
+                    DispatchQueue.main.async {
+                        if let ticker = self.decodeDefaults(forKey: json!, conformance: MakePaymentResponse.self) {
+                             print(ticker)
+                            //.onBitexenBalance!(ticker, statusCode)
+                            return
+                        }
+                        //self.onBitexenError!("parsingError", statusCode)
+                    }
+                })
+    }
     
     public func getMarketInfo() {
-        let apiURL = digilira.bexURL.baseUrl + digilira.bexURL.marketInfo
+        let apiURL = getUrl() + digilira.bexURL.marketInfo
         
         request(rURL: apiURL,
                 METHOD: req.method.get, returnCompletion: { (json, statusCode) in
@@ -217,7 +306,7 @@ class bex: NSObject {
         
         let (hmac, timestamp) = signHmac(keys: keys, params: "{}")
         
-        request(rURL: digilira.bexURL.baseUrl + digilira.bexURL.balances,
+        request(rURL: getUrl() + digilira.bexURL.balances,
                 METHOD: req.method.get,
                 AUTH: keys,
                 TIMESTAMP: timestamp,
@@ -251,6 +340,7 @@ class bex: NSObject {
                  AUTH: bitexenAPICred? = nil,
                  TIMESTAMP: String? = nil,
                  HMAC: String? = nil,
+                 PAYMENT: Bool? = false,
                  returnCompletion: @escaping (Data?, Int?) -> ()) {
         
         var request = URLRequest(url: URL(string: rURL)!)
@@ -264,7 +354,18 @@ class bex: NSObject {
             request.addValue(AUTH!.passphrase, forHTTPHeaderField: "ACCESS-PASSPHRASE")
             request.addValue(TIMESTAMP!, forHTTPHeaderField: "ACCESS-TIMESTAMP")
             request.addValue(HMAC!, forHTTPHeaderField: "ACCESS-SIGN")
-            request.addValue(AUTH!.apiKey, forHTTPHeaderField: "ACCESS-KEY")
+
+            if PAYMENT! {
+                request.addValue(AUTH!.apiKey, forHTTPHeaderField: "ACCESS-APIKEY")
+                request.addValue("DIGILIRAPAY", forHTTPHeaderField: "ACCESS-B2B-CHANNEL-NAME")
+                request.addValue("DIGILIRAPAY", forHTTPHeaderField: "ACCESS-B2B-APP-NAME")
+                request.addValue("apikey1T", forHTTPHeaderField: "ACCESS-KEY")
+
+
+            }else {
+                request.addValue(AUTH!.apiKey, forHTTPHeaderField: "ACCESS-KEY")
+            }
+            
         }
         
         if JSON != nil {
@@ -370,7 +471,7 @@ extension bex: URLSessionDelegate {
             policy.add(SecPolicyCreateSSL(true, challenge.protectionSpace.host as CFString))
             let isServerTrusted = SecTrustEvaluateWithError(serverTrust, nil)
             let remoteCertificateData:NSData =  SecCertificateCopyData(certificate!)
-            let pathToCertificate = Bundle.main.path(forResource: digilira.sslPinning.bexCert, ofType: digilira.sslPinning.fileType)
+            let pathToCertificate = Bundle.main.path(forResource: cert, ofType: digilira.sslPinning.fileType)
             let localCertificateData:NSData = NSData(contentsOfFile: pathToCertificate!)!
             
             //Compare certificates

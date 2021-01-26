@@ -129,6 +129,7 @@
                 <outlet property="confirmView" destination="eKx-ef-xwh" id="lKZ-h9-EeQ"/>
                 <outlet property="content" destination="Ek8-k0-yLj" id="vow-Y7-DLe"/>
                 <outlet property="contentLabel" destination="Ae1-Tf-WNf" id="M0t-83-HMA"/>
+                <outlet property="resetAppLink" destination="STa-K1-jy2" id="v4O-RT-lsr"/>
                 <outlet property="titleLabel" destination="cNg-WG-Fue" id="c0A-2X-7rG"/>
             </connections>
             <point key="canvasLocation" x="137.68115942028987" y="150.66964285714286"/>

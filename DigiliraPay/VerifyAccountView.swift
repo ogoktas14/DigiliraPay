@@ -364,6 +364,15 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
             error = true
         }
         
+        guard let tel = telText.text else {
+            return
+        }
+        
+        if tel.count != 17 {
+            telText.textColor = .red
+            error = true
+        }
+
         if error {
             DispatchQueue.main.async { [self] in
                 errors?.evaluate(error: digilira.NAError.missingParameters)
@@ -395,3 +404,17 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
         }
     }
 }
+extension UIDatePicker {
+    func set18YearValidation() {
+        let currentDate: Date = Date()
+        var calendar: Calendar = Calendar(identifier: Calendar.Identifier.gregorian)
+        calendar.timeZone = TimeZone(identifier: "UTC")!
+        var components: DateComponents = DateComponents()
+        components.calendar = calendar
+        components.year = -12
+        let maxDate: Date = calendar.date(byAdding: components, to: currentDate)!
+        components.year = -90
+        let minDate: Date = calendar.date(byAdding: components, to: currentDate)!
+        self.minimumDate = minDate
+        self.maximumDate = maxDate
+    } }

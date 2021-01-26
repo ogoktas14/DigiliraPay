@@ -11,6 +11,7 @@ import Locksmith
 class LegalView: UIView {
 
     
+    @IBOutlet weak var resetAppLink: UIButton!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var contentLabel: UILabel!
     @IBOutlet weak var confirmView: UIView!
@@ -23,8 +24,17 @@ class LegalView: UIView {
     var m: String?
     var v: Int?
     
+    let BC = Blockchain()
+    
     override func awakeFromNib()
     {
+        
+        let isMainnet = try! BC.getChain()
+        
+        if isMainnet == "W" {
+            resetAppLink.isHidden=true
+        }
+        
         confirmView.clipsToBounds = true
 
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
@@ -51,19 +61,6 @@ class LegalView: UIView {
         } catch  {
             print(error)
         }
-        do {
-            try Locksmith.deleteDataForUserAccount(userAccount: "sensitiveMainnet")
-
-        } catch  {
-            print(error)
-        }
-        do {
-            try Locksmith.deleteDataForUserAccount(userAccount: "authenticateMainnet")
-
-        } catch  {
-            print(error)
-        }
-        
         do {
             try Locksmith.deleteDataForUserAccount(userAccount: "environment")
         } catch  {

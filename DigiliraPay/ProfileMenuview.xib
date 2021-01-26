@@ -46,25 +46,18 @@
                                         <constraint firstAttribute="width" secondItem="7Dk-qX-rBj" secondAttribute="height" multiplier="1:1" id="W3G-eR-UID"/>
                                     </constraints>
                                 </imageView>
-                                <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.20000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="NTx-4P-F0f">
-                                    <rect key="frame" x="149" y="23" width="81.666666666666686" height="4"/>
-                                    <color key="tintColor" systemColor="systemGreenColor"/>
-                                </progressView>
                             </subviews>
                             <color key="backgroundColor" systemColor="systemGroupedBackgroundColor"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="lmT-cI-9ud" secondAttribute="height" multiplier="283:50" id="11q-f4-Mnj"/>
                                 <constraint firstItem="jkB-dc-xvt" firstAttribute="top" secondItem="lmT-cI-9ud" secondAttribute="top" constant="10" id="6IU-Rp-Gfd"/>
                                 <constraint firstItem="7Dk-qX-rBj" firstAttribute="top" secondItem="lmT-cI-9ud" secondAttribute="top" constant="17" id="8pm-ZL-HWH"/>
-                                <constraint firstItem="NTx-4P-F0f" firstAttribute="centerY" secondItem="lmT-cI-9ud" secondAttribute="centerY" id="CwA-qK-I5u"/>
                                 <constraint firstItem="GiJ-uf-lkF" firstAttribute="leading" secondItem="jkB-dc-xvt" secondAttribute="trailing" constant="8" id="T0b-4F-qCJ"/>
                                 <constraint firstItem="jkB-dc-xvt" firstAttribute="leading" secondItem="lmT-cI-9ud" secondAttribute="leadingMargin" constant="10" id="VIe-sn-UBa"/>
                                 <constraint firstAttribute="bottom" secondItem="7Dk-qX-rBj" secondAttribute="bottom" constant="17" id="VRp-9K-U79"/>
                                 <constraint firstItem="7Dk-qX-rBj" firstAttribute="width" secondItem="7Dk-qX-rBj" secondAttribute="height" multiplier="1:1" id="Xqb-yA-opu"/>
                                 <constraint firstItem="GiJ-uf-lkF" firstAttribute="centerY" secondItem="lmT-cI-9ud" secondAttribute="centerY" id="bbJ-Ki-oCq"/>
                                 <constraint firstItem="jkB-dc-xvt" firstAttribute="centerY" secondItem="lmT-cI-9ud" secondAttribute="centerY" id="fWa-G2-RGf"/>
-                                <constraint firstItem="7Dk-qX-rBj" firstAttribute="leading" secondItem="NTx-4P-F0f" secondAttribute="trailing" constant="10" id="pKa-Pt-SQu"/>
-                                <constraint firstItem="NTx-4P-F0f" firstAttribute="leading" secondItem="GiJ-uf-lkF" secondAttribute="trailing" constant="10" id="pgd-VK-Nq7"/>
                                 <constraint firstItem="7Dk-qX-rBj" firstAttribute="width" secondItem="7Dk-qX-rBj" secondAttribute="height" multiplier="1:1" id="wyh-FO-Uhc"/>
                             </constraints>
                         </view>
@@ -277,7 +270,7 @@
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="vYy-Xr-Umz">
+                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="vYy-Xr-Umz">
                                     <rect key="frame" x="224" y="9.6666666666666856" width="51" height="31"/>
                                     <connections>
                                         <action selector="mainnetTestnetSwitch:" destination="iN0-l3-epB" eventType="valueChanged" id="FeF-at-rCU"/>
@@ -369,7 +362,6 @@
                 <outlet property="profileVerifyImage" destination="jkB-dc-xvt" id="Ko7-Sg-RKD"/>
                 <outlet property="profileVerifyLabel" destination="GiJ-uf-lkF" id="qPS-4k-eoc"/>
                 <outlet property="profileWarning" destination="7Dk-qX-rBj" id="Lcy-Gw-Yub"/>
-                <outlet property="progressView" destination="NTx-4P-F0f" id="oB5-Im-Bxn"/>
                 <outlet property="securityLabel" destination="d50-nx-NzY" id="0Zg-Yt-tIy"/>
                 <outlet property="securityPinLabel" destination="vmV-2f-1SM" id="QzE-f6-Qq2"/>
                 <outlet property="seedBackupWarning" destination="AdQ-F1-UNE" id="ujH-Vi-q03"/>
@@ -394,9 +386,6 @@
         <image name="warning" width="48" height="48"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemGreenColor">
-            <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGroupedBackgroundColor">
             <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

@@ -14,7 +14,6 @@ class ProfileMenuView: UIView {
     @IBOutlet weak var menuImage: UIImageView!
     @IBOutlet weak var title: UILabel!
     @IBOutlet weak var profileVerifyImage: UIImageView!
-    @IBOutlet weak var progressView: UIProgressView!
     @IBOutlet weak var biometricSecurityToggle: UISwitch!
     @IBOutlet weak var mainnetTestnet: UISwitch!
     

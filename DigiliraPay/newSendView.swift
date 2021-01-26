@@ -40,7 +40,8 @@ class newSendView: UIView {
     var assetId: String?
     
     var isWavesNetwork: Bool = false
-    
+    var isTetherNetwork: Bool = false
+
     var Filtered: [digilira.DigiliraPayBalance] = []
     var Coins: [WavesListedToken] = []
     let BC = Blockchain()
@@ -289,12 +290,29 @@ class newSendView: UIView {
         if let t = transaction {
             
             guard let m = t.amount else {return}
+             
+            let balance = Filtered[currentPage].availableBalance
+            
+            if balance < m {
+                errors?.errorCaution(message: "Bakiyeniz bu transferi gerçekleştirebilmek için yeterli değil.", title: "Yetersiz Bakiye")
+                sendView.isUserInteractionEnabled = true
+                sendView.alpha = 1
+                return
+            }
             
             var komisyon:Double = 0
             var komisyonText = "Blokzincir komisyon ücreti DigiliraPay tarafından karşılanmaktadır."
+            var komisyonCoin = "Waves"
             
             if t.destination == digilira.transactionDestination.foreign {
                 komisyon = coin.gatewayFee
+                komisyonCoin = coin.tokenSymbol
+                komisyonText = "Hesabınızda bakiye olmaması durumunda blokzincir komisyonu gönderilecek tutardan otomatik olarak düşecektir."
+            }
+            
+            if t.destination == digilira.transactionDestination.unregistered {
+                komisyon = coin.wavesFee
+                komisyonCoin = "Waves"
                 komisyonText = "Hesabınızda bakiye olmaması durumunda blokzincir komisyonu gönderilecek tutardan otomatik olarak düşecektir."
             }
             
@@ -304,7 +322,7 @@ class newSendView: UIView {
                 l1: "Alıcı: " + t.merchant!,
                 l2: "Miktar: " +  MainScreen.int2so(m, digits: coin.decimal) + " " + coin.tokenSymbol,
                 l3: "TL Karşılığı: ₺" + MainScreen.df2so(t.fiat),
-                l4: "Blokzincir Komisyonu: " + komisyon.description + " " + coin.tokenSymbol,
+                l4: "Blokzincir Komisyonu: " + komisyon.description + " " + komisyonCoin,
                 l5: "",
                 l6: komisyonText,
                 yes: "Onayla",
@@ -531,6 +549,9 @@ class newSendView: UIView {
             
             BC.onMember = { res, data in
                 DispatchQueue.main.async { [self] in
+                    if (data?.isTether)! {
+                        getPage(x: "Tether USDT")
+                    }
                     errors?.removeWait()
                     switch res {
                     case true:
@@ -755,11 +776,12 @@ class newSendView: UIView {
                                     tl: MainScreen.df2so(tlfiyat),
                                     amount: MainScreen.int2so(coin.availableBalance, digits: coin.decimal),
                                     price: MainScreen.int2so(Int64(amount), digits: coin.decimal),
-                                    symbol: coin.tokenName)
+                                    symbol: coin.tokenName, icon: UIImage(named: coin.tokenName))
             
             balanceCardView.balanceTL.isHidden = true
             balanceCardView.balanceTLicon.isHidden = true
-            balanceCardView.totalTitle.isHidden = true
+            balanceCardView.totalTitle.isHidden = false
+            balanceCardView.totalTitle.text = "Gönderilecek Tutar:"
             if coin.availableBalance >= (Int64(amount)) {
                 
             } else {
@@ -884,7 +906,7 @@ class newSendView: UIView {
                                     tl: "0",
                                     amount: "0",
                                     price: "0",
-                                    symbol: coin.tokenName)
+                                    symbol: coin.tokenName, icon: UIImage(named: "ico2"))
             
             balanceCardView.balanceTL.isHidden = true
             balanceCardView.balanceTLicon.isHidden = true

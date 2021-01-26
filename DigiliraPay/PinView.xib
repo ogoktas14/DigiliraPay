@@ -343,21 +343,41 @@
                         <action selector="closeView:" destination="iN0-l3-epB" eventType="touchUpInside" id="drt-6b-WIi"/>
                     </connections>
                 </button>
+                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hatalı giriş yaptınız." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pdB-XJ-Wgo">
+                    <rect key="frame" x="20" y="199" width="374" height="26"/>
+                    <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="19"/>
+                    <color key="textColor" red="0.88235294119999996" green="0.1019607843" blue="0.1843137255" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Kalan deneme hakkınız: 5" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gsy-47-OP0">
+                    <rect key="frame" x="20" y="235" width="374" height="26"/>
+                    <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="19"/>
+                    <color key="textColor" red="0.88235294119999996" green="0.1019607843" blue="0.1843137255" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
                 <constraint firstItem="VmM-Gn-Ljc" firstAttribute="top" secondItem="YwR-9f-mln" secondAttribute="bottom" constant="30" id="0zQ-pc-KfF"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="YwR-9f-mln" secondAttribute="trailing" constant="10" id="86i-db-UQ2"/>
+                <constraint firstItem="pdB-XJ-Wgo" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="D2n-TR-11B"/>
+                <constraint firstItem="Gsy-47-OP0" firstAttribute="top" secondItem="pdB-XJ-Wgo" secondAttribute="bottom" constant="10" id="Gkm-0o-w6m"/>
                 <constraint firstItem="YwR-9f-mln" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="40" id="J8C-uG-AyZ"/>
+                <constraint firstItem="Gsy-47-OP0" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="JgY-8M-sYa"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="Gsy-47-OP0" secondAttribute="trailing" constant="20" id="KWb-vA-40i"/>
                 <constraint firstItem="6y4-Hf-T5V" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="20" id="PHu-4s-l3j"/>
                 <constraint firstItem="VT8-xU-4Ke" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="40" id="TPn-50-mCV"/>
                 <constraint firstItem="VT8-xU-4Ke" firstAttribute="top" relation="greaterThanOrEqual" secondItem="VmM-Gn-Ljc" secondAttribute="bottom" constant="10" id="b5B-SY-2xb"/>
                 <constraint firstItem="6y4-Hf-T5V" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="bi2-Eq-qnh"/>
                 <constraint firstItem="VmM-Gn-Ljc" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="fzG-zw-6E6"/>
+                <constraint firstItem="Gsy-47-OP0" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="gEk-cq-w4C"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="VT8-xU-4Ke" secondAttribute="bottom" constant="40" id="pUU-Ui-naO"/>
+                <constraint firstItem="pdB-XJ-Wgo" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="skk-bQ-Q9I"/>
                 <constraint firstItem="YwR-9f-mln" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="10" id="wvx-O6-aNp"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="VT8-xU-4Ke" secondAttribute="trailing" constant="40" id="xP1-xj-xpK"/>
+                <constraint firstItem="pdB-XJ-Wgo" firstAttribute="top" secondItem="nAp-gB-uv6" secondAttribute="bottom" constant="25" id="xlm-DS-jrR"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="pdB-XJ-Wgo" secondAttribute="trailing" constant="20" id="yKO-jf-jnK"/>
             </constraints>
             <connections>
                 <outlet property="entryAreaView" destination="VT8-xU-4Ke" id="kPy-eG-U67"/>
@@ -372,6 +392,8 @@
                 <outlet property="pinArea4Label" destination="pfI-jV-ECg" id="iuU-PB-3um"/>
                 <outlet property="pinAreaView" destination="VmM-Gn-Ljc" id="B6Q-da-LDd"/>
                 <outlet property="titleLabel" destination="YwR-9f-mln" id="jza-rK-Vyr"/>
+                <outlet property="warning1" destination="pdB-XJ-Wgo" id="O5G-zj-ddx"/>
+                <outlet property="warning2" destination="Gsy-47-OP0" id="NjH-FK-OG8"/>
             </connections>
             <point key="canvasLocation" x="137.68115942028987" y="142.63392857142856"/>
         </view>

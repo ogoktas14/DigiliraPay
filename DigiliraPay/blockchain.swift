@@ -235,16 +235,38 @@ class Blockchain: NSObject {
     }
     
     func getFeeAssetId(destination: String) -> String {
-        switch destination {
-        case digilira.transactionDestination.domestic:
-            return digilira.paymentToken
-        case digilira.transactionDestination.interwallets:
-            return digilira.sponsorToken
-        case digilira.transactionDestination.foreign:
-            return digilira.sponsorToken
+        guard let chainId = WavesSDK.shared.enviroment.chainId else { return "" }
+
+        switch chainId {
+        case "T":
+            switch destination {
+            case digilira.transactionDestination.domestic:
+                return digilira.paymentToken
+            case digilira.transactionDestination.interwallets:
+                return digilira.sponsorToken
+            case digilira.transactionDestination.foreign:
+                return digilira.sponsorToken
+            default:
+                return ""
+            }
         default:
-            return ""
+            switch destination {
+            case digilira.transactionDestination.domestic:
+                return digilira.mainnetPaymentToken
+            case digilira.transactionDestination.interwallets:
+                return digilira.mainnetSponsorToken
+            case digilira.transactionDestination.foreign:
+                return digilira.mainnetSponsorToken
+            default:
+                return ""
+            }
         }
+        
+
+    }
+    
+    func sendBitexen() {
+        
     }
     
     func sendTransaction2(name: String, recipient: String, amount:Int64, assetId:String, attachment:String, wallet:digilira.wallet, blob: SendTrx) {
@@ -543,6 +565,7 @@ class Blockchain: NSObject {
                     let me = digilira.dummyName
                     
                     sendTransaction2(name: me, recipient: proxyAddress, amount: amount, assetId: assetId, attachment: "", wallet: wallet, blob: blob)
+                    
                 }
             }
     }
@@ -813,6 +836,16 @@ class Blockchain: NSObject {
         return "Diğer"
     }
     
+    func returnScript() -> String {
+        guard let chainId = WavesSDK.shared.enviroment.chainId else { return "" }
+        switch chainId {
+        case "T":
+            return digilira.smartAccount.script
+        default:
+            return digilira.smartAccountMainnet.script
+        }
+    }
+    
     func smartD(initial: Bool) {
         do {
             let wallet = try getSeed()
@@ -827,10 +860,10 @@ class Blockchain: NSObject {
                                                                           fee: fee,
                                                                           timestamp: timestamp,
                                                                           senderPublicKey: senderPublicKey,
-                                                                          script: digilira.smartAccount.script)
+                                                                          script: returnScript())
             
             
-            let v:[String] = [chainId, fee.description, digilira.smartAccount.script]
+            let v:[String] = [chainId, fee.description, returnScript()]
             let sign = try bytization(v, timestamp)
             
             struct scriptSend: Codable {
@@ -855,7 +888,7 @@ class Blockchain: NSObject {
                                     signed: sign.signature,
                                     wallet: sign.wallet,
                                     setScript: queryModel,
-                                    script: digilira.smartAccount.script)
+                                    script: returnScript())
             
             if initial {
                 WavesSDK.shared.services
@@ -887,13 +920,35 @@ class Blockchain: NSObject {
                 defaults.set(result, forKey: "walletStatus")
             }
             
-            self.wavesNodeRequests(path: "/addresses/data/" + digilira.gatewayAddress + "/" + address)
+            self.wavesNodeRequests(path: "/addresses/data/" + self.returnDataAddress() + "/" + address)
             }
 
 
     }
     
-    func getDataTrx(key:String, address:String = digilira.gatewayAddress) {
+    func returnDataAddress() -> String {
+        guard let chainId = WavesSDK.shared.enviroment.chainId else { return "" }
+        switch chainId {
+        case "T":
+            return digilira.gatewayAddress
+        default:
+            return digilira.mainnetDataAddress
+        }
+    }
+    
+    func returnGatewayAddress() -> String {
+    guard let chainId = WavesSDK.shared.enviroment.chainId else { return "" }
+    switch chainId {
+    case "T":
+        return digilira.gatewayAddress
+    default:
+        return digilira.mainnetGatewayAddress
+    }
+        
+    }
+    
+    func getDataTrx(key:String) {
+        
         onWavesApiError = { error, status, path in
             self.onWavesDataResponse!(error.data!,status)
         }
@@ -902,7 +957,7 @@ class Blockchain: NSObject {
             self.onWavesDataResponse!(result,status)
         }
         
-        wavesNodeRequests(path: "/addresses/data/" + address + "/" + key)
+        wavesNodeRequests(path: "/addresses/data/" + returnDataAddress() + "/" + key)
     }
     
     func checkListedTokens() {
@@ -913,7 +968,7 @@ class Blockchain: NSObject {
             let defaults = UserDefaults.standard
             defaults.set(result, forKey: "listedTokens")
         }
-        wavesNodeRequests(path: "/addresses/data/" + digilira.gatewayAddress + "/ListedTokens")
+        wavesNodeRequests(path: "/addresses/data/" + returnDataAddress() + "/ListedTokens")
 
     }
     
@@ -927,7 +982,7 @@ class Blockchain: NSObject {
                     sleep(1)
                     self.checkBalance(account: account)
                 }else {
-                    if account.script != digilira.smartAccount.script {
+                    if account.script != self.returnScript() {
                         //script is updated
                         if account.script == nil {
                             //initial script
@@ -962,7 +1017,7 @@ class Blockchain: NSObject {
             .scriptInfo(address: address)
             .asObservable()
             .subscribe(onNext:{(smart) in
-                if smart.script != digilira.smartAccount.script {
+                if smart.script != self.returnScript() {
                     self.checkBalance(account: smart)
                 }
             })
@@ -1078,7 +1133,8 @@ class Blockchain: NSObject {
                                                                          owner: ourMember.owner,
                                                                          wallet: ourMember.wallet,
                                                                          assetId: external.assetId,
-                                                                         destination: ourMember.destination
+                                                                         destination: ourMember.destination,
+                                                                         isTether: ourMember.isTether ?? false
                         )
                         
                         self.onMember!(true, response)
@@ -1099,7 +1155,7 @@ class Blockchain: NSObject {
                                                                          address: croppedAddress,
                                                                          amount: 0,
                                                                          owner: croppedAddress,
-                                                                         wallet: digilira.gatewayAddress,
+                                                                         wallet: returnGatewayAddress(),
                                                                          assetId: external.assetId,
                                                                          destination: digilira.transactionDestination.foreign
                         )
@@ -1153,7 +1209,7 @@ class Blockchain: NSObject {
                                                                                  address: croppedAddress,
                                                                                  amount: 0,
                                                                                  owner: croppedAddress,
-                                                                                 wallet: digilira.gatewayAddress,
+                                                                                 wallet: returnGatewayAddress(),
                                                                                  assetId: external.assetId,
                                                                                  destination: digilira.transactionDestination.foreign
                                 )
@@ -1164,7 +1220,7 @@ class Blockchain: NSObject {
                             }
                             
                         }
-                        let StringUrl = "/addresses/data/" + digilira.gatewayAddress + "/" + croppedAddress!
+                        let StringUrl = "/addresses/data/" + returnDataAddress() + "/" + croppedAddress!
                         wavesNodeRequests(path: StringUrl)
                         break
                     default:
@@ -1229,6 +1285,11 @@ class Blockchain: NSObject {
         default:
             throw digilira.NAError.emptyAuth
         }
+    }
+    
+    func getChain() throws -> String {
+        guard let chainId = WavesSDK.shared.enviroment.chainId else { throw digilira.NAError.emptyAuth }
+        return chainId
     }
     
     func createUser(seed: String) {
@@ -1341,7 +1402,7 @@ class Blockchain: NSObject {
                         }
                     }
                 }
-                crud.request(rURL: crud.getApiURL() + digilira.api.userRegister, postData: try JSONEncoder().encode(user), signature: signed.signature)
+                crud.request(rURL: crud.getApiURL() + digilira.api.userRegister, postData: try JSONEncoder().encode(user), signature: user.signed!)
             } catch  {
                 print(error)
             }

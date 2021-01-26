@@ -61,6 +61,8 @@ class Verify_StartView: UIView {
     
     override func awakeFromNib()
     {
+        NotificationCenter.default.addObserver(self, selector: #selector(screenshotTaken), name: UIApplication.userDidTakeScreenshotNotification, object: nil)
+
         setView1()
     }
     
@@ -158,6 +160,11 @@ class Verify_StartView: UIView {
         }
         
     }
+    
+    @objc func screenshotTaken() {
+        delegate?.warnUser()
+    }
+    
      
 
     func setView()
@@ -165,21 +172,21 @@ class Verify_StartView: UIView {
 
         if keywordArray.count > 0 {
             
-            label1.text = keywordArray[0]
-            label2.text = keywordArray[1]
-            label3.text = keywordArray[2]
-            label4.text = keywordArray[3]
-            label5.text = keywordArray[4]
-            label6.text = keywordArray[5]
-            label7.text = keywordArray[6]
-            label8.text = keywordArray[7]
-            label9.text = keywordArray[8]
-            label10.text = keywordArray[9]
-            label11.text = keywordArray[10]
-            label12.text = keywordArray[11]
-            label13.text = keywordArray[12]
-            label14.text = keywordArray[13]
-            label15.text = keywordArray[14]
+            label1.text = shuffled[0]
+            label2.text = shuffled[1]
+            label3.text = shuffled[2]
+            label4.text = shuffled[3]
+            label5.text = shuffled[4]
+            label6.text = shuffled[5]
+            label7.text = shuffled[6]
+            label8.text = shuffled[7]
+            label9.text = shuffled[8]
+            label10.text = shuffled[9]
+            label11.text = shuffled[10]
+            label12.text = shuffled[11]
+            label13.text = shuffled[12]
+            label14.text = shuffled[13]
+            label15.text = shuffled[14]
         }
     }
     

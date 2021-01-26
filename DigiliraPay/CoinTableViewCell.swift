@@ -27,5 +27,16 @@ class CoinTableViewCell: UITableViewCell {
         coinAmount.textColor = .darkGray
         emptyIcon.layer.cornerRadius = emptyIcon.frame.size.height / 2
     }
+}
+
+class CoinTableSeperator: UITableViewCell {
+
+    @IBOutlet weak var network: UILabel!
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        network.text = "111"
+
+    }
 
 }

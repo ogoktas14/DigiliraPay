@@ -34,6 +34,6 @@ protocol NewCoinSendDelegate: class {
  
 protocol PageCardViewDeleGate: class {
     func cancel1(id: String)
-    func dismissNewSend1(params: PaymentModel)
+    func dismissNewSend1(params: PaymentModel, network: String)
     func selectCoin1(params: String)
 }

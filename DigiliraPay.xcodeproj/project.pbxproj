@@ -119,6 +119,8 @@
 		93BB06E6259FD6E4000E4BBB /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93BB06E5259FD6E4000E4BBB /* ComplicationController.swift */; };
 		93BB06E8259FD6E5000E4BBB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 93BB06E7259FD6E5000E4BBB /* Assets.xcassets */; };
 		93BB06ED259FD6E5000E4BBB /* WatchDP.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 93BB06CE259FD6E2000E4BBB /* WatchDP.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		93C1118D25B8507A00CEE537 /* CoinTableSeperator.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93C1118C25B8507A00CEE537 /* CoinTableSeperator.xib */; };
+		93C111A525BC9B8B00CEE537 /* testBitexen.cer in Resources */ = {isa = PBXBuildFile; fileRef = 93C111A125BC9A2300CEE537 /* testBitexen.cer */; };
 		93CAC397259225B9006B8FB7 /* PaymentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93CAC396259225B9006B8FB7 /* PaymentModel.swift */; };
 		93E9D552257A930D00FE19D8 /* ErrorHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E9D551257A930D00FE19D8 /* ErrorHandling.swift */; };
 		93F79FD3257E0D48006DC148 /* ParaYatirView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93F79FD2257E0D48006DC148 /* ParaYatirView.xib */; };
@@ -300,6 +302,8 @@
 		93BB06E7259FD6E5000E4BBB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		93BB06E9259FD6E5000E4BBB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		93BB06EA259FD6E5000E4BBB /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
+		93C1118C25B8507A00CEE537 /* CoinTableSeperator.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CoinTableSeperator.xib; sourceTree = "<group>"; };
+		93C111A125BC9A2300CEE537 /* testBitexen.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = testBitexen.cer; sourceTree = "<group>"; };
 		93CAC396259225B9006B8FB7 /* PaymentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentModel.swift; sourceTree = "<group>"; };
 		93E9D551257A930D00FE19D8 /* ErrorHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorHandling.swift; sourceTree = "<group>"; };
 		93F79FD2257E0D48006DC148 /* ParaYatirView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ParaYatirView.xib; sourceTree = "<group>"; };
@@ -424,6 +428,7 @@
 				88BEDFAD23101AC80003C371 /* Verify&StartView.xib */,
 				889F2A2023158BAB00ACD656 /* MenuView.xib */,
 				880541F92319702B004EE85F /* CoinTableViewCell.xib */,
+				93C1118C25B8507A00CEE537 /* CoinTableSeperator.xib */,
 				93757C20256D43060066A7B9 /* PayTableViewCell.xib */,
 				88CA93632319792A008F894B /* WalletView.xib */,
 				88CA9367231979C3008F894B /* WalletOperationButtonSView.xib */,
@@ -562,6 +567,7 @@
 			children = (
 				93390885255A76CD0005B64A /* cloudflaressl.cer */,
 				93390893255AB1230005B64A /* bitexen.com.cer */,
+				93C111A125BC9A2300CEE537 /* testBitexen.cer */,
 				93FC66C22562AB9400E42AAC /* binance.com.cer */,
 				93390894255AB1760005B64A /* wavesnodes.com.cer */,
 			);
@@ -715,6 +721,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				93C111A525BC9B8B00CEE537 /* testBitexen.cer in Resources */,
 				9342427F2586AF7E009D6024 /* OrderDetailView.xib in Resources */,
 				93FC66C32562ABAB00E42AAC /* binance.com.cer in Resources */,
 				932A59C02584FA1900B64EA9 /* warningView.xib in Resources */,
@@ -740,6 +747,7 @@
 				93F79FDA257E5B4C006DC148 /* CreditCardView.xib in Resources */,
 				88CA9368231979C3008F894B /* WalletOperationButtonSView.xib in Resources */,
 				93757C28256E3EAD0066A7B9 /* PageCardView.xib in Resources */,
+				93C1118D25B8507A00CEE537 /* CoinTableSeperator.xib in Resources */,
 				88CA937C231A48A0008F894B /* TransactionHistoryDetailCellDeatils.xib in Resources */,
 				9360FE62258F6B510064C579 /* LogoAnimation.xib in Resources */,
 				88F3F957230FD92600D81F2B /* LetsStartWordView.xib in Resources */,
@@ -1083,7 +1091,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 87;
+				CURRENT_PROJECT_VERSION = 91;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;
@@ -1108,7 +1116,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPayRelease.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 87;
+				CURRENT_PROJECT_VERSION = 91;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;
@@ -1131,7 +1139,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 87;
+				CURRENT_PROJECT_VERSION = 91;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = "WatchDP Extension/Info.plist";
@@ -1155,7 +1163,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 87;
+				CURRENT_PROJECT_VERSION = 91;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = "WatchDP Extension/Info.plist";
@@ -1181,7 +1189,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 87;
+				CURRENT_PROJECT_VERSION = 91;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				ENABLE_BITCODE = YES;
 				IBSC_MODULE = WatchDP_Extension;
@@ -1203,7 +1211,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 87;
+				CURRENT_PROJECT_VERSION = 91;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				ENABLE_BITCODE = YES;
 				IBSC_MODULE = WatchDP_Extension;

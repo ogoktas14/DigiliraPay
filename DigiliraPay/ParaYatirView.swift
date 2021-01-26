@@ -296,9 +296,15 @@ class ParaYatirView:UIView {
         case digilira.bitcoinNetwork:
             let address = kullanici?.btcAddress
             return address
-        case digilira.ethereumNetwork:
-            let address = kullanici?.ethAddress
-            return address
+        case digilira.ethereumNetwork: 
+            switch coin.tokenName {
+            case "Tether USDT":
+                let address = kullanici?.tetherAddress
+                return address
+            default:
+                let address = kullanici?.ethAddress
+                return address
+            }
         case digilira.wavesNetwork:
             let address = kullanici?.wallet
             return address

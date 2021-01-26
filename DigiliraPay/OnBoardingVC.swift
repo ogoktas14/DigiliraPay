@@ -27,14 +27,27 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
     @IBOutlet weak var letsGoView: UIView!
     @IBOutlet weak var importAccountView: UILabel!
     @IBOutlet weak var letsGoLabel: UILabel!
+    
+    var notifyDest: NSNotification.Name?
 
     var logoAnimation = LogoAnimation()
     var warningView = WarningView()
 
+    var onScreeen = false
     var onBoardingScrollView = UIScrollView()
     let BC = Blockchain()
+    let digiliraPay = digiliraPayApi()
 
     var QR:digilira.QR = digilira.QR.init()
+    
+    @objc func blocked() {
+        if onScreeen {
+            self.warningView.removeFromSuperview()
+            
+        }
+        onScreeen = true
+        self.alertWarning(title: "Hesabınız Bloke Edildi", message: "Pin kodunuzu sıfırlamak için www.digilirapay.com/pin adresini ziyaret ediniz.", error: true)
+    }
     
     private func initial2() {
         letsGoView.isHidden = true
@@ -42,11 +55,38 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
         pageControl.isHidden = true
         
         UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(blocked), name: Notification.Name(.foo), object: nil)
+
         if BC.checkIfUser() {
 
             DispatchQueue.main.async { [self] in
                 if let user = try? secretKeys.userData() {
+                    
+                    if user.status == 403000 { 
+                        digiliraPay.onUpdate = { res in
+ 
+                        }
+                        let timestamp = Int64(Date().timeIntervalSince1970) * 1000
+
+                        if let sign = try? BC.bytization([user.id, 403000.description], timestamp) {
+                            let user = digilira.exUser.init(
+                                id: user.id,
+                                wallet: sign.wallet,
+                                status: 403000,
+                                signed: sign.signature,
+                                publicKey: sign.publicKey,
+                                timestamp: timestamp
+                            )
+                            
+                            let encoder = JSONEncoder()
+                            let data = try? encoder.encode(user)
+                            
+                            digiliraPay.updateUser(user: data, signature: sign.signature)
+                        }
+                        return
+                    } else {
+                        UserDefaults.standard.set(false, forKey: "isBlocked")
+                    }
                     self.BC.checkSmart(address: user.wallet)
                     self.goMainVC()
                     return
@@ -408,4 +448,13 @@ class DynamicViewController: UIViewController, LegalDelegate {
 
 protocol DisplayViewControllerDelegate : NSObjectProtocol{
     func doSomethingWith()
+}
+
+extension NSNotification.Name {
+    enum Notifications: String {
+        case foo, bar
+    }
+    init(_ value: Notifications) {
+        self = NSNotification.Name(value.rawValue)
+    }
 }

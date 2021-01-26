@@ -68,7 +68,45 @@ extension MainScreen: NewCoinSendDelegate
                     self.dismissNewSend()
                     switch params.destination {
                     case digilira.transactionDestination.domestic, digilira.transactionDestination.unregistered:
-                        BC.sendTransaction2(name: params.merchant!, recipient: params.recipient!, amount: params.amount!, assetId: params.assetId!, attachment: params.attachment, wallet:wallet, blob: params)
+                        
+                        switch params.network {
+                        case "bitexen":
+                            //TODO - BC.sendBitexen()
+                            
+                            if let api = decodeDefaults(forKey: digiliraPay.returnBexChain(), conformance: bex.bitexenAPICred.self) {
+                                if (api.valid) { // if bitexen api valid
+                                    
+                                    let double = Double(truncating: pow(10,8) as NSNumber)
+                                    
+                                    let f = Double(params.amount!) / double
+                                    
+                                    let p = bex.MakePayment.init(paymentID: UUID().uuidString,
+                                                                 amount: "10.00",
+                                                                 currencyCode: params.assetId!,
+                                                                 counterAmount: "20.00",
+                                                                 counterCurrencyCode: "TRY",
+                                                                 merchantCode: "DEMO",
+                                                                 merchantMcc: "1122F",
+                                                                 merchantName: "BTXTEST"
+                                    )
+                                    
+
+                                    bitexenSign.makePayment(payment: p, keys: api)
+
+                                    isBitexenFetched = false
+                                }else {
+                                    isBitexenFetched = true //is bex not valid do not wait
+                                    isBitexenReload = true
+                                }
+                            }else {
+                                isBitexenFetched = true //is bex not valid do not wait
+                                isBitexenReload = true
+                            }
+                            
+                            break
+                        default:
+                            BC.sendTransaction2(name: params.merchant!, recipient: params.recipient!, amount: params.amount!, assetId: params.assetId!, attachment: params.attachment, wallet:wallet, blob: params)
+                        }
                         break
                     case digilira.transactionDestination.foreign:
                         
@@ -141,7 +179,7 @@ extension MainScreen: PageCardViewDeleGate
         })
     }
     
-    func dismissNewSend1(params: PaymentModel) {
+    func dismissNewSend1(params: PaymentModel, network: String) {
         //fetch()
         isNewSendScreen = false
         menuView.isHidden = false
@@ -154,13 +192,13 @@ extension MainScreen: PageCardViewDeleGate
             }
         }
         let data = SendTrx.init(merchant: params.merchant,
-                                recipient: digilira.gatewayAddress,
+                                recipient: BC.returnGatewayAddress(),
                                 assetId: params.currency,
                                 amount: params.rate,
                                 fee: digilira.sponsorTokenFee,
                                 fiat: params.totalPrice,
                                 attachment: params.paymentModelID,
-                                network: digilira.transactionDestination.domestic,
+                                network: network,
                                 destination: digilira.transactionDestination.domestic,
                                 products: params.products,
                                 me: name,
@@ -219,6 +257,7 @@ extension MainScreen: PinViewDelegate
             }
             pinView.setCode()
             
+            pinView.errors = self
             pinView.delegate = self
             pinView.frame = CGRect(x: 0,
                                    y: 0,
@@ -240,6 +279,41 @@ extension MainScreen: PinViewDelegate
         self.onPinSuccess!(res)
     }
     
+    func blockUser () {
+        
+        digiliraPay.onUpdate = { res in
+            
+            DispatchQueue.main.async { [self] in
+                if res {
+                    UserDefaults.standard.set(true, forKey: "isBlocked")
+                    checkEssentials()
+                } else {
+                    throwEngine.evaluateError(error: digilira.NAError.anErrorOccured)
+                }
+                
+            }
+        }
+        
+        
+        
+        let timestamp = Int64(Date().timeIntervalSince1970) * 1000
+
+        if let sign = try? BC.bytization([kullanici.id, 403000.description], timestamp) {
+            let user = digilira.exUser.init(
+                id: kullanici.id,
+                wallet: sign.wallet,
+                status: 403000,
+                signed: sign.signature,
+                publicKey: sign.publicKey,
+                timestamp: timestamp
+            )
+            
+            let encoder = JSONEncoder()
+            let data = try? encoder.encode(user)
+            
+            digiliraPay.updateUser(user: data, signature: sign.signature)
+        }
+    }
     func closePinView() {
         
         
@@ -549,6 +623,10 @@ extension MainScreen: PaymentCatViewsDelegate {
 
 
 extension MainScreen: LetsStartSkipDelegate {
+    
+    func warnUser() {
+        throwEngine.alertWarning(title: "Dikkat", message: "Ekran görüntüsü olarak anahtar kelimelerinizi yedeklemeniz durumunda, anahtar kelimelerinizin üçüncü şahıslar tarafından görülmesi riskini arttırmaktadır. Lütfen daha güvenli bir yedekleme metodu gerçekleştiriniz.")
+    }
     func skipTap() {
         UIView.animate(withDuration: 0.3) {
             self.sendWithQRView.frame.origin.y = self.self.view.frame.height

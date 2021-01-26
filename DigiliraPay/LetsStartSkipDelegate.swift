@@ -12,5 +12,6 @@ protocol LetsStartSkipDelegate: class
 {
     func skipTap()
     func dogrula()
+    func warnUser()
 
 }

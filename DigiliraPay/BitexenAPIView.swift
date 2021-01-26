@@ -33,10 +33,10 @@ class BitexenAPIView: UIView {
     
     override func awakeFromNib()
     {
-        if  digiliraPay.isKeyPresentInUserDefaults(key: bex.bexApiDefaultKey.key) {
+        if  digiliraPay.isKeyPresentInUserDefaults(key: digiliraPay.returnBexChain()) {
                         
             let defaults = UserDefaults.standard
-            if let savedAPI = defaults.object(forKey: bex.bexApiDefaultKey.key) as? Data {
+            if let savedAPI = defaults.object(forKey: digiliraPay.returnBexChain()) as? Data {
                 let decoder = JSONDecoder()
                 
                 do {
@@ -59,10 +59,13 @@ class BitexenAPIView: UIView {
 
         bitexenSign.onBitexenError = { [self] res, sts in
            
-            saveView.alpha = 1
-            saveView.isUserInteractionEnabled = true
-            
-            self.shake()
+            DispatchQueue.main.async {
+                saveView.alpha = 1
+                saveView.isUserInteractionEnabled = true
+                
+                self.shake()
+
+            }
             
             errors?.evaluate(error: digilira.NAError.missingParameters)
         }
@@ -88,7 +91,7 @@ class BitexenAPIView: UIView {
             if statusCode == 200 {  
                 
                 res.valid = true
-                save2defaults(forKey: bex.bexApiDefaultKey.key, data: res)
+                save2defaults(forKey: digiliraPay.returnBexChain(), data: res)
                 delegate?.dismissBitexen()
                 errors?.errorHandler(message: "API bilgileriniz kaydedildi.", title: "İşlem Başarılı", error: false)
                 
@@ -96,7 +99,7 @@ class BitexenAPIView: UIView {
             
         }
         bitexenSign.getBalances(keys: res)
-        save2defaults(forKey:bex.bexApiDefaultKey.key, data: res)
+        save2defaults(forKey:digiliraPay.returnBexChain(), data: res)
 
     }
     

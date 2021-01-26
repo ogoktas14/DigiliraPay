@@ -19,6 +19,8 @@ class PinView: UIView {
     @IBOutlet weak var pinArea3: UIView!
     @IBOutlet weak var pinArea4: UIView!
     
+    @IBOutlet weak var warning1: UILabel!
+    @IBOutlet weak var warning2: UILabel!
     @IBOutlet weak var pinArea1Label: UILabel!
     @IBOutlet weak var pinArea2Label: UILabel!
     @IBOutlet weak var pinArea3Label: UILabel!
@@ -30,7 +32,9 @@ class PinView: UIView {
     let generator = UINotificationFeedbackGenerator()
 
     let digiliraPay = digiliraPayApi()
-     
+    weak var errors: ErrorsDelegate?
+
+    var tryAgain = 5
     weak var delegate: PinViewDelegate?
     
     let enteredColor =  UIColor(red: 0.8941, green: 0.0941, blue: 0.1686, alpha: 1.0)
@@ -44,6 +48,7 @@ class PinView: UIView {
     var isVerify = false
     var isEntryMode = false
     var isUpdateMode = false
+    var isUpdating = false
     var isInit = false
     var isTouchIDCanceled = false
     var wrongEntry = 0
@@ -61,12 +66,16 @@ class PinView: UIView {
             } catch  {
                 print (error)
             }
+            UserDefaults.standard.set(0, forKey: "wrongEntry")
+
             delegate?.closePinView()
             return true
         }
         
         if let compare = BCryptSwift.verifyPassword(pin, matchesHash: bcrypt) {
                 if compare {
+                    UserDefaults.standard.set(0, forKey: "wrongEntry")
+
                     return true
                 }
                 else {
@@ -100,7 +109,11 @@ class PinView: UIView {
     }
 
     override func awakeFromNib()
-    { 
+    {
+        
+        if let we = UserDefaults.standard.value(forKey: "wrongEntry") as? Int {
+            wrongEntry = we
+        }
         setView()
         digiliraPay.onTouchID = { res, err in
             if res == true {
@@ -247,7 +260,7 @@ class PinView: UIView {
     {
         if !isVerify {
             entryAreaView.isUserInteractionEnabled = true
-
+            isUpdating = true
             titleLabel.text = "Pini Doğrulayın"
         }
         entered = [false, false, false, false]
@@ -304,7 +317,10 @@ class PinView: UIView {
             if isUpdateMode {
                 goVerify()
                 entryAreaView.isUserInteractionEnabled = true
-
+ 
+                warning1.isHidden = true
+                warning2.isHidden = true
+                
                 firstCode.removeAll()
                 titleLabel.text = "Yeni Pin Belirleyin"
                 isVerify = false
@@ -313,40 +329,34 @@ class PinView: UIView {
             }
         } else {
             entryAreaView.isUserInteractionEnabled = true
-
-            if wrongEntry > 4 {
-                    wrongEntry = 0
-                    if (!isTouchIDCanceled) {
-                        
-                        digiliraPay.onTouchID = { res, err in
-                            if res == true {
-                                self.goVerify()
-                                self.isEntryMode = false
-                                self.firstCode.removeAll()
-                                self.titleLabel.text = "Yeni Pin Belirleyin"
-                                self.isVerify = false
-                                self.lastCode.removeAll()
-                                self.isUpdateMode=false
-                            }
-                        }
-                        
-                        digiliraPay.touchID(reason: "Transferin gerçekleşebilmesi için biometrik onayınız gerekmektedir!")
-                      
-                    } else {
-
-                        delegate?.pinSuccess(res:false)
-                        delegate?.closePinView()
-                    }
-            }
             
+            if !isUpdating {
             wrongEntry += 1
+                UserDefaults.standard.set(wrongEntry, forKey: "wrongEntry")
+
+            warning1.isHidden = false
+            warning2.isHidden = false
             
+            if wrongEntry > 4 {
+                   
+                entryAreaView.alpha = 0.4
+                entryAreaView.isUserInteractionEnabled = false
+                warning1.isHidden = true
+                warning2.isHidden = true
+ 
+                goBackButtonView.isHidden = true
+                delegate?.blockUser()
+            }
+
+            warning2.text = "Kalan deneme hakkınız: " + (tryAgain - wrongEntry).description
+            }
             generator.notificationOccurred(.error)
             goVerify()
             pinAreaView.shake()
             pinAreaView.isHidden = false
             firstCode.removeAll()
-
+                
+            
             if !isEntryMode && !isUpdateMode  {
             titleLabel.text = "Pini Girin"
             isVerify = false
@@ -434,3 +444,4 @@ class PinView: UIView {
         delegate?.closePinView()
     }
 }
+

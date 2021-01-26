@@ -23,6 +23,8 @@ class digiliraPayApi: NSObject {
     var onResponse: ((_ result: [String:Any], _ statusCode: Int?)->())?
     var onUpdate: ((_ result: Bool)->())?
     var onTicker: ((_ result: String)->())?
+    var onBitexenTicker: ((_ result: bex.bexAllTicker)->())?
+ 
     
     var crud = centralRequest()
     var throwEngine = ErrorHandling()
@@ -67,6 +69,11 @@ class digiliraPayApi: NSObject {
             self.onTouchID!(false, "Fallback authentication mechanism selected.")
             UserDefaults.standard.setValue(false, forKey: "biometrics")
         }
+    }
+    
+    func getChain() throws -> String {
+        guard let chainId = WavesSDK.shared.enviroment.chainId else { throw digilira.NAError.emptyAuth }
+        return chainId
     }
     
     func getKeyChainSource() throws -> digilira.keychainData {
@@ -188,13 +195,14 @@ class digiliraPayApi: NSObject {
     }
     
     func ratePrice(price: Double, asset: digilira.DigiliraPayBalance, symbol: digilira.ticker) throws -> (Double, String, Double) {
-
         let double = Double(truncating: pow(10,asset.decimal) as NSNumber)
+
         
-        do {
-            let tokens = try listedTokens.returnAsset(assetId: asset.tokenName)
-            switch asset.network {
-            case "waves":
+        switch asset.network {
+        case "waves":
+            
+            do {
+                let tokens = try listedTokens.returnAsset(assetId: asset.tokenName)
                 switch tokens.network {
                 case digilira.bitcoinNetwork:
                     
@@ -234,21 +242,20 @@ class digiliraPayApi: NSObject {
                     let result = price / tick
                     return (Double(round(double * result)), tokens.token, tick)
                 }
-                
-            case "bitexen":
-                if let usdt = symbol.usdTLPrice {
-                    let result = price / usdt
-                    return (Double(round(double * result)), tokens.token, usdt)
-                }
-                break
-            default:
-                break
+            } catch {
+                throw digilira.NAError.emptyAuth
             }
-            throw digilira.NAError.emptyAuth
-  
-        } catch {
-            throw digilira.NAError.emptyAuth
+            break
+        case "bitexen":
+            if let usdt = symbol.usdTLPrice {
+                let result = price / usdt
+                return (Double(round(double * result)), asset.tokenName, usdt)
+            }
+            break
+        default:
+            break
         }
+         
          throw digilira.NAError.emptyAuth
     }
     
@@ -277,9 +284,19 @@ class digiliraPayApi: NSObject {
         return UserDefaults.standard.object(forKey: key) != nil
     }
     
+    func returnBexChain() -> String{
+        guard let chainId = WavesSDK.shared.enviroment.chainId else { return bex.bexApiDefaultKey.key }
+        switch chainId {
+        case "W":
+            return bex.bexApiDefaultKey.testKey
+        default:
+            return bex.bexApiDefaultKey.key
+        }
+    }
+    
     func wipeOut () {
         do {
-            try Locksmith.deleteDataForUserAccount(userAccount: bex.bexApiDefaultKey.key)
+            try Locksmith.deleteDataForUserAccount(userAccount: returnBexChain())
         } catch  {
             print(error)
         }
@@ -290,16 +307,6 @@ class digiliraPayApi: NSObject {
         }
         do {
             try Locksmith.deleteDataForUserAccount(userAccount: "authenticate")
-        } catch  {
-            print(error)
-        }
-        do {
-            try Locksmith.deleteDataForUserAccount(userAccount: "sensitiveMainnet")
-        } catch  {
-            print(error)
-        }
-        do {
-            try Locksmith.deleteDataForUserAccount(userAccount: "authenticateMainnet")
         } catch  {
             print(error)
         }

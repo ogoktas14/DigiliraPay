@@ -131,7 +131,7 @@ public class BCryptSwiftRandom : NSObject {
             return []
         }
         
-        var sequence = BCryptSwiftRandom.generateNumberSequenceBetween(-128, 127, ofLength: length, withUniqueValues: false)
+        let sequence = BCryptSwiftRandom.generateNumberSequenceBetween(-128, 127, ofLength: length, withUniqueValues: false)
         var randomData : [Int8] = [Int8](repeating: 0, count: length)
         
         for i in 0 ..< length {

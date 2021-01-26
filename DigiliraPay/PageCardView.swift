@@ -30,12 +30,17 @@ class PageCardView: UIView {
     let digiliraPay = digiliraPayApi()
     let BC = Blockchain()
     var direction: UISwipeGestureRecognizer.Direction?
-    
+    var network: String = digilira.wavesNetwork
     var shoppingCart: [digilira.shoppingCart] = []
     
     var Ticker: binance.BinanceMarketInfo = []
     let binanceAPI = binance()
     var ticker: digilira.ticker?
+    
+    var bexTicker: bex.bexAllTicker?
+    var marketInfo: bex.bexMarketInfo?
+
+    var bexT = bex()
     
     var Order: PaymentModel?
     var currentPage: Int = 0
@@ -127,7 +132,21 @@ class PageCardView: UIView {
     @objc func letsPay()
     {
         if let order = Order {
-            delegate?.dismissNewSend1(params: order)
+            let t1 = Int64(NSDate().timeIntervalSince1970) * 1000
+            let timestamp = order.createdDate
+             
+            let formatter4 = DateFormatter()
+            formatter4.dateFormat = "y-M-d'T'HH:mm:ss.SSS'Z'"
+            let then = formatter4.date(from: timestamp) ?? Date()
+            let t0 = (Int64(then.timeIntervalSince1970) * 1000)
+            
+            let delta = (t1 - t0 - 10800000) / 1000
+            
+            if delta > 120 {
+                errors?.errorHandler(message: "Ödeme süresi doldu. Lütfen yeni QR kod okutunuz.", title: "Geçersiz QR Kod", error: true)
+            } else {
+                delegate?.dismissNewSend1(params: order, network: network)
+            }
         }
     }
     
@@ -205,37 +224,113 @@ class PageCardView: UIView {
         
     }
     
+    func rateBitexen (coin: digilira.DigiliraPayBalance, fiyat: Double ) throws -> (Double, String, Double)  {
+         
+        if let mi = marketInfo {
+            let data = mi.data.markets
+            for item in data {
+                if item.baseCurrency == coin.tokenName {
+                    let coinPrice = bexTicker?.data.ticker[ item.marketCode]
+                    let double = Double(truncating: pow(10,coin.decimal) as NSNumber)
+                    let coinDouble = Double(coinPrice!.lastPrice)
+                    
+                    let balance = Double(coin.availableBalance) / double
+                    let balanceTL = balance * coinDouble!
+                    let price = (fiyat / coinDouble!) * double
+                    
+                    if item.counterCurrency.rawValue == "TRY" {
+                        return (price, coin.tokenName, balanceTL)
+                    }
+                }
+            
+            }
+        }
+        
+        throw digilira.NAError.notListedToken
+    }
+    
     func setCoinCard(scrollViewSize: UIView, layer: CGFloat, coin:digilira.DigiliraPayBalance) throws -> UIView {
         balanceCardView = UIView().loadNib(name: "BalanceCard") as! BalanceCard
         let ticker = digiliraPay.ticker(ticker: Ticker)
-        
+ 
         if let order = Order {
             let fiyat = order.totalPrice
                 do {
-                    let (amount, asset, tlfiyat) = try digiliraPay.ratePrice(price: fiyat, asset: coin, symbol: ticker)
-                    
-                    balanceCardView.setView(desc: coin.tokenName,
-                                            tl: MainScreen.df2so(tlfiyat),
-                                            amount: MainScreen.int2so(coin.availableBalance, digits: coin.decimal),
-                                            price: MainScreen.int2so(Int64(amount), digits: coin.decimal),
-                                            symbol: coin.tokenName)
-                    
-                    
-                    if coin.availableBalance >= (Int64(amount)) {
-                        Order?.currency = asset
-                        Order?.rate = (Int64(amount))
-                        payButton.isUserInteractionEnabled = true
-                        payButton.alpha = 1
+                     
+                    if coin.network == "bitexen" {
+                        let icon = UIImage(named: "bitexen_hover-1")
+                        
+                        var amount = fiyat
+                        var asset = "TRY"
+                        var tlfiyat = fiyat
+                        
+                        switch coin.tokenName {
+                        case "TRY":
+                            let double = Double(truncating: pow(10,coin.decimal) as NSNumber)
+                            amount = fiyat * double
+                            asset = "TRY"
+                            tlfiyat = Double(coin.availableBalance) / double
+                        default:
+                            (amount, asset, tlfiyat) = try rateBitexen(coin: coin, fiyat: fiyat)
+                        }
+                        
+                        network = coin.network
+                         
+                        balanceCardView.setView(desc: coin.tokenName,
+                                                tl: MainScreen.df2so(tlfiyat),
+                                                amount: MainScreen.int2so(coin.availableBalance, digits: coin.decimal),
+                                                price: MainScreen.int2so(Int64(amount), digits: coin.decimal),
+                                                symbol: coin.tokenName, icon: icon)
+                        
+                        
+                        if coin.availableBalance >= (Int64(amount)) {
+                            Order?.currency = asset
+                            Order?.rate = (Int64(amount))
+                            payButton.isUserInteractionEnabled = true
+                            payButton.alpha = 1
+                        } else {
+                            payButton.isUserInteractionEnabled = false
+                            payButton.alpha = 0.4
+                        }
+                        
+                        if (asset == "TL") {
+                            payButton.isUserInteractionEnabled = false
+                            payButton.alpha = 0.4
+                            shake()
+                        }
                     } else {
-                        payButton.isUserInteractionEnabled = false
-                        payButton.alpha = 0.4
+                        
+                        let (amount, asset, tlfiyat) = try digiliraPay.ratePrice(price: fiyat, asset: coin, symbol: ticker)
+                        network = coin.network
+                        let icon = UIImage(named: coin.tokenName)
+                         
+                        balanceCardView.setView(desc: coin.tokenName,
+                                                tl: MainScreen.df2so(tlfiyat),
+                                                amount: MainScreen.int2so(coin.availableBalance, digits: coin.decimal),
+                                                price: MainScreen.int2so(Int64(amount), digits: coin.decimal),
+                                                symbol: coin.tokenName, icon: icon)
+                        
+                        
+                        if coin.availableBalance >= (Int64(amount)) {
+                            Order?.currency = asset
+                            Order?.rate = (Int64(amount))
+                            payButton.isUserInteractionEnabled = true
+                            payButton.alpha = 1
+                        } else {
+                            payButton.isUserInteractionEnabled = false
+                            payButton.alpha = 0.4
+                        }
+                        
+                        if (asset == "TL") {
+                            payButton.isUserInteractionEnabled = false
+                            payButton.alpha = 0.4
+                            shake()
+                        }
+                        
                     }
                     
-                    if (asset == "TL") {
-                        payButton.isUserInteractionEnabled = false
-                        payButton.alpha = 0.4
-                        shake()
-                    }
+                    
+
                 } catch  {
                     print(error)
                     throw error
@@ -337,7 +432,7 @@ class PageCardView: UIView {
                                         tl: "0",
                                         amount: "0",
                                         price: "0",
-                                        symbol: coin.tokenName)
+                                        symbol: coin.tokenName, icon: UIImage(named: "ico2"))
                 
                 balanceCardView.balanceTL.isHidden = true
                 balanceCardView.balanceTLicon.isHidden = true
