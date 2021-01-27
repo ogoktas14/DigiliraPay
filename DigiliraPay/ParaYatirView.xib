@@ -270,7 +270,7 @@
                                 <constraint firstAttribute="trailing" secondItem="gWL-gf-3pJ" secondAttribute="trailing" id="1XP-fS-AoE"/>
                                 <constraint firstItem="gWL-gf-3pJ" firstAttribute="top" secondItem="a8l-gl-AX5" secondAttribute="top" id="1mX-AM-dmJ"/>
                                 <constraint firstItem="gWL-gf-3pJ" firstAttribute="width" secondItem="a8l-gl-AX5" secondAttribute="width" id="Ko6-C6-fEV"/>
-                                <constraint firstAttribute="bottom" secondItem="gWL-gf-3pJ" secondAttribute="bottom" constant="100" id="PwD-57-idO"/>
+                                <constraint firstAttribute="bottom" secondItem="gWL-gf-3pJ" secondAttribute="bottom" constant="200" id="PwD-57-idO"/>
                                 <constraint firstItem="gWL-gf-3pJ" firstAttribute="leading" secondItem="a8l-gl-AX5" secondAttribute="leading" id="SIP-cA-MLr"/>
                             </constraints>
                         </scrollView>
@@ -311,11 +311,20 @@
                 <outlet property="imgSave" destination="6PZ-IS-xjj" id="8GC-R8-tLr"/>
                 <outlet property="imgShare" destination="bFO-rI-qaB" id="XNN-m9-AkZ"/>
                 <outlet property="l1" destination="sLx-3H-uwg" id="uaY-47-fdY"/>
+                <outlet property="l2" destination="EnS-Aa-bT4" id="pxF-6p-SuY"/>
+                <outlet property="l3" destination="vE3-zb-UdF" id="BBb-Mw-jhY"/>
+                <outlet property="l4" destination="llB-Gl-0wQ" id="MB1-LX-V29"/>
+                <outlet property="l5" destination="dXf-nE-Pnn" id="ass-U8-zXf"/>
                 <outlet property="pageControl" destination="DIQ-Za-y1C" id="oTo-yH-h9k"/>
                 <outlet property="saveView" destination="Bx3-CG-sgH" id="qEN-ei-zGW"/>
                 <outlet property="scrollAreaView" destination="adC-qW-R2O" id="J9D-Ki-0Pe"/>
                 <outlet property="scrollView" destination="a8l-gl-AX5" id="mtK-7h-HaM"/>
                 <outlet property="shareView" destination="dkj-0F-Otb" id="Xeg-TR-9ha"/>
+                <outlet property="v1" destination="9sA-Ur-bmY" id="Zyv-lY-sCo"/>
+                <outlet property="v2" destination="zoi-ch-hAe" id="BXj-aI-R8g"/>
+                <outlet property="v3" destination="i9X-2X-YVE" id="ba9-YL-zmQ"/>
+                <outlet property="v4" destination="kbV-ch-ICx" id="AXQ-p2-oTW"/>
+                <outlet property="v5" destination="YGV-fq-Vk7" id="oYc-WT-MEG"/>
             </connections>
             <point key="canvasLocation" x="137.68115942028987" y="152.67857142857142"/>
         </view>

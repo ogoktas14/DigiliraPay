@@ -215,13 +215,26 @@ class digiliraPayApi: NSObject {
                         }
                     }
                 case digilira.ethereumNetwork:
-                    if let tl = symbol.usdTLPrice {
-                        if let eth = symbol.ethUSDPrice {
-                            let tick = (eth * tl)
-                            let result = price / tick
-                            return (Double(round(double * result)), tokens.token, tick)
+                    switch asset.tokenSymbol {
+                    case "WETH", "Ethereum":
+                        if let tl = symbol.usdTLPrice {
+                            if let eth = symbol.ethUSDPrice {
+                                let tick = (eth * tl)
+                                let result = price / tick
+                                return (Double(round(double * result)), tokens.token, tick)
+                            }
                         }
+                    case "USDT":
+                            if let usdt = symbol.usdTLPrice {
+                                let tick = (usdt)
+                                let result = price / tick
+                                return (Double(round(double * result)), tokens.token, tick)
+                            }
+                        break
+                    default:
+                        throw digilira.NAError.emptyAuth
                     }
+               
                 case digilira.wavesNetwork:
                     
                     switch tokens.token {

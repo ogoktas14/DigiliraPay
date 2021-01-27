@@ -146,7 +146,7 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
     
     override func viewDidLoad() {
         if initialWaves() {
-            print("mainnet")
+
         }
         initial2()
         UNUserNotificationCenter.current().delegate = self;

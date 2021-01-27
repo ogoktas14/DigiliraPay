@@ -134,13 +134,14 @@ class PageCardView: UIView {
         if let order = Order {
             let t1 = Int64(NSDate().timeIntervalSince1970) * 1000
             let timestamp = order.createdDate
-             
+
             let formatter4 = DateFormatter()
-            formatter4.dateFormat = "y-M-d'T'HH:mm:ss.SSS'Z'"
-            let then = formatter4.date(from: timestamp) ?? Date()
-            let t0 = (Int64(then.timeIntervalSince1970) * 1000)
+            formatter4.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+            let then = formatter4.date(from: String(timestamp.description))
+
+            let t0 = (Int64(then!.timeIntervalSince1970) * 1000)
             
-            let delta = (t1 - t0 - 10800000) / 1000
+            let delta = (t1 - t0) / 1000
             
             if delta > 120 {
                 errors?.errorHandler(message: "Ödeme süresi doldu. Lütfen yeni QR kod okutunuz.", title: "Geçersiz QR Kod", error: true)

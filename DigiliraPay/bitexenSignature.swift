@@ -359,7 +359,7 @@ class bex: NSObject {
                 request.addValue(AUTH!.apiKey, forHTTPHeaderField: "ACCESS-APIKEY")
                 request.addValue("DIGILIRAPAY", forHTTPHeaderField: "ACCESS-B2B-CHANNEL-NAME")
                 request.addValue("DIGILIRAPAY", forHTTPHeaderField: "ACCESS-B2B-APP-NAME")
-                request.addValue("apikey1T", forHTTPHeaderField: "ACCESS-KEY")
+                request.addValue(AUTH!.apiKey, forHTTPHeaderField: "ACCESS-KEY")
 
 
             }else {

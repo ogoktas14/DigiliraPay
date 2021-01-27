@@ -25,7 +25,17 @@ class ParaYatirView:UIView {
     @IBOutlet weak var copyView: UIView!
     
     @IBOutlet weak var l1: UILabel!
+    @IBOutlet weak var l2: UILabel!
+    @IBOutlet weak var l3: UILabel!
+    @IBOutlet weak var l4: UILabel!
+    @IBOutlet weak var l5: UILabel! 
     
+    @IBOutlet weak var v1: UIView!
+    @IBOutlet weak var v2: UIView!
+    @IBOutlet weak var v3: UIView!
+    @IBOutlet weak var v4: UIView!
+    @IBOutlet weak var v5: UIView!
+
     var ccView = CreditCardView()
     let generator = UINotificationFeedbackGenerator()
     
@@ -55,6 +65,62 @@ class ParaYatirView:UIView {
     var assetId: String?
     
     var kullanici: digilira.auth?
+    
+    var datas:[digilira.DepositLine] = []
+    
+    func constants (coin: String, symbol: String, min: String, mode: Int){
+        v1.isHidden = true
+        v2.isHidden = true
+        v3.isHidden = true
+        v4.isHidden = true
+        v5.isHidden = true
+        
+        var array:[String] = []
+        switch mode {
+        case 0:
+             array = [
+                "Herhangi bir yatırma limiti bulunmamaktadır.",
+                "Bu adrese dilediğiniz kadar " + coin + " gönderebilirsiniz."
+            ]
+        case 1:
+             array = [
+                "One Tower AVM'nin resmi sadakat jetonudur.",
+                "Herhangi bir yatırma limiti bulunmamaktadır."
+            ]
+        default:
+             array = [
+                "Bu adrese sadece " + coin + " gönderin. Bu adrese " + coin + " dışında yapılan gönderimler kayıplara neden olur.",
+                "Minimum yatırım tutarı " + min + " " + symbol + "'dir. Bu tutarın altındaki yatırma işlemleri iade edilmeyecektir.",
+                "Gönderdiğiniz turar blokzincirde onaylandıktan sonra DigiliraPAY hesabınıza aktarılacaktır.",
+                "Cüzdan adresinizi kopyalamak için adrese basabilirsiniz. Kopyaladığınız adres ile yapıştırdığınız adresi mutlaka kontrol edin.",
+                "Ödeme almak için QR kodunuzu paylaşabilirsiniz."
+            ]
+        }
+        for (i, c) in array.enumerated() {
+            switch i {
+            case 0:
+                l1.text = c
+                v1.isHidden = false
+            case 1:
+                l2.text = c
+                v2.isHidden = false
+            case 2:
+                l3.text = c
+                v3.isHidden = false
+            case 3:
+                l4.text = c
+                v4.isHidden = false
+            case 4:
+                l5.text = c
+                v5.isHidden = false
+            default:
+                break
+            }
+            
+        }
+
+        
+    }
     
     override func awakeFromNib() {
         
@@ -100,7 +166,6 @@ class ParaYatirView:UIView {
         
         if let user = kullanici {
             if user.status == 0 {
-                
                 DispatchQueue.main.async { [self] in
                     self.errors?.errorHandler(message: "Hesabınıza para yükleyebilmek için profil onayı sürecini tamamlamanız gerekmektedir.", title: "Profil Onayı", error: true)
                 }
@@ -109,7 +174,6 @@ class ParaYatirView:UIView {
     }
     
     @objc func copyToClipboard() {
-        
         generator.notificationOccurred(.success)
         UIView.animateKeyframes(withDuration: 0.1, delay: 0, options: .allowUserInteraction, animations: {
             self.copyView.alpha = 0
@@ -128,14 +192,10 @@ class ParaYatirView:UIView {
             self.copyView.alpha = 1
             self.copyView.isUserInteractionEnabled = true
         })
-        
-        
-        
     }
     
     @objc func shareButton()
     {
-        
         generator.notificationOccurred(.success)
         UIView.animateKeyframes(withDuration: 0.1, delay: 0, options: .allowUserInteraction, animations: {
             self.shareView.alpha = 0.4
@@ -252,10 +312,10 @@ class ParaYatirView:UIView {
         print(currentPage)
         currentPage = sender.currentPage
         setBalanceView(index: sender.currentPage)
-
+        
     }
     
-
+    
     
     @objc func handleSwipes(_ sender: UISwipeGestureRecognizer)
     {
@@ -295,17 +355,30 @@ class ParaYatirView:UIView {
         switch coin.network {
         case digilira.bitcoinNetwork:
             let address = kullanici?.btcAddress
+            constants(coin: "Bitcoin", symbol: "BTC", min: "0.001", mode: -1)
             return address
         case digilira.ethereumNetwork: 
             switch coin.tokenName {
             case "Tether USDT":
+                constants(coin: "ERC-20 USDT Tether", symbol: "USDT", min: "10", mode: -1)
+
                 let address = kullanici?.tetherAddress
                 return address
             default:
                 let address = kullanici?.ethAddress
+                constants(coin: "Ethereum", symbol: "ETH", min: "0.01", mode: -1)
+
                 return address
             }
         case digilira.wavesNetwork:
+            
+            switch coin.tokenName {
+            case "One Tower":
+                constants(coin: "One Tower", symbol: "", min: "", mode: 1)
+            default:
+                constants(coin: "Waves", symbol: "", min: "", mode: 0)
+            }
+            
             let address = kullanici?.wallet
             return address
         default:
@@ -321,11 +394,6 @@ class ParaYatirView:UIView {
         let soyad = "Nakamoto"
         do {
             let address = try setCoin()
-            
-            let c = coin.gatewayFee
-            let t = coin.symbol
-            
-            l1.text = "Minimum yatırma tutarı " + c.description + " "  + t + "'dir. Bu tutarın altındaki yatırma işlemleri iade edilmeyecektir."
              
             if let kullanici = kullanici {
                 let name = kullanici.firstName ?? ad
@@ -463,7 +531,7 @@ class ImageSaver: NSObject {
         print("Save finished!")
     }
 }
- 
+
 extension UIView {
     
     func takeScreenshot() -> UIImage {
@@ -485,7 +553,7 @@ extension UIView {
         return UIImage()
     }
 }
- 
+
 extension UITextField {
     func addDoneCancelToolbar(onDone: (target: Any, action: Selector)? = nil, onCancel: (target: Any, action: Selector)? = nil) {
         let onDone = onDone ?? (target: self, action: #selector(doneButtonTapped))
@@ -536,7 +604,7 @@ extension Data {
         return nil
         
     }
-     
+    
     func getDocumentsDirectory() -> NSString {
         let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         let documentsDirectory = paths[0]

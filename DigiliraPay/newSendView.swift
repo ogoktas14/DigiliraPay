@@ -860,7 +860,22 @@ class newSendView: UIView {
                     coinPrice = (fiyatlama.btcUSDPrice)! * (fiyatlama.usdTLPrice)!
                     break
                 case digilira.ethereumNetwork:
-                    coinPrice = (fiyatlama.ethUSDPrice)! * (fiyatlama.usdTLPrice)!
+                    switch coin.symbol {
+                    case "ETH", "WETH":
+                        if let tl = fiyatlama.usdTLPrice {
+                            if let eth = fiyatlama.ethUSDPrice {
+                                coinPrice = (eth * tl)
+                            }
+                        }
+                    case "USDT":
+                            if let usdt = fiyatlama.usdTLPrice {
+                                let tick = (usdt)
+                                coinPrice = tick
+                            }
+                        break
+                    default:
+                        break
+                    }
                     break
                 case digilira.wavesNetwork:
                     switch coin.tokenName {

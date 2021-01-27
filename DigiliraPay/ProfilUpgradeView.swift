@@ -10,6 +10,7 @@ import UIKit
 
 class ProfilUpgradeView: UIView {
     @IBOutlet weak var sendInfoView: UIView!
+    @IBOutlet weak var image: UIImageView!
     @IBOutlet weak var galleryButtonView: UIView!
     weak var delegate: VerifyAccountDelegate?
     var verifying: Bool = false
@@ -33,7 +34,6 @@ class ProfilUpgradeView: UIView {
     @objc func openGallery()
     {
         delegate?.uploadImage()
-        delegate?.dismissVErifyAccountView()
     }
     
     @objc func goHome()

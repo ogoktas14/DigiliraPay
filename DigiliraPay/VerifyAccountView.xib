@@ -28,7 +28,7 @@
                                         <constraint firstAttribute="height" constant="5" id="oU0-H9-fWL"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ej8-EE-jIN" userLabel="mail" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
+                                <view contentMode="scaleToFill" restorationIdentifier="t6" translatesAutoresizingMaskIntoConstraints="NO" id="ej8-EE-jIN" userLabel="mail" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                                     <rect key="frame" x="24.666666666666657" y="455.33333333333326" width="371" height="60.666666666666629"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="E-POSTA ADRESİ" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jaj-hw-EKW">
@@ -53,7 +53,7 @@
                                         <constraint firstItem="Jaj-hw-EKW" firstAttribute="top" secondItem="ej8-EE-jIN" secondAttribute="top" id="hpw-Ub-1rw"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cn8-1W-mMo" userLabel="tel" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
+                                <view contentMode="scaleToFill" restorationIdentifier="t5" translatesAutoresizingMaskIntoConstraints="NO" id="cn8-1W-mMo" userLabel="tel" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                                     <rect key="frame" x="24.666666666666657" y="386.66666666666663" width="371" height="60.666666666666686"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TELEFON NUMARASI" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gXi-Aj-cC5">
@@ -78,7 +78,7 @@
                                         <constraint firstItem="gXi-Aj-cC5" firstAttribute="leading" secondItem="cn8-1W-mMo" secondAttribute="leading" constant="5" id="p5W-zW-TJ6"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Epr-7L-uMC" userLabel="dogum" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
+                                <view contentMode="scaleToFill" restorationIdentifier="t4" translatesAutoresizingMaskIntoConstraints="NO" id="Epr-7L-uMC" userLabel="dogum" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                                     <rect key="frame" x="24" y="226.33333333333331" width="371" height="152.33333333333331"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="DOĞUM TARİHİ" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zko-9e-yDR">
@@ -105,7 +105,7 @@
                                         <constraint firstItem="8Ii-Qb-kcS" firstAttribute="top" secondItem="Epr-7L-uMC" secondAttribute="top" constant="10" id="sWj-bk-LAi"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dvd-tE-Gbg" userLabel="tc" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
+                                <view contentMode="scaleToFill" restorationIdentifier="t3" translatesAutoresizingMaskIntoConstraints="NO" id="dvd-tE-Gbg" userLabel="tc" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                                     <rect key="frame" x="24.666666666666657" y="157.66666666666666" width="371" height="60.666666666666657"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="TC KİMLİK NUMARASI" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5vg-ka-jCM">
@@ -122,6 +122,7 @@
                                             <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="numberPad" returnKeyType="next"/>
                                         </textField>
                                     </subviews>
+                                    <accessibility key="accessibilityConfiguration" identifier="t3"/>
                                     <constraints>
                                         <constraint firstItem="5vg-ka-jCM" firstAttribute="top" secondItem="dvd-tE-Gbg" secondAttribute="top" id="8Mm-0J-zBL"/>
                                         <constraint firstItem="g5z-i2-1vs" firstAttribute="top" secondItem="5vg-ka-jCM" secondAttribute="bottom" constant="1" id="RS8-cT-0XM"/>
@@ -130,7 +131,7 @@
                                         <constraint firstItem="g5z-i2-1vs" firstAttribute="leading" secondItem="dvd-tE-Gbg" secondAttribute="leading" constant="5" id="bU7-vH-e2B"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eR5-yL-lw5" userLabel="soyad" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
+                                <view contentMode="scaleToFill" restorationIdentifier="t2" translatesAutoresizingMaskIntoConstraints="NO" id="eR5-yL-lw5" userLabel="soyad" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                                     <rect key="frame" x="24.666666666666657" y="88.666666666666657" width="371" height="61"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SOYAD" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hWq-hY-edJ">
@@ -147,6 +148,7 @@
                                             <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="next" textContentType="family-name"/>
                                         </textField>
                                     </subviews>
+                                    <accessibility key="accessibilityConfiguration" identifier="t2"/>
                                     <constraints>
                                         <constraint firstItem="Gk1-ac-RfA" firstAttribute="leading" secondItem="eR5-yL-lw5" secondAttribute="leading" constant="5" id="R9e-fb-MJD"/>
                                         <constraint firstItem="hWq-hY-edJ" firstAttribute="leading" secondItem="eR5-yL-lw5" secondAttribute="leading" constant="5" id="gC7-09-0xp"/>
@@ -155,7 +157,7 @@
                                         <constraint firstAttribute="trailing" secondItem="Gk1-ac-RfA" secondAttribute="trailing" constant="5" id="zs7-aX-LTE"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BPa-mJ-Nky" userLabel="adview" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
+                                <view contentMode="scaleToFill" restorationIdentifier="t1" translatesAutoresizingMaskIntoConstraints="NO" id="BPa-mJ-Nky" userLabel="adview" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                                     <rect key="frame" x="24.666666666666657" y="19.999999999999996" width="371" height="60.666666666666657"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AD" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k7q-x9-6m4">
@@ -175,6 +177,7 @@
                                             <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="next" textContentType="given-name"/>
                                         </textField>
                                     </subviews>
+                                    <accessibility key="accessibilityConfiguration" identifier="t1"/>
                                     <constraints>
                                         <constraint firstAttribute="trailing" secondItem="anA-Tm-0CD" secondAttribute="trailing" constant="5" id="9Cs-q4-GM2"/>
                                         <constraint firstItem="anA-Tm-0CD" firstAttribute="leading" secondItem="BPa-mJ-Nky" secondAttribute="leading" constant="5" id="Bgw-0H-DcN"/>
@@ -343,6 +346,11 @@
                 <outlet property="telText" destination="EuO-gN-eh3" id="gnc-aO-LyE"/>
                 <outlet property="titleLabel" destination="T6Y-az-2Ae" id="B8B-5F-Cmm"/>
                 <outlet property="understand" destination="yd8-Eh-adU" id="oMD-Al-WYv"/>
+                <outlet property="vMailText" destination="ej8-EE-jIN" id="ZcR-km-iRM"/>
+                <outlet property="vNameText" destination="BPa-mJ-Nky" id="Jow-2E-NW8"/>
+                <outlet property="vSurnameText" destination="eR5-yL-lw5" id="NDi-1a-RfC"/>
+                <outlet property="vTcText" destination="dvd-tE-Gbg" id="46v-xD-LJT"/>
+                <outlet property="vTelText" destination="cn8-1W-mMo" id="mt4-E6-kOb"/>
             </connections>
             <point key="canvasLocation" x="137.68115942028987" y="150.66964285714286"/>
         </view>

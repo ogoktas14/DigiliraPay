@@ -30,6 +30,12 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     @IBOutlet weak var mailText: UITextField!
     @IBOutlet weak var dogum: UIDatePicker!
     
+    @IBOutlet weak var vNameText: UIView!
+    @IBOutlet weak var vSurnameText: UIView!
+    @IBOutlet weak var vTcText: UIView!
+    @IBOutlet weak var vTelText: UIView!
+    @IBOutlet weak var vMailText: UIView!
+    
     @IBOutlet weak var understand: UISwitch!
     
     @IBOutlet weak var onayImage: UIImageView!
@@ -39,6 +45,12 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     var isExit: Bool = false
     var dogumTarihi: Date?
     
+    var isFirstNameHidden:Bool = true
+    var isLastNameHidden:Bool = true
+    var isTelHidden:Bool = true
+    var isTCHidden:Bool = true
+    var isMailHidden:Bool = true
+ 
     let digiliraPay = digiliraPayApi()
     var kullanici = try? secretKeys.userData()
     
@@ -53,6 +65,15 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
                 tcText.text = k.tcno
                 telText.text = k.tel
                 mailText.text = k.mail
+                
+                if k.status == 3 {
+                    nameText.text = "*****"
+                    surnameText.text = "*****"
+                    tcText.text = "*****"
+                    telText.text = "*****"
+                    mailText.text = "*****"
+                    
+                }
                 
             }
             if let dogumTarihi = user.dogum {
@@ -241,9 +262,80 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
         return count <= 40
     }
     
+    @objc func showHide(gesture: UITapGestureRecognizer) {
+        
+        if let tapped = gesture.view {
+            let id = tapped.restorationIdentifier
+
+            switch id {
+            case "t1":
+                if isFirstNameHidden {
+                    nameText.text = kullanici?.firstName
+                    isFirstNameHidden = false
+                } else {
+                    nameText.text = "*****"
+                    isFirstNameHidden = true
+                }
+                break
+            case "t2":
+                if isLastNameHidden {
+                    surnameText.text = kullanici?.lastName
+                    isLastNameHidden = false
+                }else {
+                    surnameText.text = "*****"
+                    isLastNameHidden = true
+                }
+                break
+            case "t3":
+                if isTCHidden {
+                    tcText.text = kullanici?.tcno
+                    isTCHidden = false
+                }else {
+                    tcText.text = "*****"
+                    isTCHidden = true
+                }
+                break
+            case "t5":
+                if isTelHidden {
+                    telText.text = kullanici?.tel
+                    isTelHidden = false
+                }else {
+                    telText.text = "*****"
+                    isTelHidden = true
+                }
+                break
+            case "t6":
+                if isMailHidden {
+                    mailText.text = kullanici?.mail
+                    isMailHidden = false
+                }else {
+                    mailText.text = "*****"
+                    isMailHidden = true
+                }
+                break
+            default:
+                break
+            }
+        }
+
+    }
+    
     override func awakeFromNib()
     {
         let sendAndContiuneGesture = UITapGestureRecognizer(target: self, action: #selector(sendAndContiune))
+        let t1 = UITapGestureRecognizer(target: self, action: #selector(showHide))
+        let t2 = UITapGestureRecognizer(target: self, action: #selector(showHide))
+        let t3 = UITapGestureRecognizer(target: self, action: #selector(showHide))
+        let t4 = UITapGestureRecognizer(target: self, action: #selector(showHide))
+        let t5 = UITapGestureRecognizer(target: self, action: #selector(showHide))
+        let t6 = UITapGestureRecognizer(target: self, action: #selector(showHide))
+
+        vNameText.addGestureRecognizer(t1)
+        vSurnameText.addGestureRecognizer(t2)
+        vTcText.addGestureRecognizer(t3)
+        vTcText.addGestureRecognizer(t4)
+        vTelText.addGestureRecognizer(t5)
+        vMailText.addGestureRecognizer(t6)
         
         sendAndContiuneView.addGestureRecognizer(sendAndContiuneGesture)
         sendAndContiuneView.isUserInteractionEnabled = true

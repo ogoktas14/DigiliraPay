@@ -24,40 +24,19 @@ struct turkish {
         apiSet: false,
         bg: "bitexen_hover-1"
     )
-    static let okexCard = digilira.cardData.init(
-        org: "Okex",
-        bgColor:  UIColor(red: 0.0431, green: 0.1294, blue: 0.3843, alpha: 1.0), /* #0b2162 */
-        logoName: "okex-1",
-        cardHolder:  "",
-        cardNumber: "Okex Hesabı Ekle",
-        apiSet: false,
-        bg: "okex_logo"
-        
-    )
     
-    static let kizilayCard = digilira.cardData.init(
-        org: "Kızılay",
+    static let oneTower = digilira.cardData.init(
+        org: "One Tower",
         bgColor:  UIColor(red: 0.7529, green: 0.0039, blue: 0, alpha: 1.0), /* #c00100 */
-        logoName: "logo_kizilay",
+        logoName: "onetower",
         cardHolder:  "",
-        cardNumber: "Kızılay",
-        line1: "Kızılay'a kripto varlıklarınızı kullanarak bağış yapabilirsiniz.",
+        cardNumber: "One Tower",
+        line1: "One Tower Token",
         apiSet: false
         
     )
      
-    static let pepCard = digilira.cardData.init(
-        org: "PeP",
-        bgColor:  UIColor(red: 0.1804, green: 0.7725, blue: 0.6902, alpha: 1.0), /* #2ec5b0 */
-        logoName: "peppara",
-        cardHolder:  "",
-        cardNumber: "PeP Card",
-        line1: "PeP hesabınızı tanımlayın.",
-        apiSet: false,
-        bg: "footer-logo"
 
-        
-    )
     
     struct messages {
         static let touchIDAuthorization = ""

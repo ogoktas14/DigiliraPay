@@ -92,6 +92,7 @@
             </constraints>
             <connections>
                 <outlet property="galleryButtonView" destination="hOU-g6-x2m" id="KHW-yW-Nb2"/>
+                <outlet property="image" destination="Ilo-9b-jWu" id="vQE-On-Mki"/>
                 <outlet property="sendInfoView" destination="4lF-sD-jAI" id="sfG-ax-i0B"/>
             </connections>
             <point key="canvasLocation" x="137.68115942028987" y="141.96428571428569"/>

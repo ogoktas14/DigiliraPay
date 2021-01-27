@@ -17,7 +17,8 @@ class CreditCardView : UIView {
     @IBOutlet weak var adsoyad: UILabel!
     @IBOutlet weak var address: UIButton!
     @IBOutlet weak var imageView: UIImageView!
-    
+    let pasteboard = UIPasteboard.general
+
     func setView(tokenName: String, wallet: String, qr: UIImage, ad:String)
     {
         coinName.text = tokenName
@@ -31,11 +32,23 @@ class CreditCardView : UIView {
         adsoyad.text = ad
     }
     
+    @IBAction func copyButton(_ sender: Any)
+    {
+        let t = address.title(for: .normal)
+        pasteboard.string = address.title(for: .normal)
+        self.address.setTitle("Address Kopyalandı", for: .normal)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [self] in
+            self.address.setTitle(t, for: .normal)
+        }
+    }
     
     override func awakeFromNib() {
         contentView.clipsToBounds = true
         contentView.layer.cornerRadius = 10
         bottomView.layer.cornerRadius = 10
+        
+
         
     }
     

@@ -351,6 +351,7 @@ struct digilira {
         let createdDate: String
         let profil1: String?
         let profil2: String?
+        let profil3: String?
         let dogum: String?
         let v: Int?
         let appV: Double?
@@ -359,7 +360,7 @@ struct digilira {
         enum CodingKeys: String, CodingKey {
             case userRole, status, pincode, imported, apnToken
             case id = "_id"
-            case lastName, firstName, wallet, btcAddress, ethAddress, profil1, profil2, tetherAddress, ltcAddress, createdDate, appV, dogum, tcno, tel, mail, isAuthorized
+            case lastName, firstName, wallet, btcAddress, ethAddress, profil1, profil2, profil3, tetherAddress, ltcAddress, createdDate, appV, dogum, tcno, tel, mail, isAuthorized
             case v = "__v"
         }
     }
@@ -452,6 +453,12 @@ struct digilira {
             case attachment, transferCount, totalAmount, transfers, applicationStatus, height, recipient, feeAsset, amount
         }
     }
+    
+    // MARK: - Deposit Remarks
+    struct DepositLine: Codable {
+        let remark: String
+    }
+     
 
     // MARK: - Transfer
     struct Transfer: Codable {

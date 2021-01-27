@@ -587,10 +587,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                         UserDefaults.standard.set(false, forKey: "isBlocked")
                         self.throwEngine.alertWarning(title: "Hesabınız Aktif Edildi", message: "Hesabınız yeniden kullanıma açılmıştır. Yeni bir pin kodu ayarlayabilirsiniz.", error: false)
                     }
-                }
-                
-
-                
+                } 
             }
             break
             case 3:
@@ -705,7 +702,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                             wallet = w
                         }
                         break
-                    case "Tether US":
+                    case "Tether USDT":
                         coinPrice = (ticker.usdTLPrice)! * Double(asset1.balance) / double
                         if let w = k.tetherAddress {
                             wallet = w
@@ -1308,9 +1305,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         var cards: [digilira.cardData] = []
         
         var bitexen = turkish.bitexenCard
-        let kizilay = turkish.kizilayCard
-        let okex = turkish.okexCard
-        let pep = turkish.pepCard
+        let oneTower = turkish.oneTower
         
         if let api = decodeDefaults(forKey: digiliraPay.returnBexChain(), conformance: bex.bitexenAPICred.self) {
             bitexen.cardNumber = "Hesap Bilgilerini Düzenle"
@@ -1322,9 +1317,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         }
         
         cards.append(bitexen)
-        cards.append(pep)
-        cards.append(okex)
-        cards.append(kizilay)
+        cards.append(oneTower)
         
         if !isFirstLaunch {
             paymentCat.cards = cards

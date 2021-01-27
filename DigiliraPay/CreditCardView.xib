@@ -48,11 +48,14 @@
                         <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CIi-Bq-Wl4">
                             <rect key="frame" x="0.0" y="242.5" width="434" height="30"/>
                             <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E9R-oE-fI5">
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E9R-oE-fI5">
                                     <rect key="frame" x="20" y="0.0" width="394" height="30"/>
                                     <state key="normal" title="ADDRESS">
                                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </state>
+                                    <connections>
+                                        <action selector="copyButton:" destination="7BS-ab-8b3" eventType="touchUpInside" id="FPm-n5-yyK"/>
+                                    </connections>
                                 </button>
                                 <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="copyImg" translatesAutoresizingMaskIntoConstraints="NO" id="nxg-Ln-hMh">
                                     <rect key="frame" x="389" y="4.5" width="25" height="21"/>
