@@ -279,22 +279,24 @@ extension MainScreen: PinViewDelegate
         self.onPinSuccess!(res)
     }
     
+    func checkBlock() {
+        curtain.isHidden = false
+        checkIfBlocked()
+    }
+    
     func blockUser () {
-        
-        digiliraPay.onUpdate = { res in
-            
+        throwEngine.alertWarning(title: "Hesabınız Bloke Edildi", message: "Pin kodunuzu sıfırlamak için www.digilirapay.com/pin adresini ziyaret ediniz.", error: true)
+        digiliraPay.onUpdate = { res, sts in
             DispatchQueue.main.async { [self] in
-                if res {
-                    UserDefaults.standard.set(true, forKey: "isBlocked")
-                    checkEssentials()
+                if (res != nil) {
+                    if let user = res {
+                        kullanici = user
+                    }
                 } else {
                     throwEngine.evaluateError(error: digilira.NAError.anErrorOccured)
                 }
-                
             }
         }
-        
-        
         
         let timestamp = Int64(Date().timeIntervalSince1970) * 1000
 
@@ -310,10 +312,10 @@ extension MainScreen: PinViewDelegate
             
             let encoder = JSONEncoder()
             let data = try? encoder.encode(user)
-            
             digiliraPay.updateUser(user: data, signature: sign.signature)
         }
     }
+    
     func closePinView() {
         
         
@@ -390,6 +392,7 @@ extension MainScreen: PinViewDelegate
                     DispatchQueue.main.async { [self] in
                         
                         if sts == 200 {
+                            isInformed = true
                             if secretKeys.LocksmithSave(forKey: try! BC.getKeyChainSource().authenticateData, data: data) {
                                 self.throwEngine.alertWarning(title: "Pin Kodu Güncellendi", message: "Pin kodunuzu unutmayın, cüzdanınızı başka bir cihaza aktarırken ihtiyacınız olacaktır.", error: false)
                                 
@@ -625,7 +628,7 @@ extension MainScreen: PaymentCatViewsDelegate {
 extension MainScreen: LetsStartSkipDelegate {
     
     func warnUser() {
-        throwEngine.alertWarning(title: "Dikkat", message: "Ekran görüntüsü olarak anahtar kelimelerinizi yedeklemeniz durumunda, anahtar kelimelerinizin üçüncü şahıslar tarafından görülmesi riskini arttırmaktadır. Lütfen daha güvenli bir yedekleme metodu gerçekleştiriniz.")
+        throwEngine.alertWarning(title: "Dikkat", message: "Ekran görüntüsü olarak anahtar kelimelerinizi yedeklemeniz durumunda, anahtar kelimelerinizin üçüncü şahıslar tarafından görülmesi riskini artmaktadır. Lütfen daha güvenli bir yedekleme metodu gerçekleştiriniz.")
     }
     func skipTap() {
         UIView.animate(withDuration: 0.3) {

@@ -13,6 +13,7 @@ protocol PinViewDelegate: class {
     func updatePinCode(code:String)
     func pinSuccess(res:Bool)
     func blockUser()
+    func checkBlock()
 }
 
 

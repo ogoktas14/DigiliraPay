@@ -29,75 +29,35 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
     @IBOutlet weak var letsGoLabel: UILabel!
     
     var notifyDest: NSNotification.Name?
-
+    
     var logoAnimation = LogoAnimation()
     var warningView = WarningView()
+    var throwEngine = ErrorHandling()
 
     var onScreeen = false
     var onBoardingScrollView = UIScrollView()
     let BC = Blockchain()
     let digiliraPay = digiliraPayApi()
-
+    
     var QR:digilira.QR = digilira.QR.init()
-    
-    @objc func blocked() {
-        if onScreeen {
-            self.warningView.removeFromSuperview()
-            
-        }
-        onScreeen = true
-        self.alertWarning(title: "Hesabınız Bloke Edildi", message: "Pin kodunuzu sıfırlamak için www.digilirapay.com/pin adresini ziyaret ediniz.", error: true)
-    }
-    
+ 
     private func initial2() {
         letsGoView.isHidden = true
         importAccountView.isHidden = true
         pageControl.isHidden = true
         
         UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
-        NotificationCenter.default.addObserver(self, selector: #selector(blocked), name: Notification.Name(.foo), object: nil)
 
+        
         if BC.checkIfUser() {
-
+            
             DispatchQueue.main.async { [self] in
-                if let user = try? secretKeys.userData() {
-                    
-                    if user.status == 403000 { 
-                        digiliraPay.onUpdate = { res in
- 
-                        }
-                        let timestamp = Int64(Date().timeIntervalSince1970) * 1000
-
-                        if let sign = try? BC.bytization([user.id, 403000.description], timestamp) {
-                            let user = digilira.exUser.init(
-                                id: user.id,
-                                wallet: sign.wallet,
-                                status: 403000,
-                                signed: sign.signature,
-                                publicKey: sign.publicKey,
-                                timestamp: timestamp
-                            )
-                            
-                            let encoder = JSONEncoder()
-                            let data = try? encoder.encode(user)
-                            
-                            digiliraPay.updateUser(user: data, signature: sign.signature)
-                        }
-                        return
-                    } else {
-                        UserDefaults.standard.set(false, forKey: "isBlocked")
+                
+                    if let user = try? secretKeys.userData() {
+                        self.BC.checkSmart(address: user.wallet)
+                        self.goMainVC()
                     }
-                    self.BC.checkSmart(address: user.wallet)
-                    self.goMainVC()
-                    return
-                } else {
-                    self.letsGoView.isHidden = false
-                    self.importAccountView.isHidden = false
-                    curtain.isHidden = true
-                }
-
-        }
- 
+            }
         } else {
             self.letsGoView.isHidden = false
             self.importAccountView.isHidden = false
@@ -124,7 +84,7 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
             print (error)
         }
     }
-
+    
     func waitPlease () {
         logoAnimation.removeFromSuperview()
         
@@ -132,7 +92,7 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
             
             logoAnimation = UIView().loadNib(name: "LogoAnimation") as! LogoAnimation
             logoAnimation.frame = self.view.frame
-
+            
             logoAnimation.setImage()
             
             self.view.addSubview(logoAnimation)
@@ -142,18 +102,18 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
     
     func alertWarning (title: String, message: String, error: Bool = true) {
         DispatchQueue.main.async { [self] in
-                logoAnimation.removeFromSuperview()
-                
-                warningView = UIView().loadNib(name: "warningView") as! WarningView
-                warningView.frame = self.view.frame
-                
-                warningView.isError = error
-                warningView.title = title
-                warningView.message = message
-                warningView.setMessage()
-                
+            logoAnimation.removeFromSuperview()
+            
+            warningView = UIView().loadNib(name: "warningView") as! WarningView
+            warningView.frame = self.view.frame
+            
+            warningView.isError = error
+            warningView.title = title
+            warningView.message = message
+            warningView.setMessage()
+            
             self.view.addSubview(warningView)
-           
+            
         }
     }
     
@@ -257,7 +217,7 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
                 DispatchQueue.main.async {
                     UIView.animate(withDuration: 0.5, animations: { [self] in
                         logoAnimation.alpha = 0
-                            
+                        
                     },completion: { [self]_ in
                         logoAnimation.removeFromSuperview()
                         logoAnimation.alpha = 1
@@ -275,7 +235,7 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
                 self.alertWarning(title: "Bir Hata Oluştu", message: "Şu anda işleminizi gerçekleştiremiyoruz. Lütfen daha sonra tekrar deneyin.", error: true)
             }
         }
-         
+        
         waitPlease()
         BC.createMainnet(imported: imported, importedSeed: seed)
     }

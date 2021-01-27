@@ -212,7 +212,7 @@ class HeaderExitView: UIView{
     }
     
     @objc func screenshotTaken() {
-        delegate?.alertSomething(title: "Dikkat", message: "Ekran görüntüsü olarak anahtar kelimelerinizi yedeklemeniz durumunda, anahtar kelimelerinizin üçüncü şahıslar tarafından görülmesi riskini arttırmaktadır. Lütfen daha güvenli bir yedekleme metodu gerçekleştiriniz.")
+        delegate?.alertSomething(title: "Dikkat", message: "Ekran görüntüsü olarak anahtar kelimelerinizi yedeklemeniz durumunda, anahtar kelimelerinizin üçüncü şahıslar tarafından görülmesi riskini artmaktadır. Lütfen daha güvenli bir yedekleme metodu gerçekleştiriniz.")
     }
     
     private var seedContainer: String = ""

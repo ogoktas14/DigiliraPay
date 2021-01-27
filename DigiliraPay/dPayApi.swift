@@ -21,7 +21,7 @@ class digiliraPayApi: NSObject {
     
     var onTouchID: ((_ result: Bool, _ status: String)->())?
     var onResponse: ((_ result: [String:Any], _ statusCode: Int?)->())?
-    var onUpdate: ((_ result: Bool)->())?
+    var onUpdate: ((_ result: digilira.auth?, _ status: Bool)->())?
     var onTicker: ((_ result: String)->())?
     var onBitexenTicker: ((_ result: bex.bexAllTicker)->())?
  
@@ -90,16 +90,17 @@ class digiliraPayApi: NSObject {
     
     func updateUser(user: Data?, signature: String) {
         crud.onError = { error, sts in
-            self.onUpdate!(false)
+            self.onUpdate!(nil, false)
         }
         crud.onResponse = { [self] data, sts in
             switch sts {
             case 200:
                 do {
                     if secretKeys.LocksmithSave(forKey: try getKeyChainSource().authenticateData, data: data) {
-                        self.onUpdate!(true)
+                        let user = try crud.decodeDefaults(forKey: data, conformance: digilira.auth.self)
+                        self.onUpdate!(user, true)
                     } else {
-                        self.onUpdate!(false)
+                        self.onUpdate!(nil, false)
                     }
                     
                 } catch  {
@@ -107,10 +108,10 @@ class digiliraPayApi: NSObject {
                 }
                 break
             case 502:
-                self.onUpdate!(false)
+                self.onUpdate!(nil, false)
                 break
             default:
-                self.onUpdate!(false)
+                self.onUpdate!(nil, false)
             }
         } 
         crud.request(rURL: crud.getApiURL() + digilira.api.userUpdate, postData: user, method: req.method.put, signature: signature)

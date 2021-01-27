@@ -349,16 +349,17 @@ struct digilira {
         let apnToken, id, wallet: String
         let firstName, lastName, ltcAddress, btcAddress, tetherAddress, ethAddress, tcno, tel, mail: String?
         let createdDate: String
+        let profil1: String?
+        let profil2: String?
         let dogum: String?
         let v: Int?
         let appV: Double?
-        let id1: String?
         var isAuthorized: Int?
 
         enum CodingKeys: String, CodingKey {
             case userRole, status, pincode, imported, apnToken
             case id = "_id"
-            case lastName, firstName, wallet, btcAddress, ethAddress, tetherAddress, ltcAddress, createdDate, appV, id1, dogum, tcno, tel, mail, isAuthorized
+            case lastName, firstName, wallet, btcAddress, ethAddress, profil1, profil2, tetherAddress, ltcAddress, createdDate, appV, dogum, tcno, tel, mail, isAuthorized
             case v = "__v"
         }
     }

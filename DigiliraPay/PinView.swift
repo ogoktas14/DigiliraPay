@@ -229,6 +229,12 @@ class PinView: UIView {
         do {
             let user = try secretKeys.userData()
             
+            if user.status == 403000 {
+                entryAreaView.isUserInteractionEnabled = false
+                entryAreaView.alpha = 0.4
+                delegate?.checkBlock()
+            }
+            
             isVerify = isEntryMode
 
             if isInit {

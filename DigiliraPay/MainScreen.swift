@@ -163,9 +163,10 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
     func checkEssentials() {
         do {
             let k = try secretKeys.userData()
+            kullanici = k
              
             if k.status == 403000 {
-                throwEngine.alertWarning(title: "Hesabınız Bloke Edildi", message: "Pin kodunuzu sıfırlamak için www.digilirapay.com/pin adresini ziyaret ediniz.", error: true)
+                checkIfBlocked()
             }
             
             if let selfied = UserDefaults.standard.value(forKey: "isSelfied") as? Bool {
@@ -197,7 +198,11 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                 if deviceToken != "" {
                     if k.apnToken != deviceToken {
                         
-                        digiliraPay.onUpdate = {_ in}
+                        digiliraPay.onUpdate = { [self] res, sts in
+                            if let user = res {
+                                userStatus(user: user)
+                            }
+                        }
                         
                         let timestamp = Int64(Date().timeIntervalSince1970) * 1000
 
@@ -273,6 +278,44 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         }
     }
     
+    @objc func checkIfBlocked() {
+        
+        digiliraPay.onUpdate = { [self] res, sts in
+            if let user = res {
+                userStatus(user: user)
+            }
+       }
+        
+        DispatchQueue.main.async { [self] in
+            if let user = try? secretKeys.userData() {
+                switch user.status {
+                case 403000:
+                    let timestamp = Int64(Date().timeIntervalSince1970) * 1000
+                    
+                    if let sign = try? BC.bytization([user.id, 403000.description], timestamp) {
+                        let user = digilira.exUser.init(
+                            id: user.id,
+                            wallet: sign.wallet,
+                            status: 403000,
+                            signed: sign.signature,
+                            publicKey: sign.publicKey,
+                            timestamp: timestamp
+                        )
+                        
+                        let encoder = JSONEncoder()
+                        let data = try? encoder.encode(user)
+                        
+                        digiliraPay.updateUser(user: data, signature: sign.signature)
+                    }
+                    return
+                default:
+                    curtain.isHidden = true
+                }
+                return
+            }
+        }
+    }
+    
     override func viewDidLoad()
     {
         
@@ -304,12 +347,12 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                 
                 if let isVerified = UserDefaults.standard.value(forKey: "seedRecovery") as? Bool {
                     if !isVerified {
-                        if !isInformed {
-                            isInformed = true
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [self] in
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [self] in
+                            if !isInformed {
+                                isInformed = true
                                 throwEngine.alertCaution(title: "Anahtar Kelimeler", message: "Anahtar kelimelerinizi sizden başka kimse bilemez. Buna biz de dahiliz. Lütfen anahtar kelimelerinizi yedekleyin. Bu uyarıyı almak istemiyorsanız anahtar kelimelerinizi yedeklemeniz gerekmektedir.")
                             }
-                             
+                            
                             
                         }
                         
@@ -319,7 +362,11 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                     QR = qr
                     self.getOrder(address: QR)
                 }
-                curtain.isHidden = true
+                
+                checkIfBlocked()
+                //curtain.isHidden = true
+                
+                
                 isBitexenReload = false
                 isWavesReloaded = false
                 
@@ -507,6 +554,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         refreshControl.addTarget(self, action: #selector(refreshData(_:)), for: UIControl.Event.valueChanged)
         
         NotificationCenter.default.addObserver(self, selector: #selector(checkStatus), name: Notification.Name(.bar), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(checkIfBlocked), name: Notification.Name(.foo), object: nil)
 
         NotificationCenter.default.addObserver( self, selector: #selector(keyboardWillShow(notification:)), name:  UIResponder.keyboardWillShowNotification, object: nil )
         NotificationCenter.default.addObserver( self, selector: #selector(keyboardWillHide(notification:)), name:  UIResponder.keyboardWillHideNotification, object: nil )
@@ -524,16 +572,61 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         
     }
     
+    func userStatus(user: digilira.auth) {
+        kullanici = user
+        switch user.status {
+        case 0,1,2:
+            DispatchQueue.main.async { [self] in
+
+                if let isBlocked = UserDefaults.standard.value(forKey: "isBlocked") as? Bool {
+                    if isBlocked {
+                        curtain.isHidden = true
+                        closePinView()
+                        isInformed = true
+                        
+                        UserDefaults.standard.set(false, forKey: "isBlocked")
+                        self.throwEngine.alertWarning(title: "Hesabınız Aktif Edildi", message: "Hesabınız yeniden kullanıma açılmıştır. Yeni bir pin kodu ayarlayabilirsiniz.", error: false)
+                    }
+                }
+                
+
+                
+            }
+            break
+            case 3:
+                DispatchQueue.main.async { [self] in
+                    if let selfied = UserDefaults.standard.value(forKey: "isSelfied") as? Bool {
+                        if selfied {
+                            UserDefaults.standard.set(false, forKey: "isSelfied")
+                            self.throwEngine.alertWarning(title: "Hesabınız Onaylandı", message: "Hesabınız Onaylanmıştır", error: false)
+                        }
+                    } 
+                }
+                break
+            case 403000:
+                DispatchQueue.main.async { [self] in
+                    UserDefaults.standard.set(true, forKey: "isBlocked")
+                    throwEngine.alertWarning(title: "Hesabınız Bloke Edildi", message: "Pin kodunuzu sıfırlamak için www.digilirapay.com/pin adresini ziyaret ediniz.", error: true)
+                }
+                break
+            default:
+                break
+            }
+     
+    }
+    
     @objc func checkStatus() {
+        
+        digiliraPay.onUpdate = { [self] res, sts in
+            if let user = res {
+                userStatus(user: user)
+            }
+        }
         
         if let user = try? secretKeys.userData() {
             
             switch user.status {
             case 2:
-                digiliraPay.onUpdate = { res in
-
-                }
-                
                 let timestamp = Int64(Date().timeIntervalSince1970) * 1000
 
                 if let sign = try? BC.bytization([user.id, 2.description], timestamp) {
@@ -556,7 +649,6 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
             case 3:
                 throwEngine.alertWarning(title: "Hesabınız Onaylandı", message: "Hesabınız Onaylanmıştır", error: false)
                 UserDefaults.standard.set(false, forKey: "isSelfied")
-
                 break
             default:
                 break
@@ -871,6 +963,12 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                 }
             }
             do {
+                
+                if kullanici.pincode == "-1" {
+                    openPinView()
+                    return
+                }
+                
                 let timestamp = Int64(Date().timeIntervalSince1970) * 1000
                 
                 let sign = try BC.bytization(["payment", adres, kullanici.id], timestamp)
@@ -1878,6 +1976,16 @@ extension MainScreen: OperationButtonsDelegate
     }
     
     func showMyFQr() {
+        
+        if kullanici.status == 0 {
+            verifyProfile()
+            DispatchQueue.main.async { [self] in
+                self.throwEngine.alertCaution(title: "Profil Onayı", message: "Hesabınıza para yükleyebilmek için profil onayı sürecini tamamlamanız gerekmektedir.")
+            }
+            return
+        }
+        
+        
         qrView.frame.origin.y = view.frame.height
         paraYatirView = UIView().loadNib(name: "ParaYatirView") as! ParaYatirView
         paraYatirView.frame.origin.y = self.view.frame.height
@@ -2450,19 +2558,19 @@ extension MainScreen: UIImagePickerControllerDelegate {
             isProfileImageUpload = false
 
             
-        digiliraPay.onUpdate = { res in
-            
+        digiliraPay.onUpdate = { res, sts in
             DispatchQueue.main.async { [self] in
-                if res {
-                    self.throwEngine.warningView.removeFromSuperview()
-                    self.throwEngine.alertWarning(title: "Bilgileriniz Yüklendi", message: "Gönderdiğiniz bilgiler kontrol edildikten sonra profiliniz güncellenecektir.", error: false)
-                    UserDefaults.standard.set(true, forKey: "isSelfied")
-
-                    checkEssentials()
+                if (res != nil) {
+                    if let user = res {
+                        kullanici = user
+                        self.throwEngine.warningView.removeFromSuperview()
+                        self.throwEngine.alertWarning(title: "Bilgileriniz Yüklendi", message: "Gönderdiğiniz bilgiler kontrol edildikten sonra profiliniz güncellenecektir.", error: false)
+                        UserDefaults.standard.set(true, forKey: "isSelfied") 
+                        checkEssentials()
+                    }
                 } else {
                     throwEngine.evaluateError(error: digilira.NAError.anErrorOccured)
                 }
-                
             }
         }
         

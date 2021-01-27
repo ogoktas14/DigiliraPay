@@ -40,7 +40,6 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     var dogumTarihi: Date?
     
     let digiliraPay = digiliraPayApi()
-    var onUpdate: ((_ result: [String:Any])->())?
     var kullanici = try? secretKeys.userData()
     
     override func didMoveToSuperview() {
@@ -153,12 +152,11 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
                 
                 let BC = Blockchain()
                 
-                digiliraPay.onUpdate = { res in
+                digiliraPay.onUpdate = { res, sts in
                     errors?.removeWait()
-
-                    if !res {
+                    
+                    if (res == nil) {
                         errors?.evaluate(error: digilira.NAError.missingParameters)
-                        
                     } else {
                         errors?.errorHandler(message: "Kimlik bilgileriniz doğrulandı, ancak KYC sürecini tamamlamak için kimliğinizin ön yüzü görünecek biçimde boş bir kağıda günün tarihini ve DigiliraPay yazarak Profil Onayı sayfasına yükleyin.", title: "Profiliniz Güncellendi", error: false)
                         
