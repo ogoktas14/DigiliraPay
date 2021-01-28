@@ -15,14 +15,14 @@
             <rect key="frame" x="0.0" y="0.0" width="399" height="684"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lütfen sırası ile" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GYN-vf-iPt">
-                    <rect key="frame" x="107" y="323.33333333333331" width="185" height="35.666666666666686"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Anahtar Kelimlerinizi" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GYN-vf-iPt">
+                    <rect key="frame" x="71.333333333333343" y="323.33333333333331" width="256.33333333333326" height="35.666666666666686"/>
                     <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="26"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="anahtar kelimeleri seç" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="esa-FC-xDE">
-                    <rect key="frame" x="81.333333333333329" y="359" width="236.66666666666669" height="31.666666666666686"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="doğrulayın." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="esa-FC-xDE">
+                    <rect key="frame" x="138" y="359" width="123" height="31.666666666666686"/>
                     <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="23"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>

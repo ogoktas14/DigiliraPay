@@ -189,11 +189,7 @@ struct digilira {
         tokenSymbol: "D-Pay",
         gatewayFee: 0
     )
-
-    static var gatewayAddress = "3NCpyPuNzUaB7LFS4KBzwzWVnXmjur582oy"
-    static var mainnetDataAddress = "3PPJ3ZDTWeyLoDWs6TsXWSuYZV3nqSR1xJm"
-    static var mainnetGatewayAddress = "3P8UrCejM61VhTAHYJ5QmJ8PZquYp7otKNb"
-
+ 
     static var waves = coin.init(token: "",
                             symbol: "WAVES",
                             tokenName: "Waves",
@@ -239,6 +235,61 @@ struct digilira {
         Üye olmanız halinde DIGILIRAPAY TEKNOLOJİ ANONİM ŞİRKETİ  ('DigiliraPay'), ad soyad, elektronik posta, cep telefonu, cinsiyet (isteğe bağlı) ve doğum tarihine ait kişisel verilerinizi ve üyeliğiniz sırasında gerçekleştireceğiniz işlemler neticesinde paylaşacağınız Kişisel Verilerin İşlenmesi ve Korunması Politikası'nda ('Politika') belirtilen diğer verilerinizi (2.A. Maddesi); başta üyelik işlemlerinin gerçekleştirilmesi, sorun ve şikâyetlerinizin çözümlenmesi, ticari elektronik ileti onayınızı vermişseniz hizmetlerimize ilişkin haberlere, bilgilere ve güncellemelere, tekliflerimize ve özel etkinliklerle ilgili ve ilginizi çekebilecek diğer pazarlama iletişimlerini gönderme amaçları olmak üzere Politika'da yer alan diğer amaçlar (2.B. Maddesi) için işleyecektir. Kişisel verileriniz; iş geliştirme hizmetlerinin sağlanması, istatistiksel ve teknik hizmetlerin temini ve müşteri ilişkilerinin yürütülmesi, arşivleme ve depolama amacıyla yurt dışında bulunan bilişim teknolojileri desteği alınan sunucular, hosting şirketleri, bulut bilişim gibi elektronik ortamlara aktarılması için ve Politikada yer alan Kişisel Verilerin Yurt dışına Aktarılması (5.B. Maddesi) başlığı kapsamında diğer veri ve amaçlar uyarınca yurt dışındaki iş ortaklarımızla paylaşılacaktır. KVK Kanunu'nun 11.maddesi ve ilgili mevzuat uyarınca; Şirket’e başvurarak kendinizle ilgili; kişisel veri işlenip işlenmediğini öğrenme ve Politika’da yer alan Veri Sahibinin Haklarının Gözetilmesi (8. Madde) kapsamında diğer haklarınızı ve DigiliraPay’e başvuru yollarınızı öğrenebilirsiniz. Detaylı bilgiye Kişisel Verilerin İşlenmesi ve Korunması Politikası'ndan ulaşabilirsiniz.
         """
         static let version = 4
+    }
+    
+    struct codes {
+        static let  code = [
+            "DP-QICAAL",
+            "DP-RHRNXF",
+            "DP-GZCFAU",
+            "DP-OERGEZ",
+            "DP-ORUOQU",
+            "DP-ZHBCHZ",
+            "DP-NZYTJR",
+            "DP-ZLLHKO",
+            "DP-GXPRMY",
+            "DP-OSRIPU",
+            "DP-KOAITZ",
+            "DP-BYACLY",
+            "DP-OJMNCG",
+            "DP-SWWVVE",
+            "DP-AYZYLP",
+            "DP-YUDTWJ",
+            "DP-LPHAJD",
+            "DP-EXOGFU",
+            "DP-ZOHBUL",
+            "DP-XSFLRK",
+            "DP-SRXLJU",
+            "DP-CKIUOO",
+            "DP-VXVRJE",
+            "DP-QCKDDI",
+            "DP-GIHMOW",
+            "DP-MKNKRD",
+            "DP-FEFOYI",
+            "DP-NCWTPA",
+            "DP-PCEBFU",
+            "DP-TBASJL",
+            "DP-EHSSPI",
+            "DP-ZXNIWP",
+            "DP-LQBUTW",
+            "DP-IWOCGH",
+            "DP-VJKXZC",
+            "DP-ORKLPT",
+            "DP-HISVXU",
+            "DP-SYRXVY",
+            "DP-GWQHNY",
+            "DP-IVUCEC",
+            "DP-GOAKPG",
+            "DP-JOKIPD",
+            "DP-TLYJIL",
+            "DP-WLHZSK",
+            "DP-TBBPUH",
+            "DP-AAPIBR",
+            "DP-BLDNUZ",
+            "DP-HUMKIO",
+            "DP-PWQXQP",
+            "DP-UUJSGU"
+        ]
     }
     
     struct termsOfUse {
@@ -329,9 +380,11 @@ struct digilira {
         var imported: Bool?
         var id1: String?
         var apnToken: String?
+        var zmark: String?
         var signed: String?
         var publicKey: String?
         var timestamp: Int64?
+        
     }
 
     struct login: Codable {

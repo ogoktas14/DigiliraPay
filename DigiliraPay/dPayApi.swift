@@ -18,7 +18,8 @@ class digiliraPayApi: NSObject {
     private var isCertificatePinning: Bool = true
     
     var token:String?
-    
+    var lang = Localize()
+
     var onTouchID: ((_ result: Bool, _ status: String)->())?
     var onResponse: ((_ result: [String:Any], _ statusCode: Int?)->())?
     var onUpdate: ((_ result: digilira.auth?, _ status: Bool)->())?
@@ -133,9 +134,6 @@ class digiliraPayApi: NSObject {
         crud.onError = { error, sts in }
         crud.onResponse = { res, sts in
             if (sts == 200) {
-                var jsonResponse = try! JSONSerialization.jsonObject(with: res) as! Dictionary<String, AnyObject>
-
-                print(jsonResponse)
             }else {
                 print("fail")
             }
@@ -198,7 +196,6 @@ class digiliraPayApi: NSObject {
     func ratePrice(price: Double, asset: digilira.DigiliraPayBalance, symbol: digilira.ticker) throws -> (Double, String, Double) {
         let double = Double(truncating: pow(10,asset.decimal) as NSNumber)
 
-        
         switch asset.network {
         case "waves":
             
@@ -325,11 +322,7 @@ class digiliraPayApi: NSObject {
             print(error)
         }
         
-        do {
-            try Locksmith.deleteDataForUserAccount(userAccount: "environment")
-        } catch  {
-            print(error)
-        }
+        UserDefaults.standard.setValue(true, forKey: "environment")
         throwEngine.resetApp()
         
         let defaults = UserDefaults.standard
@@ -341,7 +334,7 @@ class digiliraPayApi: NSObject {
 }
 
 class OpenUrlManager {
-    
+
     class func detectQRCode(_ image: UIImage?) -> [CIFeature]? {
         if let image = image, let ciImage = CIImage.init(image: image){
             var options: [String: Any]
@@ -362,6 +355,7 @@ class OpenUrlManager {
     
     static var openUrl: URL?
     static var onURL: ((_ result: digilira.QR)->())?
+    static var notSupportedYet: ((_ result: Bool, _ network: String)->())?
     
     class func parseUrlParams(openUrl: URL?) {
         if openUrl?.absoluteString == nil {
@@ -423,8 +417,82 @@ class OpenUrlManager {
             
             break
         default:
+            checkRegex(address: caption)
             break
         }
+    }
+    
+    class func eval(template: String, address: String) -> Bool {
+        let addressTest = NSPredicate(format: "SELF MATCHES %@", template)
+        let result = addressTest.evaluate(with: address)
+        return result
+    }
+    
+    class func returnEnv() -> String  {
+        switch WavesSDK.shared.enviroment.server {
+        case .mainNet:
+            return "mainnet"
+        case .testNet:
+            return "testnet"
+        default:
+            return "-"
+        }
+    }
+    
+    class func checkRegex(address: String) {
+ 
+        let env = returnEnv()
+        
+        var avax = "^(X-avax1)[a-zA-HJ-NP-Z0-9]{38}$"
+        var bitcoinSegwit = "^(bc1|[13])[a-zA-HJ-NP-Z0-9]{25,39}$"
+        if env == "testnet" {
+            bitcoinSegwit = "^(tb1|[13])[a-zA-HJ-NP-Z0-9]{25,39}$"
+            avax = "^(X-fuji1)[a-zA-HJ-NP-Z0-9]{38}$"
+        }
+        
+        let bitcoinReg = "^[13][a-km-zA-HJ-NP-Z0-9]{26,33}$"
+        let ethereumReg = "^0x[a-fA-F0-9]{40}$"
+        let wavesreg = "^[3][a-zA-Z0-9]{34}"
+        
+        let regexString = wavesreg
+         
+        let result = eval(template: regexString, address: address)
+        
+        if (!result) {
+            let avaxResult = eval(template: avax, address: address)
+            if avaxResult {
+                self.notSupportedYet!(true, "AVAX")
+                return
+            }
+            
+            let btcresult = eval(template: bitcoinReg, address: address)
+            
+            if btcresult {
+                self.onURL!(digilira.QR.init(network: "bitcoin", address: address, amount: 0))
+                return
+            }
+            
+            let btcresultSegwit = eval(template: bitcoinSegwit, address: address)
+            
+            if btcresultSegwit {
+                self.onURL!(digilira.QR.init(network: "bitcoin", address: address, amount: 0))
+                return
+            }
+            
+            let ethresult = eval(template: ethereumReg, address: address)
+            
+            if ethresult {
+                self.onURL!(digilira.QR.init(network: "ethereum", address: address, amount: 0))
+                return
+            }
+        }
+        
+        if result {
+            self.onURL!(digilira.QR.init(network: "waves", address: address, amount: 0, assetId: "WAVES"))
+            return
+        }
+        self.notSupportedYet!(false, "-")
+
     }
     
     class ImagePickerManager: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -464,12 +532,14 @@ class OpenUrlManager {
             viewController.present(alert, animated: true, completion: nil)
         }
         func openCamera(){
+            let lang = Localize()
+
             alert.dismiss(animated: true, completion: nil)
             if(UIImagePickerController .isSourceTypeAvailable(.camera)){
                 picker.sourceType = .camera
                 self.viewController!.present(picker, animated: true, completion: nil)
             } else {
-                let alert = UIAlertController(title: "Dikkat", message: "Kameranız bulunmamaktadır.", preferredStyle: UIAlertController.Style.alert)
+                let alert = UIAlertController(title: lang.const(x: "attention") , message: lang.const(x: "no_camera"), preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
                 alert.show(self.viewController!, sender: nil)
             }
@@ -488,7 +558,7 @@ class OpenUrlManager {
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             picker.dismiss(animated: true, completion: nil)
             guard let image = info[.originalImage] as? UIImage else {
-                fatalError("Expected a dictionary containing an image, but was provided the following: \(info)")
+                return
             }
             pickImageCallback?(image)
         }

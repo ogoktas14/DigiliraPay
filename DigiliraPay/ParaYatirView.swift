@@ -84,8 +84,11 @@ class ParaYatirView:UIView {
             ]
         case 1:
              array = [
-                "One Tower AVM'nin resmi sadakat jetonudur.",
-                "Herhangi bir yatırma limiti bulunmamaktadır."
+                "One Tower AVM resmi sadakat jetonudur.",
+                "One Tower AVM içerisinde yer alan standlarda One Tower jetonlarınız ile alışveriş yapabilirsiniz.",
+                "One Tower jetonları başka DigiliraPay kullanıcıları arasında ücretsiz olarak transfer edebilir, birleştirerek harcanabilir.",
+                "One Tower jetonlarının nakdi bir karşılığı bulunmamaktadır. AVM'nin kendisi tarafından belirlenen promosyon ürünler, yine AVM tarafından belirlenen jeton bedelleri ile satın alınabilmektedir.",
+                "One Tower jetonları hakkında bilgiye onetoweravm.com.tr adresinden ulaşabilirsiniz."
             ]
         default:
              array = [

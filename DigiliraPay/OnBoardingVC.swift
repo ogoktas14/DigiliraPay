@@ -13,7 +13,7 @@ import WavesSDK
 class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
     
     @IBOutlet var curtain:UIView!
-    
+    let lang = Localize()
     var gotoSeedRecover = false
     
     func doSomethingWith() {
@@ -44,23 +44,20 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
     private func initial2() {
         letsGoView.isHidden = true
         importAccountView.isHidden = true
-        pageControl.isHidden = true
+        pageControl.isHidden = false
         
         UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
 
-        
         if BC.checkIfUser() {
-            
             DispatchQueue.main.async { [self] in
-                
-                    if let user = try? secretKeys.userData() {
-                        self.BC.checkSmart(address: user.wallet)
-                        self.goMainVC()
-                    }
+                if let user = try? secretKeys.userData() {
+                    self.BC.checkSmart(address: user.wallet)
+                    self.goMainVC()
+                }
             }
         } else {
             self.letsGoView.isHidden = false
-            self.importAccountView.isHidden = false
+            self.importAccountView.isHidden = true
             curtain.isHidden = true
             
         }
@@ -127,21 +124,24 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
     func initialWaves() -> Bool {
         
         if let environment = UserDefaults.standard.value(forKey: "environment") {
-            if environment as! Bool {
-                WavesSDK.initialization(servicesPlugins: .init(data: [],
-                                                               node: [],
-                                                               matcher: []),
-                                        enviroment: .init(server: .mainNet, timestampServerDiff: 0))
-                return true
-                
+            if let E = environment as? Bool {
+                if !E {
+                    WavesSDK.initialization(servicesPlugins: .init(data: [],
+                                                                   node: [],
+                                                                   matcher: []),
+                                            enviroment: .init(server: .testNet, timestampServerDiff: 0))
+                    return false
+                }
             }
         }
+        
+        UserDefaults.standard.setValue(true, forKey: "environment")
         
         WavesSDK.initialization(servicesPlugins: .init(data: [],
                                                        node: [],
                                                        matcher: []),
-                                enviroment: .init(server: .testNet, timestampServerDiff: 0))
-        return false
+                                enviroment: .init(server: .mainNet, timestampServerDiff: 0))
+        return true
     }
     
     override func viewDidLoad() {
@@ -210,7 +210,7 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
     
     func nowLetsGo(imported: Bool = false, seed: String = "") {
         
-        BC.onComplete = { res, status in
+        BC.onComplete = { [self] res, status in
             print(res,status)
             switch status {
             case 200:
@@ -229,10 +229,13 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
                         }
                     })
                 }
+            case 400:
+                self.alertWarning(title: lang.const(x: Localize.keys.an_error_occured.rawValue), message: "Girdiğiniz bilgileri kontrol edip tekrar deneyin.", error: true)
+                letsGoView.isHidden = false
             case 502:
-                self.alertWarning(title: "Bir Hata Oluştu", message: "Şu anda işleminizi gerçekleştiremiyoruz. Lütfen daha sonra tekrar deneyin.", error: true)
+                self.alertWarning(title: lang.const(x: Localize.keys.an_error_occured.rawValue), message: "Şu anda işleminizi gerçekleştiremiyoruz. Lütfen daha sonra tekrar deneyin.", error: true)
             default:
-                self.alertWarning(title: "Bir Hata Oluştu", message: "Şu anda işleminizi gerçekleştiremiyoruz. Lütfen daha sonra tekrar deneyin.", error: true)
+                self.alertWarning(title: lang.const(x: Localize.keys.an_error_occured.rawValue), message: "Şu anda işleminizi gerçekleştiremiyoruz. Lütfen daha sonra tekrar deneyin.", error: true)
             }
         }
         
@@ -261,7 +264,7 @@ extension OnBoardingVC: UIScrollViewDelegate
         onBoardingView1.setView(image: UIImage(named: "letsStart1")!,
                                 titleFirst: "Blokzincir",
                                 titleSecond: "Ödeme Geçidi",
-                                desc: "DigiliraPay’e hoşgeldin.\nBlockzincir tabanlı ödeme yöntemimizle tanış.")
+                                desc: "DigiliraPay’e hoşgeldin.\nKripto paranı güvenle sakla, transfer et, alışverişlerinde kullan.")
         
         onBoardingView1.frame = CGRect(x: 0,
                                        y: 0,
@@ -272,7 +275,7 @@ extension OnBoardingVC: UIScrollViewDelegate
         onBoardingView2.setView(image: UIImage(named: "onboarding2")!,
                                 titleFirst: "Kripto Paralarınızı",
                                 titleSecond: "Güvenle Saklayın",
-                                desc: "Kripto paralarınız bizimle her zaman güvende!")
+                                desc: "Cüzdanınız sadece sizin kontrolünüzde olsun!")
         
         onBoardingView2.frame = CGRect(x: scrollViewSize.width,
                                        y: 0,
@@ -281,9 +284,9 @@ extension OnBoardingVC: UIScrollViewDelegate
         
         let onBoardingView3: OnBoardingView = UIView().loadOnBoardingNib()
         onBoardingView3.setView(image: UIImage(named: "onboarding3")!,
-                                titleFirst: "Tüm İşlemler",
-                                titleSecond: "Tek Hesapta Saklı",
-                                desc: "Tüm işlemlerini tek hesaptan yönet, \ngüvenli bir şekilde al-sat.")
+                                titleFirst: "Merkeziyetsiz",
+                                titleSecond: "Finans ile Tanışın!",
+                                desc: "Tüm işlemlerinizi tek hesaptan yönetin, \nMerkeziyetsiz finansın kapısını DigiliraPay ile aralayın.")
         
         onBoardingView3.frame = CGRect(x: scrollViewSize.width * 2,
                                        y: 0,
@@ -302,13 +305,7 @@ extension OnBoardingVC: UIScrollViewDelegate
         onBoardingScrollView.isPagingEnabled = true
         scrollAreaView.addSubview(onBoardingScrollView)
         
-        pageControl.transform = CGAffineTransform(scaleX: 3, y: 3)
         scrollAreaView.addSubview(pageControl)
-        
-        
-        pageControl.pageIndicatorTintColor = UIColor(red:0.66, green:0.71, blue:0.95, alpha:1.0)
-        pageControl.currentPageIndicatorTintColor = UIColor(red:0.24, green:0.54, blue:1.00, alpha:1.0)
-        
         
     }
     

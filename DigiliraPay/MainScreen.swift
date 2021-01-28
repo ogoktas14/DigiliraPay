@@ -45,6 +45,8 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
     @IBOutlet var mainView: UIView!
     var profileViewXib: ProfileMenuView = ProfileMenuView()
     
+    let lang = Localize()
+
     var warningView = WarningView()
     var orderDetailView = OrderDetailView()
     var contentScrollView = UIScrollView()
@@ -350,7 +352,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [self] in
                             if !isInformed {
                                 isInformed = true
-                                throwEngine.alertCaution(title: "Anahtar Kelimeler", message: "Anahtar kelimelerinizi sizden başka kimse bilemez. Buna biz de dahiliz. Lütfen anahtar kelimelerinizi yedekleyin. Bu uyarıyı almak istemiyorsanız anahtar kelimelerinizi yedeklemeniz gerekmektedir.")
+                                throwEngine.alertCaution(title: "Anahtar Kelimeler", message: "Anahtar kelimelerinizi sizden başka kimse bilemez. Buna biz de dahiliz. Lütfen anahtar kelimelerinizi yedekleyin. Cüzdanınızın silinmesi veya telefonunuzu değiştirmeniz durumunda bu kelimeleri kullanarak hesabınıza erişebileceksiniz. Bu uyarıyı almak istemiyorsanız yedekleme işlemini doğrulamanız gerekmektedir.")
                             }
                             
                             
@@ -945,7 +947,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                     case 400:
                         do {
                             let pm = try crud.decodeDefaults(forKey: data, conformance: digilira.NodeError.self)
-                            self.throwEngine.alertCaution(title: "Bir Hata Oluştu", message: pm.message)
+                            self.throwEngine.alertCaution(title: lang.const(x: Localize.keys.an_error_occured.rawValue), message: pm.message)
                              
                         } catch {
                             print(error)
@@ -1973,7 +1975,7 @@ extension MainScreen: OperationButtonsDelegate
         if kullanici.status == 0 {
             verifyProfile()
             DispatchQueue.main.async { [self] in
-                self.throwEngine.alertCaution(title: "Profil Onayı", message: "Hesabınıza para yükleyebilmek için profil onayı sürecini tamamlamanız gerekmektedir.")
+                self.throwEngine.alertCaution(title: "Profil Onayı", message: "Müşterini tanı politikası gereğince hesabınıza para yükleyebilmek için profil onay sürecini tamamlamanız gerekmektedir.")
             }
             return
         }
@@ -2367,9 +2369,8 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
     func showSuccess(mode: Int, transaction: TransferTransactionModel) {
         do {
             let asset = try BC.returnAsset(assetId: transaction.assetID)
-            let double = Double(truncating: pow(10,asset.decimal) as NSNumber)
             
-            let amount:String = (Double(transaction.amount) / double).description
+            let amount:String = MainScreen.int2so(transaction.amount, digits: asset.decimal)
 
             let message = amount + " " + asset.tokenName + " Gönderiliyor."
             switch mode {
@@ -2594,15 +2595,15 @@ extension MainScreen: UIImagePickerControllerDelegate {
                             digiliraPay.updateUser(user: data, signature: sign.signature)
                         }
                     } else {
-                        throwEngine.alertWarning(title: "Bir Hata Oluştu", message: "Dosya yüklenemedi. Lütfen tekrar deneyin. Sıkıştırma Hatası", error: true)
+                        throwEngine.alertWarning(title: lang.const(x: Localize.keys.an_error_occured.rawValue), message: "Dosya yüklenemedi. Lütfen tekrar deneyin. Sıkıştırma Hatası", error: true)
                         return
                     }
                 } else {
-                    throwEngine.alertWarning(title: "Bir Hata Oluştu", message: "Dosya yüklenemedi. Lütfen tekrar deneyin. Düzenleme Hatası", error: true)
+                    throwEngine.alertWarning(title: lang.const(x: Localize.keys.an_error_occured.rawValue), message: "Dosya yüklenemedi. Lütfen tekrar deneyin. Düzenleme Hatası", error: true)
                     return
                 }
             } else {
-                throwEngine.alertWarning(title: "Bir Hata Oluştu", message: "Dosya yüklenemedi. Lütfen tekrar deneyin.", error: true)
+                throwEngine.alertWarning(title: lang.const(x: Localize.keys.an_error_occured.rawValue), message: "Dosya yüklenemedi. Lütfen tekrar deneyin.", error: true)
                 return
             }
   
@@ -2611,6 +2612,14 @@ extension MainScreen: UIImagePickerControllerDelegate {
                 for case let row as CIQRCodeFeature in features{
                     
                     if (row.messageString != "") {
+                        OpenUrlManager.notSupportedYet = { [self] res, network in
+                            if !res {
+                                throwEngine.alertWarning(title: "Geçersiz Cüzdan", message: "Cüzdan adresi geçersiz veya desteklenmemektedir.")
+                            } else {
+                                throwEngine.alertCaution(title: network, message: network + " blokzinciri henüz desteklenmemektedir.")
+                            }
+                        }
+                        
                         OpenUrlManager.onURL = { [self] res in
                             getOrder(address: res)
                         }

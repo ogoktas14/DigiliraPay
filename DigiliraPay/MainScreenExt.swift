@@ -628,7 +628,7 @@ extension MainScreen: PaymentCatViewsDelegate {
 extension MainScreen: LetsStartSkipDelegate {
     
     func warnUser() {
-        throwEngine.alertWarning(title: "Dikkat", message: "Ekran görüntüsü olarak anahtar kelimelerinizi yedeklemeniz durumunda, anahtar kelimelerinizin üçüncü şahıslar tarafından görülmesi riskini artmaktadır. Lütfen daha güvenli bir yedekleme metodu gerçekleştiriniz.")
+        throwEngine.alertWarning(title: "Dikkat", message: "Ekran görüntüsü alarak anahtar kelimeleri yedeklemeniz durumunda, anahtar kelimeleriniz sizden başka birisinin eline geçebilir ve kripto paralarınızı kaybedebilirsiniz. Lütfen daha güvenli bir yedekleme metodu gerçekleştiriniz.")
     }
     func skipTap() {
         UIView.animate(withDuration: 0.3) {
@@ -661,6 +661,14 @@ extension MainScreen: SendWithQrDelegate
     func dismissSendWithQr(url: String)
     {
         if (url != "") {
+            OpenUrlManager.notSupportedYet = { [self] res, network in
+                if !res {
+                    throwEngine.alertWarning(title: "Geçersiz Cüzdan", message: "Cüzdan adresi geçersiz veya desteklenmemektedir.")
+                } else {
+                    throwEngine.alertCaution(title: network, message: network + " blokzinciri henüz desteklenmemektedir.")
+                }
+            }
+            
             OpenUrlManager.onURL = { [self] res in
                 getOrder(address: res)
             }

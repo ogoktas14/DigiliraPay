@@ -32,7 +32,13 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="guv-uw-pms">
-                                <rect key="frame" x="146.33333333333334" y="698.66666666666663" width="121.33333333333334" height="27.333333333333371"/>
+                                <rect key="frame" x="107" y="698.66666666666663" width="200" height="27.333333333333371"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="27.329999999999998" id="Voh-T3-4WV"/>
+                                    <constraint firstAttribute="width" constant="200" id="vjR-3U-064"/>
+                                </constraints>
+                                <color key="pageIndicatorTintColor" red="1" green="0.55292166095890405" blue="0.55292166095890405" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="currentPageIndicatorTintColor" red="1" green="0.1019607843" blue="0.1843137255" alpha="1" colorSpace="calibratedRGB"/>
                             </pageControl>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="am5-Ed-hkq" customClass="DLGradient" customModule="DigiliraPay" customModuleProvider="target">
                                 <rect key="frame" x="60" y="751.33333333333337" width="294" height="50"/>
@@ -51,7 +57,7 @@
                                     <constraint firstAttribute="height" constant="50" id="rbk-S5-AdL"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hesabımı İçeri Aktar" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZJS-5x-J1Z">
+                            <label hidden="YES" opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hesabımı İçeri Aktar" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZJS-5x-J1Z">
                                 <rect key="frame" x="131" y="812.33333333333337" width="152.33333333333337" height="52.666666666666629"/>
                                 <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="17"/>
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

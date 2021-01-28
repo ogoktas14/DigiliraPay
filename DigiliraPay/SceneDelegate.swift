@@ -30,6 +30,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, UNUserNotificationCente
         for urlContext in connectionOptions.urlContexts {
             let url = urlContext.url
             
+            OpenUrlManager.notSupportedYet = { res, network in
+                
+            }
+            
             OpenUrlManager.onURL = { res in
                 let encoder = JSONEncoder()
                 if let encoded = try? encoder.encode(res) {
@@ -148,6 +152,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, UNUserNotificationCente
     func scene(_ scene: UIScene,openURLContexts URLContexts: Set<UIOpenURLContext>){
         
         if let url = URLContexts.first?.url{
+            
+            OpenUrlManager.notSupportedYet = { res, network in
+                
+            }
             
             OpenUrlManager.onURL = { res in
                 let encoder = JSONEncoder()

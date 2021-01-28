@@ -17,26 +17,28 @@ class ErrorHandling: NSObject {
     var orderDetailView = OrderDetailView()
     var transferConfirmationView = TransferConfirmationView()
     
+    let lang = Localize()
+    
     weak var errors: ErrorsDelegate?
     
     func evaluateError(error: Error) {
         switch error {
         
         case digilira.NAError.E_502:
-            alertWarning(title: "Bir Hata Oluştu", message: "Şu anda işleminizi gerçekleştiremiyoruz. Lütfen daha sonra tekrar deneyin.", error: true)
+            alertWarning(title: lang.const(x: Localize.keys.an_error_occured.rawValue), message: "Şu anda işleminizi gerçekleştiremiyoruz. Lütfen daha sonra tekrar deneyin.", error: true)
             break
             
         case digilira.NAError.missingParameters:
-            alertWarning(title: "Bir Hata Oluştu", message: "Girdiğiniz bilgileri kontrol ederek tekrar deneyin.", error: true)
+            alertWarning(title: lang.const(x: Localize.keys.an_error_occured.rawValue), message: "Girdiğiniz bilgileri kontrol ederek tekrar deneyin.", error: true)
             break
         case digilira.NAError.anErrorOccured:
-            alertWarning(title: "Bir Hata Oluştu", message: "Lütfen tekrar deneyin.", error: true)
+            alertWarning(title: lang.const(x: Localize.keys.an_error_occured.rawValue), message: "Lütfen tekrar deneyin.", error: true)
             break
         case digilira.NAError.emptyAuth:
-            alertWarning(title: "Bir Hata Oluştu", message: "Kullanıcı bilgileri okunamadı")
+            alertWarning(title: lang.const(x: Localize.keys.an_error_occured.rawValue), message: "Kullanıcı bilgileri okunamadı")
             break
         case digilira.NAError.emptyPassword:
-            alertWarning(title: "Bir Hata Oluştu", message: "Kullanıcı bilgileri okunamadı")
+            alertWarning(title: lang.const(x: Localize.keys.an_error_occured.rawValue), message: "Kullanıcı bilgileri okunamadı")
             break
         case digilira.NAError.notListedToken:
             break
@@ -45,7 +47,7 @@ class ErrorHandling: NSObject {
         case digilira.NAError.tokenNotFound:
             return
         case digilira.NAError.noAmount:
-            alertWarning(title: "Miktar Giriniz", message: "Gödermek istediğiniz miktarı giriniz.")
+            alertWarning(title: "Miktar Giriniz", message: "Minimum gönderme tutarının altında bir miktar girdiniz.")
             return
         case NetworkError.negativeBalance:
             alertWarning(title: "Yetersiz Bakiye", message: "Bakiyeniz bu transferi gerçekleştirebilmek için yeterli değil.")

@@ -210,7 +210,7 @@ class LetsStartVC: UIViewController {
         letsStartView1.makeWhiteBackground()
         letsStartView1.setView(image: UIImage(named: "letsStart1")!,
                                 titleFirst: "Blokzincir dünyasına",
-                                titleSecond: "hoşgeldin!",
+                                titleSecond: "hoşgeldiniz!",
                                 desc: "Dijital cüzdanını oluşturmaya hemen başlayalım.")
         
         letsStartView1.frame = CGRect(x: 0,
@@ -222,9 +222,9 @@ class LetsStartVC: UIViewController {
         let letsStartView2: OnBoardingView = UIView().loadOnBoardingNib()
         letsStartView2.makeWhiteBackground()
         letsStartView2.setView(image: UIImage(named: "letsStart2")!,
-                                titleFirst: "Blokzincir cüzdanın",
+                                titleFirst: "Blokzincir cüzdanınız",
                                 titleSecond: "şeffaf bir kasa gibidir",
-                                desc: "Bu kasayı açabilecek anahtar ise sadece senin kontrolündedir.")
+                                desc: "Bu kasayı açabilecek anahtar ise sadece sizin kontrolünüzdedir. Bu kasayı sizden başka kimse açamaz. Anahtarı kaybederseniz buna siz de dahilsiniz.")
         
         letsStartView2.frame = CGRect(x: scrollViewSize.width,
                                        y: 0,
@@ -236,7 +236,7 @@ class LetsStartVC: UIViewController {
         letsStartView3.setView(image: UIImage(named: "letsStart3")!,
                                 titleFirst: "Anahtar kelimeler ile",
                                 titleSecond: "her zaman güvende ol!",
-                                desc: "Anahtar kelimelerini senden başka kimse bilemez. Buna biz de dahiliz. Lütfen anahtar kelimelerini not al.")
+                                desc: "Anahtar kelimelerini senden başka kimse bilemez. Buna biz de dahiliz. Bir sonraki ekranda kullandığınız cihaz üzerinde oluşturulan 15 'anahtar kelime'yi sırasıyla güvenli bir yere kaydetmeyi unutmayın.")
         
         letsStartView3.frame = CGRect(x: scrollViewSize.width * 2,
                                        y: 0,
@@ -244,7 +244,7 @@ class LetsStartVC: UIViewController {
                                        height: scrollViewSize.height)
         
         let letsStartView4: LetsStartWordsView = UIView().loadNib(name: "LetsStartWordView") as! LetsStartWordsView
-        letsStartView4.setTitles(title: "Anahtar kelimelerini", subTitle: "asla kaybetme!", desc: "Eğer uygulaman silinirse veya cüzdanını başka bir cihaza aktarman gerekirse bu kelimelere ihtiyaç duyacaksın.")
+        letsStartView4.setTitles(title: "Anahtar kelimelerinizi", subTitle: "asla kaybetmeyin!", desc: "Eğer uygulamanız silinirse veya cüzdanınızı başka bir cihaza aktarmanız gerekirse bu kelimelere ihtiyaç duyacaksınız. Bu kelimeleri sırasıyla not alın.")
         letsStartView4.frame = CGRect(x: scrollViewSize.width * 3,
                                        y: 0,
                                        width: scrollViewSize.width,
@@ -315,7 +315,7 @@ class LetsStartVC: UIViewController {
 extension LetsStartVC: LetsStartSkipDelegate
 {
     func warnUser() {
-        alertWarning(title: "Dikkat", message: "Ekran görüntüsü olarak anahtar kelimelerinizi yedeklemeniz durumunda, anahtar kelimelerinizin üçüncü şahıslar tarafından görülmesi riskini arttırmaktadır. Lütfen daha güvenli bir yedekleme metodu gerçekleştiriniz.")
+        alertWarning(title: "Dikkat", message: "Ekran görüntüsü alarak anahtar kelimeleri yedeklemeniz durumunda, anahtar kelimeleriniz sizden başka birisinin eline geçebilir ve kripto paralarınızı kaybedebilirsiniz. Lütfen daha güvenli bir yedekleme metodu gerçekleştiriniz.")
     }
     
     func skipTap() {

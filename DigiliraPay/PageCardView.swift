@@ -137,9 +137,9 @@ class PageCardView: UIView {
 
             let formatter4 = DateFormatter()
             formatter4.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-            let then = formatter4.date(from: String(timestamp.description))
+            let then = formatter4.date(from: String(timestamp.description)) ?? Date()
 
-            let t0 = (Int64(then!.timeIntervalSince1970) * 1000)
+            let t0 = (Int64(then.timeIntervalSince1970) * 1000)
             
             let delta = (t1 - t0) / 1000
             

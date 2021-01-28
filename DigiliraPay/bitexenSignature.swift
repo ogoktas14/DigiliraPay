@@ -274,7 +274,7 @@ class bex: NSObject {
                 HMAC: hmac,
                 PAYMENT: true,
                 returnCompletion: { (json, statusCode) in
-                    let jsonResponse = try? JSONSerialization.jsonObject(with: JSONEncoder().encode(json)) as! Dictionary<String, AnyObject>
+//                    let jsonResponse = try? JSONSerialization.jsonObject(with: JSONEncoder().encode(json)) as! Dictionary<String, AnyObject>
 
                     DispatchQueue.main.async {
                         if let ticker = self.decodeDefaults(forKey: json!, conformance: MakePaymentResponse.self) {

@@ -29,7 +29,8 @@ class newSendView: UIView {
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var scrollAreaView: UIView!
     weak var errors: ErrorsDelegate?
-    
+    let lang = Localize()
+
     let generator = UINotificationFeedbackGenerator()
     var direction: UISwipeGestureRecognizer.Direction?
     
@@ -66,6 +67,7 @@ class newSendView: UIView {
     let digiliraPay = digiliraPayApi()
     
     @objc func sendMoneyButton() {
+        
         sendView.alpha = 0.4
         sendView.isUserInteractionEnabled = false
         var isMissing = false
@@ -120,10 +122,28 @@ class newSendView: UIView {
         t.fiat = price
         
         
+        
         if let coin = selectedCoinX {
+            
             let double = Double(truncating: pow(10,coin.decimal) as NSNumber)
             t.amount = Int64(isAmount * double)
-            if t.amount == 0 {
+            var minAmount = 0
+            switch coin.tokenName {
+            case "Bitcoin":
+                minAmount = 99999
+                break
+            case "Ethereum":
+                minAmount = 9999
+                break
+            case "Waves":
+                minAmount = 999999
+                break
+            default:
+                minAmount = Int(double - 1)
+                break
+            }
+            
+            if t.amount! <= minAmount {
                 
                 sendView.alpha = 1
                 sendView.isUserInteractionEnabled = true
@@ -428,11 +448,11 @@ class newSendView: UIView {
             }
             DispatchQueue.main.async { [self] in
                 
-                errors?.errorHandler(message: y.tokenName + " bakiyeniz bulunmamaktadır.", title: "Bir Hata Oluştu", error: true)
+                errors?.errorHandler(message: y.tokenName + " bakiyeniz bulunmamaktadır.", title: lang.const(x: Localize.keys.an_error_occured.rawValue), error: true)
             }
         } catch  {
             DispatchQueue.main.async { [self] in
-                errors?.errorHandler(message: "Token desteklenmemektedir.", title: "Bir Hata Oluştu", error: true)
+                errors?.errorHandler(message: "Token desteklenmemektedir.", title: lang.const(x: Localize.keys.an_error_occured.rawValue), error: true)
             }
             return
         }
@@ -490,12 +510,40 @@ class newSendView: UIView {
                 balanceCardView.willPaidCoin.text = String(format: "%." + coin.decimal.description + "f", amount)
             }
             if let t = transaction {
+                
+                var minAmount: Double = 0
+                switch coin.tokenName {
+                case "Bitcoin":
+                    minAmount = 0.001
+                    break
+                case "Ethereum":
+                    minAmount = 0.01
+                    break
+                case "Waves":
+                    minAmount = 0.1
+                    break
+                default:
+                    minAmount = 1
+                    break
+                }
+                
                 if t.destination == digilira.transactionDestination.foreign {
-                    commissionLabel.text = "Blokzincir transfer ücreti: " + coin.gatewayFee.description + " " + coin.tokenName
-                    commissionLabel.isHidden = false
+                    if amount >= minAmount {
+                        commissionLabel.text = "Blokzincir transfer ücreti: " + coin.gatewayFee.description + " " + coin.tokenName
+                        commissionLabel.isHidden = false
+                    } else {
+                        commissionLabel.text = "Minimum transfer miktarı: " + minAmount.description + " " + coin.tokenName
+                        commissionLabel.isHidden = false
+                        
+                    }
+                    
+
                     
                 } else {
-                    commissionLabel.isHidden = true
+                    commissionLabel.text = "Minimum transfer miktarı: " + minAmount.description + " " + coin.tokenName
+                    commissionLabel.isHidden = false
+                    
+                    
                 }
             }
         }

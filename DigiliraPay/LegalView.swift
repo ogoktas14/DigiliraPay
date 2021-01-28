@@ -17,6 +17,8 @@ class LegalView: UIView {
     @IBOutlet weak var confirmView: UIView!
     @IBOutlet weak var backView: UIView!
     @IBOutlet weak var content: UIView!
+    @IBOutlet weak var davetiye: UITextField!
+    @IBOutlet weak var davetiyeLabel: UILabel!
 
     let throwEngine = ErrorHandling()
     weak var delegate: LegalDelegate?
@@ -61,11 +63,7 @@ class LegalView: UIView {
         } catch  {
             print(error)
         }
-        do {
-            try Locksmith.deleteDataForUserAccount(userAccount: "environment")
-        } catch  {
-            print(error)
-        }
+        UserDefaults.standard.setValue(true, forKey: "environment")
         throwEngine.resetApp()
 
         let defaults = UserDefaults.standard
@@ -89,6 +87,9 @@ class LegalView: UIView {
         }
     }
     
+    @IBAction func entry(_ sender: Any) {
+
+    }
     func setView() {
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .light
@@ -104,9 +105,11 @@ class LegalView: UIView {
         case digilira.legalView.title:
             m = "isLegalView"
             v = digilira.legalView.version
+            davetiye.isHidden = false
         case digilira.termsOfUse.title:
             m = "isTermsOfUse"
             v = digilira.termsOfUse.version
+            davetiye.isHidden = true
         default:
             return
         }
@@ -121,6 +124,34 @@ class LegalView: UIView {
     }
     
     @objc func setOK() {
+        
+        if davetiye.isHidden == false {
+            if davetiye.text == "" {
+                davetiyeLabel.text = "Davetiye Kodu Girmediniz."
+                content.shake()
+                return
+            } else {
+                
+                let isOk = NSPredicate(format: "SELF MATCHES %@", "DP-[A-Z]{6}$")
+                let result = isOk.evaluate(with: davetiye.text)
+                if (!result) {
+                    davetiyeLabel.text = "Davetiye kodunu hatalı girdiniz."
+                    content.shake()
+                    return
+                }
+                
+                let array = digilira.codes.code
+                if array.contains(where: {$0 == davetiye.text}) {
+                UserDefaults.standard.set(davetiye.text, forKey: "invitation")
+                } else {
+                    davetiyeLabel.text = "Davetiye kodunu hatalı girdiniz."
+                    content.shake()
+                    return
+                }
+                
+            }
+        }
+        
         UserDefaults.standard.set(v, forKey: self.m!)
         delegate?.dismissLegalView()
         confirmView.isHidden = true

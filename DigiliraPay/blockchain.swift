@@ -181,6 +181,7 @@ class Blockchain: NSObject {
     
     private let wavesCrypto: WavesCrypto = WavesCrypto()
     
+    var lang = Localize()
     var listedTokens = ListedTokens()
     let digiliraPay = digiliraPayApi()
     let throwEngine = ErrorHandling()
@@ -898,7 +899,7 @@ class Blockchain: NSObject {
                     .subscribe(onNext: {(tx) in
                         print(tx)
                     }, onError: {(error) in
-                        self.onError!(error)
+                        //self.onError!(error)
                     })
                     .disposed(by: self.disposeBag)
             } else {
@@ -927,23 +928,31 @@ class Blockchain: NSObject {
     }
     
     func returnDataAddress() -> String {
+        
+        let gatewayPublicAddress = "57EFni8M1XesEurFh3c4jnpLExP2PCPd5TRrwMjePAT4"
+        let mainnetDataPublic = "4snGCeL4Wjopx9awWd7pfdqUYyN1CLqbPz66bn7VY8oe"
+        
         guard let chainId = WavesSDK.shared.enviroment.chainId else { return "" }
         switch chainId {
         case "T":
-            return digilira.gatewayAddress
+            return WavesCrypto.shared.address(publicKey: gatewayPublicAddress, chainId: "T")!
         default:
-            return digilira.mainnetDataAddress
+            return WavesCrypto.shared.address(publicKey: mainnetDataPublic, chainId: "W")!
         }
     }
     
     func returnGatewayAddress() -> String {
-    guard let chainId = WavesSDK.shared.enviroment.chainId else { return "" }
-    switch chainId {
-    case "T":
-        return digilira.gatewayAddress
-    default:
-        return digilira.mainnetGatewayAddress
-    }
+        
+        let gatewayPublicAddress = "57EFni8M1XesEurFh3c4jnpLExP2PCPd5TRrwMjePAT4"
+        let mainnetGatewayPublic = "ActWMpdeyp8YHRhLxXmwdJmr37VXGgb44m8DuSVJW3k1"
+        
+        guard let chainId = WavesSDK.shared.enviroment.chainId else { return "" }
+        switch chainId {
+        case "T":
+            return WavesCrypto.shared.address(publicKey: gatewayPublicAddress, chainId: "T")!
+        default:
+            return WavesCrypto.shared.address(publicKey: mainnetGatewayPublic, chainId: "W")!
+        }
         
     }
     
@@ -1050,7 +1059,7 @@ class Blockchain: NSObject {
                 self.onSensitive!(digilira.wallet.init(seed: "", wavesToken: ""), err)
             }
         }
-        digiliraPay.touchID(reason: "Transferin gerçekleşebilmesi için biometrik onayınız gerekmektedir!")
+        digiliraPay.touchID(reason: lang.const(x: "touch_id_reason"))
     }
     
     private func getSeed() throws -> digilira.wallet {
@@ -1316,8 +1325,14 @@ class Blockchain: NSObject {
             {
                 devToken = deviceToken
             }
+            var zmark = ""
             
-            let v = [devToken, btc, eth, imported.description, ltc]
+            if let isInvitation = UserDefaults.standard.value(forKey: "invitation") as? String
+            {
+                zmark = isInvitation
+            }
+            
+            let v = [devToken, btc, eth, imported.description, ltc, zmark]
             guard let signed = try? bytization( v, timestamp, seed) else {return}
             
             var user = digilira.exUser.init(btcAddress: btc,
@@ -1326,6 +1341,7 @@ class Blockchain: NSObject {
                                             wallet: wallet,
                                             imported: imported,
                                             apnToken: devToken,
+                                            zmark: zmark,
                                             signed: signed.signature,
                                             publicKey: senderPublicKey,
                                             timestamp: timestamp
@@ -1334,7 +1350,7 @@ class Blockchain: NSObject {
             if chainId != "T" {
                 guard let usd = UserDefaults.standard.value(forKey: "usdtAddress") as? String else { return }
                 user.tetherAddress = usd
-                let v = [devToken, btc, eth, imported.description, ltc, usd]
+                let v = [devToken, btc, eth, imported.description, ltc, usd, zmark]
                 guard let signed = try? bytization( v, timestamp, seed) else {return}
                 user.signed = signed.signature
             }
@@ -1396,8 +1412,19 @@ class Blockchain: NSObject {
                             switch statusCode {
                             case 502:
                                 self.onComplete!(false, 502)
+                                break
+                            case 400:
+                                let defaults = UserDefaults.standard
+                                let dictionary = defaults.dictionaryRepresentation()
+                                dictionary.keys.forEach { key in
+                                    defaults.removeObject(forKey: key)
+                                }
+                                UserDefaults.standard.setValue(true, forKey: "environment")
+                                self.onComplete!(false, 400)
+                                break
                             default:
                                 self.onComplete!(false, 502)
+                                break
                             }
                         }
                     }
