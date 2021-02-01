@@ -6,13 +6,8 @@ import Wallet
 class ColoredCardView: CardView {
 
     @IBOutlet weak var contentView: UIView!
-    @IBOutlet weak var v1: UIView!
-    @IBOutlet weak var v2: UIView!
-    @IBOutlet weak var v3: UIView!
     
     @IBOutlet weak var l1: UILabel!
-    @IBOutlet weak var l2: UILabel!
-    @IBOutlet weak var l3: UILabel!
     
     @IBOutlet weak var cardNumber: UILabel!
     @IBOutlet weak var remarks: UIView!
@@ -80,22 +75,10 @@ class ColoredCardView: CardView {
         logoView.image = UIImage(named: cardInfo.logoName)
         cardMode = cardInfo.org
         
-        v1.isHidden = true
-        v2.isHidden = true
-        v3.isHidden = true
-        
         if let line1 = cardInfo.line1 {
             l1.text = line1
-            v1.isHidden = false
         }
-        if let line2 = cardInfo.line2 {
-            l2.text = line2
-            v2.isHidden = false
-        }
-        if let line3 = cardInfo.line3 {
-            l3.text = line3
-            v3.isHidden = false
-        }
+
         
         setGradientBackground(colorTop: cardInfo.bgColor, colorBottom: cardInfo.bgColor)
         contentView.addTransitionFade()

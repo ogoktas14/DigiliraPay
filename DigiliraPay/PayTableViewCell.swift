@@ -20,4 +20,28 @@ class PayTableViewCell: UITableViewCell {
      }
     
 }
+
+class CommissionsLineCell: UITableViewCell {
+   @IBOutlet weak var prodName: UILabel!
+   @IBOutlet weak var prodPrice: UILabel!
+   @IBOutlet weak var BGView: UIView!
+   @IBOutlet weak var discountView: UIView!
  
+   override func awakeFromNib() {
+       super.awakeFromNib()
+    }
+   
+}
+
+class CommissionsTableViewCell: UITableViewCell {
+   @IBOutlet weak var icon: UIImageView!
+   @IBOutlet weak var tokenName: UILabel!
+   @IBOutlet weak var send: UILabel!
+   @IBOutlet weak var receive: UILabel!
+ 
+   override func awakeFromNib() {
+       super.awakeFromNib()
+    }
+   
+}
+

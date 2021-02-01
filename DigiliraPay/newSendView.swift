@@ -138,6 +138,9 @@ class newSendView: UIView {
             case "Waves":
                 minAmount = 999999
                 break
+            case "Tether USDT":
+                minAmount = 10 * Int(double - 1)
+                break
             default:
                 minAmount = Int(double - 1)
                 break
@@ -520,7 +523,10 @@ class newSendView: UIView {
                     minAmount = 0.01
                     break
                 case "Waves":
-                    minAmount = 0.1
+                    minAmount = 0.01
+                    break
+                case "Tether USDT":
+                    minAmount = 10.0
                     break
                 default:
                     minAmount = 1

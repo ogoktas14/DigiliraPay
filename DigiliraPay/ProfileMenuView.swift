@@ -32,7 +32,8 @@ class ProfileMenuView: UIView {
     @IBOutlet weak var legalTextView: UIView!
     @IBOutlet weak var pinView: UIView!
     @IBOutlet weak var seedView: UIView!
-     
+    @IBOutlet weak var commissions: UIView!
+
     @IBOutlet weak var profileWarning: UIImageView!
     @IBOutlet weak var seedBackupWarning: UIImageView!
     @IBOutlet weak var legalViewWarning: UIImageView!
@@ -70,6 +71,9 @@ class ProfileMenuView: UIView {
         
         let showBitexenGesture = UITapGestureRecognizer(target: self, action: #selector(openBitexenAPI))
         bitexenAPI.addGestureRecognizer(showBitexenGesture)
+        
+        let showCommissions = UITapGestureRecognizer(target: self, action: #selector(openCommissions))
+        commissions.addGestureRecognizer(showCommissions)
         
         let authContext = LAContext()
         
@@ -127,6 +131,10 @@ class ProfileMenuView: UIView {
     @objc func openBitexenAPI()
     {
         delegate?.showBitexenView()
+    }
+    @objc func openCommissions()
+    {
+        delegate?.showCommissions()
     }
     
     @IBAction func biometricSecuritySwitch(_ sender: Any)

@@ -18,26 +18,22 @@ struct turkish {
         logoName: "logo_bitexen",
         cardHolder:  "",
         cardNumber: "Bitexen Hesabı Ekle",
-        line1: "Bitexen hesabınızı DigiliraPay'e bağlayın ve doğrudan borsa cüzdanınızdan ödeme yapın",
-        line2: "Bitexen web sayfasındaki erişim ayaları sekmesinden API erişimi oluşturun. Oluşturduğunuz bilgileri Bitexen Hesabı ekle seçeneğini kullanarak DigiliraPay uygulamasına tanımlayın.",
-        line3: "API bilgileriniz DigiliraPay sunucularına kaydedilmez sadece uygulamanızda kaydedilir.",
+        line1: "bitexen hesabınızı DigiliraPay'e bağlayın ve bitexen borsasında bulunan bakiyelerinizi görüntüleyin ve dilerseniz alışveriş yapın.\n\nbitexen hesabınızı bağlamak için sırası ile Ayarlar -> Erişim Ayarları sayfasına gidin. Yeni API oluştur butonuna tıklayarak 'İzleme İşlemleri' ve 'Yatırma-Çekme' işlemlerinee izin verin. API erişimi için bir 'Parola' belirleyerek 'API Erişimi Oluştur' butonuna tıklayın.\n\nOluşturacağınız parola bitexen veya DigiliraPay sunucularına kaydedilmez sadece uygulamanıza kaydedilir.\n\nBilgileri kaybetmeniz durumunda yeni API erişimi oluşturmanız gerekmektedir.",
         apiSet: false,
         bg: "bitexen_hover-1"
     )
     
     static let oneTower = digilira.cardData.init(
         org: "One Tower",
-        bgColor:  UIColor(red: 0.7529, green: 0.0039, blue: 0, alpha: 1.0), /* #c00100 */
-        logoName: "onetower",
+        bgColor:  UIColor(red: 0.549, green: 0.9765, blue: 1, alpha: 1.0),
+        logoName: "one_tower_logo",
         cardHolder:  "",
         cardNumber: "One Tower",
-        line1: "One Tower Token",
+        line1: "One Tower AVM resmi sadakat jetonudur.\n\nOne Tower AVM içerisinde yer alan standlarda One Tower jetonlarınız ile alışveriş yapabilirsiniz.\n\nOne Tower jetonları başka DigiliraPay kullanıcıları arasında ücretsiz olarak transfer edebilir, birleştirerek harcanabilir.\n\nOne Tower jetonlarının nakdi bir karşılığı bulunmamaktadır. AVM'nin kendisi tarafından belirlenen promosyon ürünler, yine AVM tarafından belirlenen jeton bedelleri ile satın alınabilmektedir.\n\nOne Tower jetonları hakkında bilgiye onetoweravm.com.tr adresinden ulaşabilirsiniz.",
         apiSet: false
         
     )
-     
-
-    
+      
     struct messages {
         static let touchIDAuthorization = ""
     }

@@ -17,6 +17,7 @@ protocol ProfileMenuDelegate: class
     func showPinView()
     func showSeedView()
     func showBitexenView()
+    func showCommissions()
 }
 
 protocol ProfileSettingsViewDelegate: class 

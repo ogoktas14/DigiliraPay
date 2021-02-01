@@ -25,16 +25,8 @@ class ParaYatirView:UIView {
     @IBOutlet weak var copyView: UIView!
     
     @IBOutlet weak var l1: UILabel!
-    @IBOutlet weak var l2: UILabel!
-    @IBOutlet weak var l3: UILabel!
-    @IBOutlet weak var l4: UILabel!
-    @IBOutlet weak var l5: UILabel! 
     
     @IBOutlet weak var v1: UIView!
-    @IBOutlet weak var v2: UIView!
-    @IBOutlet weak var v3: UIView!
-    @IBOutlet weak var v4: UIView!
-    @IBOutlet weak var v5: UIView!
 
     var ccView = CreditCardView()
     let generator = UINotificationFeedbackGenerator()
@@ -70,59 +62,32 @@ class ParaYatirView:UIView {
     
     func constants (coin: String, symbol: String, min: String, mode: Int){
         v1.isHidden = true
-        v2.isHidden = true
-        v3.isHidden = true
-        v4.isHidden = true
-        v5.isHidden = true
         
         var array:[String] = []
         switch mode {
         case 0:
              array = [
-                "Herhangi bir yatırma limiti bulunmamaktadır.",
-                "Bu adrese dilediğiniz kadar " + coin + " gönderebilirsiniz."
+                "Herhangi bir yatırma limiti bulunmamaktadır.\n\nBu adrese dilediğiniz kadar " + coin + " gönderebilirsiniz."
             ]
         case 1:
              array = [
-                "One Tower AVM resmi sadakat jetonudur.",
-                "One Tower AVM içerisinde yer alan standlarda One Tower jetonlarınız ile alışveriş yapabilirsiniz.",
-                "One Tower jetonları başka DigiliraPay kullanıcıları arasında ücretsiz olarak transfer edebilir, birleştirerek harcanabilir.",
-                "One Tower jetonlarının nakdi bir karşılığı bulunmamaktadır. AVM'nin kendisi tarafından belirlenen promosyon ürünler, yine AVM tarafından belirlenen jeton bedelleri ile satın alınabilmektedir.",
-                "One Tower jetonları hakkında bilgiye onetoweravm.com.tr adresinden ulaşabilirsiniz."
+                "One Tower AVM resmi sadakat jetonudur.\n\nHerhangi bir yatırma limiti bulunmamaktadır."
             ]
         default:
              array = [
-                "Bu adrese sadece " + coin + " gönderin. Bu adrese " + coin + " dışında yapılan gönderimler kayıplara neden olur.",
-                "Minimum yatırım tutarı " + min + " " + symbol + "'dir. Bu tutarın altındaki yatırma işlemleri iade edilmeyecektir.",
-                "Gönderdiğiniz turar blokzincirde onaylandıktan sonra DigiliraPAY hesabınıza aktarılacaktır.",
-                "Cüzdan adresinizi kopyalamak için adrese basabilirsiniz. Kopyaladığınız adres ile yapıştırdığınız adresi mutlaka kontrol edin.",
-                "Ödeme almak için QR kodunuzu paylaşabilirsiniz."
+                "Bu adrese sadece " + coin + " gönderin. Bu adrese " + coin + " dışında yapılan gönderimler kayıplara neden olur.\n\nMinimum yatırım tutarı " + min + " " + symbol + "'dir. Bu tutarın altındaki yatırma işlemleri iade edilmeyecektir.\n\nGönderdiğiniz turar blokzincirde onaylandıktan sonra DigiliraPAY hesabınıza aktarılacaktır.\n\nÖdeme almak için QR kodunuzu paylaşabilirsiniz."
             ]
         }
         for (i, c) in array.enumerated() {
             switch i {
             case 0:
+                l1.fadeTransition(0.4)
                 l1.text = c
                 v1.isHidden = false
-            case 1:
-                l2.text = c
-                v2.isHidden = false
-            case 2:
-                l3.text = c
-                v3.isHidden = false
-            case 3:
-                l4.text = c
-                v4.isHidden = false
-            case 4:
-                l5.text = c
-                v5.isHidden = false
             default:
                 break
             }
-            
         }
-
-        
     }
     
     override func awakeFromNib() {

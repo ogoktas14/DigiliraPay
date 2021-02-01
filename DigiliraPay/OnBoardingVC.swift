@@ -9,6 +9,7 @@
 import UIKit
 import UserNotifications
 import WavesSDK
+import Locksmith
 
 class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
     
@@ -41,7 +42,7 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
     
     var QR:digilira.QR = digilira.QR.init()
  
-    private func initial2() {
+    private func initial2() {        
         letsGoView.isHidden = true
         importAccountView.isHidden = true
         pageControl.isHidden = false

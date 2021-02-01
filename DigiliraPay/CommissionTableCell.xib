@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="121" id="ya9-T2-Gi5" customClass="CommissionsTableViewCell" customModule="DigiliraPay" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="485" height="121"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ya9-T2-Gi5" id="0nx-aY-Wxg">
+                <rect key="frame" x="0.0" y="0.0" width="485" height="121"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8oT-8e-F0s">
+                        <rect key="frame" x="0.0" y="0.0" width="485" height="40"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6DZ-yv-Fr0">
+                                <rect key="frame" x="10" y="8" width="24" height="24"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="24" id="Lad-NT-bit"/>
+                                    <constraint firstAttribute="height" constant="24" id="X5Z-Q6-gY0"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bitcoin" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DCL-Kh-Owa">
+                                <rect key="frame" x="44" y="10.5" width="45.5" height="19.5"/>
+                                <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="14"/>
+                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bitcoin" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IF8-eC-6HK">
+                                <rect key="frame" x="295" y="10.5" width="90" height="19.5"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="90" id="orC-kb-tfT"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="14"/>
+                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Gönderilmez" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B9c-qe-JLI">
+                                <rect key="frame" x="385" y="10.5" width="90" height="19.5"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="90" id="0yC-fo-L3c"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="14"/>
+                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="DCL-Kh-Owa" firstAttribute="centerY" secondItem="8oT-8e-F0s" secondAttribute="centerY" id="66f-iL-lUZ"/>
+                            <constraint firstItem="B9c-qe-JLI" firstAttribute="centerY" secondItem="DCL-Kh-Owa" secondAttribute="centerY" id="CMq-Lz-wQV"/>
+                            <constraint firstItem="IF8-eC-6HK" firstAttribute="centerY" secondItem="DCL-Kh-Owa" secondAttribute="centerY" id="DCl-Og-Ztz"/>
+                            <constraint firstAttribute="height" constant="40" id="H49-of-pVn"/>
+                            <constraint firstItem="6DZ-yv-Fr0" firstAttribute="centerY" secondItem="8oT-8e-F0s" secondAttribute="centerY" id="ThJ-Mo-Lm1"/>
+                            <constraint firstAttribute="trailing" secondItem="B9c-qe-JLI" secondAttribute="trailing" constant="10" id="YjG-Qi-mWM"/>
+                            <constraint firstItem="6DZ-yv-Fr0" firstAttribute="leading" secondItem="8oT-8e-F0s" secondAttribute="leading" constant="10" id="mkD-AV-Tm2"/>
+                            <constraint firstItem="B9c-qe-JLI" firstAttribute="leading" secondItem="IF8-eC-6HK" secondAttribute="trailing" id="oce-Ay-5SW"/>
+                            <constraint firstItem="DCL-Kh-Owa" firstAttribute="leading" secondItem="6DZ-yv-Fr0" secondAttribute="trailing" constant="10" id="wE5-ZU-x6Q"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="8oT-8e-F0s" firstAttribute="top" secondItem="0nx-aY-Wxg" secondAttribute="top" id="V9R-1b-wBn"/>
+                    <constraint firstAttribute="trailing" secondItem="8oT-8e-F0s" secondAttribute="trailing" id="csD-nO-t6P"/>
+                    <constraint firstAttribute="bottom" secondItem="8oT-8e-F0s" secondAttribute="bottom" id="yIi-sb-oQa"/>
+                    <constraint firstItem="8oT-8e-F0s" firstAttribute="leading" secondItem="0nx-aY-Wxg" secondAttribute="leading" id="zma-lx-kzI"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="icon" destination="6DZ-yv-Fr0" id="nMd-Go-WoY"/>
+                <outlet property="receive" destination="B9c-qe-JLI" id="HVT-yZ-iEk"/>
+                <outlet property="send" destination="IF8-eC-6HK" id="rya-Bb-pnF"/>
+                <outlet property="tokenName" destination="DCL-Kh-Owa" id="DI6-a6-9e9"/>
+            </connections>
+            <point key="canvasLocation" x="365.94202898550725" y="60.602678571428569"/>
+        </tableViewCell>
+    </objects>
+</document>

@@ -34,6 +34,7 @@ class ProfilUpgradeView: UIView {
     @objc func openGallery()
     {
         delegate?.uploadImage()
+        delegate?.dismissVErifyAccountView()
     }
     
     @objc func goHome()

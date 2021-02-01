@@ -59,6 +59,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
     var profileMenuView = ProfileMenuView()
     let imagePicker = UIImagePickerController()
     var newSendMoneyView = newSendView()
+    var commissionsView = CommissionsView()
 
     var pageCardView = PageCardView()
     var paraYatirView = ParaYatirView()
@@ -1826,6 +1827,71 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         }
     }
     
+    internal func openCommissions() {
+
+        commissionsView = UIView().loadNib(name: "CommisionsView") as! CommissionsView
+        sendWithQRView.frame.origin.y = self.view.frame.height
+        commissionsView.frame = CGRect(x: 0,
+                                      y: 0,
+                                      width: view.frame.width,
+                                      height: view.frame.height)
+        commissionsView.delegate = self
+        commissionsView.errors = self
+        
+        commissionsView.tableView.frame = CGRect(x: 0,
+                                 y: 0,
+                                 width: self.view.frame.width,
+                                 height: self.view.frame.height)
+        commissionsView.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        
+        let line1 = digilira.line.init(mode: "text", text: "DigiliraPay kullanıcıları arasındaki transfer")
+        let btc1 = digilira.line.init(mode: "coin", text: "Bitcoin", icon: UIImage(named: "WBTC"), l1: "Ücretsiz", l2: "Ücretsiz")
+        let eth1 = digilira.line.init(mode: "coin", text: "Ethereum", icon: UIImage(named: "WETH"), l1: "Ücretsiz", l2: "Ücretsiz")
+        let waves1 = digilira.line.init(mode: "coin", text: "Waves", icon: UIImage(named: "Waves"), l1: "Ücretsiz", l2: "Ücretsiz")
+        let usd1 = digilira.line.init(mode: "coin", text: "Tether USDT", icon: UIImage(named: "USDT"), l1: "Ücretsiz", l2: "Ücretsiz")
+        let onet1 = digilira.line.init(mode: "coin", text: "One Tower", icon: UIImage(named: "One Tower"), l1: "Ücretsiz", l2: "Ücretsiz")
+        
+        let sep1 = digilira.line.init(mode: "text", text: "")
+        
+        let line2 = digilira.line.init(mode: "text", text: "DigiliraPay kullanıcılarının Waves blokzinciri üzerindeki transferleri")
+        let head2 = digilira.line.init(mode: "coin", text: "Token Adı", icon: UIImage(named: ""), l1: "Gönderme", l2: "Alma")
+        let btc2 = digilira.line.init(mode: "coin", text: "Bitcoin", icon: UIImage(named: "WBTC"), l1: "0.005 Waves", l2: "Ücretsiz")
+        let eth2 = digilira.line.init(mode: "coin", text: "Ethereum", icon: UIImage(named: "WETH"), l1: "0.005 Waves", l2: "Ücretsiz")
+        let waves2 = digilira.line.init(mode: "coin", text: "Waves", icon: UIImage(named: "Waves"), l1: "0.005 Waves", l2: "Ücretsiz")
+        let usd2 = digilira.line.init(mode: "coin", text: "Tether USDT", icon: UIImage(named: "USDT"), l1: "0.005 Waves", l2: "Ücretsiz")
+        let onet2 = digilira.line.init(mode: "coin", text: "One Tower", icon: UIImage(named: "One Tower"), l1: "Gönderilmez", l2: "Gönderilmez")
+        let sep2 = digilira.line.init(mode: "text", text: "")
+        
+        let line3 = digilira.line.init(mode: "text", text: "DigiliraPay kullanıcılarının Waves blokzinciri dışındaki transferleri")
+        
+        let btc3 = digilira.line.init(mode: "coin", text: "Bitcoin", icon: UIImage(named: "WBTC"), l1: "0.001 BTC", l2: "Ücretsiz")
+        let eth3 = digilira.line.init(mode: "coin", text: "Ethereum", icon: UIImage(named: "WETH"), l1: "0.01 BTC", l2: "Ücretsiz")
+        let waves3 = digilira.line.init(mode: "coin", text: "Waves", icon: UIImage(named: "Waves"), l1: "0.01 WAVES", l2: "Ücretsiz")
+        let usd3 = digilira.line.init(mode: "coin", text: "Tether USDT", icon: UIImage(named: "USDT"), l1: "10 USDT", l2: "Ücretsiz")
+        let onet3 = digilira.line.init(mode: "coin", text: "One Tower", icon: UIImage(named: "One Tower"), l1: "Gönderilmez", l2: "Gönderilmez")
+        
+         commissionsView.lines = [line1, head2, btc1, eth1, waves1, usd1, onet1, sep1,
+                                 line2, head2, btc2, eth2, waves2, usd2, onet2, sep2,
+                                 line3, head2, btc3, eth3, waves3, usd3, onet3
+                                ]
+
+        for subView in sendWithQRView.subviews
+        { subView.removeFromSuperview() }
+        
+        menuView.isHidden = true
+        
+        sendWithQRView.addSubview(commissionsView)
+        sendWithQRView.isHidden = false
+        sendWithQRView.translatesAutoresizingMaskIntoConstraints = true
+        closeProfileView()
+        
+        UIView.animate(withDuration: 0.3)
+        {
+            self.sendWithQRView.frame.origin.y = 0
+            self.sendWithQRView.alpha = 1
+        }
+    }
+    
     private func bitexenScreen() {
         isBitexenAPI = true
         bitexenAPIView = UIView().loadNib(name: "bitexenApiView") as! BitexenAPIView
@@ -2057,6 +2123,11 @@ extension MainScreen: BitexenAPIDelegate
 
 extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları gibi yan menü işlemleri
 {
+    func showCommissions() {
+        self.openCommissions()
+    }
+    
+    
     func showBitexenView() {
         
         if  !digiliraPay.isKeyPresentInUserDefaults(key: digiliraPay.returnBexChain()) {

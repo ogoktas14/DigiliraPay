@@ -15,6 +15,7 @@ class LegalView: UIView {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var contentLabel: UILabel!
     @IBOutlet weak var confirmView: UIView!
+    @IBOutlet weak var confirmAreaView: UIView!
     @IBOutlet weak var backView: UIView!
     @IBOutlet weak var content: UIView!
     @IBOutlet weak var davetiye: UITextField!
@@ -25,12 +26,15 @@ class LegalView: UIView {
     var tapOkGesture = UITapGestureRecognizer()
     var m: String?
     var v: Int?
+    var isKeyboard: Bool = false
+    
+    var buffer: CGFloat?
     
     let BC = Blockchain()
     
     override func awakeFromNib()
     {
-        
+        self.buffer = self.confirmAreaView.frame.origin.y
         let isMainnet = try! BC.getChain()
         
         if isMainnet == "W" {
@@ -38,11 +42,49 @@ class LegalView: UIView {
         }
         
         confirmView.clipsToBounds = true
-
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver( self, selector: #selector(keyboardWillHide(notification:)), name:  UIResponder.keyboardWillHideNotification, object: nil )
+        NotificationCenter.default.addObserver( self, selector: #selector(keyboardHide(notification:)), name:  UIResponder.keyboardDidHideNotification, object: nil )
+        
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(keyboardWillHide(notification:)))
+        
+        self.addGestureRecognizer(tap)
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
         swipeLeft.direction = .left
         self.addGestureRecognizer(swipeLeft)
         content.addGestureRecognizer(swipeLeft)
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        
+        if !isKeyboard {
+            if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+                
+                self.confirmAreaView.frame.origin.y -= keyboardSize.height
+                buffer = keyboardSize.height
+                isKeyboard = true
+            }
+        }
+    }
+    
+    @objc func keyboardHide(notification: NSNotification) {
+
+        isKeyboard = false
+    }
+
+    @objc func keyboardWillHide(notification: NSNotification) {
+
+        DispatchQueue.main.async { [self] in
+            self.endEditing(true)
+            if !isKeyboard {
+                return
+            }
+            
+            UIView.animate(withDuration: 0.4, animations: {
+                self.confirmAreaView.frame.origin.y += buffer!
+                isKeyboard = false
+            })
+        }
     }
     
     @IBAction func resetApp(_ sender: Any) {
@@ -64,13 +106,14 @@ class LegalView: UIView {
             print(error)
         }
         UserDefaults.standard.setValue(true, forKey: "environment")
-        throwEngine.resetApp()
-
         let defaults = UserDefaults.standard
         let dictionary = defaults.dictionaryRepresentation()
         dictionary.keys.forEach { key in
             defaults.removeObject(forKey: key)
         }
+        throwEngine.resetApp()
+
+
         delegate?.dismissLegalView()
         
     }
@@ -101,15 +144,26 @@ class LegalView: UIView {
         confirmView.addGestureRecognizer(tapOkGesture)
         tapOkGesture.isEnabled = true
 
-        switch titleLabel.text {
+        switch titleLabel.text  {
         case digilira.legalView.title:
             m = "isLegalView"
             v = digilira.legalView.version
+            davetiyeLabel.isHidden = false
             davetiye.isHidden = false
+            davetiye.isEnabled = false
+            davetiye.text = "ONAYLI"
+            davetiyeLabel.text = "Davetiye Kodu Doğrulandı"
+
+            davetiye.alpha = 0.4
+
+            break
         case digilira.termsOfUse.title:
             m = "isTermsOfUse"
             v = digilira.termsOfUse.version
-            davetiye.isHidden = true
+            davetiye.isHidden = false
+            davetiyeLabel.isEnabled = true
+            davetiye.isHidden = false
+            break
         default:
             return
         }
@@ -118,14 +172,18 @@ class LegalView: UIView {
         
         if (version != nil) {
             if (v! <= version!) {
-                confirmView.isHidden = true
+                confirmAreaView.isHidden = true
+                davetiye.isHidden = true
+
+                davetiyeLabel.isHidden = true
+                davetiye.isHidden = true
             }
         }
     }
     
     @objc func setOK() {
         
-        if davetiye.isHidden == false {
+        if titleLabel.text == digilira.termsOfUse.title  {
             if davetiye.text == "" {
                 davetiyeLabel.text = "Davetiye Kodu Girmediniz."
                 content.shake()
@@ -141,7 +199,13 @@ class LegalView: UIView {
                 }
                 
                 let array = digilira.codes.code
-                if array.contains(where: {$0 == davetiye.text}) {
+                
+                let prefix = "INVITATION-"
+                let inputString = prefix + davetiye.text!
+                
+                let hashed = inputString.hash256()
+                
+                if array.contains(where: {$0 == hashed}) {
                 UserDefaults.standard.set(davetiye.text, forKey: "invitation")
                 } else {
                     davetiyeLabel.text = "Davetiye kodunu hatalı girdiniz."
@@ -154,7 +218,7 @@ class LegalView: UIView {
         
         UserDefaults.standard.set(v, forKey: self.m!)
         delegate?.dismissLegalView()
-        confirmView.isHidden = true
+        confirmAreaView.isHidden = true
     }
     
     @IBAction func goBackButton(_ sender: Any)

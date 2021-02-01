@@ -217,9 +217,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
                         digiliraPay.updateUser(user: data, signature: sign.signature)
                     }
                 } 
-                
-                
-                
+                 
             }else {
                 errors?.evaluate(error: digilira.NAError.missingParameters)
                 understand.isEnabled = true

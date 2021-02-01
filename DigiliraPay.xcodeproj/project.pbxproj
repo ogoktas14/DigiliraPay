@@ -77,6 +77,10 @@
 		931A08D425A2F29F003AD083 /* WavesModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 931A08D325A2F29F003AD083 /* WavesModels.swift */; };
 		932A59C02584FA1900B64EA9 /* warningView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 932A59BF2584FA1900B64EA9 /* warningView.xib */; };
 		932A59C32584FA6200B64EA9 /* warningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932A59C22584FA6200B64EA9 /* warningView.swift */; };
+		932CF57625C818E900599C0D /* CommisionsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 932CF57525C818E900599C0D /* CommisionsView.xib */; };
+		932CF57B25C81CB100599C0D /* CommissionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932CF57A25C81CB100599C0D /* CommissionsView.swift */; };
+		932CF58025C8208100599C0D /* CommissionsLineCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 932CF57F25C8208100599C0D /* CommissionsLineCell.xib */; };
+		932CF58525C829BF00599C0D /* CommissionTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 932CF58425C829BF00599C0D /* CommissionTableCell.xib */; };
 		93390886255A76D40005B64A /* cloudflaressl.cer in Resources */ = {isa = PBXBuildFile; fileRef = 93390885255A76CD0005B64A /* cloudflaressl.cer */; };
 		93390895255AB18F0005B64A /* bitexen.com.cer in Resources */ = {isa = PBXBuildFile; fileRef = 93390893255AB1230005B64A /* bitexen.com.cer */; };
 		93390896255AB18F0005B64A /* wavesnodes.com.cer in Resources */ = {isa = PBXBuildFile; fileRef = 93390894255AB1760005B64A /* wavesnodes.com.cer */; };
@@ -256,6 +260,10 @@
 		931A08D325A2F29F003AD083 /* WavesModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WavesModels.swift; sourceTree = "<group>"; };
 		932A59BF2584FA1900B64EA9 /* warningView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = warningView.xib; sourceTree = "<group>"; };
 		932A59C22584FA6200B64EA9 /* warningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = warningView.swift; sourceTree = "<group>"; };
+		932CF57525C818E900599C0D /* CommisionsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CommisionsView.xib; sourceTree = "<group>"; };
+		932CF57A25C81CB100599C0D /* CommissionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommissionsView.swift; sourceTree = "<group>"; };
+		932CF57F25C8208100599C0D /* CommissionsLineCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CommissionsLineCell.xib; sourceTree = "<group>"; };
+		932CF58425C829BF00599C0D /* CommissionTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CommissionTableCell.xib; sourceTree = "<group>"; };
 		93390885255A76CD0005B64A /* cloudflaressl.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = cloudflaressl.cer; sourceTree = "<group>"; };
 		93390893255AB1230005B64A /* bitexen.com.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = bitexen.com.cer; sourceTree = "<group>"; };
 		93390894255AB1760005B64A /* wavesnodes.com.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = wavesnodes.com.cer; sourceTree = "<group>"; };
@@ -459,6 +467,9 @@
 				934F3C4F258A4A9E007CFC19 /* SendMoneyCard.xib */,
 				939FD248258BA69D00964E97 /* TransferConfirmationView.xib */,
 				9360FE61258F6B510064C579 /* LogoAnimation.xib */,
+				932CF57525C818E900599C0D /* CommisionsView.xib */,
+				932CF57F25C8208100599C0D /* CommissionsLineCell.xib */,
+				932CF58425C829BF00599C0D /* CommissionTableCell.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -503,6 +514,7 @@
 				934F3C52258A4C37007CFC19 /* SendMoneyCard.swift */,
 				93A3CC32258C7F5900E89E6E /* TransferConfirmationView.swift */,
 				9360FE64258F6C990064C579 /* LogoAnimation.swift */,
+				932CF57A25C81CB100599C0D /* CommissionsView.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -731,7 +743,9 @@
 				93390895255AB18F0005B64A /* bitexen.com.cer in Resources */,
 				93390896255AB18F0005B64A /* wavesnodes.com.cer in Resources */,
 				93390886255A76D40005B64A /* cloudflaressl.cer in Resources */,
+				932CF57625C818E900599C0D /* CommisionsView.xib in Resources */,
 				88BEDFAE23101AC80003C371 /* Verify&StartView.xib in Resources */,
+				932CF58025C8208100599C0D /* CommissionsLineCell.xib in Resources */,
 				880541FB2319702B004EE85F /* CoinTableViewCell.xib in Resources */,
 				93757C2E256E55AF0066A7B9 /* BalanceCard.xib in Resources */,
 				88CA93642319792A008F894B /* WalletView.xib in Resources */,
@@ -743,6 +757,7 @@
 				88F4A1C42312CA56007172A6 /* MockImages.xcassets in Resources */,
 				93534036253C4F2C00FFEA4D /* newSendView.xib in Resources */,
 				88309EC0231FD36000F96C05 /* VerifyAccountView.xib in Resources */,
+				932CF58525C829BF00599C0D /* CommissionTableCell.xib in Resources */,
 				88114F6623216A8E00AB3B5A /* sendWithQR.xib in Resources */,
 				93757C21256D43060066A7B9 /* PayTableViewCell.xib in Resources */,
 				88CA9378231A488A008F894B /* TransactionHistoryDetailCellHeader.xib in Resources */,
@@ -899,6 +914,7 @@
 				93534F1E2549958C0000329F /* bitexenSignature.swift in Sources */,
 				93534039253C528600FFEA4D /* newSendView.swift in Sources */,
 				931A08D425A2F29F003AD083 /* WavesModels.swift in Sources */,
+				932CF57B25C81CB100599C0D /* CommissionsView.swift in Sources */,
 				937C52D825C1E19000D3BB36 /* Localization.swift in Sources */,
 				88A6BA4B232039D7002640D6 /* LegalDelegate.swift in Sources */,
 				88CA9372231A475F008F894B /* TransactionDetailView.swift in Sources */,
@@ -1095,7 +1111,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 94;
+				CURRENT_PROJECT_VERSION = 96.5;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;
@@ -1120,7 +1136,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DigiliraPay/DigiliraPayRelease.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 94;
+				CURRENT_PROJECT_VERSION = 96.5;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				INFOPLIST_FILE = DigiliraPay/Info.plist;
@@ -1143,7 +1159,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 94;
+				CURRENT_PROJECT_VERSION = 96.5;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = "WatchDP Extension/Info.plist";
@@ -1167,7 +1183,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 94;
+				CURRENT_PROJECT_VERSION = 96.5;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = "WatchDP Extension/Info.plist";
@@ -1193,7 +1209,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 94;
+				CURRENT_PROJECT_VERSION = 96.5;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				ENABLE_BITCODE = YES;
 				IBSC_MODULE = WatchDP_Extension;
@@ -1215,7 +1231,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 94;
+				CURRENT_PROJECT_VERSION = 96.5;
 				DEVELOPMENT_TEAM = 3543QJXWHA;
 				ENABLE_BITCODE = YES;
 				IBSC_MODULE = WatchDP_Extension;

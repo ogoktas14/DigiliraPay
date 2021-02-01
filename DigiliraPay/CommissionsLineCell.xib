@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="vdd-OE-ddX" customClass="CommissionsLineCell" customModule="DigiliraPay" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="vdd-OE-ddX" id="XGH-QO-zqk">
+                <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ouL-sX-RhB">
+                        <rect key="frame" x="20" y="10" width="384" height="24"/>
+                        <fontDescription key="fontDescription" name="Avenir-Black" family="Avenir" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="ouL-sX-RhB" firstAttribute="top" secondItem="XGH-QO-zqk" secondAttribute="top" constant="10" id="JlS-j6-K4Y"/>
+                    <constraint firstAttribute="bottom" secondItem="ouL-sX-RhB" secondAttribute="bottom" constant="10" id="KWY-52-A7t"/>
+                    <constraint firstItem="ouL-sX-RhB" firstAttribute="centerY" secondItem="XGH-QO-zqk" secondAttribute="centerY" id="LXg-VP-3L4"/>
+                    <constraint firstAttribute="trailing" secondItem="ouL-sX-RhB" secondAttribute="trailing" constant="10" id="U6m-9Y-mrv"/>
+                    <constraint firstItem="ouL-sX-RhB" firstAttribute="leading" secondItem="XGH-QO-zqk" secondAttribute="leading" constant="20" symbolic="YES" id="ekP-iI-ocK"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="prodName" destination="ouL-sX-RhB" id="nBV-AZ-Kqw"/>
+            </connections>
+            <point key="canvasLocation" x="258" y="64"/>
+        </tableViewCell>
+    </objects>
+</document>
