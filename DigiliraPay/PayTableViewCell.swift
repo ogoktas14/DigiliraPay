@@ -37,8 +37,14 @@ class CommissionsTableViewCell: UITableViewCell {
    @IBOutlet weak var icon: UIImageView!
    @IBOutlet weak var tokenName: UILabel!
    @IBOutlet weak var send: UILabel!
-   @IBOutlet weak var receive: UILabel!
- 
+    @IBOutlet weak var receive: UILabel!
+    @IBOutlet weak var minReceive: UILabel!
+    @IBOutlet weak var minSend: UILabel!
+    @IBOutlet weak var HL: UILabel!
+    @IBOutlet weak var HR: UILabel!
+    @IBOutlet weak var kom: UILabel!
+    @IBOutlet weak var min: UILabel!
+
    override func awakeFromNib() {
        super.awakeFromNib()
     }

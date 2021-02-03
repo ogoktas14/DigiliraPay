@@ -173,7 +173,7 @@ class Blockchain: NSObject {
     
     // MARK: - Fees
     struct Fees: Codable {
-        let flat, rate: Int
+        let flat, rate: Double
     }
     
     private var balances: NodeService.DTO.AddressAssetsBalance?
@@ -246,7 +246,7 @@ class Blockchain: NSObject {
             case digilira.transactionDestination.interwallets:
                 return digilira.sponsorToken
             case digilira.transactionDestination.foreign:
-                return digilira.sponsorToken
+                return ""
             default:
                 return ""
             }
@@ -257,7 +257,7 @@ class Blockchain: NSObject {
             case digilira.transactionDestination.interwallets:
                 return digilira.mainnetSponsorToken
             case digilira.transactionDestination.foreign:
-                return digilira.mainnetSponsorToken
+                return ""
             default:
                 return ""
             }
@@ -549,10 +549,13 @@ class Blockchain: NSObject {
                 
                 if result.currency.status == "active" {
                     let minAmount = MainScreen.decimal2Int64(result.currency.allowedAmount.min, digits: result.currency.decimals)
-                    let maxAmount = MainScreen.decimal2Int64(result.currency.allowedAmount.max, digits: result.currency.decimals)
+                    //let maxAmount = MainScreen.decimal2Int64(result.currency.allowedAmount.max, digits: result.currency.decimals)
                     
-                    guard amount < maxAmount else { return }
-                    guard amount > minAmount else { return }
+                    //guard amount < maxAmount else { return }
+                    guard amount > minAmount else {
+                        throwEngine.evaluateError(error: digilira.NAError.minBalance)
+                        return
+                    }
                     
                     let proxyAddress = result.proxyAddresses[0]
                     
@@ -654,7 +657,7 @@ class Blockchain: NSObject {
                             return }
                         
                         do{
-                            //var jsonResponse = try? (JSONSerialization.jsonObject(with: dataResponse) as! Dictionary<String, AnyObject>)
+                            var jsonResponse = try? (JSONSerialization.jsonObject(with: dataResponse) as! Dictionary<String, AnyObject>)
 
                             let ifError = try? JSONDecoder().decode(WavesTokenError.self, from: dataResponse)
                             let ifApiError = try? JSONDecoder().decode(WavesAPIError.self, from: dataResponse)
@@ -1126,11 +1129,10 @@ class Blockchain: NSObject {
             let data = try? encoder.encode(user)
             
             crud.onError = { error, sts in
-                
+                print(error)
             }
             
             crud.onResponse = { [self] res, sts in
-                print(sts)
                 if (sts == 200) {
                     
                     do {
@@ -1233,6 +1235,7 @@ class Blockchain: NSObject {
                         wavesNodeRequests(path: StringUrl)
                         break
                     default:
+                        self.onError!(digilira.NAError.anErrorOccured)
                         break
                     }
                 }

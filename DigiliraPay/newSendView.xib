@@ -50,10 +50,10 @@
                                     <rect key="frame" x="0.0" y="0.0" width="374" height="400"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LXE-e5-Ewh" userLabel="miktar" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
-                                            <rect key="frame" x="10" y="10" width="354" height="52"/>
+                                            <rect key="frame" x="10" y="55" width="354" height="52"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MİKTAR" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W0A-QM-dyk">
-                                                    <rect key="frame" x="5" y="0.0" width="45" height="15"/>
+                                                    <rect key="frame" x="5" y="1" width="45" height="15"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="15" id="ia2-Kh-o6J"/>
                                                     </constraints>
@@ -62,7 +62,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <textField opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="751" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="gDs-O5-4Yv">
-                                                    <rect key="frame" x="5" y="16" width="199" height="32"/>
+                                                    <rect key="frame" x="5" y="17" width="199" height="32"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="22"/>
@@ -86,14 +86,14 @@
                                                 <constraint firstItem="gDs-O5-4Yv" firstAttribute="top" secondItem="W0A-QM-dyk" secondAttribute="bottom" constant="1" id="kZ3-6Y-0Ir"/>
                                                 <constraint firstAttribute="trailing" secondItem="oe7-7U-zmr" secondAttribute="trailing" constant="7" id="omJ-Ez-9fo"/>
                                                 <constraint firstItem="W0A-QM-dyk" firstAttribute="leading" secondItem="LXE-e5-Ewh" secondAttribute="leading" constant="5" id="tyg-uY-z0n"/>
-                                                <constraint firstItem="W0A-QM-dyk" firstAttribute="top" secondItem="LXE-e5-Ewh" secondAttribute="top" id="zGa-3D-Ojq"/>
+                                                <constraint firstItem="W0A-QM-dyk" firstAttribute="top" secondItem="LXE-e5-Ewh" secondAttribute="top" constant="1" id="zGa-3D-Ojq"/>
                                             </constraints>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ewN-7G-cHi" userLabel="miktar" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
-                                            <rect key="frame" x="10" y="72" width="354" height="46"/>
+                                            <rect key="frame" x="10" y="117" width="354" height="46"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ALICI" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uXb-fY-wSf">
-                                                    <rect key="frame" x="5" y="0.0" width="30" height="15"/>
+                                                    <rect key="frame" x="5" y="1" width="30" height="15"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="15" id="anH-vM-pl0"/>
                                                     </constraints>
@@ -118,7 +118,7 @@
                                                     </connections>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mcy-ca-qcg">
-                                                    <rect key="frame" x="5" y="16" width="235" height="25"/>
+                                                    <rect key="frame" x="5" y="17.000000000000057" width="235" height="24"/>
                                                     <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="22"/>
                                                     <state key="normal">
                                                         <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -137,14 +137,14 @@
                                                 <constraint firstItem="twO-m1-WLQ" firstAttribute="leading" secondItem="Mcy-ca-qcg" secondAttribute="trailing" constant="8" symbolic="YES" id="IFx-FG-i9e"/>
                                                 <constraint firstItem="Mcy-ca-qcg" firstAttribute="top" secondItem="uXb-fY-wSf" secondAttribute="bottom" constant="1" id="fEB-BA-cgG"/>
                                                 <constraint firstAttribute="bottom" secondItem="Mcy-ca-qcg" secondAttribute="bottom" constant="5" id="gWj-Fx-Bf3"/>
-                                                <constraint firstItem="uXb-fY-wSf" firstAttribute="top" secondItem="ewN-7G-cHi" secondAttribute="top" id="kvC-9K-2OX"/>
+                                                <constraint firstItem="uXb-fY-wSf" firstAttribute="top" secondItem="ewN-7G-cHi" secondAttribute="top" constant="1" id="kvC-9K-2OX"/>
                                                 <constraint firstItem="uXb-fY-wSf" firstAttribute="leading" secondItem="ewN-7G-cHi" secondAttribute="leading" constant="5" id="mOm-qK-O6e"/>
                                                 <constraint firstItem="mkC-Zd-RWP" firstAttribute="leading" secondItem="twO-m1-WLQ" secondAttribute="trailing" constant="11" id="v9q-54-pxP"/>
                                                 <constraint firstAttribute="bottom" secondItem="mkC-Zd-RWP" secondAttribute="bottom" constant="2" id="z4X-kF-fo3"/>
                                             </constraints>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5wV-zS-jCt">
-                                            <rect key="frame" x="10" y="128.00000000000006" width="354" height="13.666666666666657"/>
+                                            <rect key="frame" x="10" y="173.00000000000006" width="354" height="13.666666666666657"/>
                                             <subviews>
                                                 <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qlq-zg-v70">
                                                     <rect key="frame" x="0.0" y="0.0" width="354" height="13.666666666666666"/>
@@ -169,7 +169,7 @@
                                             </constraints>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lHS-wd-2Uo" customClass="DLGradient" customModule="DigiliraPay" customModuleProvider="target">
-                                            <rect key="frame" x="42" y="171.66666666666669" width="290" height="50"/>
+                                            <rect key="frame" x="42" y="216.66666666666669" width="290" height="50"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Gönder" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dN0-J5-7UY">
                                                     <rect key="frame" x="113" y="12.666666666666631" width="64.333333333333314" height="24.666666666666671"/>
@@ -185,20 +185,105 @@
                                                 <constraint firstItem="dN0-J5-7UY" firstAttribute="centerX" secondItem="lHS-wd-2Uo" secondAttribute="centerX" id="bkd-G8-ey4"/>
                                             </constraints>
                                         </view>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MV3-kW-6Cp">
+                                            <rect key="frame" x="10" y="10" width="354" height="35"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="hYg-Xq-pdB">
+                                                    <rect key="frame" x="0.0" y="0.0" width="354" height="35"/>
+                                                    <subviews>
+                                                        <view contentMode="scaleToFill" restorationIdentifier="b100" translatesAutoresizingMaskIntoConstraints="NO" id="vfM-Vf-XCj" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
+                                                            <rect key="frame" x="0.0" y="0.0" width="84.666666666666671" height="35"/>
+                                                            <subviews>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="%100" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qMo-8z-XSp">
+                                                                    <rect key="frame" x="23.333333333333336" y="7.0000000000000018" width="38" height="20.666666666666671"/>
+                                                                    <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="15"/>
+                                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                            </subviews>
+                                                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                            <constraints>
+                                                                <constraint firstItem="qMo-8z-XSp" firstAttribute="centerY" secondItem="vfM-Vf-XCj" secondAttribute="centerY" id="Dwh-rd-VNk"/>
+                                                                <constraint firstItem="qMo-8z-XSp" firstAttribute="centerX" secondItem="vfM-Vf-XCj" secondAttribute="centerX" id="hYn-Dm-SbG"/>
+                                                            </constraints>
+                                                        </view>
+                                                        <view contentMode="scaleToFill" restorationIdentifier="b50" translatesAutoresizingMaskIntoConstraints="NO" id="gRv-hH-yPg" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
+                                                            <rect key="frame" x="89.666666666666686" y="0.0" width="85" height="35"/>
+                                                            <subviews>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="%50" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FdU-Kb-b2e">
+                                                                    <rect key="frame" x="27.666666666666671" y="7.0000000000000018" width="29.666666666666671" height="20.666666666666671"/>
+                                                                    <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="15"/>
+                                                                    <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                            </subviews>
+                                                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                            <constraints>
+                                                                <constraint firstItem="FdU-Kb-b2e" firstAttribute="centerX" secondItem="gRv-hH-yPg" secondAttribute="centerX" id="FqC-ft-mcw"/>
+                                                                <constraint firstItem="FdU-Kb-b2e" firstAttribute="centerY" secondItem="gRv-hH-yPg" secondAttribute="centerY" id="XJ2-Lz-bFx"/>
+                                                            </constraints>
+                                                        </view>
+                                                        <view contentMode="scaleToFill" restorationIdentifier="b25" translatesAutoresizingMaskIntoConstraints="NO" id="E4h-iE-a0d" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
+                                                            <rect key="frame" x="179.66666666666666" y="0.0" width="84.666666666666657" height="35"/>
+                                                            <subviews>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="%25" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2uM-E9-htR">
+                                                                    <rect key="frame" x="27.333333333333343" y="7.0000000000000018" width="29.666666666666671" height="20.666666666666671"/>
+                                                                    <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="15"/>
+                                                                    <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                            </subviews>
+                                                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                            <constraints>
+                                                                <constraint firstItem="2uM-E9-htR" firstAttribute="centerY" secondItem="E4h-iE-a0d" secondAttribute="centerY" id="TVg-lr-GF5"/>
+                                                                <constraint firstItem="2uM-E9-htR" firstAttribute="centerX" secondItem="E4h-iE-a0d" secondAttribute="centerX" id="mK7-cG-fDV"/>
+                                                            </constraints>
+                                                        </view>
+                                                        <view contentMode="scaleToFill" restorationIdentifier="b10" translatesAutoresizingMaskIntoConstraints="NO" id="eIE-wB-YlE" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
+                                                            <rect key="frame" x="269.33333333333331" y="0.0" width="84.666666666666686" height="35"/>
+                                                            <subviews>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="%10" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rg3-Q1-t0z">
+                                                                    <rect key="frame" x="27.333333333333371" y="7.0000000000000018" width="29.666666666666671" height="20.666666666666671"/>
+                                                                    <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="15"/>
+                                                                    <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                            </subviews>
+                                                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                            <constraints>
+                                                                <constraint firstItem="rg3-Q1-t0z" firstAttribute="centerX" secondItem="eIE-wB-YlE" secondAttribute="centerX" id="Vd4-Pb-lWC"/>
+                                                                <constraint firstItem="rg3-Q1-t0z" firstAttribute="centerY" secondItem="eIE-wB-YlE" secondAttribute="centerY" id="ak7-SF-sfZ"/>
+                                                            </constraints>
+                                                        </view>
+                                                    </subviews>
+                                                </stackView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="hYg-Xq-pdB" secondAttribute="trailing" id="8MS-Vr-mtT"/>
+                                                <constraint firstItem="hYg-Xq-pdB" firstAttribute="leading" secondItem="MV3-kW-6Cp" secondAttribute="leading" id="99E-j4-x1k"/>
+                                                <constraint firstAttribute="height" constant="35" id="Be8-GM-4QV"/>
+                                                <constraint firstAttribute="bottom" secondItem="hYg-Xq-pdB" secondAttribute="bottom" id="j25-UJ-omF"/>
+                                                <constraint firstItem="hYg-Xq-pdB" firstAttribute="top" secondItem="MV3-kW-6Cp" secondAttribute="top" id="l3C-1D-xew"/>
+                                            </constraints>
+                                        </view>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="400" id="1NJ-X8-aAW"/>
+                                        <constraint firstItem="MV3-kW-6Cp" firstAttribute="leading" secondItem="wLC-b9-1uO" secondAttribute="leading" constant="10" id="AfW-wr-lM0"/>
                                         <constraint firstAttribute="trailing" secondItem="ewN-7G-cHi" secondAttribute="trailing" constant="10" id="BdP-vx-ISy"/>
                                         <constraint firstItem="lHS-wd-2Uo" firstAttribute="top" secondItem="5wV-zS-jCt" secondAttribute="bottom" constant="30" id="Ick-mY-pCP"/>
                                         <constraint firstItem="ewN-7G-cHi" firstAttribute="leading" secondItem="wLC-b9-1uO" secondAttribute="leading" constant="10" id="Qlc-Ge-n7T"/>
-                                        <constraint firstItem="LXE-e5-Ewh" firstAttribute="top" secondItem="wLC-b9-1uO" secondAttribute="top" constant="10" id="U6Y-t7-QXW"/>
+                                        <constraint firstItem="LXE-e5-Ewh" firstAttribute="top" secondItem="MV3-kW-6Cp" secondAttribute="bottom" constant="10" id="U6Y-t7-QXW"/>
+                                        <constraint firstItem="MV3-kW-6Cp" firstAttribute="top" secondItem="wLC-b9-1uO" secondAttribute="top" constant="10" id="UG9-yd-rNi"/>
                                         <constraint firstItem="5wV-zS-jCt" firstAttribute="top" secondItem="ewN-7G-cHi" secondAttribute="bottom" constant="10" id="XyU-gc-UeL"/>
                                         <constraint firstAttribute="trailing" secondItem="5wV-zS-jCt" secondAttribute="trailing" constant="10" id="aBB-E0-U9m"/>
                                         <constraint firstAttribute="trailing" secondItem="LXE-e5-Ewh" secondAttribute="trailing" constant="10" id="ecE-XL-soy"/>
                                         <constraint firstItem="LXE-e5-Ewh" firstAttribute="leading" secondItem="wLC-b9-1uO" secondAttribute="leading" constant="10" id="hMz-1t-CZs"/>
                                         <constraint firstItem="ewN-7G-cHi" firstAttribute="top" secondItem="LXE-e5-Ewh" secondAttribute="bottom" constant="10" id="qVd-IZ-3Gu"/>
                                         <constraint firstItem="5wV-zS-jCt" firstAttribute="leading" secondItem="wLC-b9-1uO" secondAttribute="leading" constant="10" id="t5d-Pv-tcG"/>
+                                        <constraint firstAttribute="trailing" secondItem="MV3-kW-6Cp" secondAttribute="trailing" constant="10" id="xnP-G9-Nk7"/>
                                     </constraints>
                                 </view>
                             </subviews>
@@ -245,6 +330,10 @@
                 <constraint firstItem="8YY-TE-LN4" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="u58-hd-Ene"/>
             </constraints>
             <connections>
+                <outlet property="b10" destination="eIE-wB-YlE" id="jz4-g0-jOf"/>
+                <outlet property="b100" destination="vfM-Vf-XCj" id="uhG-Us-kIf"/>
+                <outlet property="b25" destination="E4h-iE-a0d" id="vfh-kL-4Dc"/>
+                <outlet property="b50" destination="gRv-hH-yPg" id="N4O-8y-u65"/>
                 <outlet property="coinSwitch" destination="oe7-7U-zmr" id="Wz9-F0-7oe"/>
                 <outlet property="commissionLabel" destination="Qlq-zg-v70" id="ll3-bZ-d1G"/>
                 <outlet property="content" destination="tIN-Ez-rbf" id="Xb0-w8-iTY"/>

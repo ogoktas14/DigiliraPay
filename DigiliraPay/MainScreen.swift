@@ -994,11 +994,19 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                     sendBTCETH(external: external, ticker:digiliraPay.ticker(ticker: Ticker))
                     break
                 case digilira.wavesNetwork:
-                    let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!, assetId: address.assetId!)
+                    let external = digilira.externalTransaction(network: address.network,
+                                                                address: address.address,
+                                                                amount: address.amount,
+                                                                message: address.address!,
+                                                                assetId: address.assetId!)
                     sendBTCETH(external: external, ticker:digiliraPay.ticker(ticker: Ticker))
                     break
                 case digilira.ethereumNetwork:
-                    let external = digilira.externalTransaction(network: address.network, address: address.address, amount: address.amount, message: address.address!, assetId:token.token)
+                    let external = digilira.externalTransaction(network: address.network,
+                                                                address: address.address,
+                                                                amount: address.amount,
+                                                                message: address.address!,
+                                                                assetId:token.token)
                     sendBTCETH(external: external, ticker:digiliraPay.ticker(ticker: Ticker))
                     break
                 default:
@@ -1845,34 +1853,37 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         commissionsView.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         
         let line1 = digilira.line.init(mode: "text", text: "DigiliraPay kullanıcıları arasındaki transfer")
-        let btc1 = digilira.line.init(mode: "coin", text: "Bitcoin", icon: UIImage(named: "WBTC"), l1: "Ücretsiz", l2: "Ücretsiz")
-        let eth1 = digilira.line.init(mode: "coin", text: "Ethereum", icon: UIImage(named: "WETH"), l1: "Ücretsiz", l2: "Ücretsiz")
-        let waves1 = digilira.line.init(mode: "coin", text: "Waves", icon: UIImage(named: "Waves"), l1: "Ücretsiz", l2: "Ücretsiz")
-        let usd1 = digilira.line.init(mode: "coin", text: "Tether USDT", icon: UIImage(named: "USDT"), l1: "Ücretsiz", l2: "Ücretsiz")
-        let onet1 = digilira.line.init(mode: "coin", text: "One Tower", icon: UIImage(named: "One Tower"), l1: "Ücretsiz", l2: "Ücretsiz")
+        let btc1 = digilira.line.init(mode: "coin", text: "Bitcoin", icon: UIImage(named: "WBTC"), l1: "Ücretsiz", l2: "Ücretsiz", minSend: "0.0001 BTC", minReceive: "-")
+        let eth1 = digilira.line.init(mode: "coin", text: "Ethereum", icon: UIImage(named: "WETH"), l1: "Ücretsiz", l2: "Ücretsiz", minSend: "0.001 ETH", minReceive: "-")
+        let waves1 = digilira.line.init(mode: "coin", text: "Waves", icon: UIImage(named: "Waves"), l1: "Ücretsiz", l2: "Ücretsiz", minSend: "0.01 WAVES", minReceive: "-")
+        let usd1 = digilira.line.init(mode: "coin", text: "Tether USDT", icon: UIImage(named: "USDT"), l1: "Ücretsiz", l2: "Ücretsiz", minSend: "1 USDT", minReceive: "-")
+        let onet1 = digilira.line.init(mode: "coin", text: "One Tower", icon: UIImage(named: "One Tower"), l1: "Ücretsiz", l2: "Ücretsiz", minSend: "1 ONET", minReceive: "-")
         
         let sep1 = digilira.line.init(mode: "text", text: "")
         
         let line2 = digilira.line.init(mode: "text", text: "DigiliraPay kullanıcılarının Waves blokzinciri üzerindeki transferleri")
-        let head2 = digilira.line.init(mode: "coin", text: "Token Adı", icon: UIImage(named: ""), l1: "Gönderme", l2: "Alma")
-        let btc2 = digilira.line.init(mode: "coin", text: "Bitcoin", icon: UIImage(named: "WBTC"), l1: "0.005 Waves", l2: "Ücretsiz")
-        let eth2 = digilira.line.init(mode: "coin", text: "Ethereum", icon: UIImage(named: "WETH"), l1: "0.005 Waves", l2: "Ücretsiz")
-        let waves2 = digilira.line.init(mode: "coin", text: "Waves", icon: UIImage(named: "Waves"), l1: "0.005 Waves", l2: "Ücretsiz")
-        let usd2 = digilira.line.init(mode: "coin", text: "Tether USDT", icon: UIImage(named: "USDT"), l1: "0.005 Waves", l2: "Ücretsiz")
-        let onet2 = digilira.line.init(mode: "coin", text: "One Tower", icon: UIImage(named: "One Tower"), l1: "Gönderilmez", l2: "Gönderilmez")
+        
+        let head2 = digilira.line.init(mode: "header", text: "TOKEN", icon: UIImage(named: ""), l1: "Gönderme", l2: "Alma", minSend: "(min)", minReceive: "(min)")
+        
+        let btc2 = digilira.line.init(mode: "coin", text: "Bitcoin", icon: UIImage(named: "WBTC"), l1: "0.005 Waves", l2: "Ücretsiz", minSend: "0.001 BTC", minReceive: "-")
+        let eth2 = digilira.line.init(mode: "coin", text: "Ethereum", icon: UIImage(named: "WETH"), l1: "0.005 Waves", l2: "Ücretsiz", minSend: "0.01 ETH", minReceive: "-")
+        let waves2 = digilira.line.init(mode: "coin", text: "Waves", icon: UIImage(named: "Waves"), l1: "0.005 Waves", l2: "Ücretsiz", minSend: "0.01 WAVES", minReceive: "-")
+        let usd2 = digilira.line.init(mode: "coin", text: "Tether USDT", icon: UIImage(named: "USDT"), l1: "0.005 Waves", l2: "Ücretsiz", minSend: "1 USDT", minReceive: "-")
+        let onet2 = digilira.line.init(mode: "coin", text: "One Tower", icon: UIImage(named: "One Tower"), l1: "Gönderilmez", l2: "Gönderilmez", minSend: "-", minReceive: "-")
         let sep2 = digilira.line.init(mode: "text", text: "")
         
         let line3 = digilira.line.init(mode: "text", text: "DigiliraPay kullanıcılarının Waves blokzinciri dışındaki transferleri")
         
-        let btc3 = digilira.line.init(mode: "coin", text: "Bitcoin", icon: UIImage(named: "WBTC"), l1: "0.001 BTC", l2: "Ücretsiz")
-        let eth3 = digilira.line.init(mode: "coin", text: "Ethereum", icon: UIImage(named: "WETH"), l1: "0.01 BTC", l2: "Ücretsiz")
-        let waves3 = digilira.line.init(mode: "coin", text: "Waves", icon: UIImage(named: "Waves"), l1: "0.01 WAVES", l2: "Ücretsiz")
-        let usd3 = digilira.line.init(mode: "coin", text: "Tether USDT", icon: UIImage(named: "USDT"), l1: "10 USDT", l2: "Ücretsiz")
-        let onet3 = digilira.line.init(mode: "coin", text: "One Tower", icon: UIImage(named: "One Tower"), l1: "Gönderilmez", l2: "Gönderilmez")
+        let btc3 = digilira.line.init(mode: "coin", text: "Bitcoin", icon: UIImage(named: "WBTC"), l1: "0.001 BTC", l2: "Ücretsiz", minSend: "0.001 BTC", minReceive: "0.001 BTC")
+        let eth3 = digilira.line.init(mode: "coin", text: "Ethereum", icon: UIImage(named: "WETH"), l1: "0.01 ETH", l2: "Ücretsiz", minSend: "0.01 ETH", minReceive: "0.01 ETH")
+        let waves3 = digilira.line.init(mode: "coin", text: "Waves", icon: UIImage(named: "Waves"), l1: "1 WAVES", l2: "Ücretsiz", minSend: "1 WAVES", minReceive: "1 WAVES")
+        let usd3 = digilira.line.init(mode: "coin", text: "Tether USDT", icon: UIImage(named: "USDT"), l1: "5 USDT", l2: "Ücretsiz", minSend: "10 USDT", minReceive: "10 USDT")
+        let onet3 = digilira.line.init(mode: "coin", text: "One Tower", icon: UIImage(named: "One Tower"), l1: "Gönderilmez", l2: "Gönderilmez", minSend: "-", minReceive: "-" )
         
+        let line4 = digilira.line.init(mode: "text", text: "(min): Komisyonlar hariç gönderebileceğiniz veya alabileceğiniz en az miktarları gösterir. Bu miktarların altında yapılan transferler alıcıya ulaşmaz ve iade talep edilemez.\n\n(kom): Blokzincir üzerinde yapılan işlemler için madencilere ödenen ücret.")
          commissionsView.lines = [line1, head2, btc1, eth1, waves1, usd1, onet1, sep1,
                                  line2, head2, btc2, eth2, waves2, usd2, onet2, sep2,
-                                 line3, head2, btc3, eth3, waves3, usd3, onet3
+                                 line3, head2, btc3, eth3, waves3, usd3, onet3, sep2, line4
                                 ]
 
         for subView in sendWithQRView.subviews
@@ -2545,7 +2556,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
                                                        fiat: exchange,
                                                        attachment: attach,
                                                        network: data.network!,
-                                                       destination: data.destination!,
+                                                       destination: data.destination!, externalAddress: data.wallet,
                                                        massWallet: data.wallet,
                                                        memberCheck: true,
                                                        me: name,

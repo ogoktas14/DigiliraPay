@@ -39,10 +39,10 @@
                             <rect key="frame" x="0.0" y="0.0" width="374" height="714"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tT0-AN-Kam" userLabel="contentView">
-                                    <rect key="frame" x="0.0" y="0.0" width="374" height="1000"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="374" height="714"/>
                                     <subviews>
-                                        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="cpE-lo-01o">
-                                            <rect key="frame" x="5" y="5" width="364" height="990"/>
+                                        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="cpE-lo-01o">
+                                            <rect key="frame" x="5" y="5" width="364" height="704"/>
                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                             <connections>
                                                 <outlet property="dataSource" destination="iN0-l3-epB" id="fiN-kd-cW2"/>
@@ -54,17 +54,17 @@
                                         <constraint firstAttribute="trailing" secondItem="cpE-lo-01o" secondAttribute="trailing" constant="5" id="8fs-9M-qVG"/>
                                         <constraint firstAttribute="bottom" secondItem="cpE-lo-01o" secondAttribute="bottom" constant="5" id="GbC-FN-jhA"/>
                                         <constraint firstItem="cpE-lo-01o" firstAttribute="top" secondItem="tT0-AN-Kam" secondAttribute="top" constant="5" id="foX-mP-dcb"/>
-                                        <constraint firstAttribute="height" constant="1000" id="j7g-o9-ed9"/>
                                         <constraint firstItem="cpE-lo-01o" firstAttribute="leading" secondItem="tT0-AN-Kam" secondAttribute="leading" constant="5" id="w3d-Ec-980"/>
                                     </constraints>
                                 </view>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
+                                <constraint firstItem="tT0-AN-Kam" firstAttribute="height" secondItem="rFA-hl-2jc" secondAttribute="height" id="DB5-nS-ur7"/>
                                 <constraint firstAttribute="trailing" secondItem="tT0-AN-Kam" secondAttribute="trailing" id="IsC-RX-IVw"/>
                                 <constraint firstItem="tT0-AN-Kam" firstAttribute="leading" secondItem="rFA-hl-2jc" secondAttribute="leading" id="MkV-3N-03T"/>
                                 <constraint firstItem="tT0-AN-Kam" firstAttribute="top" secondItem="rFA-hl-2jc" secondAttribute="top" id="gYQ-Uz-2hb"/>
-                                <constraint firstAttribute="bottom" secondItem="tT0-AN-Kam" secondAttribute="bottom" constant="50" id="sD5-bC-oP4"/>
+                                <constraint firstAttribute="bottom" secondItem="tT0-AN-Kam" secondAttribute="bottom" id="sD5-bC-oP4"/>
                                 <constraint firstItem="tT0-AN-Kam" firstAttribute="width" secondItem="rFA-hl-2jc" secondAttribute="width" id="sdn-hz-Dje"/>
                             </constraints>
                         </scrollView>

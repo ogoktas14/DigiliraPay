@@ -5,6 +5,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -73,6 +74,14 @@
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GrS-F1-mt3" customClass="GradientView1" customModule="DigiliraPay" customModuleProvider="target">
+                            <rect key="frame" x="403.5" y="221.5" width="70" height="70"/>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="70" id="aoO-bb-4MX"/>
+                                <constraint firstAttribute="width" constant="70" id="fkx-eY-xNE"/>
+                            </constraints>
+                        </view>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ico2" translatesAutoresizingMaskIntoConstraints="NO" id="Hpo-Q6-msM">
                             <rect key="frame" x="407.5" y="225.5" width="61.5" height="61.5"/>
                             <constraints>
@@ -107,6 +116,8 @@
                         <constraint firstAttribute="trailing" secondItem="Hpo-Q6-msM" secondAttribute="trailing" constant="20" id="fB9-Qc-ANw"/>
                         <constraint firstItem="qAw-Ep-98b" firstAttribute="centerY" secondItem="rkN-C6-BvQ" secondAttribute="centerY" id="fDN-Gn-Gas"/>
                         <constraint firstItem="rkN-C6-BvQ" firstAttribute="leading" secondItem="Wux-a5-VVI" secondAttribute="leading" id="iVb-E1-C1T"/>
+                        <constraint firstItem="GrS-F1-mt3" firstAttribute="centerX" secondItem="Hpo-Q6-msM" secondAttribute="centerX" id="mC8-gm-Fl0"/>
+                        <constraint firstItem="GrS-F1-mt3" firstAttribute="centerY" secondItem="Hpo-Q6-msM" secondAttribute="centerY" id="mt3-ct-r4v"/>
                         <constraint firstItem="cRR-0T-y38" firstAttribute="leading" secondItem="r0r-aw-d48" secondAttribute="leading" id="rbU-V5-xH7"/>
                         <constraint firstItem="r0r-aw-d48" firstAttribute="leading" secondItem="Wux-a5-VVI" secondAttribute="leading" id="tRr-Ea-zfJ"/>
                         <constraint firstItem="qAw-Ep-98b" firstAttribute="leading" secondItem="rkN-C6-BvQ" secondAttribute="trailing" constant="2" id="xjf-lW-U9b"/>
@@ -133,6 +144,7 @@
                 <outlet property="onBoardingDesc" destination="Wux-a5-VVI" id="2DP-bd-H2W"/>
                 <outlet property="paidCoin" destination="l1c-aG-cin" id="xgl-ek-xk4"/>
                 <outlet property="totalTitle" destination="r0r-aw-d48" id="Uba-ru-gwD"/>
+                <outlet property="tuval" destination="GrS-F1-mt3" id="a7F-kX-cYN"/>
                 <outlet property="willPaidCoin" destination="cRR-0T-y38" id="CIN-5e-ObO"/>
             </connections>
             <point key="canvasLocation" x="-182.8125" y="-122.00704225352113"/>
@@ -141,5 +153,8 @@
     <resources>
         <image name="headerBG" width="414" height="120"/>
         <image name="ico2" width="152" height="152"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>

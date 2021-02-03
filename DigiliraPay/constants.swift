@@ -222,6 +222,8 @@ struct digilira {
         var icon: UIImage?
         var l1: String?
         var l2: String?
+        var minSend: String?
+        var minReceive: String?
     }
  
     struct smartAccountMainnet {
@@ -653,6 +655,7 @@ Onsekiz (17) sayfa ve on iki (12) ana maddeden ibaret işbu Sözleşme, Kullanı
         case userCanceled
         case updateAPP
         case noBalance
+        case minBalance
         case anErrorOccured
         case missingParameters
         case noAmount

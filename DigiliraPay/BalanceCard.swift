@@ -20,8 +20,9 @@ class BalanceCard: UIView {
     @IBOutlet weak var willPaidCoin: UILabel!
     @IBOutlet weak var paidCoin: UILabel!
     @IBOutlet weak var imgCoin: UIImageView!
-    @IBOutlet weak var container: UIView! 
-    
+    @IBOutlet weak var container: UIView!
+    @IBOutlet weak var tuval: UIView!
+
     func setView(desc: String, tl: String, amount: String, price: String, symbol: String, icon: UIImage!)
     {
         var coinIcon = icon
@@ -34,6 +35,7 @@ class BalanceCard: UIView {
         willPaidCoin.text = price
         paidCoin.text = symbol
         imgCoin.image = coinIcon
+        tuval.layer.cornerRadius = 35
         
     }
     

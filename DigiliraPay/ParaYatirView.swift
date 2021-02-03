@@ -75,7 +75,7 @@ class ParaYatirView:UIView {
             ]
         default:
              array = [
-                "Bu adrese sadece " + coin + " gönderin. Bu adrese " + coin + " dışında yapılan gönderimler kayıplara neden olur.\n\nMinimum yatırım tutarı " + min + " " + symbol + "'dir. Bu tutarın altındaki yatırma işlemleri iade edilmeyecektir.\n\nGönderdiğiniz turar blokzincirde onaylandıktan sonra DigiliraPAY hesabınıza aktarılacaktır.\n\nÖdeme almak için QR kodunuzu paylaşabilirsiniz."
+                "Bu adrese sadece " + coin + " gönderin. Bu adrese " + coin + " dışında yapılan gönderimler kayıplara neden olur.\n\nMinimum yatırım tutarı " + min + " " + symbol + "'dir. Bu tutarın altındaki yatırma işlemleri iade edilmeyecektir.\n\nGönderdiğiniz turar blokzincirde en az 3 onaylandıktan sonra DigiliraPAY hesabınıza aktarılacaktır.\n\nÖdeme almak için QR kodunuzu paylaşabilirsiniz."
             ]
         }
         for (i, c) in array.enumerated() {
