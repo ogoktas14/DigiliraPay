@@ -18,8 +18,6 @@ class LegalView: UIView {
     @IBOutlet weak var confirmAreaView: UIView!
     @IBOutlet weak var backView: UIView!
     @IBOutlet weak var content: UIView!
-    @IBOutlet weak var davetiye: UITextField!
-    @IBOutlet weak var davetiyeLabel: UILabel!
 
     let throwEngine = ErrorHandling()
     weak var delegate: LegalDelegate?
@@ -148,21 +146,10 @@ class LegalView: UIView {
         case digilira.legalView.title:
             m = "isLegalView"
             v = digilira.legalView.version
-            davetiyeLabel.isHidden = false
-            davetiye.isHidden = false
-            davetiye.isEnabled = false
-            davetiye.text = "ONAYLI"
-            davetiyeLabel.text = "Davetiye Kodu Doğrulandı"
-
-            davetiye.alpha = 0.4
-
             break
         case digilira.termsOfUse.title:
             m = "isTermsOfUse"
             v = digilira.termsOfUse.version
-            davetiye.isHidden = false
-            davetiyeLabel.isEnabled = true
-            davetiye.isHidden = false
             break
         default:
             return
@@ -173,48 +160,11 @@ class LegalView: UIView {
         if (version != nil) {
             if (v! <= version!) {
                 confirmAreaView.isHidden = true
-                davetiye.isHidden = true
-
-                davetiyeLabel.isHidden = true
-                davetiye.isHidden = true
             }
         }
     }
     
     @objc func setOK() {
-        
-        if titleLabel.text == digilira.termsOfUse.title  {
-            if davetiye.text == "" {
-                davetiyeLabel.text = "Davetiye Kodu Girmediniz."
-                content.shake()
-                return
-            } else {
-                
-                let isOk = NSPredicate(format: "SELF MATCHES %@", "DP-[A-Z]{6}$")
-                let result = isOk.evaluate(with: davetiye.text)
-                if (!result) {
-                    davetiyeLabel.text = "Davetiye kodunu hatalı girdiniz."
-                    content.shake()
-                    return
-                }
-                
-                let array = digilira.codes.code
-                
-                let prefix = "INVITATION-"
-                let inputString = prefix + davetiye.text!
-                
-                let hashed = inputString.hash256()
-                
-                if array.contains(where: {$0 == hashed}) {
-                UserDefaults.standard.set(davetiye.text, forKey: "invitation")
-                } else {
-                    davetiyeLabel.text = "Davetiye kodunu hatalı girdiniz."
-                    content.shake()
-                    return
-                }
-                
-            }
-        }
         
         UserDefaults.standard.set(v, forKey: self.m!)
         delegate?.dismissLegalView()
@@ -224,5 +174,14 @@ class LegalView: UIView {
     @IBAction func goBackButton(_ sender: Any)
     {
         delegate?.dismissLegalView()
+    }
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let textFieldText = textField.text,
+            let rangeOfTextToReplace = Range(range, in: textFieldText) else {
+                return false
+        }
+        let substringToReplace = textFieldText[rangeOfTextToReplace]
+        let count = textFieldText.count - substringToReplace.count + string.count
+        return count <= 10
     }
 }

@@ -345,6 +345,23 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
         telText.delegate = self
         
         mailText.delegate = self
+        
+        let calendar = Calendar(identifier: .gregorian)
+
+            let currentDate = Date()
+            var components = DateComponents()
+            components.calendar = calendar
+
+            components.year = -12
+            components.month = 12
+            let maxDate = calendar.date(byAdding: components, to: currentDate)!
+
+            components.year = -100
+            let minDate = calendar.date(byAdding: components, to: currentDate)!
+
+            dogum.minimumDate = minDate
+            dogum.maximumDate = maxDate
+        
     }
     
     func validate(value: String) -> Bool {

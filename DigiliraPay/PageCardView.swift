@@ -131,6 +131,10 @@ class PageCardView: UIView {
     
     @objc func letsPay()
     {
+        if Filtered[currentPage].network == "bitexen" {
+            errors?.errorHandler(message: "Bitexen bakiyelerinizle ödeme işlemi henüz desteklenmemektedir.", title: "Yakında", error: false)
+            return
+        }
         if let order = Order {
             let t1 = Int64(NSDate().timeIntervalSince1970) * 1000
             let timestamp = order.createdDate

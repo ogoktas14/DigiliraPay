@@ -32,6 +32,7 @@ struct PaymentModel: Codable {
     var currency: String?
     var rate: Int64?
     var trx: String?
+    var zmark: String?
     let paymentModelID: String
 
     enum CodingKeys: String, CodingKey {
@@ -48,7 +49,7 @@ struct PaymentModel: Codable {
         case orderDate = "order_date"
         case history, refund
         case v = "__v"
-        case currency, rate, trx
+        case currency, rate, trx, zmark
         case paymentModelID = "id"
     }
 }

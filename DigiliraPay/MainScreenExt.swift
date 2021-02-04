@@ -76,22 +76,9 @@ extension MainScreen: NewCoinSendDelegate
                             if let api = decodeDefaults(forKey: digiliraPay.returnBexChain(), conformance: bex.bitexenAPICred.self) {
                                 if (api.valid) { // if bitexen api valid
                                     
-                                    let double = Double(truncating: pow(10,8) as NSNumber)
+                                    //let double = Double(truncating: pow(10,8) as NSNumber)
                                     
-                                    let f = Double(params.amount!) / double
-                                    
-                                    let p = bex.MakePayment.init(paymentID: UUID().uuidString,
-                                                                 amount: "10.00",
-                                                                 currencyCode: params.assetId!,
-                                                                 counterAmount: "20.00",
-                                                                 counterCurrencyCode: "TRY",
-                                                                 merchantCode: "DEMO",
-                                                                 merchantMcc: "1122F",
-                                                                 merchantName: "BTXTEST"
-                                    )
-                                    
-
-                                    bitexenSign.makePayment(payment: p, keys: api)
+                                    //bitexenSign.makePayment(payment: p, keys: api)
 
                                     isBitexenFetched = false
                                 }else {
@@ -285,6 +272,7 @@ extension MainScreen: PinViewDelegate
     }
     
     func blockUser () {
+        UserDefaults.standard.setValue(false, forKey: "isSecure")
         throwEngine.alertWarning(title: "Hesabınız Bloke Edildi", message: "Pin kodunuzu sıfırlamak için www.digilirapay.com/pin adresini ziyaret ediniz.", error: true)
         digiliraPay.onUpdate = { res, sts in
             DispatchQueue.main.async { [self] in
@@ -390,17 +378,19 @@ extension MainScreen: PinViewDelegate
               
                 crud.onResponse = { data, sts in
                     DispatchQueue.main.async { [self] in
-                        
                         if sts == 200 {
-                            isInformed = true
-                            if secretKeys.LocksmithSave(forKey: try! BC.getKeyChainSource().authenticateData, data: data) {
-                                self.throwEngine.alertWarning(title: "Pin Kodu Güncellendi", message: "Pin kodunuzu unutmayın, cüzdanınızı başka bir cihaza aktarırken ihtiyacınız olacaktır.", error: false)
-                                
-                                self.profileMenuView.pinWarning.isHidden = true
-                                self.checkEssentials()
-                            } else {
-                                throwEngine.evaluateError(error: digilira.NAError.E_500)
+                            if digiliraPay.validateUser(user: data) {
+                                isInformed = true
+                                if secretKeys.LocksmithSave(forKey: try! BC.getKeyChainSource().authenticateData, data: data) {
+                                    self.throwEngine.alertWarning(title: "Pin Kodu Güncellendi", message: "Pin kodunuzu unutmayın, cüzdanınızı başka bir cihaza aktarırken ihtiyacınız olacaktır.", error: false)
+                                    
+                                    self.profileMenuView.pinWarning.isHidden = true
+                                    self.checkEssentials()
+                                } else {
+                                    throwEngine.evaluateError(error: digilira.NAError.E_500)
+                                }
                             }
+
                         }
                     }
                 }

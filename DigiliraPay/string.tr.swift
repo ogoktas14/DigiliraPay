@@ -18,7 +18,7 @@ struct turkish {
         logoName: "logo_bitexen",
         cardHolder:  "",
         cardNumber: "Bitexen Hesabı Ekle",
-        line1: "bitexen hesabınızı DigiliraPay'e bağlayın ve bitexen borsasında bulunan bakiyelerinizi görüntüleyin ve dilerseniz alışveriş yapın.\n\nbitexen hesabınızı bağlamak için sırası ile Ayarlar -> Erişim Ayarları sayfasına gidin. Yeni API oluştur butonuna tıklayarak 'İzleme İşlemleri' ve 'Yatırma-Çekme' işlemlerinee izin verin. API erişimi için bir 'Parola' belirleyerek 'API Erişimi Oluştur' butonuna tıklayın.\n\nOluşturacağınız parola bitexen veya DigiliraPay sunucularına kaydedilmez sadece uygulamanıza kaydedilir.\n\nBilgileri kaybetmeniz durumunda yeni API erişimi oluşturmanız gerekmektedir.",
+        line1: "bitexen hesabınızı DigiliraPay'e bağlayın ve bitexen borsasında bulunan bakiyelerinizi görüntüleyin ve dilerseniz alışveriş yapın.\n\nbitexen hesabınızı bağlamak için sırası ile Ayarlar -> Erişim Ayarları sayfasına gidin. Yeni API oluştur butonuna tıklayarak 'İzleme İşlemleri' ve 'Yatırma-Çekme' işlemlerine izin verin. API erişimi için bir 'Parola' belirleyerek 'API Erişimi Oluştur' butonuna tıklayın.\n\nOluşturacağınız parola bitexen veya DigiliraPay sunucularına kaydedilmez sadece uygulamanıza kaydedilir.\n\nBilgileri kaybetmeniz durumunda yeni API erişimi oluşturmanız gerekmektedir.",
         apiSet: false,
         bg: "bitexen_hover-1"
     )

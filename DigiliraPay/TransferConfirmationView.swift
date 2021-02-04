@@ -13,8 +13,6 @@ class TransferConfirmationView: UIView {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var messageLabel: UILabel!
-    @IBOutlet weak var warningLabel: UILabel!
-    @IBOutlet weak var loading: UIProgressView!
 
     @IBOutlet weak var yes: UIView!
     @IBOutlet weak var no: UIView!
@@ -24,13 +22,15 @@ class TransferConfirmationView: UIView {
     @IBOutlet weak var titleView: UIView!
     @IBOutlet weak var msg: UIView!
     @IBOutlet weak var l1: UIButton!
+    @IBOutlet weak var sender: UILabel!
     @IBOutlet weak var l2: UILabel!
     @IBOutlet weak var l3: UILabel!
     @IBOutlet weak var l4: UILabel!
-    @IBOutlet weak var l5: UILabel!
-    @IBOutlet weak var l6: UILabel!
+    @IBOutlet weak var t2: UILabel!
+    @IBOutlet weak var remark: UILabel!
     @IBOutlet weak var icon: UIImageView!
-    
+    @IBOutlet weak var c2: UIImageView!
+
     var params: digilira.txConfMsg?
     var confirmation: Bool = false
 
@@ -115,13 +115,15 @@ class TransferConfirmationView: UIView {
         
         titleLabel.text = p.title
         messageLabel.text = p.message
-        l1.setTitle(p.l1.description, for: .normal)  
+        l1.setTitle(p.l1.description, for: .normal)
+        sender.text = p.sender
         l2.text = p.l2
         l3.text = p.l3
         l4.text = p.l4
-        l5.text = p.l5
-        l6.text = p.l6
-        
+        t2.text = p.t2
+        remark.text = p.remark
+        c2.image = UIImage(named: p.c2 ?? "")
+
         if let customConfirm = p.yes {
             yesLabel.text = customConfirm
         }

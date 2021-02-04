@@ -60,6 +60,7 @@ class digiliraPayApi: NSObject {
                     
                     if success {
                         self?.onTouchID!(true, "ok")
+                        UserDefaults.standard.set(0, forKey: "wrongEntry")
                     } else {
                         self?.onTouchID!(false, authenticationError!.localizedDescription)
                     }
@@ -89,6 +90,91 @@ class digiliraPayApi: NSObject {
         }
     }
     
+    
+    func stringify (x: Any) -> String{
+        
+        if let y = x as? Int {
+            return y.description
+        }
+        
+        if let y = x as? Double {
+            return y.description
+        }
+        
+        
+        if let y = x as? String {
+            return y
+        }
+        
+        if let y = x as? Bool {
+            if (y) {
+                return "true"
+            } else {
+                return "false"
+            }
+            
+        }
+        
+        return ""
+    }
+    private let wavesCrypto: WavesCrypto = WavesCrypto()
+
+    func validateUser(user: Data) -> Bool {
+ 
+        let dataAddress = Blockchain().returnPublicKey()
+        do {
+            let jsonResponse = try JSONSerialization.jsonObject(with: user) as! Dictionary<String, AnyObject>
+            let sorted = jsonResponse.sorted(by: { $0.key < $1.key })
+  
+            var sign = ""
+            var array:[String] = []
+            for item in sorted {
+                switch item.key {
+                case "zmark":
+                    sign = stringify(x: item.value)
+                    break
+                case "id", "id1", "":
+                    break
+                default:
+                    
+                    var val = stringify(x: item.value)
+ 
+                    if (item.key == "imported") {
+                        if (val == "0") {
+                            val = "false"
+                        } else {
+                            val = "true"
+                        }
+                    }
+                    array.append(val)
+                }
+                 
+            }
+
+            var bytes: [UInt8] = []
+
+                var byteString = ""
+                for item in array {
+                    if item != "" {
+                        byteString = byteString + item
+                    }
+                }
+                
+            let array1: [UInt8] = Array(byteString.utf8)
+                
+            bytes.append(contentsOf: array1)
+            let s = wavesCrypto.base58decode(input: sign)
+            if wavesCrypto.verifySignature(publicKey: dataAddress, bytes: bytes, signature: s!) {
+                return true
+            } else {
+                return false
+            }
+  
+        } catch {
+            return false
+        }
+    }
+    
     func updateUser(user: Data?, signature: String) {
         crud.onError = { error, sts in
             self.onUpdate!(nil, false)
@@ -96,17 +182,25 @@ class digiliraPayApi: NSObject {
         crud.onResponse = { [self] data, sts in
             switch sts {
             case 200:
-                do {
-                    if secretKeys.LocksmithSave(forKey: try getKeyChainSource().authenticateData, data: data) {
-                        let user = try crud.decodeDefaults(forKey: data, conformance: digilira.auth.self)
-                        self.onUpdate!(user, true)
+                DispatchQueue.main.async {
+                    if validateUser(user: data) {
+                        do {
+                            if secretKeys.LocksmithSave(forKey: try getKeyChainSource().authenticateData, data: data) {
+                                let user = try crud.decodeDefaults(forKey: data, conformance: digilira.auth.self)
+                                
+                                self.onUpdate!(user, true)
+                            } else {
+                                self.onUpdate!(nil, false)
+                            }
+                            
+                        } catch  {
+                            print(error)
+                        }
                     } else {
                         self.onUpdate!(nil, false)
                     }
-                    
-                } catch  {
-                    print(error)
                 }
+                
                 break
             case 502:
                 self.onUpdate!(nil, false)
@@ -133,6 +227,7 @@ class digiliraPayApi: NSObject {
     func saveTransactionTransfer(JSON : Data?, signature: String) {
         crud.onError = { error, sts in }
         crud.onResponse = { res, sts in
+            
             if (sts == 200) {
             }else {
                 print("fail")

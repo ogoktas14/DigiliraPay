@@ -79,7 +79,8 @@ class ErrorHandling: NSObject {
             alertWarning(title: "Blokzincir Hatası", message: "Blokzincir kaynaklı problemlerden dolayı işleminiz gerçekleşmemiştir. Lütfen daha sonra yeniden deneyin.")
             break
         case digilira.NAError.minBalance:
-            alertWarning(title: "Blokzincir Hatası", message: "Minimum miktarın altında transfer gerçekleştiremezsiniz.")
+            
+            alertWarning(title: "Blokzincir Hatası", message: "Minimum miktarın altında transfer gerçekleştiremezsiniz." .debugDescription)
             break
         default:
             DispatchQueue.main.async {

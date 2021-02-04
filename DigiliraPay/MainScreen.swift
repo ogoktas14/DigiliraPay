@@ -604,6 +604,8 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                 }
                 break
             case 403000:
+                UserDefaults.standard.setValue(false, forKey: "isSecure")
+
                 DispatchQueue.main.async { [self] in
                     UserDefaults.standard.set(true, forKey: "isBlocked")
                     throwEngine.alertWarning(title: "Hesabınız Bloke Edildi", message: "Pin kodunuzu sıfırlamak için www.digilirapay.com/pin adresini ziyaret ediniz.", error: true)
@@ -928,7 +930,6 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         if address.network == "digilirapay" {
             crud.onResponse = { [self] data, sts in
                 DispatchQueue.main.async {
-                    
                     switch sts {
                     case 200:
                         do {
@@ -1853,10 +1854,10 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         commissionsView.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         
         let line1 = digilira.line.init(mode: "text", text: "DigiliraPay kullanıcıları arasındaki transfer")
-        let btc1 = digilira.line.init(mode: "coin", text: "Bitcoin", icon: UIImage(named: "WBTC"), l1: "Ücretsiz", l2: "Ücretsiz", minSend: "0.0001 BTC", minReceive: "-")
-        let eth1 = digilira.line.init(mode: "coin", text: "Ethereum", icon: UIImage(named: "WETH"), l1: "Ücretsiz", l2: "Ücretsiz", minSend: "0.001 ETH", minReceive: "-")
+        let btc1 = digilira.line.init(mode: "coin", text: "Bitcoin", icon: UIImage(named: "WBTC"), l1: "Ücretsiz", l2: "Ücretsiz", minSend: "0.00000300 BTC", minReceive: "-")
+        let eth1 = digilira.line.init(mode: "coin", text: "Ethereum", icon: UIImage(named: "WETH"), l1: "Ücretsiz", l2: "Ücretsiz", minSend: "0.0001 ETH", minReceive: "-")
         let waves1 = digilira.line.init(mode: "coin", text: "Waves", icon: UIImage(named: "Waves"), l1: "Ücretsiz", l2: "Ücretsiz", minSend: "0.01 WAVES", minReceive: "-")
-        let usd1 = digilira.line.init(mode: "coin", text: "Tether USDT", icon: UIImage(named: "USDT"), l1: "Ücretsiz", l2: "Ücretsiz", minSend: "1 USDT", minReceive: "-")
+        let usd1 = digilira.line.init(mode: "coin", text: "Tether USDT", icon: UIImage(named: "USDT"), l1: "Ücretsiz", l2: "Ücretsiz", minSend: "0.1 USDT", minReceive: "-")
         let onet1 = digilira.line.init(mode: "coin", text: "One Tower", icon: UIImage(named: "One Tower"), l1: "Ücretsiz", l2: "Ücretsiz", minSend: "1 ONET", minReceive: "-")
         
         let sep1 = digilira.line.init(mode: "text", text: "")
@@ -1865,10 +1866,10 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         
         let head2 = digilira.line.init(mode: "header", text: "TOKEN", icon: UIImage(named: ""), l1: "Gönderme", l2: "Alma", minSend: "(min)", minReceive: "(min)")
         
-        let btc2 = digilira.line.init(mode: "coin", text: "Bitcoin", icon: UIImage(named: "WBTC"), l1: "0.005 Waves", l2: "Ücretsiz", minSend: "0.001 BTC", minReceive: "-")
-        let eth2 = digilira.line.init(mode: "coin", text: "Ethereum", icon: UIImage(named: "WETH"), l1: "0.005 Waves", l2: "Ücretsiz", minSend: "0.01 ETH", minReceive: "-")
+        let btc2 = digilira.line.init(mode: "coin", text: "Bitcoin", icon: UIImage(named: "WBTC"), l1: "0.005 Waves", l2: "Ücretsiz", minSend: "0.00000300 BTC", minReceive: "-")
+        let eth2 = digilira.line.init(mode: "coin", text: "Ethereum", icon: UIImage(named: "WETH"), l1: "0.005 Waves", l2: "Ücretsiz", minSend: "0.0001 ETH", minReceive: "-")
         let waves2 = digilira.line.init(mode: "coin", text: "Waves", icon: UIImage(named: "Waves"), l1: "0.005 Waves", l2: "Ücretsiz", minSend: "0.01 WAVES", minReceive: "-")
-        let usd2 = digilira.line.init(mode: "coin", text: "Tether USDT", icon: UIImage(named: "USDT"), l1: "0.005 Waves", l2: "Ücretsiz", minSend: "1 USDT", minReceive: "-")
+        let usd2 = digilira.line.init(mode: "coin", text: "Tether USDT", icon: UIImage(named: "USDT"), l1: "0.005 Waves", l2: "Ücretsiz", minSend: "0.1 USDT", minReceive: "-")
         let onet2 = digilira.line.init(mode: "coin", text: "One Tower", icon: UIImage(named: "One Tower"), l1: "Gönderilmez", l2: "Gönderilmez", minSend: "-", minReceive: "-")
         let sep2 = digilira.line.init(mode: "text", text: "")
         
@@ -2547,7 +2548,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
                                     name = f + " " + l
                                 }
                             }
-                            
+                            let double = Double(truncating: pow(10,coin.decimal) as NSNumber)
                                 let trx = SendTrx.init(merchant: data.owner!,
                                                        recipient: data.wallet!,
                                                        assetId: data.assetId!,
@@ -2560,7 +2561,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
                                                        massWallet: data.wallet,
                                                        memberCheck: true,
                                                        me: name,
-                                                       blockchainFee: 0
+                                                       blockchainFee: Int64(coin.gatewayFee * double)
                                 )
                                 
                                 self.send(params: trx)

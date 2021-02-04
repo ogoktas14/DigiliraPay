@@ -58,7 +58,7 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
             }
         } else {
             self.letsGoView.isHidden = false
-            self.importAccountView.isHidden = true
+            self.importAccountView.isHidden = false
             curtain.isHidden = true
             
         }

@@ -329,15 +329,39 @@ extension WalletView: TransactionDetailCloseDelegate
                 m = "Giden Transfer"
             }
             
+            var feeAsset = ""
+            var fee = order.fee.description
+            
+            switch order.feeAssetID {
+            case digilira.sponsorToken, digilira.paymentToken, digilira.mainnetSponsorToken, digilira.mainnetPaymentToken:
+                feeAsset = "DigiliraPay"
+            case "WAVES":
+                feeAsset = "Waves"
+                fee = MainScreen.int2so(order.fee, digits: 8)
+            default:
+                break
+            }
+            
+            var x = Double(MainScreen.int2so(order.amount, digits: coin.decimal))!
+            var z = 0.0.description + " " + coin.tokenSymbol
+            let y = MainScreen.int2so(order.amount, digits: coin.decimal)
+            
+            if order.destination == digilira.transactionDestination.foreign {
+                x = x - coin.gatewayFee
+                z = String(format: "%." + coin.decimal.description + "f", coin.gatewayFee)  + " " + coin.tokenSymbol
+            }
+            
             let t = digilira.txConfMsg.init(title: "Transfer Detayları",
                                             message: m,
-                                            l1: "Gönderici: " + order.myName,
-                                            l2: "Alıcı: " + order.recipientName,
-                                            l3: "Token: " + coin.tokenSymbol,
-                                            l4: "Miktar: " + MainScreen.int2so(order.amount, digits: coin.decimal),
-                                            l5: "TL Karşılığı: ₺" + order.tickerTl,
-                                            l6: "",
+                                            l1: order.recipientName,
+                                            sender: order.myName,
+                                            l2: String(format: "%." + coin.decimal.description + "f", x) + " " + coin.tokenSymbol,
+                                            l3: fee + " " + feeAsset,
+                                            l4: y + " " + coin.tokenSymbol,
+                                            t2: z,
+                                            c2: coin.tokenName,
                                             yes: "Tamam",
+                                            remark: "",
                                             no: "",
                                             icon: "success")
             throwEngine.transferConfirmation(txConMsg: t, destination: .trxConfirm)

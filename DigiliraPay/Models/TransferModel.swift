@@ -54,7 +54,7 @@ struct TransferModel: Codable {
     let tickerTl: String
     let assetID, destination, attachment: String
     let v: Int
-    let createdDate, transferModelID: String
+    let createdDate, zmark, transferModelID: String
 
     enum CodingKeys: String, CodingKey {
         case id = "_id"
@@ -67,6 +67,7 @@ struct TransferModel: Codable {
         case destination, attachment
         case v = "__v"
         case createdDate
+        case zmark
         case transferModelID = "id"
     }
 }

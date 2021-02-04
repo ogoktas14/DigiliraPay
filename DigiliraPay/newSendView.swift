@@ -141,38 +141,48 @@ class newSendView: UIView {
             let double = Double(truncating: pow(10,coin.decimal) as NSNumber)
             t.amount = Int64(isAmount * double)
             var minAmount = 0
+            var minTotal = minAmount
+
             switch coin.tokenName {
             case "Bitcoin":
                 if t.destination == digilira.transactionDestination.interwallets {
-                    minAmount = 999999
+                    minAmount = 300
+                    minTotal = minAmount
                 } else {
-                    minAmount = 99999
+                    minAmount = 100000
+                    minTotal = Int((coin.gatewayFee) * (double) ) + minAmount
                 }
                 break
             case "Ethereum":
                 if t.destination == digilira.transactionDestination.interwallets {
-                    minAmount = 99999
+                    minAmount = 10000
+                    minTotal = minAmount
                 } else {
-                    minAmount = 9999
+                    minAmount = 1000000
+                    minTotal = Int((coin.gatewayFee) * (double) ) + minAmount
                 }
                 break
             case "Waves":
-                minAmount = 999999
+                minAmount = 1000000
+                minTotal = minAmount
                 break
             case "Tether USDT":
-                if t.destination == digilira.transactionDestination.foreign {
-                    minAmount = 10 * Int(double - 1)
+                if t.destination == digilira.transactionDestination.interwallets {
+                    minAmount = 10000
+                    minTotal = minAmount
                 } else {
-                    minAmount = 1 * Int(double - 1)
+                    minAmount = 10000000
+                    minTotal = Int((coin.gatewayFee) * (double) ) + minAmount
                 }
                 break
             default:
-                minAmount = Int(double - 1)
+                minAmount = Int(double)
+                minTotal = minAmount
                 break
             }
             
-            if t.amount! <= minAmount {
-                
+            if t.amount! < minTotal {
+
                 sendView.alpha = 1
                 sendView.isUserInteractionEnabled = true
                 errors?.evaluate(error: digilira.NAError.noAmount)
@@ -191,6 +201,7 @@ class newSendView: UIView {
     
     func checkAddress(network: String, address: String) -> Bool {
         isWavesNetwork = false
+        isEthereumNetwork = false
         let env = BC.returnEnv()
         
         var bitcoinSegwit = "^(bc1|[13])[a-zA-HJ-NP-Z0-9]{25,62}$"
@@ -341,34 +352,32 @@ class newSendView: UIView {
             guard let m = t.amount else {return}
             guard t.recipient != "" && t.recipient != nil else {return}
             
-            var balance = Filtered[currentPage].availableBalance
+            let balance = Filtered[currentPage].availableBalance
             
             //TO-DO check destination and calculate fee margin
             
-            var komisyon:Double = 0
-            var komisyonText = "Blokzincir komisyon ücreti DigiliraPay tarafından karşılanmaktadır."
+            var komisyon:Double = 0.005
             var komisyonCoin = "Waves"
+            var remark = "Waves blokzinciri üzerinde yaptığınız transferlerde madencilere 0.005 Waves işlem ücreti ödenmektedir. DigiliraPay cüzdanları arasında yaptığınız transferlerde bu ücret DigiliraPay tarafından karşılanmaktadır."
             
+            var agKomisyonu: Double = 0
+            var agCoin = coin.tokenName
+
             if t.destination == digilira.transactionDestination.foreign {
                 
-                komisyon = coin.gatewayFee
-                komisyonCoin = coin.tokenSymbol
-                komisyonText = "Hesabınızda bakiye olmaması durumunda blokzincir komisyonu gönderilecek tutardan otomatik olarak düşecektir."
+                agKomisyonu = coin.gatewayFee
+                agCoin = coin.tokenName
+                
+                komisyon = 5
+                komisyonCoin = "DigiliraPay"
             }
             
-            if t.destination == digilira.transactionDestination.unregistered {
+            if  t.destination == digilira.transactionDestination.interwallets {
                 
-                if coin.tokenName == "Waves" {
-                    let x = Int64(coin.wavesFee * 100000000)
-                    balance = balance - x
-                    textAmount.text = MainScreen.int2so(balance, digits: coin.decimal)
-                    calcPrice(text: textAmount.text!)
-                }
+                komisyon = 5
+                komisyonCoin = "DigiliraPay"
+                remark = "DigiliraPay cüzdanları arasında yaptığınız transferlerde işlem komisyonu DigiliraPay tarafından karşılanmaktadır."
                 
-                komisyon = coin.wavesFee
-                komisyonCoin = "Waves"
-                komisyonText = ""
-                 
             }
             
             if balance < m {
@@ -378,16 +387,31 @@ class newSendView: UIView {
                 return
             }
             
+            let miktar = MainScreen.int2so(m, digits: coin.decimal) + " " + coin.tokenSymbol
+            var minTotal = miktar
+
+            if t.destination == digilira.transactionDestination.foreign {
+                let double = Double(m) / Double(truncating: pow(10,coin.decimal) as NSNumber)
+                minTotal = String(format: "%." + coin.decimal.description + "f", double - agKomisyonu) + " " + coin.tokenSymbol
+                remark = "Waves blokzinciri dışına yaptığınız transferlerde işlem komisyonu DigiliraPay tarafından karşılanmaktadır."
+
+            }
+            
+            
+            
+            
             let confirmationMessage = digilira.txConfMsg.init(
                 title: "Transfer Onayı",
                 message: "Bilgileri Kontrol Edin",
-                l1: "Alıcı: " + t.merchant!,
-                l2: "Miktar: " +  MainScreen.int2so(m, digits: coin.decimal) + " " + coin.tokenSymbol,
-                l3: "TL Karşılığı: ₺" + MainScreen.df2so(t.fiat),
-                l4: "Blokzincir Komisyonu: " + komisyon.description + " " + komisyonCoin,
-                l5: "",
-                l6: komisyonText,
+                l1: t.merchant!,
+                sender: t.me,
+                l2: minTotal,
+                l3: komisyon.description + " " + komisyonCoin,
+                l4: miktar,
+                t2: agKomisyonu.description + " " + agCoin , 
+                c2: coin.tokenName,
                 yes: "Onayla",
+                remark: remark,
                 no: "Reddet",
                 icon: "caution"
             )
@@ -548,19 +572,19 @@ class newSendView: UIView {
                 balanceCardView.willPaidCoin.text = String(format: "%." + coin.decimal.description + "f", amount)
             }
             if let t = transaction {
-                
+                 
                 var minAmount: Double = 0
                 switch coin.tokenName {
                 case "Bitcoin":
-                    if t.destination == digilira.transactionDestination.interwallets {
-                        minAmount = 0.0001
+                    if t.destination == digilira.transactionDestination.interwallets || isWavesNetwork {
+                        minAmount = 0.000003
                     } else {
                         minAmount = 0.001
                     }
                     break
                 case "Ethereum":
-                    if t.destination == digilira.transactionDestination.interwallets {
-                        minAmount = 0.001
+                    if t.destination == digilira.transactionDestination.interwallets || isWavesNetwork {
+                        minAmount = 0.0001
                     } else {
                         minAmount = 0.01
                     }
@@ -569,10 +593,10 @@ class newSendView: UIView {
                     minAmount = 0.01
                     break
                 case "Tether USDT":
-                    if t.destination == digilira.transactionDestination.foreign {
-                        minAmount = 10
+                    if t.destination == digilira.transactionDestination.interwallets || isWavesNetwork {
+                        minAmount = 0.1
                     } else {
-                        minAmount = 11
+                        minAmount = 10
                     }
                     break
                 default:
@@ -580,23 +604,42 @@ class newSendView: UIView {
                     break
                 }
                 
-                if t.destination == digilira.transactionDestination.foreign {
-                    if amount >= minAmount {
-                        commissionLabel.text = "Blokzincir transfer ücreti: " + coin.gatewayFee.description + " " + coin.tokenName
-                        commissionLabel.isHidden = false
-                    } else {
-                        commissionLabel.text = "Minimum transfer miktarı: " + minAmount.description + " " + coin.tokenName
-                        commissionLabel.isHidden = false
-                        
-                    }
+                if t.destination == digilira.transactionDestination.foreign && !isWavesNetwork {
                     
+                    let minTotal = coin.gatewayFee + minAmount
+                    
+                    commissionLabel.text =
+"""
+\(coin.network.capitalized) blokzincirine transfer yapmak üzeresiniz. Gönderebileceğiniz minimum tutar \(minAmount.description) \(coin.tokenName)'dir. Waves ağ geçidi ise Bitcoin transferlerinden \(minAmount.description) \(coin.tokenName) işlem komisyonu almaktadır. Bu bedel, göndereceğiniz tutardan düşecektir. İşlem komisyonu dahil gönderebileceğiniz minimum tutar \(minTotal.description) \(coin.tokenName)'dir.
 
-                    
+\(coin.network.capitalized) transferleri için işlem ücreti ödemek istemiyorsanız başka bir DigiliraPay adresine transfer yapabilirsiniz. DigiliraPay kullanıcılarının kendi aralarında yapmış oldukları transferlerin işlem ücretleri DigiliraPay tarafından karşılanmaktadır.
+"""
+                    if isEthereumNetwork {
+                        if coin.tokenName != "Tether USDT" && coin.tokenName != "Ethereum" {
+                            sendView.isUserInteractionEnabled = false
+                            sendView.alpha = 0.4
+                            commissionLabel.text = "Ethereum blokzincirine \(coin.tokenName) gönderemezsiniz."
+                        } else {
+                            sendView.isUserInteractionEnabled = true
+                            sendView.alpha = 1
+                        }
+                    }
+                    commissionLabel.isHidden = false
                 } else {
-                    commissionLabel.text = "Minimum transfer miktarı: " + minAmount.description + " " + coin.tokenName
+                    
+                    commissionLabel.text = "Minimum transfer miktarı: " + String(format: "%.\(coin.decimal)f", minAmount) + " " + coin.tokenName
                     commissionLabel.isHidden = false
                     
-                    
+                    if t.destination != digilira.transactionDestination.interwallets {
+                        if coin.symbol == "ONET" {
+                            sendView.isUserInteractionEnabled = false
+                            sendView.alpha = 0.4
+                            commissionLabel.text = "Waves blokzincirine \(coin.tokenName) gönderemezsiniz."
+                        } else {
+                            sendView.isUserInteractionEnabled = true
+                            sendView.alpha = 1
+                        }
+                    }
                 }
             }
         }

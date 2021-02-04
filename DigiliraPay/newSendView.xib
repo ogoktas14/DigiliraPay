@@ -47,7 +47,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="374" height="451.66666666666669"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wLC-b9-1uO" userLabel="contentView">
-                                    <rect key="frame" x="0.0" y="0.0" width="374" height="400"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="374" height="369"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LXE-e5-Ewh" userLabel="miktar" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                                             <rect key="frame" x="10" y="55" width="354" height="52"/>
@@ -144,15 +144,15 @@
                                             </constraints>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5wV-zS-jCt">
-                                            <rect key="frame" x="10" y="173.00000000000006" width="354" height="13.666666666666657"/>
+                                            <rect key="frame" x="10" y="173.00000000000006" width="354" height="16"/>
                                             <subviews>
                                                 <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qlq-zg-v70">
-                                                    <rect key="frame" x="0.0" y="0.0" width="354" height="13.666666666666666"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="354" height="16"/>
                                                     <attributedString key="attributedText">
                                                         <fragment content="Blokzincir transfer ücreti: 0">
                                                             <attributes>
                                                                 <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                                                <font key="NSFont" size="12" name="GillSans-Light"/>
+                                                                <font key="NSFont" size="14" name="GillSans-Light"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                                             </attributes>
                                                         </fragment>
@@ -162,14 +162,15 @@
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="Qlq-zg-v70" secondAttribute="bottom" id="29g-PY-kMF"/>
                                                 <constraint firstAttribute="trailing" secondItem="Qlq-zg-v70" secondAttribute="trailing" id="Fdf-yY-dE9"/>
                                                 <constraint firstItem="Qlq-zg-v70" firstAttribute="top" secondItem="5wV-zS-jCt" secondAttribute="top" id="GaP-F9-9j0"/>
-                                                <constraint firstAttribute="bottom" secondItem="Qlq-zg-v70" secondAttribute="bottom" id="Qo5-X6-adE"/>
                                                 <constraint firstItem="Qlq-zg-v70" firstAttribute="leading" secondItem="5wV-zS-jCt" secondAttribute="leading" id="quA-r0-zcR"/>
+                                                <constraint firstItem="Qlq-zg-v70" firstAttribute="top" secondItem="5wV-zS-jCt" secondAttribute="top" id="tce-uJ-M3A"/>
                                             </constraints>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lHS-wd-2Uo" customClass="DLGradient" customModule="DigiliraPay" customModuleProvider="target">
-                                            <rect key="frame" x="42" y="216.66666666666669" width="290" height="50"/>
+                                            <rect key="frame" x="42" y="209.00000000000006" width="290" height="50"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Gönder" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dN0-J5-7UY">
                                                     <rect key="frame" x="113" y="12.666666666666631" width="64.333333333333314" height="24.666666666666671"/>
@@ -270,10 +271,9 @@
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="400" id="1NJ-X8-aAW"/>
                                         <constraint firstItem="MV3-kW-6Cp" firstAttribute="leading" secondItem="wLC-b9-1uO" secondAttribute="leading" constant="10" id="AfW-wr-lM0"/>
                                         <constraint firstAttribute="trailing" secondItem="ewN-7G-cHi" secondAttribute="trailing" constant="10" id="BdP-vx-ISy"/>
-                                        <constraint firstItem="lHS-wd-2Uo" firstAttribute="top" secondItem="5wV-zS-jCt" secondAttribute="bottom" constant="30" id="Ick-mY-pCP"/>
+                                        <constraint firstItem="lHS-wd-2Uo" firstAttribute="top" secondItem="5wV-zS-jCt" secondAttribute="bottom" constant="20" id="Ick-mY-pCP"/>
                                         <constraint firstItem="ewN-7G-cHi" firstAttribute="leading" secondItem="wLC-b9-1uO" secondAttribute="leading" constant="10" id="Qlc-Ge-n7T"/>
                                         <constraint firstItem="LXE-e5-Ewh" firstAttribute="top" secondItem="MV3-kW-6Cp" secondAttribute="bottom" constant="10" id="U6Y-t7-QXW"/>
                                         <constraint firstItem="MV3-kW-6Cp" firstAttribute="top" secondItem="wLC-b9-1uO" secondAttribute="top" constant="10" id="UG9-yd-rNi"/>
@@ -281,6 +281,7 @@
                                         <constraint firstAttribute="trailing" secondItem="5wV-zS-jCt" secondAttribute="trailing" constant="10" id="aBB-E0-U9m"/>
                                         <constraint firstAttribute="trailing" secondItem="LXE-e5-Ewh" secondAttribute="trailing" constant="10" id="ecE-XL-soy"/>
                                         <constraint firstItem="LXE-e5-Ewh" firstAttribute="leading" secondItem="wLC-b9-1uO" secondAttribute="leading" constant="10" id="hMz-1t-CZs"/>
+                                        <constraint firstAttribute="bottom" secondItem="lHS-wd-2Uo" secondAttribute="bottom" constant="110" id="j3P-vy-Lmi"/>
                                         <constraint firstItem="ewN-7G-cHi" firstAttribute="top" secondItem="LXE-e5-Ewh" secondAttribute="bottom" constant="10" id="qVd-IZ-3Gu"/>
                                         <constraint firstItem="5wV-zS-jCt" firstAttribute="leading" secondItem="wLC-b9-1uO" secondAttribute="leading" constant="10" id="t5d-Pv-tcG"/>
                                         <constraint firstAttribute="trailing" secondItem="MV3-kW-6Cp" secondAttribute="trailing" constant="10" id="xnP-G9-Nk7"/>
@@ -293,8 +294,8 @@
                                 <constraint firstAttribute="trailing" secondItem="wLC-b9-1uO" secondAttribute="trailing" id="685-Cc-un1"/>
                                 <constraint firstItem="wLC-b9-1uO" firstAttribute="width" secondItem="r48-9M-14x" secondAttribute="width" id="RMg-we-F5L"/>
                                 <constraint firstItem="wLC-b9-1uO" firstAttribute="leading" secondItem="r48-9M-14x" secondAttribute="leading" id="VG2-U0-dPi"/>
-                                <constraint firstAttribute="bottom" secondItem="wLC-b9-1uO" secondAttribute="bottom" constant="50" id="bad-k9-1cU"/>
                                 <constraint firstItem="lHS-wd-2Uo" firstAttribute="centerX" secondItem="r48-9M-14x" secondAttribute="centerX" id="rPR-ck-szK"/>
+                                <constraint firstAttribute="bottom" secondItem="wLC-b9-1uO" secondAttribute="bottom" id="zM9-wh-M3g"/>
                             </constraints>
                         </scrollView>
                     </subviews>

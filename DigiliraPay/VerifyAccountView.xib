@@ -89,6 +89,12 @@
                                         </label>
                                         <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" style="wheels" translatesAutoresizingMaskIntoConstraints="NO" id="8Ii-Qb-kcS">
                                             <rect key="frame" x="0.0" y="10" width="371" height="142.33333333333334"/>
+                                            <date key="minimumDate" timeIntervalSinceReferenceDate="-2556190800">
+                                                <!--1920-01-01 11:00:00 +0000-->
+                                            </date>
+                                            <date key="maximumDate" timeIntervalSinceReferenceDate="220881600">
+                                                <!--2008-01-01 12:00:00 +0000-->
+                                            </date>
                                             <locale key="locale" localeIdentifier="tr_TR"/>
                                             <connections>
                                                 <action selector="datePickerChangedWithSender:" destination="iN0-l3-epB" eventType="valueChanged" id="guI-iU-RGj"/>

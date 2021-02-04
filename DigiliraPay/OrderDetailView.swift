@@ -120,9 +120,9 @@ extension OrderDetailView: UITableViewDelegate, UITableViewDataSource {
                     }
                 }
                 
-                if  let kargo = order.orderShipping {
-                    shoppingCart.append(digilira.shoppingCart.init(label: "Kargo Ücreti", price: kargo, mode: 1))
-                }
+//                if  let kargo = order.orderShipping {
+//                    shoppingCart.append(digilira.shoppingCart.init(label: "Kargo Ücreti", price: kargo, mode: 1))
+//                }
                 
                 let total = order.totalPrice
                     shoppingCart.append(digilira.shoppingCart.init(label: "Toplam", price: total, mode: 1))
