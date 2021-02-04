@@ -1853,7 +1853,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
                                  height: self.view.frame.height)
         commissionsView.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         
-        let line1 = digilira.line.init(mode: "text", text: "DigiliraPay kullanıcıları arasındaki transfer")
+        let line1 = digilira.line.init(mode: "text", text: "DigiliraPay kullanıcıları arasındaki transferler")
         let btc1 = digilira.line.init(mode: "coin", text: "Bitcoin", icon: UIImage(named: "WBTC"), l1: "Ücretsiz", l2: "Ücretsiz", minSend: "0.00000300 BTC", minReceive: "-")
         let eth1 = digilira.line.init(mode: "coin", text: "Ethereum", icon: UIImage(named: "WETH"), l1: "Ücretsiz", l2: "Ücretsiz", minSend: "0.0001 ETH", minReceive: "-")
         let waves1 = digilira.line.init(mode: "coin", text: "Waves", icon: UIImage(named: "Waves"), l1: "Ücretsiz", l2: "Ücretsiz", minSend: "0.01 WAVES", minReceive: "-")
@@ -1881,7 +1881,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         let usd3 = digilira.line.init(mode: "coin", text: "Tether USDT", icon: UIImage(named: "USDT"), l1: "5 USDT", l2: "Ücretsiz", minSend: "10 USDT", minReceive: "10 USDT")
         let onet3 = digilira.line.init(mode: "coin", text: "One Tower", icon: UIImage(named: "One Tower"), l1: "Gönderilmez", l2: "Gönderilmez", minSend: "-", minReceive: "-" )
         
-        let line4 = digilira.line.init(mode: "text", text: "(min): Komisyonlar hariç gönderebileceğiniz veya alabileceğiniz en az miktarları gösterir. Bu miktarların altında yapılan transferler alıcıya ulaşmaz ve iade talep edilemez.\n\n(kom): Blokzincir üzerinde yapılan işlemler için madencilere ödenen ücret.")
+        let line4 = digilira.line.init(mode: "text", text: "(min): Komisyonlar hariç gönderebileceğiniz veya alabileceğiniz en az miktarları gösterir. Bu miktarların altında yapılan transferler alıcıya ulaşmaz ve iade talep edilemez.\n\n(kom): Waves blokzinciri dışına yapılan işlemler için Waves ağ geçidine ödenen ücreti ifade etmektedir.")
          commissionsView.lines = [line1, head2, btc1, eth1, waves1, usd1, onet1, sep1,
                                  line2, head2, btc2, eth2, waves2, usd2, onet2, sep2,
                                  line3, head2, btc3, eth3, waves3, usd3, onet3, sep2, line4

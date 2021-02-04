@@ -610,7 +610,7 @@ class newSendView: UIView {
                     
                     commissionLabel.text =
 """
-\(coin.network.capitalized) blokzincirine transfer yapmak üzeresiniz. Gönderebileceğiniz minimum tutar \(minAmount.description) \(coin.tokenName)'dir. Waves ağ geçidi ise Bitcoin transferlerinden \(minAmount.description) \(coin.tokenName) işlem komisyonu almaktadır. Bu bedel, göndereceğiniz tutardan düşecektir. İşlem komisyonu dahil gönderebileceğiniz minimum tutar \(minTotal.description) \(coin.tokenName)'dir.
+\(coin.network.capitalized) blokzincirine transfer yapmak üzeresiniz. Gönderebileceğiniz minimum tutar \(minAmount.description) \(coin.tokenName)'dir. Waves ağ geçidi ise \(coin.tokenName) transferlerinden \(minAmount.description) \(coin.tokenName) işlem komisyonu almaktadır. Bu bedel, göndereceğiniz tutardan düşecektir. İşlem komisyonu dahil gönderebileceğiniz minimum tutar \(minTotal.description) \(coin.tokenName)'dir.
 
 \(coin.network.capitalized) transferleri için işlem ücreti ödemek istemiyorsanız başka bir DigiliraPay adresine transfer yapabilirsiniz. DigiliraPay kullanıcılarının kendi aralarında yapmış oldukları transferlerin işlem ücretleri DigiliraPay tarafından karşılanmaktadır.
 """
