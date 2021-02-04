@@ -163,12 +163,16 @@ class digiliraPayApi: NSObject {
             let array1: [UInt8] = Array(byteString.utf8)
                 
             bytes.append(contentsOf: array1)
-            let s = wavesCrypto.base58decode(input: sign)
-            if wavesCrypto.verifySignature(publicKey: dataAddress, bytes: bytes, signature: s!) {
-                return true
+            if let s = wavesCrypto.base58decode(input: sign) {
+                if wavesCrypto.verifySignature(publicKey: dataAddress, bytes: bytes, signature: s) {
+                    return true
+                } else {
+                    return false
+                }
             } else {
                 return false
             }
+
   
         } catch {
             return false

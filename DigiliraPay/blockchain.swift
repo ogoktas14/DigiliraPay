@@ -1342,14 +1342,8 @@ class Blockchain: NSObject {
             {
                 devToken = deviceToken
             }
-            var zmark = ""
             
-            if let isInvitation = UserDefaults.standard.value(forKey: "invitation") as? String
-            {
-                zmark = isInvitation
-            }
-            
-            let v = [devToken, btc, eth, imported.description, ltc, zmark]
+            let v = [devToken, btc, eth, imported.description, ltc]
             guard let signed = try? bytization( v, timestamp, seed) else {return}
             
             var user = digilira.exUser.init(btcAddress: btc,
@@ -1358,7 +1352,6 @@ class Blockchain: NSObject {
                                             wallet: wallet,
                                             imported: imported,
                                             apnToken: devToken,
-                                            zmark: zmark,
                                             signed: signed.signature,
                                             publicKey: senderPublicKey,
                                             timestamp: timestamp
@@ -1367,7 +1360,7 @@ class Blockchain: NSObject {
             if chainId != "T" {
                 guard let usd = UserDefaults.standard.value(forKey: "usdtAddress") as? String else { return }
                 user.tetherAddress = usd
-                let v = [devToken, btc, eth, imported.description, ltc, usd, zmark]
+                let v = [devToken, btc, eth, imported.description, ltc, usd]
                 guard let signed = try? bytization( v, timestamp, seed) else {return}
                 user.signed = signed.signature
             }
@@ -1439,7 +1432,10 @@ class Blockchain: NSObject {
                                 dictionary.keys.forEach { key in
                                     defaults.removeObject(forKey: key)
                                 }
+                                
+                                if !imported {
                                 UserDefaults.standard.setValue(true, forKey: "environment")
+                                }
                                 self.onComplete!(false, 400)
                                 break
                             default:
