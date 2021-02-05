@@ -18,26 +18,37 @@
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uce-Y4-i7r">
-                            <rect key="frame" x="30" y="368.5" width="354" height="98.5"/>
+                            <rect key="frame" x="30" y="405.5" width="354" height="98.5"/>
                             <string key="text">Yukarıda gösterildiği gibi kimliğinizin ön yüzü görünecek biçimde boş bir kağıda günün tarihini ve DigiliraPay yazarak yükleyin.</string>
                             <fontDescription key="fontDescription" name="Avenir-Light" family="Avenir" pointSize="18"/>
                             <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="verifyProfilePhoto" translatesAutoresizingMaskIntoConstraints="NO" id="Ilo-9b-jWu">
-                            <rect key="frame" x="62" y="50" width="290" height="259"/>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="digilira-kyc" translatesAutoresizingMaskIntoConstraints="NO" id="Ilo-9b-jWu">
+                            <rect key="frame" x="41.5" y="50" width="331" height="296"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="Ilo-9b-jWu" secondAttribute="height" multiplier="75:67" id="Cml-fl-vZb"/>
                             </constraints>
                         </imageView>
+                        <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5ee-FI-wSx">
+                            <rect key="frame" x="364" y="64" width="30" height="30"/>
+                            <constraints>
+                                <constraint firstAttribute="width" relation="lessThanOrEqual" constant="30" id="CiE-lK-b7l"/>
+                                <constraint firstAttribute="height" relation="lessThanOrEqual" constant="30" id="eFi-3G-Ke4"/>
+                            </constraints>
+                            <state key="normal" image="exit"/>
+                            <connections>
+                                <action selector="btnExit:" destination="iN0-l3-epB" eventType="touchUpInside" id="2qc-2n-ekC"/>
+                            </connections>
+                        </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Son bir adım kaldı." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="51j-fS-zfW">
-                            <rect key="frame" x="20" y="327" width="384" height="30.5"/>
+                            <rect key="frame" x="20" y="364" width="384" height="30.5"/>
                             <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="22"/>
                             <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bof-ez-ihK">
-                            <rect key="frame" x="10" y="567" width="394" height="36"/>
+                            <rect key="frame" x="10" y="604" width="394" height="36"/>
                             <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="17"/>
                             <state key="normal" title="Bu aşamayı atla"/>
                             <connections>
@@ -45,7 +56,7 @@
                             </connections>
                         </button>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hOU-g6-x2m" customClass="DLGradient" customModule="DigiliraPay" customModuleProvider="target">
-                            <rect key="frame" x="62" y="497" width="290" height="50"/>
+                            <rect key="frame" x="62" y="534" width="290" height="50"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Galeriden Seç" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ukS-oz-Stl">
                                     <rect key="frame" x="83" y="12" width="124" height="26"/>
@@ -77,7 +88,7 @@
                         <constraint firstAttribute="trailing" secondItem="51j-fS-zfW" secondAttribute="trailing" constant="10" id="j9X-65-U21"/>
                         <constraint firstItem="51j-fS-zfW" firstAttribute="leading" secondItem="4lF-sD-jAI" secondAttribute="leading" constant="20" id="jVv-ZW-aQe"/>
                         <constraint firstItem="Ilo-9b-jWu" firstAttribute="top" secondItem="4lF-sD-jAI" secondAttribute="top" constant="50" id="maa-He-lum"/>
-                        <constraint firstItem="Ilo-9b-jWu" firstAttribute="width" secondItem="4lF-sD-jAI" secondAttribute="width" multiplier="0.7" id="nOS-Gv-FVh"/>
+                        <constraint firstItem="Ilo-9b-jWu" firstAttribute="width" secondItem="4lF-sD-jAI" secondAttribute="width" multiplier="0.8" id="nOS-Gv-FVh"/>
                         <constraint firstItem="uce-Y4-i7r" firstAttribute="leading" secondItem="51j-fS-zfW" secondAttribute="leading" constant="10" id="pfa-EJ-flP"/>
                     </constraints>
                 </view>
@@ -85,7 +96,9 @@
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
+                <constraint firstItem="5ee-FI-wSx" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="20" id="WgT-K2-Mrs"/>
                 <constraint firstItem="4lF-sD-jAI" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="a2L-T2-H2N"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="5ee-FI-wSx" secondAttribute="trailing" constant="20" id="lcO-lR-kUl"/>
                 <constraint firstItem="4lF-sD-jAI" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="uZr-FL-cOr"/>
                 <constraint firstItem="4lF-sD-jAI" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="yfD-vl-9iF"/>
                 <constraint firstAttribute="bottom" secondItem="4lF-sD-jAI" secondAttribute="bottom" id="zxT-vF-Ugw"/>
@@ -99,6 +112,7 @@
         </view>
     </objects>
     <resources>
-        <image name="verifyProfilePhoto" width="592" height="568"/>
+        <image name="digilira-kyc" width="692" height="805"/>
+        <image name="exit" width="44" height="44"/>
     </resources>
 </document>

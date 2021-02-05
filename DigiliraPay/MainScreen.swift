@@ -164,6 +164,13 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
     var crud = centralRequest()
 
     func checkEssentials() {
+        
+        let isT = BC.returnEnv()
+        
+        if isT == "mainnet" {
+            profileMenuView.mainnetTestnet.isEnabled = false
+        }
+        
         do {
             let k = try secretKeys.userData()
             kullanici = k
@@ -628,6 +635,10 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         if let user = try? secretKeys.userData() {
             
             switch user.status {
+            case 1: 
+                throwEngine.alertWarning(title: "Hesabınız Onaylanmadı", message: "Lütfen kurallara uygun olarak yeniden görsel yükleyin.", error: true)
+                UserDefaults.standard.set(false, forKey: "isSelfied")
+                break
             case 2:
                 let timestamp = Int64(Date().timeIntervalSince1970) * 1000
 
@@ -647,6 +658,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                     digiliraPay.updateUser(user: data, signature: sign.signature)
                 }
                 return
+                
                 
             case 3:
                 throwEngine.alertWarning(title: "Hesabınız Onaylandı", message: "Hesabınız Onaylanmıştır", error: false)
@@ -1488,7 +1500,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
 extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ayarları, coinlerin listelenmesinde bu fonksiyonlar kullanılır.
 {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if tableViewFiltered.count == 0 {
+        if tableViewFiltered.count == 1 {
             return 3
         }
         return tableViewFiltered.count
@@ -1518,7 +1530,7 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
             tapped.floatValue = indexPath[1]
             cell.addGestureRecognizer(tapped)
             
-            if tableViewFiltered.count > 0 {
+            if tableViewFiltered.count > 1 {
                 
                 if tableViewFiltered[indexPath[1]].tokenName == "Seperator" {
                     if let seperator = UITableViewCell().loadXib(name: "CoinTableSeperator") as? CoinTableSeperator {
@@ -1557,8 +1569,21 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
             }
             
 
-            if tableViewFiltered.count == 0 {
+            if tableViewFiltered.count == 1 {
                 let demoin = digilira.demo[indexPath[1]]
+                                 
+                if demoin == tableViewFiltered[0].tokenName {
+                    let asset = tableViewFiltered[0]
+                    cell.coinIcon.image = UIImage(named: asset.tokenSymbol)
+                    cell.coinName.text = asset.tokenName
+                    cell.type.text = "₺" + MainScreen.df2so(asset.tlExchange)
+                    
+                    let double = MainScreen.int2so(asset.balance, digits: asset.decimal)
+                    tapped.assetName = double
+                    cell.coinAmount.text = double
+                    return cell
+                }
+                      
                 let demoCoin = digilira.demoIcon[indexPath[1]]
                 cell.coinIcon.image = UIImage(named: demoCoin)
                 cell.coinName.text = demoin

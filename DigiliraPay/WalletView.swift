@@ -111,6 +111,7 @@ class WalletView: UIView {
                                     
                                     guard value.assetID != digilira.sponsorToken else { return }
                                     guard value.assetID != digilira.paymentToken else { return }
+                                    guard value.attachment != "BHceXVvk4bmLyBUoD1J25T" else { return }
                                                                       
                                     do {
                                         let tokenName = try BC.returnAsset(assetId: value.assetID)

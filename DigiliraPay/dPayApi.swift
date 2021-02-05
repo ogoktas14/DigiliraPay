@@ -789,6 +789,14 @@ class secretKeys: NSObject {
         
         do {
             let data = try secretKeys.LocksmithLoad(forKey: authenticateSource, conformance: digilira.auth.self)
+            if data.status == 2 {
+                if let selfied = UserDefaults.standard.value(forKey: "isSelfied") as? Bool {
+                    if !selfied {
+                        UserDefaults.standard.set(true, forKey: "isSelfied")
+                    }
+                }
+                
+            }
             return data
         } catch {
             throw digilira.NAError.emptyAuth
