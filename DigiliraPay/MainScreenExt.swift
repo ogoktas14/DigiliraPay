@@ -485,6 +485,12 @@ extension MainScreen: VerifyAccountDelegate
         isProfileImageUpload = true
         openGallery()
     }
+     
+    func uploadIdentity() {
+        isIdentityUpload = true
+        isProfileImageUpload = true
+        openGallery()
+    }
     
     func disableEntry() {
         DispatchQueue.main.async {

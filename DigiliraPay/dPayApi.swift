@@ -139,7 +139,7 @@ class digiliraPayApi: NSObject {
                     
                     var val = stringify(x: item.value)
  
-                    if (item.key == "imported") {
+                    if (item.key == "imported" || item.key == "isTether") {
                         if (val == "0") {
                             val = "false"
                         } else {

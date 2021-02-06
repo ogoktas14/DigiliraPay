@@ -633,6 +633,15 @@ Onsekiz (17) sayfa ve on iki (12) ana maddeden ibaret işbu Sözleşme, Kullanı
         let wallet: String
     }
  
+    struct tr {
+        static let noEmail = "E-posta"
+        static let noPhone = "Telefon"
+        static let noSurname = "Soyad"
+        static let noName = "Ad"
+        static let noTC = "TC kimlik numarası"
+        
+
+    }
     
     enum NAError: Error {
         case emptyAuth
@@ -661,6 +670,11 @@ Onsekiz (17) sayfa ve on iki (12) ana maddeden ibaret işbu Sözleşme, Kullanı
         case minBalance
         case anErrorOccured
         case missingParameters
+        case noEmail
+        case noPhone
+        case noName
+        case noSurname
+        case noTC
         case noAmount
     }
 

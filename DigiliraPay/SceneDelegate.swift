@@ -68,6 +68,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, UNUserNotificationCente
             }
         }
         
+        if let identity = UserDefaults.standard.value(forKey: "isIdentity") as? Bool {
+            if identity {
+                NotificationCenter.default.post(name: Notification.Name(.bar), object: nil)
+            }
+        }
         
         UIView.animate(withDuration: 0.2, animations: {
             self.window?.viewWithTag(74396893368329)?.alpha = 0

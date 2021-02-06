@@ -123,7 +123,8 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
     var isFirstLaunch = true
     var isTouchIDCanceled = false
     var isProfileImageUpload:Bool = false
-    
+    var isIdentityUpload:Bool = false
+
     var walletOperationsViewOrigin = CGPoint(x: 0, y: 0)
     
     var kullanici: digilira.auth = try! secretKeys.userData()
@@ -635,18 +636,37 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         if let user = try? secretKeys.userData() {
             
             switch user.status {
-            case 1: 
-                throwEngine.alertWarning(title: "Hesabınız Onaylanmadı", message: "Lütfen kurallara uygun olarak yeniden görsel yükleyin.", error: true)
+            case 1:
+                
+                if let selfied = UserDefaults.standard.value(forKey: "isSelfied") as? Bool {
+                    if selfied {
+                        throwEngine.alertWarning(title: "Hesabınız Onaylanmadı", message: "Lütfen kurallara uygun olarak yeniden görsel yükleyin.", error: true)
+                        UserDefaults.standard.set(false, forKey: "isSelfied")
+                    }
+                }
+                
+                if let identity = UserDefaults.standard.value(forKey: "isIdentity") as? Bool {
+                    if identity {
+                        throwEngine.alertWarning(title: "Profiliniz Güncellendi", message: "Kimlik bilgileriniz doğrulandı, ancak KYC sürecini tamamlamak için kimliğinizin ön yüzü görünecek biçimde boş bir kağıda günün tarihini ve DigiliraPay yazarak Profil Onayı sayfasına yükleyin.", error: false)
+                        UserDefaults.standard.set(false, forKey: "isIdentity")
+                        
+                    }
+                }
+                 
+                break
+          
+            case 3:
+                throwEngine.alertWarning(title: "Hesabınız Onaylandı", message: "Hesabınız Onaylanmıştır", error: false)
                 UserDefaults.standard.set(false, forKey: "isSelfied")
                 break
-            case 2:
+            default:
                 let timestamp = Int64(Date().timeIntervalSince1970) * 1000
 
-                if let sign = try? BC.bytization([user.id, 2.description], timestamp) {
+                if let sign = try? BC.bytization([user.id, user.status.description], timestamp) {
                     let user = digilira.exUser.init(
                         id: user.id,
                         wallet: sign.wallet,
-                        status: 2,
+                        status: user.status,
                         signed: sign.signature,
                         publicKey: sign.publicKey,
                         timestamp: timestamp
@@ -658,14 +678,6 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                     digiliraPay.updateUser(user: data, signature: sign.signature)
                 }
                 return
-                
-                
-            case 3:
-                throwEngine.alertWarning(title: "Hesabınız Onaylandı", message: "Hesabınız Onaylanmıştır", error: false)
-                UserDefaults.standard.set(false, forKey: "isSelfied")
-                break
-            default:
-                break
             }
       
              
@@ -2078,6 +2090,14 @@ extension MainScreen: OperationButtonsDelegate
         if kullanici.status == 0 {
             verifyProfile()
             DispatchQueue.main.async { [self] in
+                
+                if let identity = UserDefaults.standard.value(forKey: "isIdentity") as? Bool {
+                    if identity {
+                        self.throwEngine.alertCaution(title: "Profil Onayı", message: "Profil onay süreciniz devam etmektedir.")
+                        return
+                    }
+                }
+                
                 self.throwEngine.alertCaution(title: "Profil Onayı", message: "Müşterini tanı politikası gereğince hesabınıza para yükleyebilmek için profil onay sürecini tamamlamanız gerekmektedir.")
             }
             return
@@ -2244,6 +2264,13 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
             
             switch k.status {
             case 0, 3:
+                
+                if let isIdentity = UserDefaults.standard.value(forKey: "isIdentity") as? Bool {
+                    if isIdentity {
+                        throwEngine.alertWarning(title: "Kontrol Aşamasında", message: "Gönderdiğiniz bilgiler kontrol edildikten sonra tarafınıza bildirim yapılacaktır. Eğer bildirimleri açmadıysanız, telefonunuzun ayarlar bölümünden bildirimlere izin vermeniz gerekmektedir.")
+                        return
+                    }
+                }
                 let verifyProfileXib = UIView().loadNib(name: "VerifyAccountView") as! VerifyAccountView
                 
                 verifyProfileXib.frame = CGRect(x: 0,
@@ -2667,7 +2694,13 @@ extension MainScreen: UIImagePickerControllerDelegate {
                         kullanici = user
                         self.throwEngine.warningView.removeFromSuperview()
                         self.throwEngine.alertWarning(title: "Bilgileriniz Yüklendi", message: "Gönderdiğiniz bilgiler kontrol edildikten sonra profiliniz güncellenecektir.", error: false)
-                        UserDefaults.standard.set(true, forKey: "isSelfied") 
+                        
+                        if isIdentityUpload {
+                            UserDefaults.standard.set(true, forKey: "isIdentity")
+                        } else {
+                            UserDefaults.standard.set(true, forKey: "isSelfied")
+                        }
+                        
                         checkEssentials()
                     }
                 } else {
@@ -2686,11 +2719,16 @@ extension MainScreen: UIImagePickerControllerDelegate {
 
                         let idHash = b64.hash256()
                         let timestamp = Int64(Date().timeIntervalSince1970) * 1000
+                        
+                        var userStatus = 2
+                        if isIdentityUpload {
+                            userStatus = 0
+                        }
 
-                        if let sign = try? BC.bytization([kullanici.id, idHash, 2.description], timestamp) {
+                        if let sign = try? BC.bytization([kullanici.id, idHash, userStatus.description], timestamp) {
                             let user = digilira.exUser.init(
                                 id: kullanici.id,
-                                wallet: sign.wallet, status:2,
+                                wallet: sign.wallet, status:userStatus,
                                 id1: b64,
                                 signed: sign.signature,
                                 publicKey: sign.publicKey,
@@ -2702,6 +2740,8 @@ extension MainScreen: UIImagePickerControllerDelegate {
                             
                             digiliraPay.updateUser(user: data, signature: sign.signature)
                         }
+                        
+                        
                     } else {
                         throwEngine.alertWarning(title: lang.const(x: Localize.keys.an_error_occured.rawValue), message: "Dosya yüklenemedi. Lütfen tekrar deneyin. Sıkıştırma Hatası", error: true)
                         return

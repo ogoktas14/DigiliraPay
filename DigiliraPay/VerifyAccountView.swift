@@ -37,7 +37,11 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     @IBOutlet weak var vMailText: UIView!
     
     @IBOutlet weak var understand: UISwitch!
-    
+    @IBOutlet weak var understand_2: UISwitch!
+    @IBOutlet weak var vTCNA: UIView!
+    @IBOutlet weak var profilStack: UIStackView!
+    @IBOutlet weak var selfieStack: UIStackView!
+
     @IBOutlet weak var onayImage: UIImageView!
     @IBOutlet weak var infoTitle: UILabel!
     
@@ -50,6 +54,8 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     var isTelHidden:Bool = true
     var isTCHidden:Bool = true
     var isMailHidden:Bool = true
+    
+    var isTooManyErrors:Int = 0
  
     let digiliraPay = digiliraPayApi()
     var kullanici = try? secretKeys.userData()
@@ -97,15 +103,53 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     @IBAction func yesIKnow(_ sender: Any) {
         if let tick = sender as? UISwitch {
             delegate?.dismissKeyboard()
-            if tick.isOn {
-                sendAndContiuneView.alpha = 1
-                sendAndContiuneView.isUserInteractionEnabled = true
-                let bottomOffset = CGPoint(x: 0, y: scrollAres.contentSize.height - scrollAres.bounds.size.height)
+
+            switch tick.tag {
+            case 1:
+                if tick.isOn {
+                    if understand_2.isOn {
+                        return
+                    }
+                    sendAndContiuneView.alpha = 1
+                    sendAndContiuneView.isUserInteractionEnabled = true
+                    let bottomOffset = CGPoint(x: 0, y: scrollAres.contentSize.height - scrollAres.bounds.size.height)
+                    scrollAres.setContentOffset(bottomOffset, animated: true)
+                } else {
+                    sendAndContiuneView.alpha = 0.4
+                    sendAndContiuneView.isUserInteractionEnabled = false
+                }
+                break
+            case 2:
+                let bottomOffset = CGPoint(x: 0, y: profilStack.frame.maxY)
                 scrollAres.setContentOffset(bottomOffset, animated: true)
-            } else {
-                sendAndContiuneView.alpha = 0.4
-                sendAndContiuneView.isUserInteractionEnabled = false
+                if tick.isOn {
+                    
+                    selfieStack.isHidden = false
+                    profilStack.isUserInteractionEnabled = false
+                    profilStack.alpha = 0.4
+                } else {
+                    selfieStack.isHidden = true
+                    profilStack.isUserInteractionEnabled = true
+                    profilStack.alpha = 1
+                }
+                
+                break
+            default:
+                break
             }
+            
+
+        }
+    }
+    
+    @objc func uploadImage() {
+        if understand.isOn {
+            delegate?.dismissVErifyAccountView()
+
+            delegate?.uploadIdentity()
+            
+        } else {
+            errors?.errorCaution(message: "Verdiğiniz bilgilerinizin doğruluğunu işaretlemediniz.", title: "Bilgilerinizi Doğrulayın")
         }
     }
     
@@ -219,9 +263,18 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
                 } 
                  
             }else {
+                isTooManyErrors += 1
+                
+                if isTooManyErrors < 2 {
                 errors?.evaluate(error: digilira.NAError.missingParameters)
+                } else {
+                    vTCNA.isHidden = false
+                    errors?.errorCaution(message: "Kimliğinizi doğrulamakta sorun yaşıyorsanız farklı bir doğrulama yöntemi kullanabilirsiniz.", title:"Doğrulama Hatası")
+                    
+                }
                 understand.isEnabled = true
                 understand.isOn = false
+                    
             }
         }
     }
@@ -320,6 +373,12 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     
     override func awakeFromNib()
     {
+        let upload = UITapGestureRecognizer(target: self, action: #selector(uploadImage))
+        onayImage.isUserInteractionEnabled = true
+        onayImage.addGestureRecognizer(upload)
+        
+        infoTitle.text = "Bir kağıda;\n- DigiliraPay\n- Günün tarihini\n- E-posta adresinizi\n- Cep telefonu numaranızı \nyazınız.\n\nYukarıda gösterildiği gibi kimliğinizin ön yüzünü ve yazdığınız bilgileri elinizde tutarak çektiğiniz bir fotoğrafı yükleyin.\nKimlik üzerindeki bilgilerin okunabilir olmasına dikkat edin."
+
         let sendAndContiuneGesture = UITapGestureRecognizer(target: self, action: #selector(sendAndContiune))
         let t1 = UITapGestureRecognizer(target: self, action: #selector(showHide))
         let t2 = UITapGestureRecognizer(target: self, action: #selector(showHide))
@@ -368,6 +427,13 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
         let tcrgx = "^\\d{11}$"
         let tcTest = NSPredicate(format: "SELF MATCHES %@", tcrgx)
         let result = tcTest.evaluate(with: value)
+        return result
+    }
+    
+    func validateName(value: String) -> Bool {
+        let nameGex = "^([a-zA-Z ğüşıöçĞÜŞİÖÇ.âêîôûÂÊÎÔÛé])*$"
+        let nameTest = NSPredicate(format: "SELF MATCHES %@", nameGex)
+        let result = nameTest.evaluate(with: value)
         return result
     }
     
@@ -456,39 +522,53 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
         
         let emailVal = validateEmail(enteredEmail: mailText.text!)
         let tcVal = validate(value: tcText.text!)
+        let nameVal = validateName(value: nameText.text!)
+        let surnameVal = validateName(value: surnameText.text!)
+
         
-        var error = false
-        
-        if (emailVal == false) {
-            mailText.textColor = .red
-            error = true
-        }
-        
-        if (tcVal == false) {
-            tcText.textColor = .red
-            error = true
-        }
-        
-        guard let tel = telText.text else {
+        if (nameVal == false) {
+            nameText.textColor = .red
+            errors?.evaluate(error: digilira.NAError.noName)
+            unlock()
             return
         }
+        
+        if (surnameVal == false) {
+            surnameText.textColor = .red
+            errors?.evaluate(error: digilira.NAError.noSurname)
+            unlock()
+            return
+        }
+        if (tcVal == false) {
+            tcText.textColor = .red
+            errors?.evaluate(error: digilira.NAError.noTC)
+            unlock()
+            return
+        }
+        
+        guard let tel = telText.text else {return}
         
         if tel.count != 17 {
             telText.textColor = .red
-            error = true
-        }
-
-        if error {
-            DispatchQueue.main.async { [self] in
-                errors?.evaluate(error: digilira.NAError.missingParameters)
-            }
-            
-            understand.isEnabled = true
-            sendAndContiuneView.isUserInteractionEnabled = true
-            sendAndContiuneView.alpha = 1
+            errors?.evaluate(error: digilira.NAError.noPhone)
+            unlock()
             return
         }
+        
+        if (emailVal == false) {
+            mailText.textColor = .red
+            errors?.evaluate(error: digilira.NAError.noEmail)
+            unlock()
+            return
+        }
+ 
         KYC()
+    }
+    
+    func unlock() {
+        understand.isEnabled = true
+        sendAndContiuneView.isUserInteractionEnabled = true
+        sendAndContiuneView.alpha = 1
     }
     
     @objc func goHome()

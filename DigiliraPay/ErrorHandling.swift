@@ -82,6 +82,22 @@ class ErrorHandling: NSObject {
             
             alertWarning(title: "Blokzincir Hatası", message: "Minimum miktarın altında transfer gerçekleştiremezsiniz." .debugDescription)
             break
+        case digilira.NAError.noPhone:
+            
+            alertWarning(title: "Hatalı Giriş", message: "Telefon numarası bilgisini eksik veya hatalı girdiniz.")
+            break
+        case digilira.NAError.noEmail:
+            alertWarning(title: "Hatalı Giriş", message: "E-posta bilgisini eksik veya hatalı girdiniz.")
+            break
+        case digilira.NAError.noTC:
+            alertWarning(title: "Hatalı Giriş", message: "TC kimlik numaranızı eksik veya hatalı girdiniz.")
+            break
+        case digilira.NAError.noName:
+            alertWarning(title: "Hatalı Giriş", message: "Ad bilgisi hatalı.")
+            break
+        case digilira.NAError.noSurname:
+            alertWarning(title: "Hatalı Giriş", message: "Soyad bilgisi hatalı.")
+            break
         default:
             DispatchQueue.main.async {
                 print(error)
