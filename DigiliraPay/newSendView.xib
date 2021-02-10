@@ -192,11 +192,11 @@
                                                 <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="hYg-Xq-pdB">
                                                     <rect key="frame" x="0.0" y="0.0" width="354" height="35"/>
                                                     <subviews>
-                                                        <view contentMode="scaleToFill" restorationIdentifier="b100" translatesAutoresizingMaskIntoConstraints="NO" id="vfM-Vf-XCj" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
+                                                        <view contentMode="scaleToFill" restorationIdentifier="b10" translatesAutoresizingMaskIntoConstraints="NO" id="vfM-Vf-XCj" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="0.0" width="84.666666666666671" height="35"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="%100" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qMo-8z-XSp">
-                                                                    <rect key="frame" x="23.333333333333336" y="7.0000000000000018" width="38" height="20.666666666666671"/>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="%10" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qMo-8z-XSp">
+                                                                    <rect key="frame" x="27.666666666666664" y="7.0000000000000018" width="29.666666666666664" height="20.666666666666671"/>
                                                                     <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="15"/>
                                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <nil key="highlightedColor"/>
@@ -208,10 +208,10 @@
                                                                 <constraint firstItem="qMo-8z-XSp" firstAttribute="centerX" secondItem="vfM-Vf-XCj" secondAttribute="centerX" id="hYn-Dm-SbG"/>
                                                             </constraints>
                                                         </view>
-                                                        <view contentMode="scaleToFill" restorationIdentifier="b50" translatesAutoresizingMaskIntoConstraints="NO" id="gRv-hH-yPg" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
+                                                        <view contentMode="scaleToFill" restorationIdentifier="b25" translatesAutoresizingMaskIntoConstraints="NO" id="gRv-hH-yPg" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                                                             <rect key="frame" x="89.666666666666686" y="0.0" width="85" height="35"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="%50" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FdU-Kb-b2e">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="%25" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FdU-Kb-b2e">
                                                                     <rect key="frame" x="27.666666666666671" y="7.0000000000000018" width="29.666666666666671" height="20.666666666666671"/>
                                                                     <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="15"/>
                                                                     <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -224,10 +224,10 @@
                                                                 <constraint firstItem="FdU-Kb-b2e" firstAttribute="centerY" secondItem="gRv-hH-yPg" secondAttribute="centerY" id="XJ2-Lz-bFx"/>
                                                             </constraints>
                                                         </view>
-                                                        <view contentMode="scaleToFill" restorationIdentifier="b25" translatesAutoresizingMaskIntoConstraints="NO" id="E4h-iE-a0d" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
+                                                        <view contentMode="scaleToFill" restorationIdentifier="b50" translatesAutoresizingMaskIntoConstraints="NO" id="E4h-iE-a0d" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                                                             <rect key="frame" x="179.66666666666666" y="0.0" width="84.666666666666657" height="35"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="%25" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2uM-E9-htR">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="%50" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2uM-E9-htR">
                                                                     <rect key="frame" x="27.333333333333343" y="7.0000000000000018" width="29.666666666666671" height="20.666666666666671"/>
                                                                     <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="15"/>
                                                                     <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -240,11 +240,11 @@
                                                                 <constraint firstItem="2uM-E9-htR" firstAttribute="centerX" secondItem="E4h-iE-a0d" secondAttribute="centerX" id="mK7-cG-fDV"/>
                                                             </constraints>
                                                         </view>
-                                                        <view contentMode="scaleToFill" restorationIdentifier="b10" translatesAutoresizingMaskIntoConstraints="NO" id="eIE-wB-YlE" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
+                                                        <view contentMode="scaleToFill" restorationIdentifier="b100" translatesAutoresizingMaskIntoConstraints="NO" id="eIE-wB-YlE" customClass="GradientView" customModule="DigiliraPay" customModuleProvider="target">
                                                             <rect key="frame" x="269.33333333333331" y="0.0" width="84.666666666666686" height="35"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="%10" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rg3-Q1-t0z">
-                                                                    <rect key="frame" x="27.333333333333371" y="7.0000000000000018" width="29.666666666666671" height="20.666666666666671"/>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="%100" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rg3-Q1-t0z">
+                                                                    <rect key="frame" x="23.333333333333371" y="7.0000000000000018" width="38" height="20.666666666666671"/>
                                                                     <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="15"/>
                                                                     <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <nil key="highlightedColor"/>
@@ -331,10 +331,10 @@
                 <constraint firstItem="8YY-TE-LN4" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="u58-hd-Ene"/>
             </constraints>
             <connections>
-                <outlet property="b10" destination="eIE-wB-YlE" id="jz4-g0-jOf"/>
-                <outlet property="b100" destination="vfM-Vf-XCj" id="uhG-Us-kIf"/>
-                <outlet property="b25" destination="E4h-iE-a0d" id="vfh-kL-4Dc"/>
-                <outlet property="b50" destination="gRv-hH-yPg" id="N4O-8y-u65"/>
+                <outlet property="b10" destination="vfM-Vf-XCj" id="3P1-OR-t80"/>
+                <outlet property="b100" destination="eIE-wB-YlE" id="zXb-Y6-GfB"/>
+                <outlet property="b25" destination="gRv-hH-yPg" id="fa1-b2-wff"/>
+                <outlet property="b50" destination="E4h-iE-a0d" id="0ok-KY-yvP"/>
                 <outlet property="coinSwitch" destination="oe7-7U-zmr" id="Wz9-F0-7oe"/>
                 <outlet property="commissionLabel" destination="Qlq-zg-v70" id="ll3-bZ-d1G"/>
                 <outlet property="content" destination="tIN-Ez-rbf" id="Xb0-w8-iTY"/>

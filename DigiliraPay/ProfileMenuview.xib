@@ -387,6 +387,7 @@
                 <outlet property="legalTextView" destination="05A-4L-2G3" id="ssn-p1-aPo"/>
                 <outlet property="legalViewWarning" destination="k8N-0q-L2B" id="ue8-gt-e2c"/>
                 <outlet property="mainnetTestnet" destination="vYy-Xr-Umz" id="Bns-wK-tm5"/>
+                <outlet property="mnet" destination="HIw-I3-O3b" id="ydz-Hu-5GA"/>
                 <outlet property="pinView" destination="OhJ-XS-vds" id="xQw-AZ-tau"/>
                 <outlet property="pinWarning" destination="sa2-Or-jB1" id="i0z-Bz-z4x"/>
                 <outlet property="profileVerifyImage" destination="jkB-dc-xvt" id="Ko7-Sg-RKD"/>

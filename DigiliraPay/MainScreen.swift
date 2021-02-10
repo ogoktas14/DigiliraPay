@@ -168,10 +168,6 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         
         let isT = BC.returnEnv()
         
-        if isT == "mainnet" {
-            profileMenuView.mainnetTestnet.isEnabled = false
-        }
-        
         do {
             let k = try secretKeys.userData()
             kullanici = k
@@ -193,6 +189,16 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                     do {
                         let dataKey = try crud.decodeDefaults(forKey: res, conformance: WavesDataTransaction.self)
                         let isauthorized = try crud.decodeDefaults(forKey: dataKey.value.data!, conformance: Int.self)
+                        
+                        DispatchQueue.main.async {
+                            
+                            if isT == "mainnet" {
+                                if isauthorized != 299 {
+                                    profileMenuView.mnet.isHidden = true
+                                }
+                            }
+                        }
+                        
                         UserDefaults.standard.set(isauthorized, forKey: "isAuthorized")
                     } catch {
                         print(error)
@@ -742,9 +748,14 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                         break
                     }
                     
+                    var ts = "XXX"
+                    if let itrx = asset1.issueTransaction {
+                        ts = itrx.name
+                    }
+                    
                     let digiliraBalance = digilira.DigiliraPayBalance.init(
                         tokenName: asset.tokenName,
-                        tokenSymbol: asset1.issueTransaction.name,
+                        tokenSymbol: ts,
                         availableBalance: asset1.balance,
                         decimal: asset.decimal,
                         balance: asset1.balance,
@@ -1913,9 +1924,9 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
         let line3 = digilira.line.init(mode: "text", text: "DigiliraPay kullanıcılarının Waves blokzinciri dışındaki transferleri")
         
         let btc3 = digilira.line.init(mode: "coin", text: "Bitcoin", icon: UIImage(named: "WBTC"), l1: "0.001 BTC", l2: "Ücretsiz", minSend: "0.001 BTC", minReceive: "0.001 BTC")
-        let eth3 = digilira.line.init(mode: "coin", text: "Ethereum", icon: UIImage(named: "WETH"), l1: "0.01 ETH", l2: "Ücretsiz", minSend: "0.01 ETH", minReceive: "0.01 ETH")
-        let waves3 = digilira.line.init(mode: "coin", text: "Waves", icon: UIImage(named: "Waves"), l1: "1 WAVES", l2: "Ücretsiz", minSend: "1 WAVES", minReceive: "1 WAVES")
-        let usd3 = digilira.line.init(mode: "coin", text: "Tether USDT", icon: UIImage(named: "USDT"), l1: "5 USDT", l2: "Ücretsiz", minSend: "10 USDT", minReceive: "10 USDT")
+        let eth3 = digilira.line.init(mode: "coin", text: "Ethereum", icon: UIImage(named: "WETH"), l1: "0.02 ETH", l2: "Ücretsiz", minSend: "0.01 ETH", minReceive: "0.01 ETH")
+        let waves3 = digilira.line.init(mode: "coin", text: "Waves", icon: UIImage(named: "Waves"), l1: "2 WAVES", l2: "Ücretsiz", minSend: "1 WAVES", minReceive: "1 WAVES")
+        let usd3 = digilira.line.init(mode: "coin", text: "Tether USDT", icon: UIImage(named: "USDT"), l1: "20 USDT", l2: "Ücretsiz", minSend: "10 USDT", minReceive: "10 USDT")
         let onet3 = digilira.line.init(mode: "coin", text: "One Tower", icon: UIImage(named: "One Tower"), l1: "Gönderilmez", l2: "Gönderilmez", minSend: "-", minReceive: "-" )
         
         let line4 = digilira.line.init(mode: "text", text: "(min): Komisyonlar hariç gönderebileceğiniz veya alabileceğiniz en az miktarları gösterir. Bu miktarların altında yapılan transferler alıcıya ulaşmaz ve iade talep edilemez.\n\n(kom): Waves blokzinciri dışına yapılan işlemler için Waves ağ geçidine ödenen ücreti ifade etmektedir.")

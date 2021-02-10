@@ -33,6 +33,7 @@ class ProfileMenuView: UIView {
     @IBOutlet weak var pinView: UIView!
     @IBOutlet weak var seedView: UIView!
     @IBOutlet weak var commissions: UIView!
+    @IBOutlet weak var mnet: UIView!
 
     @IBOutlet weak var profileWarning: UIImageView!
     @IBOutlet weak var seedBackupWarning: UIImageView!
