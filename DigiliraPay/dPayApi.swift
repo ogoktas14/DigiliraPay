@@ -25,7 +25,8 @@ class digiliraPayApi: NSObject {
     var onUpdate: ((_ result: digilira.auth?, _ status: Bool)->())?
     var onTicker: ((_ result: String)->())?
     var onBitexenTicker: ((_ result: bex.bexAllTicker)->())?
- 
+    private let wavesCrypto: WavesCrypto = WavesCrypto()
+
     
     var crud = centralRequest()
     var throwEngine = ErrorHandling()
@@ -90,7 +91,6 @@ class digiliraPayApi: NSObject {
         }
     }
     
-    
     func stringify (x: Any) -> String{
         
         if let y = x as? Int {
@@ -117,7 +117,6 @@ class digiliraPayApi: NSObject {
         
         return ""
     }
-    private let wavesCrypto: WavesCrypto = WavesCrypto()
 
     func validateUser(user: Data) -> Bool {
  
@@ -748,14 +747,25 @@ class ListedTokens: NSObject {
         let type = try JSONDecoder().decode(WavesDataTransaction.self, from: result)
        
         if type.type == "binary" {
-            let d = try JSONDecoder().decode(String.self, from: type.value.data!)
-            let data = d.components(separatedBy: "base64:")
-            let b64 = base64(data: data[1].description)
-            let jsonData = b64.data(using: .utf8)!
+            var serial: Data;
+            if #available(iOS 13.0, *) {
+                let d = try JSONDecoder().decode(String.self, from: type.value.data!)
+                let data = d.components(separatedBy: "base64:")
+                let b64 = base64(data: data[1].description)
+                serial = b64.data(using: .utf8)!
+            } else {
+                // Fallback on earlier versionsü
+                let str = String(describing: type.value)
+                let data = str.components(separatedBy: "base64:")
+                let data2 = data[1].components(separatedBy: "\"")
+                let b64 = base64(data: data2[0].description)
+                serial = b64.data(using: .utf8)!
+            }
+            
             let decoder = JSONDecoder()
             
             do {
-                let wavesListedTokens = try decoder.decode([WavesListedToken].self, from: jsonData)
+                let wavesListedTokens = try decoder.decode([WavesListedToken].self, from: serial)
                 return wavesListedTokens
             } catch {
                 throw digilira.NAError.tokenNotFound

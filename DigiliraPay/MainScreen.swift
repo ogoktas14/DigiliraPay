@@ -188,18 +188,39 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                     
                     do {
                         let dataKey = try crud.decodeDefaults(forKey: res, conformance: WavesDataTransaction.self)
-                        let isauthorized = try crud.decodeDefaults(forKey: dataKey.value.data!, conformance: Int.self)
-                        
-                        DispatchQueue.main.async {
+                        var serial: Data;
+                        if #available(iOS 13.0, *) {
+                            serial = dataKey.value.data!
+                            let isauthorized = try crud.decodeDefaults(forKey: serial, conformance: Int.self)
                             
-                            if isT == "mainnet" {
-                                if isauthorized != 299 {
-                                    profileMenuView.mnet.isHidden = true
+                            DispatchQueue.main.async {
+                                if isT == "mainnet" {
+                                    if isauthorized != 299 {
+                                        profileMenuView.mnet.isHidden = true
+                                    }
                                 }
                             }
+                            
+                            UserDefaults.standard.set(isauthorized, forKey: "isAuthorized")
+                        } else {
+                            // Fallback on earlier versions
+                            let str = String(describing: dataKey.value)
+                            let data = str.components(separatedBy: "integer(")
+                            let data2 = data[1].components(separatedBy: ")")
+                            
+                            DispatchQueue.main.async {
+                                if isT == "mainnet" {
+                                    if data2[0] != "299" {
+                                        profileMenuView.mnet.isHidden = true
+                                    }
+                                }
+                            }
+                            
+                            UserDefaults.standard.set(data2[0], forKey: "isAuthorized")
                         }
                         
-                        UserDefaults.standard.set(isauthorized, forKey: "isAuthorized")
+
+ 
                     } catch {
                         print(error)
                     }
@@ -847,7 +868,6 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         return double
     }
     
-    
     func setHeaderTotal() {
 
         if headerAnimation {
@@ -1091,8 +1111,6 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
     @objc func keyboardWillHide(notification: NSNotification) {
         isKeyboard = false
         self.view.frame.origin.y = 0
-        
-        
     }
     
     @objc func dismissKeyboard() {
@@ -1101,7 +1119,6 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
             self.view.endEditing(true)
         }
     }
-    
     
     @objc private func refreshData(_ sender: Any) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0) { [self] in
@@ -1135,7 +1152,6 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         }
         return nil
     }
-    
     
     func fetch() {
         if isFetching {
@@ -1240,6 +1256,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         profileView.center.x = -profileView.frame.width / 2
         
     }
+    
     override func viewDidAppear(_ animated: Bool)
     {
         openPinView()
@@ -1433,6 +1450,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
     {
         goSettingsScreen()
     }
+    
     @objc func tapProfileMenuView()
     { /* Block menu view close tap action */ }
     
@@ -1470,7 +1488,6 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         }
     }
     
-    
     func chooseQRSource () {
         let alert = UIAlertController(title: "QR Kod Seçin", message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Kamera", style: .default, handler: { _ in
@@ -1484,7 +1501,6 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         alert.addAction(UIAlertAction.init(title: "İptal", style: .cancel, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
-    
     
     func openCamera () {
         
@@ -1628,7 +1644,6 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
         }
     }
 }
-
 
 extension UIView {
     func fadeTransition(_ duration:CFTimeInterval) {
@@ -2677,8 +2692,6 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
     } 
 }
 
-
-
 extension MainScreen: UIImagePickerControllerDelegate {
     
     public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -2800,7 +2813,6 @@ extension Notification.Name {
     static let trxConfirm = Notification.Name("trxConfirm")
 }
 
-
 class MyTapGesture: UITapGestureRecognizer {
     var floatValue = 0
     var assetName = ""
@@ -2815,7 +2827,6 @@ class CopyGesture: UITapGestureRecognizer {
     var msg:String?
     
 }
-
 
 class depositeGesture: UITapGestureRecognizer {
     var floatValue:Float?

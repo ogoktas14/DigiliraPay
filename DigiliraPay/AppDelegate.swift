@@ -13,7 +13,7 @@ import UserNotifications
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
+    var window: UIWindow?
     func applicationDidEnterBackground(_ application: UIApplication) {
 
 
@@ -21,25 +21,68 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     }
     
-    
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        if let selfied = UserDefaults.standard.value(forKey: "isSelfied") as? Bool {
+            if selfied {
+                NotificationCenter.default.post(name: Notification.Name(.bar), object: nil)
+            }
+        }
+        
+        if let identity = UserDefaults.standard.value(forKey: "isIdentity") as? Bool {
+            if identity {
+                NotificationCenter.default.post(name: Notification.Name(.bar), object: nil)
+            }
+        }
+        
+        UIView.animate(withDuration: 0.2, animations: {
+            self.window?.viewWithTag(74396893368329)?.alpha = 0
+        }, completion: {_ in
+            self.window?.viewWithTag(74396893368329)?.removeFromSuperview()
+        })
+        
+        NotificationCenter.default.post(name: .didCompleteTask, object: nil)
+    }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) {
-        (granted, error) in
-        guard granted else { return }
-        DispatchQueue.main.async {
-        UIApplication.shared.registerForRemoteNotifications()
-            
-        }
-            
-            
+        let isCydia = UIDevice.current.isJailBroken
+        
+        if isCydia {
+            exit(-1)
         }
         
         return true
 
     }
-
+    
+    func applicationWillResignActive(_ application: UIApplication) {
+        if UserDefaults.standard.value(forKey: "isSecure") == nil {
+            blur()
+            return
+        }
+        guard let isOnScreen = UserDefaults.standard.value(forKey: "biometrics") as? Bool  else { return }
+        if isOnScreen {return}
+        blur()
+    }
+     
+    func blur() {
+        let screenSize: CGRect = UIScreen.main.bounds
+        
+        if let img = UIImage(named: "appLogoWhite") {
+            let myView = DLGradient(frame: CGRect(x: 0, y: 0, width: screenSize.width, height: screenSize.height))
+            let myLogo = UIImageView(frame: CGRect(x: (screenSize.width/2) - (img.size.width / 2),
+                                                   y: (screenSize.height/2) - (img.size.height / 2),
+                                                   width: img.size.width,
+                                                   height: img.size.height))
+            
+            myLogo.image = img
+            
+            myView.addSubview(myLogo)
+            myView.tag = 74396893368329
+            
+            self.window?.addSubview(myView)
+        }
+    }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
     // 1. Convert device token to string

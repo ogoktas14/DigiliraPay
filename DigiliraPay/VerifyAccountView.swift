@@ -41,7 +41,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     @IBOutlet weak var vTCNA: UIView!
     @IBOutlet weak var profilStack: UIStackView!
     @IBOutlet weak var selfieStack: UIStackView!
-
+    
     @IBOutlet weak var onayImage: UIImageView!
     @IBOutlet weak var infoTitle: UILabel!
     
@@ -56,7 +56,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     var isMailHidden:Bool = true
     
     var isTooManyErrors:Int = 0
- 
+    
     let digiliraPay = digiliraPayApi()
     var kullanici = try? secretKeys.userData()
     
@@ -103,7 +103,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     @IBAction func yesIKnow(_ sender: Any) {
         if let tick = sender as? UISwitch {
             delegate?.dismissKeyboard()
-
+            
             switch tick.tag {
             case 1:
                 if tick.isOn {
@@ -138,14 +138,14 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
                 break
             }
             
-
+            
         }
     }
     
     @objc func uploadImage() {
         if understand.isOn {
             delegate?.dismissVErifyAccountView()
-
+            
             delegate?.uploadIdentity()
             
         } else {
@@ -206,7 +206,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     }
     
     func parser(_ parser: XMLParser, foundCharacters string: String) {
-         
+        
         DispatchQueue.main.async { [self] in
             var sts = 0
             if string == "true" {
@@ -237,7 +237,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
                 guard let tel = telText.text else {return}
                 guard let tcno = tcText.text else {return}
                 guard let mail = mailText.text else {return}
-
+                
                 if let k = kullanici {
                     if let sign = try? BC.bytization([dogum.date.description, name, k.id, surname, mail, sts.description, tcno, tel], timestamp) {
                         let user = digilira.exUser.init(
@@ -261,12 +261,12 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
                         digiliraPay.updateUser(user: data, signature: sign.signature)
                     }
                 } 
-                 
+                
             }else {
                 isTooManyErrors += 1
                 
                 if isTooManyErrors < 2 {
-                errors?.evaluate(error: digilira.NAError.missingParameters)
+                    errors?.evaluate(error: digilira.NAError.missingParameters)
                 } else {
                     vTCNA.isHidden = false
                     errors?.errorCaution(message: "Kimliğinizi doğrulamakta sorun yaşıyorsanız farklı bir doğrulama yöntemi kullanabilirsiniz.", title:"Doğrulama Hatası")
@@ -274,7 +274,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
                 }
                 understand.isEnabled = true
                 understand.isOn = false
-                    
+                
             }
         }
     }
@@ -288,19 +288,19 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-
+        
         if textField.tag == 4 {
             guard let text = textField.text else { return false }
-                let newString = (text as NSString).replacingCharacters(in: range, with: string)
-                textField.text = format(with: "X (XXX) XXX-XX-XX", phone: newString)
-                return false
+            let newString = (text as NSString).replacingCharacters(in: range, with: string)
+            textField.text = format(with: "X (XXX) XXX-XX-XX", phone: newString)
+            return false
         }
         
         if textField.tag == 3 {
             guard let text = textField.text else { return false }
-                let newString = (text as NSString).replacingCharacters(in: range, with: string)
-                textField.text = format(with: "XXXXXXXXXXX", phone: newString)
-                return false
+            let newString = (text as NSString).replacingCharacters(in: range, with: string)
+            textField.text = format(with: "XXXXXXXXXXX", phone: newString)
+            return false
         }
         
         guard let textFieldText = textField.text,
@@ -317,7 +317,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
         
         if let tapped = gesture.view {
             let id = tapped.restorationIdentifier
-
+            
             switch id {
             case "t1":
                 if isFirstNameHidden {
@@ -368,7 +368,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
                 break
             }
         }
-
+        
     }
     
     override func awakeFromNib()
@@ -378,7 +378,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
         onayImage.addGestureRecognizer(upload)
         
         infoTitle.text = "Bir kağıda;\n- DigiliraPay\n- Günün tarihini\n- E-posta adresinizi\n- Cep telefonu numaranızı \nyazınız.\n\nYukarıda gösterildiği gibi kimliğinizin ön yüzünü ve yazdığınız bilgileri elinizde tutarak çektiğiniz bir fotoğrafı yükleyin.\nKimlik üzerindeki bilgilerin okunabilir olmasına dikkat edin."
-
+        
         let sendAndContiuneGesture = UITapGestureRecognizer(target: self, action: #selector(sendAndContiune))
         let t1 = UITapGestureRecognizer(target: self, action: #selector(showHide))
         let t2 = UITapGestureRecognizer(target: self, action: #selector(showHide))
@@ -386,7 +386,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
         let t4 = UITapGestureRecognizer(target: self, action: #selector(showHide))
         let t5 = UITapGestureRecognizer(target: self, action: #selector(showHide))
         let t6 = UITapGestureRecognizer(target: self, action: #selector(showHide))
-
+        
         vNameText.addGestureRecognizer(t1)
         vSurnameText.addGestureRecognizer(t2)
         vTcText.addGestureRecognizer(t3)
@@ -406,20 +406,26 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
         mailText.delegate = self
         
         let calendar = Calendar(identifier: .gregorian)
-
-            let currentDate = Date()
-            var components = DateComponents()
-            components.calendar = calendar
-
-            components.year = -12
-            components.month = 12
-            let maxDate = calendar.date(byAdding: components, to: currentDate)!
-
-            components.year = -100
-            let minDate = calendar.date(byAdding: components, to: currentDate)!
-
-            dogum.minimumDate = minDate
-            dogum.maximumDate = maxDate
+        
+        let currentDate = Date()
+        var components = DateComponents()
+        components.calendar = calendar
+        
+        components.year = -12
+        components.month = 12
+        let maxDate = calendar.date(byAdding: components, to: currentDate)!
+        
+        components.year = -13
+        components.month = 13
+        let maxDate1 = calendar.date(byAdding: components, to: currentDate)!
+        
+        components.year = -100
+        let minDate = calendar.date(byAdding: components, to: currentDate)!
+        
+        dogum.minimumDate = minDate
+        dogum.maximumDate = maxDate
+        
+        dogum.setDate(maxDate1, animated: true)
         
     }
     
@@ -496,16 +502,16 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
         let numbers = phone.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
         var result = ""
         var index = numbers.startIndex // numbers iterator
-
+        
         // iterate over the mask characters until the iterator of numbers ends
         for ch in mask where index < numbers.endIndex {
             if ch == "X" {
                 // mask requires a number in this place, so take the next one
                 result.append(numbers[index])
-
+                
                 // move numbers iterator to the next index
                 index = numbers.index(after: index)
-
+                
             } else {
                 result.append(ch) // just append a mask character
             }
@@ -524,7 +530,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
         let tcVal = validate(value: tcText.text!)
         let nameVal = validateName(value: nameText.text!)
         let surnameVal = validateName(value: surnameText.text!)
-
+        
         
         if (nameVal == false) {
             nameText.textColor = .red
@@ -561,7 +567,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
             unlock()
             return
         }
- 
+        
         KYC()
     }
     
@@ -589,17 +595,4 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
         }
     }
 }
-extension UIDatePicker {
-    func set18YearValidation() {
-        let currentDate: Date = Date()
-        var calendar: Calendar = Calendar(identifier: Calendar.Identifier.gregorian)
-        calendar.timeZone = TimeZone(identifier: "UTC")!
-        var components: DateComponents = DateComponents()
-        components.calendar = calendar
-        components.year = -12
-        let maxDate: Date = calendar.date(byAdding: components, to: currentDate)!
-        components.year = -90
-        let minDate: Date = calendar.date(byAdding: components, to: currentDate)!
-        self.minimumDate = minDate
-        self.maximumDate = maxDate
-    } }
+

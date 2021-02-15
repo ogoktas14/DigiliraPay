@@ -136,7 +136,6 @@ class Blockchain: NSObject {
         }
     }
     
-    
     // MARK: - DepositeAddresses
     struct DepositeAddresses: Codable {
         let type: String
@@ -207,7 +206,6 @@ class Blockchain: NSObject {
     var onWavesTokenResponse: ((_ result: Data, _ statusCode: Int) ->())?
     var onWavesNodeResponse: ((_ result: Data, _ statusCode: Int) ->())?
     var onWavesDataResponse: ((_ result: Data, _ statusCode: Int) ->())?
-    
     
     func checkWavesBalance(address: String) {
         WavesSDK.shared.services
@@ -658,7 +656,6 @@ class Blockchain: NSObject {
                             return }
                         
                         do{
-                            var jsonResponse = try? (JSONSerialization.jsonObject(with: dataResponse) as! Dictionary<String, AnyObject>)
                             
                             let ifError = try? JSONDecoder().decode(WavesTokenError.self, from: dataResponse)
                             let ifApiError = try? JSONDecoder().decode(WavesAPIError.self, from: dataResponse)
@@ -913,24 +910,7 @@ class Blockchain: NSObject {
             print (error)
         }
     }
-    
-    func getWalletAddress(address: String) {
-        onWavesApiError = { error, status, path in
-            
-        }
-        
-        DispatchQueue.global(qos: .background).async  {
-            self.onWavesNodeResponse = { result, status in
-                let defaults = UserDefaults.standard
-                defaults.set(result, forKey: "walletStatus")
-            }
-            
-            self.wavesNodeRequests(path: "/addresses/data/" + self.returnDataAddress() + "/" + address)
-        }
-        
-        
-    }
-    
+ 
     func returnPublicKey() -> String {
         let gatewayPublicAddress = "57EFni8M1XesEurFh3c4jnpLExP2PCPd5TRrwMjePAT4"
         let mainnetDataPublic = "4snGCeL4Wjopx9awWd7pfdqUYyN1CLqbPz66bn7VY8oe"
@@ -1018,7 +998,6 @@ class Blockchain: NSObject {
             })
             .disposed(by: self.disposeBag)
     }
-    
     
     func checkTransactions (address: String, returnCompletion: @escaping ([NodeService.DTO.Transaction]) -> () ) {
         WavesSDK.shared.services.nodeServices.transactionNodeService

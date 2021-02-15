@@ -13,11 +13,10 @@ class LegalView: UIView {
     
     @IBOutlet weak var resetAppLink: UIButton!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var contentLabel: UILabel!
+    @IBOutlet weak var contentText: UITextView!
     @IBOutlet weak var confirmView: UIView!
     @IBOutlet weak var confirmAreaView: UIView!
     @IBOutlet weak var backView: UIView!
-    @IBOutlet weak var content: UIView!
 
     let throwEngine = ErrorHandling()
     weak var delegate: LegalDelegate?
@@ -30,8 +29,14 @@ class LegalView: UIView {
     
     let BC = Blockchain()
     
+    override func didMoveToSuperview() {
+        contentText.isScrollEnabled = true
+    }
+    
     override func awakeFromNib()
     {
+        contentText.contentInset = UIEdgeInsets(top: -7.0,left: 0.0,bottom: 0,right: 0.0);
+        
         self.buffer = self.confirmAreaView.frame.origin.y
         let isMainnet = try! BC.getChain()
         
@@ -50,7 +55,6 @@ class LegalView: UIView {
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
         swipeLeft.direction = .left
         self.addGestureRecognizer(swipeLeft)
-        content.addGestureRecognizer(swipeLeft)
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
@@ -137,7 +141,7 @@ class LegalView: UIView {
         } else {
             // Fallback on earlier versions
         }
-        
+
         tapOkGesture = UITapGestureRecognizer(target: self, action: #selector(setOK))
         confirmView.addGestureRecognizer(tapOkGesture)
         tapOkGesture.isEnabled = true

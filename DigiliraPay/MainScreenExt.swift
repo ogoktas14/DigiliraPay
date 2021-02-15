@@ -570,7 +570,7 @@ extension MainScreen: LegalDelegate // kullanım sözleşmesi gibi view'ların g
         
         
         legalXib.titleLabel.text = mode.title
-        legalXib.contentLabel.text = mode.text
+        legalXib.contentText.text = mode.text
         legalXib.setView()
         for subView in profileSettingsView.subviews
         { subView.removeFromSuperview() }

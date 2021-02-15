@@ -240,7 +240,10 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
             }
         }
         
-        waitPlease()
+        DispatchQueue.main.async { [self] in
+            waitPlease()
+        }
+
         BC.createMainnet(imported: imported, importedSeed: seed)
     }
     
@@ -389,12 +392,12 @@ class DynamicViewController: UIViewController, LegalDelegate {
         
         if versionLegal == nil {
             legalXib.titleLabel.text = digilira.legalView.title
-            legalXib.contentLabel.text = digilira.legalView.text
+            legalXib.contentText.text = digilira.legalView.text
         }
         
         if versionTerms == nil {
             legalXib.titleLabel.text = digilira.termsOfUse.title
-            legalXib.contentLabel.text = digilira.termsOfUse.text
+            legalXib.contentText.text = digilira.termsOfUse.text
         }
         
         
