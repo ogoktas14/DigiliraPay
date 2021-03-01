@@ -537,8 +537,7 @@ class newSendView: UIView {
             print(error)
         }
     }
- 
-    
+  
     @objc func calcPrice(text: String) {
         if let coin = selectedCoinX {
             if text == "" {
@@ -750,8 +749,7 @@ class newSendView: UIView {
             BC.isOurMember(external: external)
         }
     }
-    
-    
+     
     func dismissKeyboard() {
         self.endEditing(true)
     }

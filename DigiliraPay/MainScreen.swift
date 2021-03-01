@@ -1557,7 +1557,13 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
         if isSuccessView { //eger basarili ekrani aciksa kapat
             return
         }
-        goWalletScreen(coin: recognizer.assetName)
+        if let token = try? BC.returnAsset(assetId: recognizer.assetName) {
+            let tokenArray = [token]
+            showMyFQr(coin: tokenArray);
+        }
+        
+        
+        //goWalletScreen(coin: recognizer.assetName)
         
     }
     
@@ -2111,7 +2117,7 @@ extension MainScreen: OperationButtonsDelegate
         .lightContent
     }
     
-    func showMyFQr() {
+    func showMyFQr(coin: [WavesListedToken] = []) {
         
         if kullanici.status == 0 {
             verifyProfile()
@@ -2140,29 +2146,35 @@ extension MainScreen: OperationButtonsDelegate
         paraYatirView.delegate = self
         paraYatirView.errors = self
         
-        do {
-            let coins = try BC.returnCoins()
-            var arr:[WavesListedToken] = []
-            
-            if let result = UserDefaults.standard.value(forKey: "isAuthorized") as? Int {
-                for coin in coins {
-                    if coin.role <= result {
-                        arr.append(coin)
+        if (coin.count == 0) {
+            do {
+                let coins = try BC.returnCoins()
+                var arr:[WavesListedToken] = []
+                
+                if let result = UserDefaults.standard.value(forKey: "isAuthorized") as? Int {
+                    for coin in coins {
+                        if coin.role <= result {
+                            arr.append(coin)
+                        }
+                    }
+                } else {
+                    for coin in coins {
+                        if coin.role <= 200 {
+                            arr.append(coin)
+                        }
                     }
                 }
-            } else {
-                for coin in coins {
-                    if coin.role <= 200 {
-                        arr.append(coin)
-                    }
-                }
-            }
-            paraYatirView.Filtered = arr
+                paraYatirView.Filtered = arr
 
-        } catch {
-            throwEngine.evaluateError(error: digilira.NAError.tokenNotFound)
-            return
+            } catch {
+                throwEngine.evaluateError(error: digilira.NAError.tokenNotFound)
+                return
+            }
+        } else {
+            paraYatirView.Filtered = coin
         }
+        
+
         paraYatirView.Ticker = Ticker
         
         for subView in qrView.subviews

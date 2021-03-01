@@ -71,7 +71,7 @@ class ParaYatirView:UIView {
             ]
         case 1:
              array = [
-                "One Tower AVM resmi sadakat jetonudur.\n\nHerhangi bir yatırma limiti bulunmamaktadır."
+                "\(coin) sadakat jetonudur.\n\nHerhangi bir yatırma limiti bulunmamaktadır."
             ]
         default:
              array = [
@@ -340,12 +340,7 @@ class ParaYatirView:UIView {
             }
         case digilira.wavesNetwork:
             
-            switch coin.tokenName {
-            case "One Tower":
-                constants(coin: "One Tower", symbol: "", min: "", mode: 1)
-            default:
-                constants(coin: "Waves", symbol: "", min: "", mode: 0)
-            }
+            constants(coin: coin.tokenName, symbol: "", min: "", mode: 0)
             
             let address = kullanici?.wallet
             return address

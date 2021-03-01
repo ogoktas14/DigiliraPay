@@ -36,7 +36,7 @@ class CreditCardView : UIView {
     {
         let t = address.title(for: .normal)
         pasteboard.string = address.title(for: .normal)
-        self.address.setTitle("Address Kopyalandı", for: .normal)
+        self.address.setTitle("Cüzdan Adresiniz Kopyalandı", for: .normal)
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [self] in
             self.address.setTitle(t, for: .normal)
