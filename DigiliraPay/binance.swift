@@ -108,7 +108,7 @@ extension binance: URLSessionDelegate {
            //Local and Remote certificate Data
            let remoteCertificateData:NSData =  SecCertificateCopyData(certificate!)
            //let LocalCertificate = Bundle.main.path(forResource: "github.com", ofType: "cer")
-        let pathToCertificate = Bundle.main.path(forResource: digilira.sslPinning.binance, ofType: digilira.sslPinning.fileType)
+            let pathToCertificate = Bundle.main.path(forResource: digilira.sslPinning.binance, ofType: digilira.sslPinning.fileType)
            let localCertificateData:NSData = NSData(contentsOfFile: pathToCertificate!)!
            
            //Compare certificates
@@ -120,7 +120,9 @@ extension binance: URLSessionDelegate {
            else{
                completionHandler(.cancelAuthenticationChallenge,nil)
            }
-       }
+       } else {
+        completionHandler(.cancelAuthenticationChallenge,nil)
+    }
    }
    
 }

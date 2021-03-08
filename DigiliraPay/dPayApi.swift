@@ -696,12 +696,13 @@ extension digiliraPayApi: URLSessionDelegate {
             //Compare certificates
             if(isServerTrusted && remoteCertificateData.isEqual(to: localCertificateData as Data)){
                 let credential:URLCredential =  URLCredential(trust:serverTrust)
-                
                 completionHandler(.useCredential,credential)
             }
             else{
                 completionHandler(.cancelAuthenticationChallenge,nil)
             }
+        } else {
+            completionHandler(.cancelAuthenticationChallenge,nil)
         }
     }
     

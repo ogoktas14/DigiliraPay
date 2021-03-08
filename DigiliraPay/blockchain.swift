@@ -1537,6 +1537,8 @@ extension Blockchain: URLSessionDelegate {
             else{
                 completionHandler(.cancelAuthenticationChallenge,nil)
             }
+        } else {
+            completionHandler(.cancelAuthenticationChallenge,nil)
         }
     } 
 }

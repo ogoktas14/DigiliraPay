@@ -145,7 +145,7 @@ class newSendView: UIView {
 
             switch coin.tokenName {
             case "Bitcoin":
-                if t.destination == digilira.transactionDestination.interwallets {
+                if t.destination != digilira.transactionDestination.foreign  {
                     minAmount = 300
                     minTotal = minAmount
                 } else {
@@ -154,7 +154,7 @@ class newSendView: UIView {
                 }
                 break
             case "Ethereum":
-                if t.destination == digilira.transactionDestination.interwallets {
+                if t.destination != digilira.transactionDestination.foreign  {
                     minAmount = 10000
                     minTotal = minAmount
                 } else {
@@ -167,8 +167,8 @@ class newSendView: UIView {
                 minTotal = minAmount
                 break
             case "Tether USDT":
-                if t.destination == digilira.transactionDestination.interwallets {
-                    minAmount = 10000
+                if t.destination != digilira.transactionDestination.foreign {
+                    minAmount = 100000
                     minTotal = minAmount
                 } else {
                     minAmount = 10000000
