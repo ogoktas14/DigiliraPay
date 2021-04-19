@@ -14,7 +14,7 @@ import Locksmith
 import QRCoder
 import LocalAuthentication
 
-class digiliraPayApi: NSObject {
+class DigiliraPayService: NSObject {
     private var isCertificatePinning: Bool = true
     
     var token:String?
@@ -22,9 +22,9 @@ class digiliraPayApi: NSObject {
 
     var onTouchID: ((_ result: Bool, _ status: String)->())?
     var onResponse: ((_ result: [String:Any], _ statusCode: Int?)->())?
-    var onUpdate: ((_ result: digilira.auth?, _ status: Bool)->())?
+    var onUpdate: ((_ result: Constants.auth?, _ status: Bool)->())?
     var onTicker: ((_ result: String)->())?
-    var onBitexenTicker: ((_ result: bex.bexAllTicker)->())?
+    var onBitexenTicker: ((_ result: BexSign.bexAllTicker)->())?
     private let wavesCrypto: WavesCrypto = WavesCrypto()
 
     
@@ -75,39 +75,39 @@ class digiliraPayApi: NSObject {
     }
     
     func getChain() throws -> String {
-        guard let chainId = WavesSDK.shared.enviroment.chainId else { throw digilira.NAError.emptyAuth }
+        guard let chainId = WavesSDK.shared.enviroment.chainId else { throw Constants.NAError.emptyAuth }
         return chainId
     }
     
-    func getKeyChainSource() throws -> digilira.keychainData {
-        guard let chainId = WavesSDK.shared.enviroment.chainId else { throw digilira.NAError.emptyAuth }
+    func getKeyChainSource() throws -> Constants.keychainData {
+        guard let chainId = WavesSDK.shared.enviroment.chainId else { throw Constants.NAError.emptyAuth }
         switch chainId {
         case "T":
-            return digilira.keychainData.init(authenticateData: "authenticate", sensitiveData: "sensitive", wavesToken: "wavesToken")
+            return Constants.keychainData.init(authenticateData: "authenticate", sensitiveData: "sensitive", wavesToken: "wavesToken")
         case "W":
-            return digilira.keychainData.init(authenticateData: "authenticateMainnet", sensitiveData: "sensitiveMainnet", wavesToken: "wavesTokenMainnet")
+            return Constants.keychainData.init(authenticateData: "authenticateMainnet", sensitiveData: "sensitiveMainnet", wavesToken: "wavesTokenMainnet")
         default:
-            throw digilira.NAError.emptyAuth
+            throw Constants.NAError.emptyAuth
         }
     }
     
-    func stringify (x: Any) -> String{
+    func stringify (AnyVal: Any) -> String{
         
-        if let y = x as? Int {
-            return y.description
+        if let proxyVal = AnyVal as? Int {
+            return proxyVal.description
         }
         
-        if let y = x as? Double {
-            return y.description
+        if let proxyVal = AnyVal as? Double {
+            return proxyVal.description
         }
         
         
-        if let y = x as? String {
-            return y
+        if let proxyVal = AnyVal as? String {
+            return proxyVal
         }
         
-        if let y = x as? Bool {
-            if (y) {
+        if let proxyVal = AnyVal as? Bool {
+            if (proxyVal) {
                 return "true"
             } else {
                 return "false"
@@ -120,7 +120,7 @@ class digiliraPayApi: NSObject {
 
     func validateUser(user: Data) -> Bool {
  
-        let dataAddress = Blockchain().returnPublicKey()
+        let dataAddress = BlockchainService().returnPublicKey()
         do {
             let jsonResponse = try JSONSerialization.jsonObject(with: user) as! Dictionary<String, AnyObject>
             let sorted = jsonResponse.sorted(by: { $0.key < $1.key })
@@ -130,13 +130,13 @@ class digiliraPayApi: NSObject {
             for item in sorted {
                 switch item.key {
                 case "zmark":
-                    sign = stringify(x: item.value)
+                    sign = stringify(AnyVal: item.value)
                     break
                 case "id", "id1", "":
                     break
                 default:
                     
-                    var val = stringify(x: item.value)
+                    var val = stringify(AnyVal: item.value)
  
                     if (item.key == "imported" || item.key == "isTether") {
                         if (val == "0") {
@@ -189,7 +189,7 @@ class digiliraPayApi: NSObject {
                     if validateUser(user: data) {
                         do {
                             if secretKeys.LocksmithSave(forKey: try getKeyChainSource().authenticateData, data: data) {
-                                let user = try crud.decodeDefaults(forKey: data, conformance: digilira.auth.self)
+                                let user = try crud.decodeDefaults(forKey: data, conformance: Constants.auth.self)
                                 
                                 self.onUpdate!(user, true)
                             } else {
@@ -212,7 +212,7 @@ class digiliraPayApi: NSObject {
                 self.onUpdate!(nil, false)
             }
         } 
-        crud.request(rURL: crud.getApiURL() + digilira.api.userUpdate, postData: user, method: req.method.put, signature: signature)
+        crud.request(rURL: crud.getApiURL() + Constants.api.userUpdate, postData: user, method: req.method.put, signature: signature)
     }
     
     func updateSmartAcountScript(data: Data, signature: String) {
@@ -224,7 +224,7 @@ class digiliraPayApi: NSObject {
                 print("fail")
             }
         }
-        crud.request(rURL: crud.getApiURL() + digilira.api.userUpdate, postData: data, method: req.method.put)
+        crud.request(rURL: crud.getApiURL() + Constants.api.userUpdate, postData: data, method: req.method.put)
     }
     
     func saveTransactionTransfer(JSON : Data?, signature: String) {
@@ -237,7 +237,7 @@ class digiliraPayApi: NSObject {
             }
         }
         
-        crud.request(rURL: crud.getApiURL() + digilira.api.transferNew, postData: JSON, isReturn: true, signature: signature)
+        crud.request(rURL: crud.getApiURL() + Constants.api.transferNew, postData: JSON, isReturn: true, signature: signature)
     }
     
     func convertImageToBase64String (img: UIImage) -> String {
@@ -250,7 +250,7 @@ class digiliraPayApi: NSObject {
         return image!
     }
     
-    func ticker (ticker: binance.BinanceMarketInfo) -> digilira.ticker {
+    func ticker (ticker: BinanceService.BinanceMarketInfo) -> Constants.ticker {
         var btcUsdtPrice: Double = 0
         var ethUsdtPrice: Double = 0
         var wavesUsdtPrice: Double = 0
@@ -283,7 +283,7 @@ class digiliraPayApi: NSObject {
             }
         }
         
-        let res = digilira.ticker.init(ethUSDPrice: ethUsdtPrice,
+        let res = Constants.ticker.init(ethUSDPrice: ethUsdtPrice,
                                        btcUSDPrice: btcUsdtPrice,
                                        wavesUSDPrice: wavesUsdtPrice,
                                        usdTLPrice: tryUsdtPrice
@@ -291,7 +291,7 @@ class digiliraPayApi: NSObject {
         return res
     }
     
-    func ratePrice(price: Double, asset: digilira.DigiliraPayBalance, symbol: digilira.ticker) throws -> (Double, String, Double) {
+    func ratePrice(price: Double, asset: Constants.DigiliraPayBalance, symbol: Constants.ticker) throws -> (Double, String, Double) {
         let double = Double(truncating: pow(10,asset.decimal) as NSNumber)
 
         switch asset.network {
@@ -300,7 +300,7 @@ class digiliraPayApi: NSObject {
             do {
                 let tokens = try listedTokens.returnAsset(assetId: asset.tokenName)
                 switch tokens.network {
-                case digilira.bitcoinNetwork:
+                case Constants.bitcoinNetwork:
                     
                     if let tl = symbol.usdTLPrice {
                         if let btc = symbol.btcUSDPrice {
@@ -309,7 +309,7 @@ class digiliraPayApi: NSObject {
                             return (Double(round(double * result)), tokens.token, tick)
                         }
                     }
-                case digilira.ethereumNetwork:
+                case Constants.ethereumNetwork:
                     switch asset.tokenSymbol {
                     case "WETH", "Ethereum":
                         if let tl = symbol.usdTLPrice {
@@ -327,10 +327,10 @@ class digiliraPayApi: NSObject {
                             }
                         break
                     default:
-                        throw digilira.NAError.emptyAuth
+                        throw Constants.NAError.emptyAuth
                     }
                
-                case digilira.wavesNetwork:
+                case Constants.wavesNetwork:
                     
                     switch tokens.token {
                     case "WAVES":
@@ -352,7 +352,7 @@ class digiliraPayApi: NSObject {
                     return (Double(round(double * result)), tokens.token, tick)
                 }
             } catch {
-                throw digilira.NAError.emptyAuth
+                throw Constants.NAError.emptyAuth
             }
             break
         case "bitexen":
@@ -365,19 +365,19 @@ class digiliraPayApi: NSObject {
             break
         }
          
-         throw digilira.NAError.emptyAuth
+         throw Constants.NAError.emptyAuth
     }
     
-    func exchange(amount: Int64, coin:WavesListedToken, symbol:digilira.ticker) throws -> Double {
+    func exchange(amount: Int64, coin:WavesListedToken, symbol:Constants.ticker) throws -> Double {
         let double = Double(truncating: pow(10,coin.decimal) as NSNumber)
         let amountFloat = Double.init(Double.init(amount) / double)
         
         switch coin.network {
-        case digilira.bitcoinNetwork:
+        case Constants.bitcoinNetwork:
             return amountFloat  * symbol.btcUSDPrice! * symbol.usdTLPrice!
-        case digilira.ethereumNetwork:
+        case Constants.ethereumNetwork:
             return amountFloat * symbol.ethUSDPrice! * symbol.usdTLPrice!
-        case digilira.wavesNetwork:
+        case Constants.wavesNetwork:
             switch coin.token {
             case "WAVES":
                 return amountFloat * symbol.wavesUSDPrice! * symbol.usdTLPrice!
@@ -385,7 +385,7 @@ class digiliraPayApi: NSObject {
                 return amountFloat * 1
             }
         default:
-            throw digilira.NAError.emptyAuth
+            throw Constants.NAError.emptyAuth
         }
     }
     
@@ -394,12 +394,12 @@ class digiliraPayApi: NSObject {
     }
     
     func returnBexChain() -> String{
-        guard let chainId = WavesSDK.shared.enviroment.chainId else { return bex.bexApiDefaultKey.key }
+        guard let chainId = WavesSDK.shared.enviroment.chainId else { return BexSign.bexApiDefaultKey.key }
         switch chainId {
         case "W":
-            return bex.bexApiDefaultKey.testKey
+            return BexSign.bexApiDefaultKey.testKey
         default:
-            return bex.bexApiDefaultKey.key
+            return BexSign.bexApiDefaultKey.key
         }
     }
     
@@ -452,7 +452,7 @@ class OpenUrlManager {
     }
     
     static var openUrl: URL?
-    static var onURL: ((_ result: digilira.QR)->())?
+    static var onURL: ((_ result: Constants.QR)->())?
     static var notSupportedYet: ((_ result: Bool, _ network: String)->())?
     
     class func parseUrlParams(openUrl: URL?) {
@@ -481,7 +481,7 @@ class OpenUrlManager {
             let digiliraURL = openUrl!.absoluteString.components(separatedBy: CharacterSet.init(charactersIn: "://"))
             if digiliraURL.count > 2 {
                 if caption == "digilirapay" {
-                    self.onURL!(digilira.QR.init(network: caption, address: digiliraURL[3]))
+                    self.onURL!(Constants.QR.init(network: caption, address: digiliraURL[3]))
                 }
             }
             break
@@ -495,7 +495,7 @@ class OpenUrlManager {
                 let double = Double(truncating: pow(10,8) as NSNumber)
                 amount = Int64(Double.init(data[1])! * double)
             }
-            self.onURL!(digilira.QR.init(network: caption, address: data[0], amount: amount))
+            self.onURL!(Constants.QR.init(network: caption, address: data[0], amount: amount))
             break
             
         case "waves":
@@ -511,7 +511,7 @@ class OpenUrlManager {
                 amount = Int64(Double.init(amountAssetId[0])! * double)
                 assetId = amountAssetId[1]
             }
-            self.onURL!(digilira.QR.init(network: caption, address: data[0], amount: amount, assetId: assetId))
+            self.onURL!(Constants.QR.init(network: caption, address: data[0], amount: amount, assetId: assetId))
             
             break
         default:
@@ -566,27 +566,27 @@ class OpenUrlManager {
             let btcresult = eval(template: bitcoinReg, address: address)
             
             if btcresult {
-                self.onURL!(digilira.QR.init(network: "bitcoin", address: address, amount: 0))
+                self.onURL!(Constants.QR.init(network: "bitcoin", address: address, amount: 0))
                 return
             }
             
             let btcresultSegwit = eval(template: bitcoinSegwit, address: address)
             
             if btcresultSegwit {
-                self.onURL!(digilira.QR.init(network: "bitcoin", address: address, amount: 0))
+                self.onURL!(Constants.QR.init(network: "bitcoin", address: address, amount: 0))
                 return
             }
             
             let ethresult = eval(template: ethereumReg, address: address)
             
             if ethresult {
-                self.onURL!(digilira.QR.init(network: "ethereum", address: address, amount: 0))
+                self.onURL!(Constants.QR.init(network: "ethereum", address: address, amount: 0))
                 return
             }
         }
         
         if result {
-            self.onURL!(digilira.QR.init(network: "waves", address: address, amount: 0, assetId: "WAVES"))
+            self.onURL!(Constants.QR.init(network: "waves", address: address, amount: 0, assetId: "WAVES"))
             return
         }
         self.notSupportedYet!(false, "-")
@@ -668,7 +668,7 @@ class OpenUrlManager {
     }
 }
 
-extension digiliraPayApi: URLSessionDelegate {
+extension DigiliraPayService: URLSessionDelegate {
     
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         
@@ -690,7 +690,7 @@ extension digiliraPayApi: URLSessionDelegate {
             //Local and Remote certificate Data
             let remoteCertificateData:NSData =  SecCertificateCopyData(certificate!)
             //let LocalCertificate = Bundle.main.path(forResource: "github.com", ofType: "cer")
-            let pathToCertificate = Bundle.main.path(forResource: digilira.sslPinning.cert, ofType: digilira.sslPinning.fileType)
+            let pathToCertificate = Bundle.main.path(forResource: Constants.sslPinning.cert, ofType: Constants.sslPinning.fileType)
             let localCertificateData:NSData = NSData(contentsOfFile: pathToCertificate!)!
             
             //Compare certificates
@@ -733,16 +733,16 @@ class ListedTokens: NSObject {
                 let token = tokens[i]
                 return token
             }
-            throw digilira.NAError.tokenNotFound
+            throw Constants.NAError.tokenNotFound
         } catch {
-            throw digilira.NAError.notListedToken
+            throw Constants.NAError.notListedToken
         }
     }
     
     func returnCoins() throws -> [WavesListedToken] {
         
         guard let result = UserDefaults.standard.value(forKey: "listedTokens") as? Data else {
-            throw digilira.NAError.tokenNotFound
+            throw Constants.NAError.tokenNotFound
         }
         
         let type = try JSONDecoder().decode(WavesDataTransaction.self, from: result)
@@ -769,10 +769,10 @@ class ListedTokens: NSObject {
                 let wavesListedTokens = try decoder.decode([WavesListedToken].self, from: serial)
                 return wavesListedTokens
             } catch {
-                throw digilira.NAError.tokenNotFound
+                throw Constants.NAError.tokenNotFound
             }
         }
-        throw digilira.NAError.tokenNotFound
+        throw Constants.NAError.tokenNotFound
     }
 }
 
@@ -789,7 +789,7 @@ class secretKeys: NSObject {
         }
     }
     
-    class func userData() throws -> digilira.auth {
+    class func userData() throws -> Constants.auth {
         var authenticateSource = "authenticate"
         
         if let environment = UserDefaults.standard.value(forKey: "environment") {
@@ -799,7 +799,7 @@ class secretKeys: NSObject {
         }
         
         do {
-            let data = try secretKeys.LocksmithLoad(forKey: authenticateSource, conformance: digilira.auth.self)
+            let data = try secretKeys.LocksmithLoad(forKey: authenticateSource, conformance: Constants.auth.self)
             if data.status == 2 {
                 if let selfied = UserDefaults.standard.value(forKey: "isSelfied") as? Bool {
                     if !selfied {
@@ -810,7 +810,7 @@ class secretKeys: NSObject {
             }
             return data
         } catch {
-            throw digilira.NAError.emptyAuth
+            throw Constants.NAError.emptyAuth
         }
     }
     
@@ -826,10 +826,10 @@ class secretKeys: NSObject {
                 }
                 
             } catch {
-                throw digilira.NAError.emptyAuth
+                throw Constants.NAError.emptyAuth
             }
         }
-        throw digilira.NAError.emptyAuth
+        throw Constants.NAError.emptyAuth
     }
     
     class func LocksmithSave(forKey: String, data: Data, setNil: Bool = false) -> Bool {
@@ -897,10 +897,10 @@ class centralRequest: NSObject {
     func getApiURL() -> String {
         if let environment = UserDefaults.standard.value(forKey: "environment") {
             if environment as! Bool {
-                return digilira.api.urlMainnet
+                return Constants.api.urlMainnet
             }
         }
-        return digilira.api.url
+        return Constants.api.url
     }
     
     func decodeDefaults<T>(forKey: Data, conformance: T.Type, setNil: Bool = false ) throws -> T where T: Decodable  {
@@ -932,17 +932,17 @@ class centralRequest: NSObject {
                 if !isReturn {return}
                 if let httpResponse = response as? HTTPURLResponse {
                     if error != nil {
-                        self.onError!(digilira.NAError.anErrorOccured, 555)
+                        self.onError!(Constants.NAError.anErrorOccured, 555)
                     } else if data != nil {
                         guard let dataResponse = data,
                               error == nil else {
                             switch httpResponse.statusCode {
                             case 400:
-                                self.onError!(digilira.NAError.E_400, httpResponse.statusCode)
+                                self.onError!(Constants.NAError.E_400, httpResponse.statusCode)
                             case 502:
-                                self.onError!(digilira.NAError.E_502, httpResponse.statusCode)
+                                self.onError!(Constants.NAError.E_502, httpResponse.statusCode)
                             default:
-                                self.onError!(digilira.NAError.anErrorOccured, 555)
+                                self.onError!(Constants.NAError.anErrorOccured, 555)
                             }
                             return }
                         self.onResponse!(dataResponse, httpResponse.statusCode)
@@ -975,7 +975,7 @@ extension centralRequest: URLSessionDelegate {
             
             let remoteCertificateData:NSData =  SecCertificateCopyData(certificate!)
             
-            let pathToCertificate = Bundle.main.path(forResource: digilira.sslPinning.cert, ofType: digilira.sslPinning.fileType)
+            let pathToCertificate = Bundle.main.path(forResource: Constants.sslPinning.cert, ofType: Constants.sslPinning.fileType)
             let localCertificateData:NSData = NSData(contentsOfFile: pathToCertificate!)!
             
             if(isServerTrusted && remoteCertificateData.isEqual(to: localCertificateData as Data)){

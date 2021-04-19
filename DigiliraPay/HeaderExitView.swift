@@ -151,11 +151,11 @@ class HeaderExitView: UIView{
         }
         
         do {
-            let loginCredits = try secretKeys.LocksmithLoad(forKey: sensitiveSource, conformance: digilira.login.self)
+            let loginCredits = try secretKeys.LocksmithLoad(forKey: sensitiveSource, conformance: Constants.login.self)
             let seed = loginCredits.seed
             return seed
         } catch {
-            throw digilira.NAError.seed404
+            throw Constants.NAError.seed404
         }
     }
     

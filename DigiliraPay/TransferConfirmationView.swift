@@ -31,7 +31,7 @@ class TransferConfirmationView: UIView {
     @IBOutlet weak var icon: UIImageView!
     @IBOutlet weak var c2: UIImageView!
 
-    var params: digilira.txConfMsg?
+    var params: Constants.txConfMsg?
     var confirmation: Bool = false
 
     let generator = UINotificationFeedbackGenerator()

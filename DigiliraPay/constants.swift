@@ -14,7 +14,7 @@ enum DeviceLockState {
     case unlocked
 }
  
-struct digilira {
+struct Constants {
     
     static let dummyName = "Satoshi Nakamoto"
     

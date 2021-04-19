@@ -76,7 +76,7 @@ class Verify_StartView: UIView {
         }
         
         do {
-            let loginCredits = try secretKeys.LocksmithLoad(forKey: sensitiveSource, conformance: digilira.login.self)
+            let loginCredits = try secretKeys.LocksmithLoad(forKey: sensitiveSource, conformance: Constants.login.self)
            
                 let seed = loginCredits.seed
             self.seed = seed

@@ -37,10 +37,10 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
 
     var onScreeen = false
     var onBoardingScrollView = UIScrollView()
-    let BC = Blockchain()
-    let digiliraPay = digiliraPayApi()
+    let BC = BlockchainService()
+    let digiliraPay = DigiliraPayService()
     
-    var QR:digilira.QR = digilira.QR.init()
+    var QR:Constants.QR = Constants.QR.init()
  
     private func initial2() {        
         letsGoView.isHidden = true
@@ -74,7 +74,7 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
         }
         
         do {
-            let loginCredits = try secretKeys.LocksmithLoad(forKey: sensitiveSource, conformance: digilira.login.self)
+            let loginCredits = try secretKeys.LocksmithLoad(forKey: sensitiveSource, conformance: Constants.login.self)
             let seed = loginCredits.seed
             
             nowLetsGo(imported: true,  seed: seed)
@@ -343,7 +343,7 @@ class DynamicViewController: UIViewController, LegalDelegate {
     var m: String?
     var v: Int?
     
-    func showLegal(mode: digilira.terms) {
+    func showLegal(mode: Constants.terms) {
         
     }
     
@@ -391,13 +391,13 @@ class DynamicViewController: UIViewController, LegalDelegate {
         legalXib.backView.isHidden = true
         
         if versionLegal == nil {
-            legalXib.titleLabel.text = digilira.legalView.title
-            legalXib.contentText.text = digilira.legalView.text
+            legalXib.titleLabel.text = Constants.legalView.title
+            legalXib.contentText.text = Constants.legalView.text
         }
         
         if versionTerms == nil {
-            legalXib.titleLabel.text = digilira.termsOfUse.title
-            legalXib.contentText.text = digilira.termsOfUse.text
+            legalXib.titleLabel.text = Constants.termsOfUse.title
+            legalXib.contentText.text = Constants.termsOfUse.text
         }
         
         

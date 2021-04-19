@@ -32,8 +32,8 @@ class WalletView: UIView {
     var frameValue = CGRect()
     var throwEngine = ErrorHandling()
     
-    let BC = Blockchain()
-    var trxs:[digilira.transfer] = []
+    let BC = BlockchainService()
+    var trxs:[Constants.transfer] = []
     var wallet: String?
     var ad_soyad: String?
     
@@ -109,8 +109,8 @@ class WalletView: UIView {
                                     notlisted = false
                                     let value = try JSONDecoder().decode(TransferTransactionModel.self, from: d)
                                     
-                                    guard value.assetID != digilira.sponsorToken else { return }
-                                    guard value.assetID != digilira.paymentToken else { return }
+                                    guard value.assetID != Constants.sponsorToken else { return }
+                                    guard value.assetID != Constants.paymentToken else { return }
                                     guard value.attachment != "BHceXVvk4bmLyBUoD1J25T" else { return }
                                                                       
                                     do {
@@ -120,7 +120,7 @@ class WalletView: UIView {
                                         }
                                     } catch {
                                         switch error {
-                                        case digilira.NAError.notListedToken:
+                                        case Constants.NAError.notListedToken:
                                             notlisted = true
                                         default:
                                             break
@@ -136,7 +136,7 @@ class WalletView: UIView {
                                     let strDate = dateFormatter.string(from: Date(milliseconds: Int64(dateWaves)) )
                                     let remarks = self.BC.base58(data: value.attachment ?? "Qmxva3ppbmNpciBUcmFuc2Zlcmk=")
                                     
-                                    self.trxs.append (digilira.transfer.init(type: value.type,
+                                    self.trxs.append (Constants.transfer.init(type: value.type,
                                                                              id: value.id,
                                                                              sender: value.sender,
                                                                              senderPublicKey: value.senderPublicKey,
@@ -334,7 +334,7 @@ extension WalletView: TransactionDetailCloseDelegate
             var fee = order.fee.description
             
             switch order.feeAssetID {
-            case digilira.sponsorToken, digilira.paymentToken, digilira.mainnetSponsorToken, digilira.mainnetPaymentToken:
+            case Constants.sponsorToken, Constants.paymentToken, Constants.mainnetSponsorToken, Constants.mainnetPaymentToken:
                 feeAsset = "DigiliraPay"
             case "WAVES":
                 feeAsset = "Waves"
@@ -347,12 +347,12 @@ extension WalletView: TransactionDetailCloseDelegate
             var z = 0.0.description + " " + coin.tokenSymbol
             let y = MainScreen.int2so(order.amount, digits: coin.decimal)
             
-            if order.destination == digilira.transactionDestination.foreign {
+            if order.destination == Constants.transactionDestination.foreign {
                 x = x - coin.gatewayFee
                 z = String(format: "%." + coin.decimal.description + "f", coin.gatewayFee)  + " " + coin.tokenSymbol
             }
             
-            let t = digilira.txConfMsg.init(title: "Transfer Detayları",
+            let t = Constants.txConfMsg.init(title: "Transfer Detayları",
                                             message: m,
                                             l1: order.recipientName,
                                             sender: order.myName,

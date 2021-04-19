@@ -31,7 +31,7 @@ class PinView: UIView {
     
     let generator = UINotificationFeedbackGenerator()
 
-    let digiliraPay = digiliraPayApi()
+    let digiliraPay = DigiliraPayService()
     weak var errors: ErrorsDelegate?
 
     var tryAgain = 5
@@ -55,7 +55,7 @@ class PinView: UIView {
     var isPaymentMode = false
         
     var QR:String?
-    let BC = Blockchain()
+    let BC = BlockchainService()
     
     func compareHashPressed(pin: String, bcrypt: String) -> Bool {
         if firstCode == lastCode
@@ -105,7 +105,7 @@ class PinView: UIView {
         if let hash = BCryptSwift.hashPassword(pin, withSalt: self.generateSalt()) {
             return hash
         }
-        throw digilira.NAError.anErrorOccured
+        throw Constants.NAError.anErrorOccured
     }
 
     override func awakeFromNib()

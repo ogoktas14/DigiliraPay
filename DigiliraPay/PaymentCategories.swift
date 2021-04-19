@@ -20,7 +20,7 @@ class PaymentCat: WalletView1, ColoredCardViewDelegate {
     var frameValue = CGRect()
     
     var cardCount = 1
-    var cards: [digilira.cardData] = []
+    var cards: [Constants.cardData] = []
     
     var ViewOriginMaxXValue: CGPoint = CGPoint(x: 0, y: 0)
 

@@ -35,18 +35,18 @@ class ParaYatirView:UIView {
     weak var errors: ErrorsDelegate?
     
     var Filtered: [WavesListedToken] = []
-    let BC = Blockchain()
+    let BC = BlockchainService()
     
     private var selectedCoinX: WavesListedToken?
     
     var direction: UISwipeGestureRecognizer.Direction?
     private var decimal: Bool = false
-    var shoppingCart: [digilira.shoppingCart] = []
+    var shoppingCart: [Constants.shoppingCart] = []
     let pasteboard = UIPasteboard.general
     
-    var Ticker: binance.BinanceMarketInfo = []
-    let binanceAPI = binance()
-    var ticker: digilira.ticker?
+    var Ticker: BinanceService.BinanceMarketInfo = []
+    let binanceAPI = BinanceService()
+    var ticker: Constants.ticker?
     
     var currentPage: Int = 0
     
@@ -56,9 +56,9 @@ class ParaYatirView:UIView {
     var address1: String?
     var assetId: String?
     
-    var kullanici: digilira.auth?
+    var kullanici: Constants.auth?
     
-    var datas:[digilira.DepositLine] = []
+    var datas:[Constants.DepositLine] = []
     
     func constants (coin: String, symbol: String, min: String, mode: Int){
         v1.isHidden = true
@@ -178,11 +178,11 @@ class ParaYatirView:UIView {
                         popup(image: takeScreenshot())
                     }
                 } else {
-                    errors?.evaluate(error: digilira.NAError.emptyAuth)
+                    errors?.evaluate(error: Constants.NAError.emptyAuth)
                     
                 }
             } catch {
-                errors?.evaluate(error: digilira.NAError.emptyAuth)
+                errors?.evaluate(error: Constants.NAError.emptyAuth)
             }
             self.shareView.alpha = 1
             self.shareView.isUserInteractionEnabled = true
@@ -321,11 +321,11 @@ class ParaYatirView:UIView {
         let coin = Filtered[currentPage]
         
         switch coin.network {
-        case digilira.bitcoinNetwork:
+        case Constants.bitcoinNetwork:
             let address = kullanici?.btcAddress
             constants(coin: "Bitcoin", symbol: "BTC", min: "0.001", mode: -1)
             return address
-        case digilira.ethereumNetwork: 
+        case Constants.ethereumNetwork: 
             switch coin.tokenName {
             case "Tether USDT":
                 constants(coin: "ERC-20 USDT Tether", symbol: "USDT", min: "10", mode: -1)
@@ -338,7 +338,7 @@ class ParaYatirView:UIView {
 
                 return address
             }
-        case digilira.wavesNetwork:
+        case Constants.wavesNetwork:
             
             constants(coin: coin.tokenName, symbol: "", min: "", mode: 0)
             

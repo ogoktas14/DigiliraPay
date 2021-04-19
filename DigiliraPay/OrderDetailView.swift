@@ -21,7 +21,7 @@ class OrderDetailView: UIView {
     @IBOutlet weak var icon: UIImageView!
     @IBOutlet weak var tableView: UITableView!
 
-    var shoppingCart: [digilira.shoppingCart] = []
+    var shoppingCart: [Constants.shoppingCart] = []
 
     let generator = UINotificationFeedbackGenerator()
 
@@ -114,7 +114,7 @@ extension OrderDetailView: UITableViewDelegate, UITableViewDataSource {
                 for product in products {
                     if let productName = product.order_pname {
                         if let productPrice = product.order_price {
-                            shoppingCart.append(digilira.shoppingCart.init(label: productName, price: productPrice, mode: 1))
+                            shoppingCart.append(Constants.shoppingCart.init(label: productName, price: productPrice, mode: 1))
                             
                         }
                     }
@@ -125,7 +125,7 @@ extension OrderDetailView: UITableViewDelegate, UITableViewDataSource {
 //                }
                 
                 let total = order.totalPrice
-                    shoppingCart.append(digilira.shoppingCart.init(label: "Toplam", price: total, mode: 1))
+                    shoppingCart.append(Constants.shoppingCart.init(label: "Toplam", price: total, mode: 1))
                
             }
             messageLabel.text = order.merchant

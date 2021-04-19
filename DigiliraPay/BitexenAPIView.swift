@@ -23,8 +23,8 @@ class BitexenAPIView: UIView {
     weak var delegate: BitexenAPIDelegate?
     weak var errors: ErrorsDelegate?
 
-    let digiliraPay = digiliraPayApi()
-    let bitexenSign = bex()
+    let digiliraPay = DigiliraPayService()
+    let bitexenSign = BexSign()
 
     @IBAction func btnExit(_ sender: Any) {
         delegate?.dismissBitexen()
@@ -40,7 +40,7 @@ class BitexenAPIView: UIView {
                 let decoder = JSONDecoder()
                 
                 do {
-                    let loadedAPI = try decoder.decode(bex.bitexenAPICred.self, from: savedAPI)
+                    let loadedAPI = try decoder.decode(BexSign.bitexenAPICred.self, from: savedAPI)
 
                     self.textApiKey.text = loadedAPI.apiKey 
                     self.textApiSecret.text = loadedAPI.apiSecret
@@ -67,7 +67,7 @@ class BitexenAPIView: UIView {
 
             }
             
-            errors?.evaluate(error: digilira.NAError.missingParameters)
+            errors?.evaluate(error: Constants.NAError.missingParameters)
         }
         
         
@@ -78,7 +78,7 @@ class BitexenAPIView: UIView {
         saveView.alpha = 0.4
         saveView.isUserInteractionEnabled = false
         
-        var res = bex.bitexenAPICred.init(apiKey: textApiKey.text!,
+        var res = BexSign.bitexenAPICred.init(apiKey: textApiKey.text!,
                                                apiSecret: textApiSecret.text!,
                                                passphrase: textApiPassphrase.text!,
                                                username: textUsername.text!,
@@ -103,7 +103,7 @@ class BitexenAPIView: UIView {
 
     }
     
-    func save2defaults (forKey: String, data: bex.bitexenAPICred) {
+    func save2defaults (forKey: String, data: BexSign.bitexenAPICred) {
         let encoder = JSONEncoder()
         do {
             let encoded = try encoder.encode(data)

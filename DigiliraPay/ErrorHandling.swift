@@ -24,29 +24,29 @@ class ErrorHandling: NSObject {
     func evaluateError(error: Error) {
         switch error {
         
-        case digilira.NAError.E_502:
+        case Constants.NAError.E_502:
             alertWarning(title: lang.const(x: Localize.keys.an_error_occured.rawValue), message: "Şu anda işleminizi gerçekleştiremiyoruz. Lütfen daha sonra tekrar deneyin.", error: true)
             break
             
-        case digilira.NAError.missingParameters:
+        case Constants.NAError.missingParameters:
             alertWarning(title: lang.const(x: Localize.keys.an_error_occured.rawValue), message: "Girdiğiniz bilgileri kontrol ederek tekrar deneyin.", error: true)
             break
-        case digilira.NAError.anErrorOccured:
+        case Constants.NAError.anErrorOccured:
             alertWarning(title: lang.const(x: Localize.keys.an_error_occured.rawValue), message: "Lütfen tekrar deneyin.", error: true)
             break
-        case digilira.NAError.emptyAuth:
+        case Constants.NAError.emptyAuth:
             alertWarning(title: lang.const(x: Localize.keys.an_error_occured.rawValue), message: "Kullanıcı bilgileri okunamadı")
             break
-        case digilira.NAError.emptyPassword:
+        case Constants.NAError.emptyPassword:
             alertWarning(title: lang.const(x: Localize.keys.an_error_occured.rawValue), message: "Kullanıcı bilgileri okunamadı")
             break
-        case digilira.NAError.notListedToken:
+        case Constants.NAError.notListedToken:
             break
-        case digilira.NAError.sponsorToken:
+        case Constants.NAError.sponsorToken:
             return
-        case digilira.NAError.tokenNotFound:
+        case Constants.NAError.tokenNotFound:
             return
-        case digilira.NAError.noAmount:
+        case Constants.NAError.noAmount:
             alertWarning(title: "Miktar Giriniz", message: "Minimum gönderme tutarının altında bir miktar girdiniz.")
             return
         case NetworkError.negativeBalance:
@@ -75,27 +75,27 @@ class ErrorHandling: NSObject {
         case NetworkError.serverError:
             alertWarning(title: "Bağlantı Hatası", message: "Blokzincir kaynaklı problemlerden dolayı işleminiz gerçekleşmemiştir.")
             break
-        case digilira.NAError.noBalance:
+        case Constants.NAError.noBalance:
             alertWarning(title: "Blokzincir Hatası", message: "Blokzincir kaynaklı problemlerden dolayı işleminiz gerçekleşmemiştir. Lütfen daha sonra yeniden deneyin.")
             break
-        case digilira.NAError.minBalance:
+        case Constants.NAError.minBalance:
             
             alertWarning(title: "Blokzincir Hatası", message: "Minimum miktarın altında transfer gerçekleştiremezsiniz." .debugDescription)
             break
-        case digilira.NAError.noPhone:
+        case Constants.NAError.noPhone:
             
             alertWarning(title: "Hatalı Giriş", message: "Telefon numarası bilgisini eksik veya hatalı girdiniz.")
             break
-        case digilira.NAError.noEmail:
+        case Constants.NAError.noEmail:
             alertWarning(title: "Hatalı Giriş", message: "E-posta bilgisini eksik veya hatalı girdiniz.")
             break
-        case digilira.NAError.noTC:
+        case Constants.NAError.noTC:
             alertWarning(title: "Hatalı Giriş", message: "TC kimlik numaranızı eksik veya hatalı girdiniz.")
             break
-        case digilira.NAError.noName:
+        case Constants.NAError.noName:
             alertWarning(title: "Hatalı Giriş", message: "Ad bilgisi hatalı.")
             break
-        case digilira.NAError.noSurname:
+        case Constants.NAError.noSurname:
             alertWarning(title: "Hatalı Giriş", message: "Soyad bilgisi hatalı.")
             break
         default:
@@ -232,7 +232,7 @@ class ErrorHandling: NSObject {
         }) 
     }
     
-    func transferConfirmation (txConMsg: digilira.txConfMsg, destination: NSNotification.Name) {
+    func transferConfirmation (txConMsg: Constants.txConfMsg, destination: NSNotification.Name) {
         
         DispatchQueue.main.async { [self] in
             if let w = win {

@@ -13,7 +13,7 @@ import UIKit
 
 class CommissionsView: UIView, UITableViewDelegate, UITableViewDataSource {
     
-    var lines:[digilira.line] = []
+    var lines:[Constants.line] = []
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return lines.count

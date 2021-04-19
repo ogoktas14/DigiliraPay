@@ -27,7 +27,7 @@ class LegalView: UIView {
     
     var buffer: CGFloat?
     
-    let BC = Blockchain()
+    let BC = BlockchainService()
     
     override func didMoveToSuperview() {
         contentText.isScrollEnabled = true
@@ -91,7 +91,7 @@ class LegalView: UIView {
     
     @IBAction func resetApp(_ sender: Any) {
         do {
-            try Locksmith.deleteDataForUserAccount(userAccount: bex.bexApiDefaultKey.key)
+            try Locksmith.deleteDataForUserAccount(userAccount: BexSign.bexApiDefaultKey.key)
         } catch  {
             print(error)
         }
@@ -147,13 +147,13 @@ class LegalView: UIView {
         tapOkGesture.isEnabled = true
 
         switch titleLabel.text  {
-        case digilira.legalView.title:
+        case Constants.legalView.title:
             m = "isLegalView"
-            v = digilira.legalView.version
+            v = Constants.legalView.version
             break
-        case digilira.termsOfUse.title:
+        case Constants.termsOfUse.title:
             m = "isTermsOfUse"
-            v = digilira.termsOfUse.version
+            v = Constants.termsOfUse.version
             break
         default:
             return

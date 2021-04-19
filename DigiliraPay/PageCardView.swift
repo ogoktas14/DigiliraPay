@@ -26,21 +26,21 @@ class PageCardView: UIView {
     weak var errors: ErrorsDelegate?
 
     weak var delegate: PageCardViewDeleGate?
-    var Filtered: [digilira.DigiliraPayBalance] = []
-    let digiliraPay = digiliraPayApi()
-    let BC = Blockchain()
+    var Filtered: [Constants.DigiliraPayBalance] = []
+    let digiliraPay = DigiliraPayService()
+    let BC = BlockchainService()
     var direction: UISwipeGestureRecognizer.Direction?
-    var network: String = digilira.wavesNetwork
-    var shoppingCart: [digilira.shoppingCart] = []
+    var network: String = Constants.wavesNetwork
+    var shoppingCart: [Constants.shoppingCart] = []
     
-    var Ticker: binance.BinanceMarketInfo = []
-    let binanceAPI = binance()
-    var ticker: digilira.ticker?
+    var Ticker: BinanceService.BinanceMarketInfo = []
+    let binanceAPI = BinanceService()
+    var ticker: Constants.ticker?
     
-    var bexTicker: bex.bexAllTicker?
-    var marketInfo: bex.bexMarketInfo?
+    var bexTicker: BexSign.bexAllTicker?
+    var marketInfo: BexSign.bexMarketInfo?
 
-    var bexT = bex()
+    var bexT = BexSign()
     
     var Order: PaymentModel?
     var currentPage: Int = 0
@@ -229,7 +229,7 @@ class PageCardView: UIView {
         
     }
     
-    func rateBitexen (coin: digilira.DigiliraPayBalance, fiyat: Double ) throws -> (Double, String, Double)  {
+    func rateBitexen (coin: Constants.DigiliraPayBalance, fiyat: Double ) throws -> (Double, String, Double)  {
          
         if let mi = marketInfo {
             let data = mi.data.markets
@@ -251,10 +251,10 @@ class PageCardView: UIView {
             }
         }
         
-        throw digilira.NAError.notListedToken
+        throw Constants.NAError.notListedToken
     }
     
-    func setCoinCard(scrollViewSize: UIView, layer: CGFloat, coin:digilira.DigiliraPayBalance) throws -> UIView {
+    func setCoinCard(scrollViewSize: UIView, layer: CGFloat, coin:Constants.DigiliraPayBalance) throws -> UIView {
         balanceCardView = UIView().loadNib(name: "BalanceCard") as! BalanceCard
         let ticker = digiliraPay.ticker(ticker: Ticker)
  
@@ -421,11 +421,11 @@ class PageCardView: UIView {
             if Filtered.count == 0 {
                 
                 pageControl.numberOfPages = 1
-                let coin = digilira.DigiliraPayBalance.init(
-                    tokenName: digilira.demoCoin.tokenName,
-                    tokenSymbol: digilira.demoCoin.tokenSymbol,
+                let coin = Constants.DigiliraPayBalance.init(
+                    tokenName: Constants.demoCoin.tokenName,
+                    tokenSymbol: Constants.demoCoin.tokenSymbol,
                     availableBalance: 0,
-                    decimal: digilira.demoCoin.decimal,
+                    decimal: Constants.demoCoin.decimal,
                     balance: 0,
                     tlExchange: 0,
                     network: "",
@@ -489,7 +489,7 @@ extension PageCardView: UITableViewDelegate, UITableViewDataSource {
                 for product in products {
                     if let productName = product.order_pname {
                         if let productPrice = product.order_price {
-                            shoppingCart.append(digilira.shoppingCart.init(label: productName, price: productPrice, mode: 1))
+                            shoppingCart.append(Constants.shoppingCart.init(label: productName, price: productPrice, mode: 1))
                             
                         }
                     }
@@ -501,7 +501,7 @@ extension PageCardView: UITableViewDelegate, UITableViewDataSource {
 //                }
                 
                let total = order.totalPrice
-                    shoppingCart.append(digilira.shoppingCart.init(label: "Toplam", price: total, mode: 2))
+                    shoppingCart.append(Constants.shoppingCart.init(label: "Toplam", price: total, mode: 2))
                 
             
         }

@@ -25,7 +25,7 @@ class LetsStartVC: UIViewController {
 
 
     var gotoSeedRecover = false
-    let BC = Blockchain()
+    let BC = BlockchainService()
     
     private func initial() {
         do {

@@ -17,7 +17,7 @@ class ImportAccountVC: UIViewController {
     @IBOutlet weak var desc: UILabel!
     @IBOutlet weak var keyWordsTextView: UITextView!
     
-    let BC = Blockchain()
+    let BC = BlockchainService()
     let throwEngine = ErrorHandling()
     
     var isKeyboard = false
@@ -32,7 +32,7 @@ class ImportAccountVC: UIViewController {
         }
         
         do {
-            let loginCredits = try secretKeys.LocksmithLoad(forKey: sensitiveSource, conformance: digilira.login.self)
+            let loginCredits = try secretKeys.LocksmithLoad(forKey: sensitiveSource, conformance: Constants.login.self)
             let seed = loginCredits.seed
             
             keyWordsTextView.text = seed
@@ -95,7 +95,7 @@ class ImportAccountVC: UIViewController {
      
     @objc func goHome()
     {
-        let seedTest = NSPredicate(format: "SELF MATCHES %@", digilira.regExp.seedRegex)
+        let seedTest = NSPredicate(format: "SELF MATCHES %@", Constants.regExp.seedRegex)
         let result = seedTest.evaluate(with: keyWordsTextView.text)
         
         if result {
@@ -115,9 +115,9 @@ class ImportAccountVC: UIViewController {
                         UserDefaults.standard.set(false, forKey: "isSecure")
                     }
                 case 502:
-                    throwEngine.evaluateError(error: digilira.NAError.E_502)
+                    throwEngine.evaluateError(error: Constants.NAError.E_502)
                 default:
-                    throwEngine.evaluateError(error: digilira.NAError.anErrorOccured)
+                    throwEngine.evaluateError(error: Constants.NAError.anErrorOccured)
                 }
             }
             BC.createMainnet(imported: true, importedSeed: keyWordsTextView.text)

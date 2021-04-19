@@ -39,7 +39,7 @@ class newSendView: UIView {
     var direction: UISwipeGestureRecognizer.Direction?
     
     var currentPage: Int = 0
-    var kullanici: digilira.auth?
+    var kullanici: Constants.auth?
     
     var address1: String?
     var assetId: String?
@@ -47,9 +47,9 @@ class newSendView: UIView {
     var isWavesNetwork: Bool = false
     var isEthereumNetwork: Bool = false
 
-    var Filtered: [digilira.DigiliraPayBalance] = []
+    var Filtered: [Constants.DigiliraPayBalance] = []
     var Coins: [WavesListedToken] = []
-    let BC = Blockchain()
+    let BC = BlockchainService()
     
     var transaction: SendTrx?
     private var amount: Double = 0.0
@@ -57,9 +57,9 @@ class newSendView: UIView {
     private var coinPrice: Double?
     private var usdPrice: Double?
     
-    var Ticker: binance.BinanceMarketInfo = []
-    let binanceAPI = binance()
-    var ticker: digilira.ticker?
+    var Ticker: BinanceService.BinanceMarketInfo = []
+    let binanceAPI = BinanceService()
+    var ticker: Constants.ticker?
     
     private var decimal: Bool = false
     
@@ -68,7 +68,24 @@ class newSendView: UIView {
     private var selectedCoinX: WavesListedToken?
     private var selectedIndex: Int = 0
     
-    let digiliraPay = digiliraPayApi()
+    let digiliraPay = DigiliraPayService()
+    
+    func setUI() {
+        
+    }
+    
+    func getStrings(key: String) -> String {
+        switch key {
+        case "FeeRemark":
+            return NSLocalizedString("Waves blokzinciri üzerinde yaptığınız transferlerde madencilere 0.005 Waves işlem ücreti ödenmektedir. DigiliraPay cüzdanları arasında yaptığınız transferlerde bu ücret DigiliraPay tarafından karşılanmaktadır.", comment: key)
+        case "FeeRemarkInterwallets":
+            return NSLocalizedString("DigiliraPay cüzdanları arasında yaptığınız transferlerde işlem komisyonu DigiliraPay tarafından karşılanmaktadır.", comment: key)
+        case "OutOfBalanceHeader":
+            return NSLocalizedString("You like?", comment: key)
+        default:
+            return ""
+        }
+    }
     
     @objc func sendMoneyButton() {
         
@@ -83,7 +100,7 @@ class newSendView: UIView {
         }
         
         if !isWavesNetwork {
-            if t.destination == digilira.transactionDestination.foreign {
+            if t.destination == Constants.transactionDestination.foreign {
                 if let coin = selectedCoinX {
                     if !isEthereumNetwork {
                         if !checkAddress(network: coin.network, address: recipientText.title(for: .normal)!) {
@@ -94,7 +111,7 @@ class newSendView: UIView {
 
                 }
             }
-            if t.destination == digilira.transactionDestination.interwallets {
+            if t.destination == Constants.transactionDestination.interwallets {
         
                 if recipientText.title(for: .normal  ) == "" {
                         recipientText.setTitleColor(.red, for: .normal)
@@ -103,8 +120,8 @@ class newSendView: UIView {
                 
             }
         } else {
-            if t.destination == digilira.transactionDestination.foreign {
-                t.destination = digilira.transactionDestination.unregistered
+            if t.destination == Constants.transactionDestination.foreign {
+                t.destination = Constants.transactionDestination.unregistered
                 t.recipient = t.externalAddress
                 transaction = t
             }
@@ -114,16 +131,16 @@ class newSendView: UIView {
         if isMissing {
             shake()
             
-            errors?.evaluate(error: digilira.NAError.missingParameters)
+            errors?.evaluate(error: Constants.NAError.missingParameters)
             
             sendView.alpha = 1
             sendView.isUserInteractionEnabled = true
             return
         }
         
-        if t.network == digilira.transactionDestination.domestic {
+        if t.network == Constants.transactionDestination.domestic {
             t.memberCheck = true
-            t.destination = digilira.transactionDestination.domestic
+            t.destination = Constants.transactionDestination.domestic
         }
         
         if let user = kullanici {
@@ -145,7 +162,7 @@ class newSendView: UIView {
 
             switch coin.tokenName {
             case "Bitcoin":
-                if t.destination != digilira.transactionDestination.foreign  {
+                if t.destination != Constants.transactionDestination.foreign  {
                     minAmount = 300
                     minTotal = minAmount
                 } else {
@@ -154,7 +171,7 @@ class newSendView: UIView {
                 }
                 break
             case "Ethereum":
-                if t.destination != digilira.transactionDestination.foreign  {
+                if t.destination != Constants.transactionDestination.foreign  {
                     minAmount = 10000
                     minTotal = minAmount
                 } else {
@@ -167,7 +184,7 @@ class newSendView: UIView {
                 minTotal = minAmount
                 break
             case "Tether USDT":
-                if t.destination != digilira.transactionDestination.foreign {
+                if t.destination != Constants.transactionDestination.foreign {
                     minAmount = 100000
                     minTotal = minAmount
                 } else {
@@ -185,7 +202,7 @@ class newSendView: UIView {
 
                 sendView.alpha = 1
                 sendView.isUserInteractionEnabled = true
-                errors?.evaluate(error: digilira.NAError.noAmount)
+                errors?.evaluate(error: Constants.NAError.noAmount)
                 return
             }
             transaction = t
@@ -216,12 +233,12 @@ class newSendView: UIView {
         var regexString = wavesreg
         
         switch network {
-        case digilira.bitcoinNetwork:
+        case Constants.bitcoinNetwork:
             regexString = bitcoinReg
-        case digilira.ethereumNetwork:
+        case Constants.ethereumNetwork:
             regexString = ethereumReg
             break
-        case digilira.wavesNetwork:
+        case Constants.wavesNetwork:
             regexString = wavesreg
             break
         default:
@@ -234,7 +251,7 @@ class newSendView: UIView {
             let wavresult = eval(template: wavesreg, address: address)
             
             if wavresult {
-                getPage(x: digilira.wavesNetwork)
+                getPage(x: Constants.wavesNetwork)
                 isWavesNetwork = true
                 return true
             }
@@ -242,14 +259,14 @@ class newSendView: UIView {
             let btcresult = eval(template: bitcoinReg, address: address)
             
             if btcresult {
-                getPage(x: digilira.bitcoinNetwork)
+                getPage(x: Constants.bitcoinNetwork)
                 return true
             }
             
             let btcresultSegwit = eval(template: bitcoinSegwit, address: address)
             
             if btcresultSegwit {
-                getPage(x: digilira.bitcoinNetwork)
+                getPage(x: Constants.bitcoinNetwork)
                 return true
             }
             
@@ -257,7 +274,7 @@ class newSendView: UIView {
             
             if ethresult {
                 isEthereumNetwork = true
-                getPage(x: digilira.ethereumNetwork)
+                getPage(x: Constants.ethereumNetwork)
                 return true
             }
         }
@@ -290,7 +307,7 @@ class newSendView: UIView {
         textField.textColor = .black
         
         guard let str = textField.text else {
-            errors?.evaluate(error: digilira.NAError.missingParameters)
+            errors?.evaluate(error: Constants.NAError.missingParameters)
             return
         }
         
@@ -331,7 +348,7 @@ class newSendView: UIView {
                 if result as! Bool {
                     
                     guard let params = transaction else {
-                        errors?.evaluate(error: digilira.NAError.anErrorOccured)
+                        errors?.evaluate(error: Constants.NAError.anErrorOccured)
                         return
                     }
                     delegate?.sendCoinNew(params: params)
@@ -358,12 +375,12 @@ class newSendView: UIView {
             
             var komisyon:Double = 0.005
             var komisyonCoin = "Waves"
-            var remark = "Waves blokzinciri üzerinde yaptığınız transferlerde madencilere 0.005 Waves işlem ücreti ödenmektedir. DigiliraPay cüzdanları arasında yaptığınız transferlerde bu ücret DigiliraPay tarafından karşılanmaktadır."
+            var remark = getStrings(key: "FeeRemark")
             
             var agKomisyonu: Double = 0
             var agCoin = coin.tokenName
 
-            if t.destination == digilira.transactionDestination.foreign {
+            if t.destination == Constants.transactionDestination.foreign {
                 
                 agKomisyonu = coin.gatewayFee
                 agCoin = coin.tokenName
@@ -372,16 +389,16 @@ class newSendView: UIView {
                 komisyonCoin = "DigiliraPay"
             }
             
-            if  t.destination == digilira.transactionDestination.interwallets {
+            if  t.destination == Constants.transactionDestination.interwallets {
                 
                 komisyon = 5
                 komisyonCoin = "DigiliraPay"
-                remark = "DigiliraPay cüzdanları arasında yaptığınız transferlerde işlem komisyonu DigiliraPay tarafından karşılanmaktadır."
+                remark = getStrings(key: "FeeRemarkInterwallets")
                 
             }
             
             if balance < m {
-                errors?.errorCaution(message: "Bakiyeniz bu transferi gerçekleştirebilmek için yeterli değil.", title: "Yetersiz Bakiye")
+                errors?.errorCaution(message: "Bakiyeniz bu transferi gerçekleştirebilmek için yeterli değil.", title: getStrings(key: "OutOfBalanceHeader"))
                 sendView.isUserInteractionEnabled = true
                 sendView.alpha = 1
                 return
@@ -390,7 +407,7 @@ class newSendView: UIView {
             let miktar = MainScreen.int2so(m, digits: coin.decimal) + " " + coin.tokenSymbol
             var minTotal = miktar
 
-            if t.destination == digilira.transactionDestination.foreign {
+            if t.destination == Constants.transactionDestination.foreign {
                 let double = Double(m) / Double(truncating: pow(10,coin.decimal) as NSNumber)
                 minTotal = String(format: "%." + coin.decimal.description + "f", double - agKomisyonu) + " " + coin.tokenSymbol
                 remark = "Waves blokzinciri dışına yaptığınız transferlerde işlem komisyonu DigiliraPay tarafından karşılanmaktadır."
@@ -400,7 +417,7 @@ class newSendView: UIView {
             
             
             
-            let confirmationMessage = digilira.txConfMsg.init(
+            let confirmationMessage = Constants.txConfMsg.init(
                 title: "Transfer Onayı",
                 message: "Bilgileri Kontrol Edin",
                 l1: t.merchant!,
@@ -426,11 +443,11 @@ class newSendView: UIView {
     func setQR () {
         
         guard let params = transaction else {
-            errors?.evaluate(error: digilira.NAError.anErrorOccured)
+            errors?.evaluate(error: Constants.NAError.anErrorOccured)
             return
         }
         
-        if params.destination == digilira.transactionDestination.foreign {
+        if params.destination == Constants.transactionDestination.foreign {
             
             recipientText.isEnabled = true
             textAmount.isEnabled = true
@@ -470,17 +487,17 @@ class newSendView: UIView {
             coinSwitch.setTitle("₺", forSegmentAt: 0)
             coinSwitch.setTitle(coin.symbol, forSegmentAt: 1)
             
-            if params.destination == digilira.transactionDestination.interwallets {
+            if params.destination == Constants.transactionDestination.interwallets {
                 
                 recipientText.isEnabled = true
             }
-            if params.destination == digilira.transactionDestination.domestic {
+            if params.destination == Constants.transactionDestination.domestic {
                 
                 recipientText.isEnabled = true
                 textAmount.isEnabled = false
             }
             
-            if params.destination == digilira.transactionDestination.foreign {
+            if params.destination == Constants.transactionDestination.foreign {
                 let isValid = checkAddress(network: coin.network, address: params.merchant!)
                 if !isValid {
                     recipientText.setTitleColor(.red, for: .normal)
@@ -575,14 +592,14 @@ class newSendView: UIView {
                 var minAmount: Double = 0
                 switch coin.tokenName {
                 case "Bitcoin":
-                    if t.destination == digilira.transactionDestination.interwallets || isWavesNetwork {
+                    if t.destination == Constants.transactionDestination.interwallets || isWavesNetwork {
                         minAmount = 0.000003
                     } else {
                         minAmount = 0.001
                     }
                     break
                 case "Ethereum":
-                    if t.destination == digilira.transactionDestination.interwallets || isWavesNetwork {
+                    if t.destination == Constants.transactionDestination.interwallets || isWavesNetwork {
                         minAmount = 0.0001
                     } else {
                         minAmount = 0.01
@@ -592,7 +609,7 @@ class newSendView: UIView {
                     minAmount = 0.01
                     break
                 case "Tether USDT":
-                    if t.destination == digilira.transactionDestination.interwallets || isWavesNetwork {
+                    if t.destination == Constants.transactionDestination.interwallets || isWavesNetwork {
                         minAmount = 0.1
                     } else {
                         minAmount = 10
@@ -603,7 +620,7 @@ class newSendView: UIView {
                     break
                 }
                 
-                if t.destination == digilira.transactionDestination.foreign && !isWavesNetwork {
+                if t.destination == Constants.transactionDestination.foreign && !isWavesNetwork {
                     
                     let minTotal = coin.gatewayFee + minAmount
                     
@@ -629,7 +646,7 @@ class newSendView: UIView {
                     commissionLabel.text = "Minimum transfer miktarı: " + String(format: "%.\(coin.decimal)f", minAmount) + " " + coin.tokenName
                     commissionLabel.isHidden = false
                     
-                    if t.destination != digilira.transactionDestination.interwallets {
+                    if t.destination != Constants.transactionDestination.interwallets {
                         if coin.symbol == "ONET" {
                             sendView.isUserInteractionEnabled = false
                             sendView.alpha = 0.4
@@ -689,13 +706,13 @@ class newSendView: UIView {
         let isAmount = amount
         if let coin = selectedCoinX {
             let double = Double(truncating: pow(10,coin.decimal) as NSNumber)
-            let external = digilira.externalTransaction.init(network: coin.network,
+            let external = Constants.externalTransaction.init(network: coin.network,
                                                              address: recipientText.title(for: .normal),
                                                              amount: Int64(isAmount * double),
                                                              assetId: coin.token)
             BC.onError = { [self] res in
                 errors?.removeWait()
-                errors?.evaluate(error: digilira.NAError.E_400)
+                errors?.evaluate(error: Constants.NAError.E_400)
             }
             
             BC.onMember = { res, data in
@@ -708,11 +725,11 @@ class newSendView: UIView {
                     case true:
                         
                         guard let data = data else {
-                            errors?.evaluate(error: digilira.NAError.anErrorOccured)
+                            errors?.evaluate(error: Constants.NAError.anErrorOccured)
                             return
                         }
                         
-                        if data.destination == digilira.transactionDestination.foreign {
+                        if data.destination == Constants.transactionDestination.foreign {
                             foreignTrx()
                         }
                         
@@ -722,7 +739,7 @@ class newSendView: UIView {
                             t.recipient = (data.wallet)!
                             t.assetId = data.assetId!
                             t.amount = data.amount!
-                            t.fee = digilira.sponsorTokenFee
+                            t.fee = Constants.sponsorTokenFee
                             t.fiat = self.price * double
                             t.attachment = data.message
                             t.network = data.network!
@@ -731,11 +748,11 @@ class newSendView: UIView {
                             t.memberCheck = true
                             recipientText.setTitle(data.owner, for: .normal)
                             
-                            if data.destination == digilira.transactionDestination.interwallets {
-                                t.feeAssetId = digilira.sponsorToken
+                            if data.destination == Constants.transactionDestination.interwallets {
+                                t.feeAssetId = Constants.sponsorToken
                             }
                             
-                            if data.destination == digilira.transactionDestination.foreign {
+                            if data.destination == Constants.transactionDestination.foreign {
                                 t.feeAssetId = ""
                             }
                             
@@ -990,7 +1007,7 @@ class newSendView: UIView {
         }
     }
     
-    func setCoinCard(scrollViewSize: UIView, layer: CGFloat, coin:digilira.DigiliraPayBalance) throws -> UIView {
+    func setCoinCard(scrollViewSize: UIView, layer: CGFloat, coin:Constants.DigiliraPayBalance) throws -> UIView {
         balanceCardView = UIView().loadNib(name: "BalanceCard") as! BalanceCard
         let ticker = digiliraPay.ticker(ticker: Ticker)
         
@@ -1091,10 +1108,10 @@ class newSendView: UIView {
             if let fiyatlama = ticker {
                 
                 switch coin.network {
-                case digilira.bitcoinNetwork:
+                case Constants.bitcoinNetwork:
                     coinPrice = (fiyatlama.btcUSDPrice)! * (fiyatlama.usdTLPrice)!
                     break
-                case digilira.ethereumNetwork:
+                case Constants.ethereumNetwork:
                     switch coin.symbol {
                     case "ETH", "WETH":
                         if let tl = fiyatlama.usdTLPrice {
@@ -1112,9 +1129,9 @@ class newSendView: UIView {
                         break
                     }
                     break
-                case digilira.wavesNetwork:
+                case Constants.wavesNetwork:
                     switch coin.tokenName {
-                    case digilira.waves.tokenName:
+                    case Constants.waves.tokenName:
                         coinPrice = (fiyatlama.wavesUSDPrice)! * (fiyatlama.usdTLPrice)!
                         break
                     default:
@@ -1140,11 +1157,11 @@ class newSendView: UIView {
             sendView.isUserInteractionEnabled = false
             sendView.alpha = 0.4
             pageControl.numberOfPages = 1
-            let coin = digilira.DigiliraPayBalance.init(
-                tokenName: digilira.demoCoin.tokenName,
-                tokenSymbol: digilira.demoCoin.tokenSymbol,
+            let coin = Constants.DigiliraPayBalance.init(
+                tokenName: Constants.demoCoin.tokenName,
+                tokenSymbol: Constants.demoCoin.tokenSymbol,
                 availableBalance: 0,
-                decimal: digilira.demoCoin.decimal,
+                decimal: Constants.demoCoin.decimal,
                 balance: 0,
                 tlExchange: 0,
                 network: "",

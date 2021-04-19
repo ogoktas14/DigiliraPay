@@ -24,7 +24,7 @@ class ColoredCardView: CardView {
     var apiSet: Bool = false
     var cardMode: String = ""
     
-    var cardInfo: digilira.cardData = digilira.cardData.init(org: "", bgColor: .red, logoName: "", cardHolder: "", cardNumber: "1")
+    var cardInfo: Constants.cardData = Constants.cardData.init(org: "", bgColor: .red, logoName: "", cardHolder: "", cardNumber: "1")
     
     var index: Int = 0 {
         didSet {

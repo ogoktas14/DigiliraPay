@@ -93,12 +93,12 @@ class WalletOperationButtonSView: UIView {
                 recipient: "",
                 assetId: "",
                 amount: 0,
-                fee: digilira.sponsorTokenFee,
+                fee: Constants.sponsorTokenFee,
                 fiat: 0,
                 attachment: "",
                 network: "",
-                destination: digilira.transactionDestination.interwallets,
-                me: digilira.dummyName,
+                destination: Constants.transactionDestination.interwallets,
+                me: Constants.dummyName,
                 blockchainFee: 0)
             self.delegate?.send(params: empty)
         })

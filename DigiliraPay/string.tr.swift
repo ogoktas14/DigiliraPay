@@ -12,7 +12,7 @@ import UIKit
 
 struct turkish {
     
-    static let bitexenCard = digilira.cardData.init(
+    static let bitexenCard = Constants.cardData.init(
         org: "Bitexen",
         bgColor: UIColor(red: 0.1882, green: 0.2588, blue: 0.3804, alpha: 1.0),
         logoName: "logo_bitexen",
@@ -23,7 +23,7 @@ struct turkish {
         bg: "bitexen_hover-1"
     )
     
-    static let oneTower = digilira.cardData.init(
+    static let oneTower = Constants.cardData.init(
         org: "One Tower",
         bgColor:  UIColor(red: 0.549, green: 0.9765, blue: 1, alpha: 1.0),
         logoName: "one_tower_logo",

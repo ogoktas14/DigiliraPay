@@ -57,7 +57,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     
     var isTooManyErrors:Int = 0
     
-    let digiliraPay = digiliraPayApi()
+    let digiliraPay = DigiliraPayService()
     var kullanici = try? secretKeys.userData()
     
     override func didMoveToSuperview() {
@@ -163,7 +163,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     }
     
     private func exampleSoapRequest(tc: String, ad: String, soyad: String, dogum: String) {
-        let url = URL(string: digilira.tcDoguralma)!
+        let url = URL(string: Constants.tcDoguralma)!
         let bodyData = """
 <?xml version="1.0" encoding="utf-8"?>
         <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -189,7 +189,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
         request.httpMethod = "POST"
         request.httpBody = bodyData.data(using: .utf8)
         request.addValue("text/xml; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        request.addValue("SOAPAction", forHTTPHeaderField: digilira.soapAction)
+        request.addValue("SOAPAction", forHTTPHeaderField: Constants.soapAction)
         
         let task = URLSession.shared
             .dataTask(with: request as URLRequest,
@@ -215,13 +215,13 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
                 errors?.waitPlease()
                 delegate?.dismissVErifyAccountView()
                 
-                let BC = Blockchain()
+                let BC = BlockchainService()
                 
                 digiliraPay.onUpdate = { res, sts in
                     errors?.removeWait()
                     
                     if (res == nil) {
-                        errors?.evaluate(error: digilira.NAError.missingParameters)
+                        errors?.evaluate(error: Constants.NAError.missingParameters)
                     } else {
                         errors?.errorHandler(message: "Kimlik bilgileriniz doğrulandı, ancak KYC sürecini tamamlamak için kimliğinizin ön yüzü görünecek biçimde boş bir kağıda günün tarihini ve DigiliraPay yazarak Profil Onayı sayfasına yükleyin.", title: "Profiliniz Güncellendi", error: false)
                         
@@ -240,7 +240,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
                 
                 if let k = kullanici {
                     if let sign = try? BC.bytization([dogum.date.description, name, k.id, surname, mail, sts.description, tcno, tel], timestamp) {
-                        let user = digilira.exUser.init(
+                        let user = Constants.exUser.init(
                             id:k.id,
                             firstName: name,
                             lastName: surnameText.text,
@@ -266,7 +266,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
                 isTooManyErrors += 1
                 
                 if isTooManyErrors < 2 {
-                    errors?.evaluate(error: digilira.NAError.missingParameters)
+                    errors?.evaluate(error: Constants.NAError.missingParameters)
                 } else {
                     vTCNA.isHidden = false
                     errors?.errorCaution(message: "Kimliğinizi doğrulamakta sorun yaşıyorsanız farklı bir doğrulama yöntemi kullanabilirsiniz.", title:"Doğrulama Hatası")
@@ -534,20 +534,20 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
         
         if (nameVal == false) {
             nameText.textColor = .red
-            errors?.evaluate(error: digilira.NAError.noName)
+            errors?.evaluate(error: Constants.NAError.noName)
             unlock()
             return
         }
         
         if (surnameVal == false) {
             surnameText.textColor = .red
-            errors?.evaluate(error: digilira.NAError.noSurname)
+            errors?.evaluate(error: Constants.NAError.noSurname)
             unlock()
             return
         }
         if (tcVal == false) {
             tcText.textColor = .red
-            errors?.evaluate(error: digilira.NAError.noTC)
+            errors?.evaluate(error: Constants.NAError.noTC)
             unlock()
             return
         }
@@ -556,14 +556,14 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
         
         if tel.count != 17 {
             telText.textColor = .red
-            errors?.evaluate(error: digilira.NAError.noPhone)
+            errors?.evaluate(error: Constants.NAError.noPhone)
             unlock()
             return
         }
         
         if (emailVal == false) {
             mailText.textColor = .red
-            errors?.evaluate(error: digilira.NAError.noEmail)
+            errors?.evaluate(error: Constants.NAError.noEmail)
             unlock()
             return
         }

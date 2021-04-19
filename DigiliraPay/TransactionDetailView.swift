@@ -20,9 +20,9 @@ class TransactionDetailView: UIView
     var originValueLast: CGPoint = CGPoint(x: 0, y: 0)
     
     var crud = centralRequest()
-    var transaction:digilira.transfer?
+    var transaction:Constants.transfer?
 
-    let BC = Blockchain()
+    let BC = BlockchainService()
     
     var fetching: Bool = false
     let generator = UINotificationFeedbackGenerator()
@@ -114,7 +114,7 @@ class TransactionDetailView: UIView
             let sign = try BC.bytization([recognizer.assetName, tid, k.id], timestamp)
                 
                 generator.notificationOccurred(.success)
-                let data = digilira.transferGetModel.init(mode: recognizer.assetName,
+                let data = Constants.transferGetModel.init(mode: recognizer.assetName,
                                                           user: k.id,
                                                           transactionId: tid,
                                                           signed: sign.signature,
@@ -144,7 +144,7 @@ class TransactionDetailView: UIView
                                 
                             } catch {
                                 print (error)
-                                delegate?.alertEr(error: digilira.NAError.anErrorOccured)
+                                delegate?.alertEr(error: Constants.NAError.anErrorOccured)
                             }
                         default:
                             break
@@ -152,14 +152,14 @@ class TransactionDetailView: UIView
                     }
                 }
                 
-                crud.request(rURL: crud.getApiURL() + digilira.api.transferGet, postData: try? JSONEncoder().encode(data), signature: data.signed)
+                crud.request(rURL: crud.getApiURL() + Constants.api.transferGet, postData: try? JSONEncoder().encode(data), signature: data.signed)
                 
                 DispatchQueue.main.async { [self] in
                     delegate?.alertT(message: "Transfer detaylarınız yükleniyor...", title: "Detaylar")
                 
             }
         } catch {
-            delegate?.alertEr(error: digilira.NAError.anErrorOccured)
+            delegate?.alertEr(error: Constants.NAError.anErrorOccured)
         }
         
 

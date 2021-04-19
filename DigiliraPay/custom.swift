@@ -8,12 +8,6 @@
 
 import UIKit
 
-private enum Constants {
-    static let cornerRadius: Float = 10
-    static let  borderWidth = 2.0
-}
-
-
 class trxLabel: UILabel {
      
     required init?(coder aDecoder: NSCoder) {

@@ -16,7 +16,7 @@ import Foundation
 import LocalAuthentication
 
 
-class Blockchain: NSObject {
+class BlockchainService: NSObject {
     
     struct signData {
         var signature: String
@@ -182,23 +182,19 @@ class Blockchain: NSObject {
     
     var lang = Localize()
     var listedTokens = ListedTokens()
-    let digiliraPay = digiliraPayApi()
+    let digiliraPay = DigiliraPayService()
     let throwEngine = ErrorHandling()
     var crud = centralRequest()
     
-    func arrayWithSize(_ s: String) -> [UInt8] {
-        let b: [UInt8] = Array(s.utf8)
-        return toByteArray(Int16(b.count)) + b
-    }
     var onWavesBalance: ((_ result: NodeService.DTO.AddressBalance)->())?
     var onAssetBalance: ((_ assets: NodeService.DTO.AddressAssetsBalance, _ waves: NodeService.DTO.AddressBalance)->())?
     var onTransferTransaction: ((_ result: NodeService.DTO.Transaction, _ verifyData: TransferOnWay )->())?
     var onVerified: ((_ result: TransferTransactionModel, _ verifyData: TransferOnWay)->())?
-    var onSensitive: ((_ result: digilira.wallet, _ err: String)->())?
+    var onSensitive: ((_ result: Constants.wallet, _ err: String)->())?
     var onError: ((_ result: Error)->())?
     var onPinSuccess: ((_ result: Bool)->())?
     var onSmartAvailable: ((_ result: Bool)->())?
-    var onMember: ((_ result: Bool, _ data: digilira.externalTransaction?)->())?
+    var onMember: ((_ result: Bool, _ data: Constants.externalTransaction?)->())?
     
     var onComplete: ((_ result: Bool, _ statusCode: Int)->())?
     
@@ -207,7 +203,13 @@ class Blockchain: NSObject {
     var onWavesNodeResponse: ((_ result: Data, _ statusCode: Int) ->())?
     var onWavesDataResponse: ((_ result: Data, _ statusCode: Int) ->())?
     
+    func arrayWithSize(_ s: String) -> [UInt8] {
+        let b: [UInt8] = Array(s.utf8)
+        return toByteArray(Int16(b.count)) + b
+    }
+
     func checkWavesBalance(address: String) {
+
         WavesSDK.shared.services
             .nodeServices
             .addressesNodeService
@@ -226,7 +228,7 @@ class Blockchain: NSObject {
                 .subscribe(onNext: { (balances) in
                     self.onAssetBalance?(balances, wavesBalance)
                 }, onError: {_ in
-                    self.onError!(digilira.NAError.noBalance)
+                    self.onError!(Constants.NAError.noBalance)
                 })
                 .disposed(by: disposeBag)
         }
@@ -239,44 +241,43 @@ class Blockchain: NSObject {
         switch chainId {
         case "T":
             switch destination {
-            case digilira.transactionDestination.domestic:
-                return digilira.paymentToken
-            case digilira.transactionDestination.interwallets:
-                return digilira.sponsorToken
-            case digilira.transactionDestination.foreign:
-                return digilira.sponsorToken
+            case Constants.transactionDestination.domestic:
+                return Constants.paymentToken
+            case Constants.transactionDestination.interwallets:
+                return Constants.sponsorToken
+            case Constants.transactionDestination.foreign:
+                return Constants.sponsorToken
             default:
                 return ""
             }
         default:
             switch destination {
-            case digilira.transactionDestination.domestic:
-                return digilira.mainnetPaymentToken
-            case digilira.transactionDestination.interwallets:
-                return digilira.mainnetSponsorToken
-            case digilira.transactionDestination.foreign:
-                return digilira.mainnetSponsorToken
+            case Constants.transactionDestination.domestic:
+                return Constants.mainnetPaymentToken
+            case Constants.transactionDestination.interwallets:
+                return Constants.mainnetSponsorToken
+            case Constants.transactionDestination.foreign:
+                return Constants.mainnetSponsorToken
             default:
                 return ""
             }
         }
-        
-        
     }
     
     func sendBitexen() {
         
     }
     
-    func sendTransaction2(name: String, recipient: String, amount:Int64, assetId:String, attachment:String, wallet:digilira.wallet, blob: SendTrx) {
+    func sendTransaction2(name: String, recipient: String, amount:Int64, assetId:String, attachment:String, wallet:Constants.wallet, blob: SendTrx) {
         guard let chainId = WavesSDK.shared.enviroment.chainId else { return }
         guard let address = WavesCrypto.shared.address(seed: wallet.seed, chainId: chainId) else { return }
         guard let senderPublicKey = WavesCrypto.shared.publicKey(seed: wallet.seed) else { return }
         guard wallet.seed != "" else { return }
         
         self.onWavesApiError = { res, sts, path in
-            self.onError!(digilira.NAError.anErrorOccured)
+            self.onError!(Constants.NAError.anErrorOccured)
         }
+        
         self.onWavesNodeResponse = { [self] result, status in
             do {
                 
@@ -306,8 +307,6 @@ class Blockchain: NSObject {
                                                                             feeAssetId: feeAsset,
                                                                             timestamp: timestamp,
                                                                             senderPublicKey: senderPublicKey, chainId: chainId)
-                    
-                    
                     queryModel.sign(seed: wallet.seed)
                     
                     let send = NodeService.Query.Transaction.transfer(queryModel)
@@ -328,12 +327,12 @@ class Blockchain: NSObject {
                                                 var merchantId = "N/A"
                                                 
                                                 switch blob.destination {
-                                                case digilira.transactionDestination.foreign:
+                                                case Constants.transactionDestination.foreign:
                                                     if let e = blob.externalAddress {
                                                         external = e
                                                     }
                                                     break
-                                                case digilira.transactionDestination.domestic:
+                                                case Constants.transactionDestination.domestic:
                                                     if let m = blob.merchantId {
                                                         merchantId = m
                                                     }
@@ -341,7 +340,7 @@ class Blockchain: NSObject {
                                                 default:
                                                     break
                                                 }
-                                                if blob.destination != digilira.transactionDestination.foreign {
+                                                if blob.destination != Constants.transactionDestination.foreign {
                                                     if let e = blob.externalAddress {
                                                         external = e
                                                     }
@@ -407,7 +406,7 @@ class Blockchain: NSObject {
                                           recipient: recipient,
                                           amount: amount)
         
-        wavesNodeRequests(path: "/transactions/calculateFee", method: digilira.requestMethod.post, postData: try? JSONEncoder().encode(feeParams))
+        wavesNodeRequests(path: "/transactions/calculateFee", method: Constants.requestMethod.post, postData: try? JSONEncoder().encode(feeParams))
         
     }
     
@@ -429,7 +428,7 @@ class Blockchain: NSObject {
         guard WavesCrypto.shared.address(seed: seed, chainId: chainId) != nil else { return }
         guard let senderPublicKey = WavesCrypto.shared.publicKey(seed: seed) else { return }
         
-        let client_id = digilira.wavesApiEndpoints.client_id;
+        let client_id = Constants.wavesApiEndpoints.client_id;
         
         let timestamp = Int64(Date().timeIntervalSince1970) + 1000 * 60
         var bytes: [UInt8] = [255, 255, 255, 1]
@@ -441,28 +440,28 @@ class Blockchain: NSObject {
         
         if let preSign = wavesCrypto.signBytes(bytes: bytes, seed: seed) {
             if let bs58 = WavesCrypto.shared.base58encode(input: preSign) {
-                let params = digilira.authTokenWaves.init(
+                let params = Constants.authTokenWaves.init(
                     username: senderPublicKey,
                     password: timestamp.description + ":" + bs58
                 )
-                wavesApiRequest(auth: params, endpoint:digilira.wavesApiEndpoints.getToken, sender:WavesToken.self){ [self] (token, statusCode) in
+                wavesApiRequest(auth: params, endpoint:Constants.wavesApiEndpoints.getToken, sender:WavesToken.self){ [self] (token, statusCode) in
                     
-                    wavesApiRequest(auth: nil, endpoint:digilira.wavesApiEndpoints.getDeposit, currency: digilira.wavesApiEndpoints.BTC, token: token.accessToken, sender: DepositeAddresses.self) { (address, statusCode) in
+                    wavesApiRequest(auth: nil, endpoint:Constants.wavesApiEndpoints.getDeposit, currency: Constants.wavesApiEndpoints.BTC, token: token.accessToken, sender: DepositeAddresses.self) { (address, statusCode) in
                         UserDefaults.standard.set(address.depositAddresses[1], forKey: "btcAddress")
                         createUser(seed: seed)
                         print(address.depositAddresses)
                     }
-                    wavesApiRequest(auth: nil, endpoint:digilira.wavesApiEndpoints.getDeposit, currency: digilira.wavesApiEndpoints.ETH, token: token.accessToken, sender: DepositeAddresses.self) { (address, statusCode) in
+                    wavesApiRequest(auth: nil, endpoint:Constants.wavesApiEndpoints.getDeposit, currency: Constants.wavesApiEndpoints.ETH, token: token.accessToken, sender: DepositeAddresses.self) { (address, statusCode) in
                         UserDefaults.standard.set(address.depositAddresses[0], forKey: "ethAddress")
                         createUser(seed: seed)
                         print(address.depositAddresses)
                     }
-                    wavesApiRequest(auth: nil, endpoint:digilira.wavesApiEndpoints.getDeposit, currency: digilira.wavesApiEndpoints.LTC, token: token.accessToken, sender: DepositeAddresses.self) { (address, statusCode) in
+                    wavesApiRequest(auth: nil, endpoint:Constants.wavesApiEndpoints.getDeposit, currency: Constants.wavesApiEndpoints.LTC, token: token.accessToken, sender: DepositeAddresses.self) { (address, statusCode) in
                         UserDefaults.standard.set(address.depositAddresses[0], forKey: "ltcAddress")
                         createUser(seed: seed)
                         print(address.depositAddresses)
                     }
-                    wavesApiRequest(auth: nil, endpoint:digilira.wavesApiEndpoints.getDeposit, currency: digilira.wavesApiEndpoints.USDT, token: token.accessToken, sender: DepositeAddresses.self) { (address, statusCode) in
+                    wavesApiRequest(auth: nil, endpoint:Constants.wavesApiEndpoints.getDeposit, currency: Constants.wavesApiEndpoints.USDT, token: token.accessToken, sender: DepositeAddresses.self) { (address, statusCode) in
                         UserDefaults.standard.set(address.depositAddresses[0], forKey: "usdtAddress")
                         createUser(seed: seed)
                         print(address.depositAddresses)
@@ -498,7 +497,7 @@ class Blockchain: NSObject {
         guard WavesCrypto.shared.address(seed: seed, chainId: chainId) != nil else { return }
         guard let senderPublicKey = WavesCrypto.shared.publicKey(seed: seed) else { return }
         
-        let client_id = digilira.wavesApiEndpoints.client_id;
+        let client_id = Constants.wavesApiEndpoints.client_id;
         
         let timestamp = Int64(Date().timeIntervalSince1970) + 1000 * 60
         var bytes: [UInt8] = [255, 255, 255, 1]
@@ -510,11 +509,11 @@ class Blockchain: NSObject {
         
         if let preSign = wavesCrypto.signBytes(bytes: bytes, seed: seed) {
             if let bs58 = WavesCrypto.shared.base58encode(input: preSign) {
-                let params = digilira.authTokenWaves.init(
+                let params = Constants.authTokenWaves.init(
                     username: senderPublicKey,
                     password: timestamp.description + ":" + bs58
                 )
-                wavesApiRequest(auth: params, endpoint:digilira.wavesApiEndpoints.getToken, sender:WavesToken.self){ [self](token, statusCode) in
+                wavesApiRequest(auth: params, endpoint:Constants.wavesApiEndpoints.getToken, sender:WavesToken.self){ [self](token, statusCode) in
                     if let data = token.data {
                         do {
                             let source = try getKeyChainSource().wavesToken
@@ -532,7 +531,7 @@ class Blockchain: NSObject {
         }
     }
     
-    func createWithdrawRequest(wallet: digilira.wallet, address: String, currency: String, amount: Int64, blob: SendTrx) {
+    func createWithdrawRequest(wallet: Constants.wallet, address: String, currency: String, amount: Int64, blob: SendTrx) {
         
         self.onError = { [self] error in
             throwEngine.evaluateError(error: error)
@@ -545,7 +544,7 @@ class Blockchain: NSObject {
         
         var isAmount = amount
         
-        self.wavesApiRequest(auth: nil, endpoint:digilira.wavesApiEndpoints.getWithdraw, currency: symbol.symbol, withdrawAddress: address, token: wallet.wavesToken, sender: WithdrawAddresses.self) { [self] (result, statusCode) in
+        self.wavesApiRequest(auth: nil, endpoint:Constants.wavesApiEndpoints.getWithdraw, currency: symbol.symbol, withdrawAddress: address, token: wallet.wavesToken, sender: WithdrawAddresses.self) { [self] (result, statusCode) in
             
             if result.currency.status == "active" {
                 let minAmount = MainScreen.decimal2Int64(result.currency.allowedAmount.min, digits: result.currency.decimals) + MainScreen.decimal2Int64(result.currency.fees.flat, digits: result.currency.decimals)
@@ -565,7 +564,7 @@ class Blockchain: NSObject {
                     assetId = currency
                 }
                 
-                let me = digilira.dummyName
+                let me = Constants.dummyName
                 
                 sendTransaction2(name: me, recipient: proxyAddress, amount: isAmount, assetId: assetId, attachment: "", wallet: wallet, blob: blob)
                 
@@ -573,29 +572,29 @@ class Blockchain: NSObject {
         }
     }
     
-    func wavesApiRequest<T>(auth: digilira.authTokenWaves? = nil, endpoint: String, currency: String? = "", withdrawAddress: String? = "", token: String? = "", sender: T.Type, returnCompletion: @escaping (T, Int) -> ()) where T: Decodable  {
+    func wavesApiRequest<T>(auth: Constants.authTokenWaves? = nil, endpoint: String, currency: String? = "", withdrawAddress: String? = "", token: String? = "", sender: T.Type, returnCompletion: @escaping (T, Int) -> ()) where T: Decodable  {
         
         guard let chainId = WavesSDK.shared.enviroment.chainId else { return }
-        var apiUrl = digilira.node.apiUrl
+        var apiUrl = Constants.node.apiUrl
         if chainId == "T" {
-            apiUrl = digilira.node.apiTestnetUrl
+            apiUrl = Constants.node.apiTestnetUrl
         }
         
         if let url = URL(string: apiUrl + endpoint) {
             var request = URLRequest(url: url)
             
             switch endpoint {
-            case digilira.wavesApiEndpoints.getToken:
+            case Constants.wavesApiEndpoints.getToken:
                 if let auth = auth {
                     request.httpMethod = req.method.post
                     
                     var requestBody = URLComponents()
                     
-                    let grant_type = URLQueryItem(name: "grant_type", value: digilira.wavesApiEndpoints.grant_type_password)
-                    let scope = URLQueryItem(name: "scope", value: digilira.wavesApiEndpoints.scope)
+                    let grant_type = URLQueryItem(name: "grant_type", value: Constants.wavesApiEndpoints.grant_type_password)
+                    let scope = URLQueryItem(name: "scope", value: Constants.wavesApiEndpoints.scope)
                     let username = URLQueryItem(name: "username", value: auth.username)
                     let password = URLQueryItem(name: "password", value: auth.password)
-                    let client_id = URLQueryItem(name: "client_id", value: digilira.wavesApiEndpoints.client_id)
+                    let client_id = URLQueryItem(name: "client_id", value: Constants.wavesApiEndpoints.client_id)
                     
                     requestBody.queryItems = [grant_type, scope, username, password, client_id]
                     
@@ -605,7 +604,7 @@ class Blockchain: NSObject {
                     }
                 }
                 break
-            case digilira.wavesApiEndpoints.getDeposit:
+            case Constants.wavesApiEndpoints.getDeposit:
                 request.httpMethod = req.method.get
                 if currency != "" {
                     if let currency = currency {
@@ -618,7 +617,7 @@ class Blockchain: NSObject {
                 }
                 
                 break
-            case digilira.wavesApiEndpoints.getWithdraw:
+            case Constants.wavesApiEndpoints.getWithdraw:
                 request.httpMethod = req.method.get
                 if currency != "" {
                     if let currency = currency {
@@ -636,7 +635,7 @@ class Blockchain: NSObject {
                     request.setValue(tokenString, forHTTPHeaderField: "Authorization")
                 }
                 break
-            case digilira.wavesApiEndpoints.getCurrencies:
+            case Constants.wavesApiEndpoints.getCurrencies:
                 request.httpMethod = req.method.get
                 break
             default:
@@ -689,11 +688,11 @@ class Blockchain: NSObject {
             let ticker = try JSONDecoder().decode(conformance, from: forKey)
             return ticker
         } catch {
-            throw digilira.NAError.parsingError
+            throw Constants.NAError.parsingError
         }
     }
     
-    func wavesNodeRequests(path: String, method:String = digilira.requestMethod.get, postData: Data? = nil) {
+    func wavesNodeRequests(path: String, method:String = Constants.requestMethod.get, postData: Data? = nil) {
         let url = WavesSDK.shared.enviroment.nodeUrl.description
         
         if let url = URL(string: url) {
@@ -797,7 +796,7 @@ class Blockchain: NSObject {
             let tokens = try listedTokens.returnCoins()
             return tokens
         } catch {
-            throw digilira.NAError.notListedToken
+            throw Constants.NAError.notListedToken
         }
     }
     
@@ -806,7 +805,7 @@ class Blockchain: NSObject {
             let tokens = try listedTokens.returnCoins()
             return tokens
         } catch {
-            throw digilira.NAError.notListedToken
+            throw Constants.NAError.notListedToken
         }
     }
     
@@ -814,7 +813,7 @@ class Blockchain: NSObject {
         do {
             return try listedTokens.returnAsset(assetId:assetId)
         } catch {
-            throw digilira.NAError.notListedToken
+            throw Constants.NAError.notListedToken
         }
     }
     
@@ -842,9 +841,9 @@ class Blockchain: NSObject {
         guard let chainId = WavesSDK.shared.enviroment.chainId else { return "" }
         switch chainId {
         case "T":
-            return digilira.smartAccount.script
+            return Constants.smartAccount.script
         default:
-            return digilira.smartAccountMainnet.script
+            return Constants.smartAccountMainnet.script
         }
     }
     
@@ -1049,34 +1048,34 @@ class Blockchain: NSObject {
                 }
                 
             } else {
-                self.onSensitive!(digilira.wallet.init(seed: "", wavesToken: ""), err)
+                self.onSensitive!(Constants.wallet.init(seed: "", wavesToken: ""), err)
             }
         }
         digiliraPay.touchID(reason: lang.const(x: "touch_id_reason"))
     }
     
-    private func getSeed() throws -> digilira.wallet {
+    private func getSeed() throws -> Constants.wallet {
         do {
             let source = try getKeyChainSource()
-            let seed = try secretKeys.LocksmithLoad(forKey: source.sensitiveData, conformance: digilira.login.self)
+            let seed = try secretKeys.LocksmithLoad(forKey: source.sensitiveData, conformance: Constants.login.self)
             
             do {
                 let wavesToken = try secretKeys.LocksmithLoad(forKey: source.wavesToken, conformance: WavesToken.self)
-                let r = digilira.wallet.init(seed: seed.seed, wavesToken: wavesToken.accessToken)
+                let r = Constants.wallet.init(seed: seed.seed, wavesToken: wavesToken.accessToken)
                 return r
             } catch {
                 getWavesToken(seed: seed.seed)
             }
-            let r = digilira.wallet.init(seed: seed.seed, wavesToken: "")
+            let r = Constants.wallet.init(seed: seed.seed, wavesToken: "")
             return r
         } catch {
             switch error {
-            case digilira.NAError.emptyAuth:
-                throw digilira.NAError.seed404
-            case digilira.NAError.seed404:
-                throw digilira.NAError.seed404
+            case Constants.NAError.emptyAuth:
+                throw Constants.NAError.seed404
+            case Constants.NAError.seed404:
+                throw Constants.NAError.seed404
             default:
-                throw digilira.NAError.anErrorOccured
+                throw Constants.NAError.anErrorOccured
             }
         }
     }
@@ -1094,7 +1093,7 @@ class Blockchain: NSObject {
         }
     }
     
-    func isOurMember(external: digilira.externalTransaction) {
+    func isOurMember(external: Constants.externalTransaction) {
         
         guard let address = external.address else { return }
         
@@ -1106,7 +1105,7 @@ class Blockchain: NSObject {
         let v:[String] = [address, "DIGILIRAPAY TRANSFER", external.network!]
         
         if let sign = try? bytization(v, timestamp) {
-            let user = digilira.externalTransaction.init(
+            let user = Constants.externalTransaction.init(
                 network: external.network,
                 address: address,
                 wallet: sign.wallet,
@@ -1131,7 +1130,7 @@ class Blockchain: NSObject {
                                 
                                 let ourMember = try crud.decodeDefaults(forKey: res, conformance: TransferDestination.self)
                                 
-                                let response = digilira.externalTransaction.init(network: external.network,
+                                let response = Constants.externalTransaction.init(network: external.network,
                                                                                  address: external.address,
                                                                                  amount: external.amount,
                                                                                  owner: ourMember.owner,
@@ -1155,13 +1154,13 @@ class Blockchain: NSObject {
                     
                     switch sts {
                     case 404:
-                        let response = digilira.externalTransaction.init(network: external.network,
+                        let response = Constants.externalTransaction.init(network: external.network,
                                                                          address: croppedAddress,
                                                                          amount: 0,
                                                                          owner: croppedAddress,
                                                                          wallet: returnGatewayAddress(),
                                                                          assetId: external.assetId,
-                                                                         destination: digilira.transactionDestination.foreign
+                                                                         destination: Constants.transactionDestination.foreign
                         )
                         self.onMember!(false, response)
                         break
@@ -1175,13 +1174,13 @@ class Blockchain: NSObject {
                                         do {
                                             let value = try JSONDecoder().decode(Int.self, from: dataTransationModel.value.data!)
                                             if value == 2 {
-                                                let response = digilira.externalTransaction.init(network: external.network,
+                                                let response = Constants.externalTransaction.init(network: external.network,
                                                                                                  address: croppedAddress,
                                                                                                  amount: 0,
                                                                                                  owner: croppedAddress,
                                                                                                  wallet: croppedAddress,
                                                                                                  assetId: external.assetId,
-                                                                                                 destination: digilira.transactionDestination.interwallets
+                                                                                                 destination: Constants.transactionDestination.interwallets
                                                 )
                                                 self.onMember!(true, response)
                                             }
@@ -1194,13 +1193,13 @@ class Blockchain: NSObject {
                                     } else if dataTransationModel.type == "string" {
                                         do {
                                             let wallet = try JSONDecoder().decode(String.self, from: dataTransationModel.value.data!)
-                                            let response = digilira.externalTransaction.init(network: external.network,
+                                            let response = Constants.externalTransaction.init(network: external.network,
                                                                                              address: croppedAddress,
                                                                                              amount: 0,
                                                                                              owner: croppedAddress,
                                                                                              wallet: wallet,
                                                                                              assetId: external.assetId,
-                                                                                             destination: digilira.transactionDestination.interwallets
+                                                                                             destination: Constants.transactionDestination.interwallets
                                             )
                                             self.onMember!(true, response)
                                         } catch  {
@@ -1209,13 +1208,13 @@ class Blockchain: NSObject {
                                     }
                                 }
                             case 404:
-                                let response = digilira.externalTransaction.init(network: external.network,
+                                let response = Constants.externalTransaction.init(network: external.network,
                                                                                  address: croppedAddress,
                                                                                  amount: 0,
                                                                                  owner: croppedAddress,
                                                                                  wallet: returnGatewayAddress(),
                                                                                  assetId: external.assetId,
-                                                                                 destination: digilira.transactionDestination.foreign
+                                                                                 destination: Constants.transactionDestination.foreign
                                 )
                                 self.onMember!(false, response)
                                 break
@@ -1228,12 +1227,12 @@ class Blockchain: NSObject {
                         wavesNodeRequests(path: StringUrl)
                         break
                     default:
-                        self.onError!(digilira.NAError.anErrorOccured)
+                        self.onError!(Constants.NAError.anErrorOccured)
                         break
                     }
                 }
             }
-            crud.request(rURL: crud.getApiURL() + digilira.api.isOurMember, postData: data, signature: sign.signature)
+            crud.request(rURL: crud.getApiURL() + Constants.api.isOurMember, postData: data, signature: sign.signature)
         }
     }
     
@@ -1243,16 +1242,16 @@ class Blockchain: NSObject {
             do {
                 s = try getSeed().seed
             } catch {
-                throw digilira.NAError.emptyPassword
+                throw Constants.NAError.emptyPassword
             }
         }
         
         if let a = array {
             guard let senderPublicKey = WavesCrypto.shared.publicKey(seed: s) else {
-                throw digilira.NAError.emptyPassword
+                throw Constants.NAError.emptyPassword
             }
             
-            guard let wallet = WavesCrypto.shared.address(seed: s, chainId: WavesSDK.shared.enviroment.chainId) else { throw digilira.NAError.emptyPassword }
+            guard let wallet = WavesCrypto.shared.address(seed: s, chainId: WavesSDK.shared.enviroment.chainId) else { throw Constants.NAError.emptyPassword }
             
             var bytes: [UInt8] = [255, 255, 255, 1]
             var byteString = ""
@@ -1276,24 +1275,24 @@ class Blockchain: NSObject {
                 }
             }
         }
-        throw digilira.NAError.emptyPassword
+        throw Constants.NAError.emptyPassword
     }
     
-    func getKeyChainSource() throws -> digilira.keychainData {
-        guard let chainId = WavesSDK.shared.enviroment.chainId else { throw digilira.NAError.emptyAuth }
+    func getKeyChainSource() throws -> Constants.keychainData {
+        guard let chainId = WavesSDK.shared.enviroment.chainId else { throw Constants.NAError.emptyAuth }
         
         switch chainId {
         case "T":
-            return digilira.keychainData.init(authenticateData: "authenticate", sensitiveData: "sensitive", wavesToken: "wavesToken")
+            return Constants.keychainData.init(authenticateData: "authenticate", sensitiveData: "sensitive", wavesToken: "wavesToken")
         case "W":
-            return digilira.keychainData.init(authenticateData: "authenticateMainnet", sensitiveData: "sensitiveMainnet", wavesToken: "wavesTokenMainnet")
+            return Constants.keychainData.init(authenticateData: "authenticateMainnet", sensitiveData: "sensitiveMainnet", wavesToken: "wavesTokenMainnet")
         default:
-            throw digilira.NAError.emptyAuth
+            throw Constants.NAError.emptyAuth
         }
     }
     
     func getChain() throws -> String {
-        guard let chainId = WavesSDK.shared.enviroment.chainId else { throw digilira.NAError.emptyAuth }
+        guard let chainId = WavesSDK.shared.enviroment.chainId else { throw Constants.NAError.emptyAuth }
         return chainId
     }
     
@@ -1325,7 +1324,7 @@ class Blockchain: NSObject {
             let v = [devToken, btc, eth, imported.description, ltc]
             guard let signed = try? bytization( v, timestamp, seed) else {return}
             
-            var user = digilira.exUser.init(btcAddress: btc,
+            var user = Constants.exUser.init(btcAddress: btc,
                                             ethAddress: eth,
                                             ltcAddress: ltc,
                                             wallet: wallet,
@@ -1424,7 +1423,7 @@ class Blockchain: NSObject {
                         }
                     }
                 }
-                crud.request(rURL: crud.getApiURL() + digilira.api.userRegister, postData: try JSONEncoder().encode(user), signature: user.signed!)
+                crud.request(rURL: crud.getApiURL() + Constants.api.userRegister, postData: try JSONEncoder().encode(user), signature: user.signed!)
             } catch  {
                 print(error)
             }
@@ -1455,7 +1454,7 @@ class Blockchain: NSObject {
         guard let chainId = WavesSDK.shared.enviroment.chainId else { return }
         guard let senderPublicKey = WavesCrypto.shared.publicKey(seed: seed) else { return }
         
-        let client_id = digilira.wavesApiEndpoints.client_id;
+        let client_id = Constants.wavesApiEndpoints.client_id;
         
         let timestamp = Int64(Date().timeIntervalSince1970) + 1000 * 60
         var bytes: [UInt8] = [255, 255, 255, 1]
@@ -1469,29 +1468,29 @@ class Blockchain: NSObject {
         
         if let preSign = wavesCrypto.signBytes(bytes: bytes, seed: seed) {
             if let bs58 = WavesCrypto.shared.base58encode(input: preSign) {
-                let params = digilira.authTokenWaves.init(
+                let params = Constants.authTokenWaves.init(
                     username: senderPublicKey,
                     password: timestamp.description + ":" + bs58
                 )
-                wavesApiRequest(auth: params, endpoint:digilira.wavesApiEndpoints.getToken, sender:WavesToken.self){ [self] (token, statusCode) in
+                wavesApiRequest(auth: params, endpoint:Constants.wavesApiEndpoints.getToken, sender:WavesToken.self){ [self] (token, statusCode) in
                     
-                    wavesApiRequest(auth: nil, endpoint:digilira.wavesApiEndpoints.getDeposit, currency: digilira.wavesApiEndpoints.BTC, token: token.accessToken, sender: DepositeAddresses.self) { (address, statusCode) in
+                    wavesApiRequest(auth: nil, endpoint:Constants.wavesApiEndpoints.getDeposit, currency: Constants.wavesApiEndpoints.BTC, token: token.accessToken, sender: DepositeAddresses.self) { (address, statusCode) in
                         UserDefaults.standard.set(address.depositAddresses[1], forKey: "btcAddress")
                         createUser(seed: seed)
                         print(address.depositAddresses)
                     }
-                    wavesApiRequest(auth: nil, endpoint:digilira.wavesApiEndpoints.getDeposit, currency: digilira.wavesApiEndpoints.ETH, token: token.accessToken, sender: DepositeAddresses.self) { (address, statusCode) in
+                    wavesApiRequest(auth: nil, endpoint:Constants.wavesApiEndpoints.getDeposit, currency: Constants.wavesApiEndpoints.ETH, token: token.accessToken, sender: DepositeAddresses.self) { (address, statusCode) in
                         UserDefaults.standard.set(address.depositAddresses[0], forKey: "ethAddress")
                         createUser(seed: seed)
                         print(address.depositAddresses)
                     }
-                    wavesApiRequest(auth: nil, endpoint:digilira.wavesApiEndpoints.getDeposit, currency: digilira.wavesApiEndpoints.LTC, token: token.accessToken, sender: DepositeAddresses.self) { (address, statusCode) in
+                    wavesApiRequest(auth: nil, endpoint:Constants.wavesApiEndpoints.getDeposit, currency: Constants.wavesApiEndpoints.LTC, token: token.accessToken, sender: DepositeAddresses.self) { (address, statusCode) in
                         UserDefaults.standard.set(address.depositAddresses[0], forKey: "ltcAddress")
                         createUser(seed: seed)
                         print(address.depositAddresses)
                     }
                     if chainId != "T" {
-                        wavesApiRequest(auth: nil, endpoint:digilira.wavesApiEndpoints.getDeposit, currency: digilira.wavesApiEndpoints.USDT, token: token.accessToken, sender: DepositeAddresses.self) { (address, statusCode) in
+                        wavesApiRequest(auth: nil, endpoint:Constants.wavesApiEndpoints.getDeposit, currency: Constants.wavesApiEndpoints.USDT, token: token.accessToken, sender: DepositeAddresses.self) { (address, statusCode) in
                             UserDefaults.standard.set(address.depositAddresses[0], forKey: "usdtAddress")
                             createUser(seed: seed)
                             print(address.depositAddresses)
@@ -1503,7 +1502,7 @@ class Blockchain: NSObject {
     }
 }
 
-extension Blockchain: URLSessionDelegate {
+extension BlockchainService: URLSessionDelegate {
     
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         
@@ -1525,7 +1524,7 @@ extension Blockchain: URLSessionDelegate {
             //Local and Remote certificate Data
             let remoteCertificateData:NSData =  SecCertificateCopyData(certificate!)
             //let LocalCertificate = Bundle.main.path(forResource: "github.com", ofType: "cer")
-            let pathToCertificate = Bundle.main.path(forResource: digilira.sslPinning.wavesCert, ofType: digilira.sslPinning.fileType)
+            let pathToCertificate = Bundle.main.path(forResource: Constants.sslPinning.wavesCert, ofType: Constants.sslPinning.fileType)
             let localCertificateData:NSData = NSData(contentsOfFile: pathToCertificate!)!
             
             //Compare certificates

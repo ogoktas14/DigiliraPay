@@ -9,7 +9,7 @@
 import Foundation
 
 
-class binance: NSObject {
+class BinanceService: NSObject {
     private var isCertificatePinning: Bool = true
     var onBinanceError: ((_ result: String, _ statusCode: Int?)->())?
     var onBinanceTicker: ((_ result: BinanceMarketInfo, _ statusCode: Int?)->())?
@@ -66,7 +66,7 @@ class binance: NSObject {
         
     
     public func getTicker() {
-        let apiURL = digilira.binanceURL.baseUrl + digilira.binanceURL.ticker
+        let apiURL = Constants.binanceURL.baseUrl + Constants.binanceURL.ticker
         
         request(rURL: apiURL,
                 METHOD: req.method.get, returnCompletion: { (json, statusCode) in
@@ -86,7 +86,7 @@ class binance: NSObject {
 
 }
 
-extension binance: URLSessionDelegate {
+extension BinanceService: URLSessionDelegate {
    
    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
        
@@ -108,7 +108,7 @@ extension binance: URLSessionDelegate {
            //Local and Remote certificate Data
            let remoteCertificateData:NSData =  SecCertificateCopyData(certificate!)
            //let LocalCertificate = Bundle.main.path(forResource: "github.com", ofType: "cer")
-            let pathToCertificate = Bundle.main.path(forResource: digilira.sslPinning.binance, ofType: digilira.sslPinning.fileType)
+            let pathToCertificate = Bundle.main.path(forResource: Constants.sslPinning.binance, ofType: Constants.sslPinning.fileType)
            let localCertificateData:NSData = NSData(contentsOfFile: pathToCertificate!)!
            
            //Compare certificates
