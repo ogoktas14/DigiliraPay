@@ -87,9 +87,8 @@
 		9342427F2586AF7E009D6024 /* OrderDetailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9342427E2586AF7E009D6024 /* OrderDetailView.xib */; };
 		934242822586B1F0009D6024 /* OrderDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934242812586B1F0009D6024 /* OrderDetailView.swift */; };
 		9343C9052629C88D002CD530 /* newSendView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9343C9072629C88D002CD530 /* newSendView.xib */; };
-		9343C9172629CBA6002CD530 /* Localizer.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9343C9192629CBA6002CD530 /* Localizer.strings */; };
+		9343C9A4262D9559002CD530 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9343C9A6262D9559002CD530 /* Localizable.strings */; };
 		934F3C4825889950007CFC19 /* string.tr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F3C4725889950007CFC19 /* string.tr.swift */; };
-		934F3C4C2588F627007CFC19 /* mainnet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F3C4B2588F627007CFC19 /* mainnet.swift */; };
 		934F3C50258A4A9F007CFC19 /* SendMoneyCard.xib in Resources */ = {isa = PBXBuildFile; fileRef = 934F3C4F258A4A9E007CFC19 /* SendMoneyCard.xib */; };
 		934F3C53258A4C37007CFC19 /* SendMoneyCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934F3C52258A4C37007CFC19 /* SendMoneyCard.swift */; };
 		93534039253C528600FFEA4D /* newSendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93534038253C528600FFEA4D /* newSendView.swift */; };
@@ -182,7 +181,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0023C0FB2517C92B0042B50C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		003B3508234E2299004EE63F /* WavesSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = WavesSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		003B3509234E2299004EE63F /* WavesSDKCrypto.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = WavesSDKCrypto.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		003B350A234E2299004EE63F /* WavesSDKExtensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = WavesSDKExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -210,7 +208,6 @@
 		882AAB0422FC96DD004CDAA6 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		882AAB0622FC96DD004CDAA6 /* OnBoardingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnBoardingVC.swift; sourceTree = "<group>"; };
 		882AAB0B22FC96DE004CDAA6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		882AAB0E22FC96DE004CDAA6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		882AAB1022FC96DE004CDAA6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		882B9B6622FEFAA500D6E7B6 /* OnBoardingView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OnBoardingView.xib; sourceTree = "<group>"; };
 		882E99BC232301BB0061C7AC /* LetsStartSkipDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LetsStartSkipDelegate.swift; sourceTree = "<group>"; };
@@ -270,17 +267,15 @@
 		93390894255AB1760005B64A /* wavesnodes.com.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = wavesnodes.com.cer; sourceTree = "<group>"; };
 		9342427E2586AF7E009D6024 /* OrderDetailView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OrderDetailView.xib; sourceTree = "<group>"; };
 		934242812586B1F0009D6024 /* OrderDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDetailView.swift; sourceTree = "<group>"; };
-		9343C9012629C86D002CD530 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
-		9343C9062629C88D002CD530 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/newSendView.xib; sourceTree = "<group>"; };
-		9343C90C2629C8A1002CD530 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/newSendView.strings; sourceTree = "<group>"; };
-		9343C90E2629C8A4002CD530 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/newSendView.strings; sourceTree = "<group>"; };
-		9343C9182629CBA6002CD530 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizer.strings; sourceTree = "<group>"; };
-		9343C91D2629CBA9002CD530 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizer.strings; sourceTree = "<group>"; };
+		9343C940262D840A002CD530 /* tr */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = tr; path = tr.lproj/Interface.storyboard; sourceTree = "<group>"; };
+		9343C97A262D9088002CD530 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		9343C97B262D9088002CD530 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/newSendView.xib; sourceTree = "<group>"; };
+		9343C98A262D9419002CD530 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		9343C9A5262D9559002CD530 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		9343C9AA262D959A002CD530 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		934F3C4725889950007CFC19 /* string.tr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = string.tr.swift; sourceTree = "<group>"; };
-		934F3C4B2588F627007CFC19 /* mainnet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mainnet.swift; sourceTree = "<group>"; };
 		934F3C4F258A4A9E007CFC19 /* SendMoneyCard.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SendMoneyCard.xib; sourceTree = "<group>"; };
 		934F3C52258A4C37007CFC19 /* SendMoneyCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendMoneyCard.swift; sourceTree = "<group>"; };
-		934F3C5C258B2BEE007CFC19 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Main.strings; sourceTree = "<group>"; };
 		93534038253C528600FFEA4D /* newSendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newSendView.swift; sourceTree = "<group>"; };
 		93534F1725496A950000329F /* bitexenApiView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = bitexenApiView.xib; sourceTree = "<group>"; };
 		93534F1A2549851A0000329F /* BitexenAPIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitexenAPIView.swift; sourceTree = "<group>"; };
@@ -306,7 +301,6 @@
 		93B7A11A252F0D8000C89E66 /* PaymentCategories.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentCategories.xib; sourceTree = "<group>"; };
 		93B7A11D252F0F0A00C89E66 /* PaymentCategories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCategories.swift; sourceTree = "<group>"; };
 		93BB06CE259FD6E2000E4BBB /* WatchDP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WatchDP.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		93BB06D1259FD6E2000E4BBB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
 		93BB06D3259FD6E4000E4BBB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		93BB06D5259FD6E4000E4BBB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		93BB06DA259FD6E4000E4BBB /* WatchDP Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "WatchDP Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -372,9 +366,7 @@
 				93FC66BF2562AB4E00E42AAC /* BinanceService.swift */,
 				93E9D551257A930D00FE19D8 /* ErrorHandling.swift */,
 				934F3C4725889950007CFC19 /* string.tr.swift */,
-				934F3C4B2588F627007CFC19 /* mainnet.swift */,
 				937C52D725C1E19000D3BB36 /* Localization.swift */,
-				9343C9192629CBA6002CD530 /* Localizer.strings */,
 			);
 			name = blockchain;
 			sourceTree = "<group>";
@@ -529,6 +521,7 @@
 			isa = PBXGroup;
 			children = (
 				889F2A262316D8D400ACD656 /* Languages.swift */,
+				9343C9A6262D9559002CD530 /* Localizable.strings */,
 			);
 			name = Utility;
 			sourceTree = "<group>";
@@ -717,12 +710,12 @@
 			};
 			buildConfigurationList = 882AAAFA22FC96DD004CDAA6 /* Build configuration list for PBXProject "DigiliraPay" */;
 			compatibilityVersion = "Xcode 9.3";
-			developmentRegion = en;
+			developmentRegion = tr;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
-				Base,
 				tr,
+				Base,
 			);
 			mainGroup = 882AAAF622FC96DD004CDAA6;
 			productRefGroup = 882AAB0022FC96DD004CDAA6 /* Products */;
@@ -742,6 +735,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				93C111A525BC9B8B00CEE537 /* testBitexen.cer in Resources */,
+				9343C9A4262D9559002CD530 /* Localizable.strings in Resources */,
 				9342427F2586AF7E009D6024 /* OrderDetailView.xib in Resources */,
 				93FC66C32562ABAB00E42AAC /* binance.com.cer in Resources */,
 				932A59C02584FA1900B64EA9 /* warningView.xib in Resources */,
@@ -763,7 +757,6 @@
 				9343C9052629C88D002CD530 /* newSendView.xib in Resources */,
 				88309EC0231FD36000F96C05 /* VerifyAccountView.xib in Resources */,
 				932CF58525C829BF00599C0D /* CommissionTableCell.xib in Resources */,
-				9343C9172629CBA6002CD530 /* Localizer.strings in Resources */,
 				88114F6623216A8E00AB3B5A /* sendWithQR.xib in Resources */,
 				93757C21256D43060066A7B9 /* PayTableViewCell.xib in Resources */,
 				88CA9378231A488A008F894B /* TransactionHistoryDetailCellHeader.xib in Resources */,
@@ -877,7 +870,6 @@
 				934F3C4825889950007CFC19 /* string.tr.swift in Sources */,
 				93E9D552257A930D00FE19D8 /* ErrorHandling.swift in Sources */,
 				88CA938F231BD0AE008F894B /* ProfileSettingsView.swift in Sources */,
-				934F3C4C2588F627007CFC19 /* mainnet.swift in Sources */,
 				93B7A11E252F0F0A00C89E66 /* PaymentCategories.swift in Sources */,
 				88F4A1BF2312AF7B007172A6 /* MenuView.swift in Sources */,
 				88309EBE231FD08500F96C05 /* LoadCoinDelegate.swift in Sources */,
@@ -962,9 +954,7 @@
 		0023C0FA2517C92B0042B50C /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				0023C0FB2517C92B0042B50C /* Base */,
-				934F3C5C258B2BEE007CFC19 /* tr */,
-				9343C9012629C86D002CD530 /* en */,
+				9343C97A262D9088002CD530 /* Base */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -972,7 +962,7 @@
 		882AAB0D22FC96DE004CDAA6 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				882AAB0E22FC96DE004CDAA6 /* Base */,
+				9343C98A262D9419002CD530 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -980,26 +970,24 @@
 		9343C9072629C88D002CD530 /* newSendView.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				9343C9062629C88D002CD530 /* Base */,
-				9343C90C2629C8A1002CD530 /* en */,
-				9343C90E2629C8A4002CD530 /* tr */,
+				9343C97B262D9088002CD530 /* Base */,
 			);
 			name = newSendView.xib;
 			sourceTree = "<group>";
 		};
-		9343C9192629CBA6002CD530 /* Localizer.strings */ = {
+		9343C9A6262D9559002CD530 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				9343C9182629CBA6002CD530 /* en */,
-				9343C91D2629CBA9002CD530 /* tr */,
+				9343C9A5262D9559002CD530 /* en */,
+				9343C9AA262D959A002CD530 /* tr */,
 			);
-			name = Localizer.strings;
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 		93BB06D0259FD6E2000E4BBB /* Interface.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				93BB06D1259FD6E2000E4BBB /* Base */,
+				9343C940262D840A002CD530 /* tr */,
 			);
 			name = Interface.storyboard;
 			sourceTree = "<group>";

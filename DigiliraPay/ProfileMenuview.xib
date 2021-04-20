@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -381,9 +381,10 @@
             <connections>
                 <outlet property="biometricSecurityToggle" destination="U9V-c1-iTg" id="2Vh-mT-A7g"/>
                 <outlet property="bitexenAPI" destination="Cul-45-rzD" id="WlS-FF-AQ0"/>
+                <outlet property="bitexenLabel" destination="N0u-cu-xL6" id="GSr-QI-i1f"/>
                 <outlet property="commissions" destination="0se-hx-LsW" id="JSg-Ru-ihl"/>
+                <outlet property="commissionsLabel" destination="Jwh-SL-dGe" id="6fh-PA-DWH"/>
                 <outlet property="keywordsLabel" destination="hQN-uT-aWq" id="aFY-rS-J2s"/>
-                <outlet property="languageLabel" destination="N0u-cu-xL6" id="GSr-QI-i1f"/>
                 <outlet property="legalTextView" destination="05A-4L-2G3" id="ssn-p1-aPo"/>
                 <outlet property="legalViewWarning" destination="k8N-0q-L2B" id="ue8-gt-e2c"/>
                 <outlet property="mainnetTestnet" destination="vYy-Xr-Umz" id="Bns-wK-tm5"/>
@@ -400,6 +401,7 @@
                 <outlet property="termsViewWarning" destination="q9Q-bB-up9" id="N90-HH-JVV"/>
                 <outlet property="termsofUseLabel" destination="Lum-3b-OMI" id="t1b-eM-7Rm"/>
                 <outlet property="termsofUseView" destination="va4-gy-RL6" id="QVa-bq-RFP"/>
+                <outlet property="testnetMainnet" destination="JyM-kp-bgg" id="YFe-up-pfH"/>
                 <outlet property="userTextLabel" destination="Z2V-5B-8sc" id="duI-Ah-bJD"/>
                 <outlet property="verifyProfileView" destination="lmT-cI-9ud" id="D66-dT-NBx"/>
             </connections>

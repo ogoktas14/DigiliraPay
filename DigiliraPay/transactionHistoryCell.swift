@@ -14,16 +14,11 @@ class transactionHistoryCell: UITableViewCell {
     @IBOutlet weak var operationTitle: UILabel!
     @IBOutlet weak var operationDate: UILabel!
     @IBOutlet weak var operationAmount: UILabel!
-    
+    let lang = Localize()
+
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
-    }
-    
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        //super.setSelected(selected, animated: animated)
-        
-        // Configure the view for the selected state
-    }
-    
+        operationTitle.text = lang.getLocalizedString(Localize.keys.no_transaction.rawValue)
+        operationDate.text = lang.getLocalizedString(Localize.keys.transaction_access_area.rawValue)
+    }    
 }

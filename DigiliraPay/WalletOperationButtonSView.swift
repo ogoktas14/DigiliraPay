@@ -20,6 +20,7 @@ class WalletOperationButtonSView: UIView {
     @IBOutlet weak var balanceText: UILabel!
     
     let generator = UINotificationFeedbackGenerator()
+    let lang = Localize()
 
     var blnx = "initial value" {
         didSet { //called when item changes
@@ -32,7 +33,7 @@ class WalletOperationButtonSView: UIView {
     weak var delegate: OperationButtonsDelegate?
     override func awakeFromNib()
     {
-        
+        setUI()
         
     }
     
@@ -75,7 +76,13 @@ class WalletOperationButtonSView: UIView {
                 })
             })
 
-        })    }
+        })
+    }
+    
+    private func setUI() {
+        sendLabel.text = lang.getLocalizedString(Localize.keys.withdraw.rawValue)
+        loadLabel.text = lang.getLocalizedString(Localize.keys.deposite.rawValue)
+    }
     
     @objc func sendButton()
     { 

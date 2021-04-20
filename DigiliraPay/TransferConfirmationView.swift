@@ -35,9 +35,7 @@ class TransferConfirmationView: UIView {
     var confirmation: Bool = false
 
     let generator = UINotificationFeedbackGenerator()
-
-    var title: String  = "Dikkat"
-    var message: String  = "Dikkat"
+    
     var isError: Bool = true
     var isCaution: Bool = false
     var isTransaction: Bool = false
@@ -46,9 +44,8 @@ class TransferConfirmationView: UIView {
     override func awakeFromNib() {
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .light
-        } else {
-            // Fallback on earlier versions
         }
+        
         self.layer.cornerRadius = 10
         titleView.layer.cornerRadius = 10
 

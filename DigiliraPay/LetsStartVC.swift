@@ -13,6 +13,7 @@ class LetsStartVC: UIViewController {
     @IBOutlet weak var nextButtonView: UIView!
     @IBOutlet weak var scrollAreaView: UIView!
     @IBOutlet weak var backButtonView: UIView!
+    @IBOutlet weak var backButtonLabel: UILabel!
     @IBOutlet weak var nextButtonLabel: UILabel!
     @IBOutlet weak var nextButtonContentView: UIView!
     
@@ -23,6 +24,7 @@ class LetsStartVC: UIViewController {
     var logoAnimation = LogoAnimation()
     var warningView = WarningView()
 
+    let lang = Localize()
 
     var gotoSeedRecover = false
     let BC = BlockchainService()
@@ -55,12 +57,10 @@ class LetsStartVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        setUI()
         initial()
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .light
-        } else {
-            // Fallback on earlier versions
         }
         
         nextButtonView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
@@ -77,9 +77,14 @@ class LetsStartVC: UIViewController {
         setScrollView()
         if (gotoSeedRecover == true) {
             letsStartScrollView.scrollToPage(index: 3)
-            nextButtonLabel.text = "Yedekledim"
+            nextButtonLabel.text = lang.getLocalizedString(Localize.letsStartVc.backed_up.rawValue)
         }
         nextButtonView.translatesAutoresizingMaskIntoConstraints = true
+    }
+    
+    private func setUI() {
+        backButtonLabel.text = lang.getLocalizedString(Localize.importAccountVals.back_button.rawValue)
+        nextButtonLabel.text = lang.getLocalizedString(Localize.importAccountVals.start_button.rawValue)
     }
     
     func setNextButton()
@@ -110,18 +115,18 @@ class LetsStartVC: UIViewController {
         switch letsStartScrollPage
         {
         case 0:
-            nextButtonLabel.text = "Başla"
+            nextButtonLabel.text = lang.getLocalizedString(Localize.letsStartVc.start.rawValue)
         case 1:
-            nextButtonLabel.text = "Devam"
+            nextButtonLabel.text = lang.getLocalizedString(Localize.letsStartVc.continue_to.rawValue)
         case 2:
             showKeywordView()
-            nextButtonLabel.text = "Anahtar Oluştur"
+            nextButtonLabel.text = lang.getLocalizedString(Localize.letsStartVc.create_seed_keys.rawValue)
         case 3:
-            nextButtonLabel.text = "Yedekledim"
+            nextButtonLabel.text = lang.getLocalizedString(Localize.letsStartVc.backed_up.rawValue)
             UserDefaults.standard.set(false, forKey: "seedRecovery")
         case 4:
             nextButtonView.isHidden = true
-            nextButtonLabel.text = "Doğrula ve Başla"
+            nextButtonLabel.text = lang.getLocalizedString(Localize.letsStartVc.verify_and_start.rawValue)
             showVerifyView()
         default:
             break
@@ -151,14 +156,14 @@ class LetsStartVC: UIViewController {
         switch letsStartScrollPage
         {
         case 0:
-            nextButtonLabel.text = "Başla"
+            nextButtonLabel.text = lang.getLocalizedString(Localize.letsStartVc.start.rawValue)
         case 1:
             notShowKeyWordView()
-            nextButtonLabel.text = "Devam"
+            nextButtonLabel.text = lang.getLocalizedString(Localize.letsStartVc.continue_to.rawValue)
         case 2:
-            nextButtonLabel.text = "Anahtar Oluştur"
+            nextButtonLabel.text = lang.getLocalizedString(Localize.letsStartVc.create_seed_keys.rawValue)
         case 3:
-            nextButtonLabel.text = "Yedekledim"
+            nextButtonLabel.text = lang.getLocalizedString(Localize.letsStartVc.backed_up.rawValue)
             nextButtonView.isHidden = false
 
         default:
@@ -209,9 +214,9 @@ class LetsStartVC: UIViewController {
         let letsStartView1: OnBoardingView = UIView().loadOnBoardingNib()
         letsStartView1.makeWhiteBackground()
         letsStartView1.setView(image: UIImage(named: "letsStart1")!,
-                                titleFirst: "Blokzincir dünyasına",
-                                titleSecond: "hoşgeldiniz!",
-                                desc: "Dijital cüzdanını oluşturmaya hemen başlayalım.")
+                                titleFirst:  lang.getLocalizedString(Localize.letsStartVc.lets_page_1_line_1.rawValue),
+                                titleSecond: lang.getLocalizedString(Localize.letsStartVc.lets_page_1_line_2.rawValue),
+                                desc:        lang.getLocalizedString(Localize.letsStartVc.lets_page_1_line_3.rawValue))
         
         letsStartView1.frame = CGRect(x: 0,
                                        y: 0,
@@ -222,9 +227,9 @@ class LetsStartVC: UIViewController {
         let letsStartView2: OnBoardingView = UIView().loadOnBoardingNib()
         letsStartView2.makeWhiteBackground()
         letsStartView2.setView(image: UIImage(named: "letsStart2")!,
-                                titleFirst: "Blokzincir cüzdanınız",
-                                titleSecond: "şeffaf bir kasa gibidir",
-                                desc: "Bu kasayı açabilecek anahtar ise sadece sizin kontrolünüzdedir. Bu kasayı sizden başka kimse açamaz. Anahtarı kaybederseniz buna siz de dahilsiniz.")
+                                titleFirst:  lang.getLocalizedString(Localize.letsStartVc.lets_page_2_line_1.rawValue),
+                                titleSecond: lang.getLocalizedString(Localize.letsStartVc.lets_page_2_line_2.rawValue),
+                                desc:        lang.getLocalizedString(Localize.letsStartVc.lets_page_2_line_3.rawValue))
         
         letsStartView2.frame = CGRect(x: scrollViewSize.width,
                                        y: 0,
@@ -234,9 +239,9 @@ class LetsStartVC: UIViewController {
         let letsStartView3: OnBoardingView = UIView().loadOnBoardingNib()
         letsStartView3.makeWhiteBackground()
         letsStartView3.setView(image: UIImage(named: "letsStart3")!,
-                                titleFirst: "Anahtar kelimeler ile",
-                                titleSecond: "her zaman güvende ol!",
-                                desc: "Anahtar kelimelerini senden başka kimse bilemez. Buna biz de dahiliz. Bir sonraki ekranda kullandığınız cihaz üzerinde oluşturulan 15 'anahtar kelime'yi sırasıyla güvenli bir yere kaydetmeyi unutmayın.")
+                                titleFirst:  lang.getLocalizedString(Localize.letsStartVc.lets_page_3_line_1.rawValue),
+                                titleSecond: lang.getLocalizedString(Localize.letsStartVc.lets_page_3_line_2.rawValue),
+                                desc:        lang.getLocalizedString(Localize.letsStartVc.lets_page_3_line_3.rawValue))
         
         letsStartView3.frame = CGRect(x: scrollViewSize.width * 2,
                                        y: 0,
@@ -244,7 +249,11 @@ class LetsStartVC: UIViewController {
                                        height: scrollViewSize.height)
         
         let letsStartView4: LetsStartWordsView = UIView().loadNib(name: "LetsStartWordView") as! LetsStartWordsView
-        letsStartView4.setTitles(title: "Anahtar kelimelerinizi", subTitle: "asla kaybetmeyin!", desc: "Eğer uygulamanız silinirse veya cüzdanınızı başka bir cihaza aktarmanız gerekirse bu kelimelere ihtiyaç duyacaksınız. Bu kelimeleri sırasıyla not alın.")
+        
+        letsStartView4.setTitles(title: lang.getLocalizedString(Localize.letsStartVc.last_page_header.rawValue),
+                                 subTitle: lang.getLocalizedString(Localize.letsStartVc.last_page_message.rawValue),
+                                 desc: lang.getLocalizedString(Localize.letsStartVc.last_page_desc.rawValue))
+        
         letsStartView4.frame = CGRect(x: scrollViewSize.width * 3,
                                        y: 0,
                                        width: scrollViewSize.width,
@@ -315,7 +324,8 @@ class LetsStartVC: UIViewController {
 extension LetsStartVC: LetsStartSkipDelegate
 {
     func warnUser() {
-        alertWarning(title: "Dikkat", message: "Ekran görüntüsü alarak anahtar kelimeleri yedeklemeniz durumunda, anahtar kelimeleriniz sizden başka birisinin eline geçebilir ve kripto paralarınızı kaybedebilirsiniz. Lütfen daha güvenli bir yedekleme metodu gerçekleştiriniz.")
+        alertWarning(title: lang.getLocalizedString(Localize.keys.attention.rawValue),
+                     message: lang.getLocalizedString(Localize.keys.do_not_take_screenshots.rawValue))
     }
     
     func skipTap() {

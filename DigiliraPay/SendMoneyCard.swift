@@ -11,9 +11,6 @@ import UIKit
 
 
 class SendMoneyCard: UIView {
-    
-    
     override func awakeFromNib() {
-        
     }
 }

@@ -33,6 +33,7 @@ class PinView: UIView {
 
     let digiliraPay = DigiliraPayService()
     weak var errors: ErrorsDelegate?
+    let lang = Localize()
 
     var tryAgain = 5
     weak var delegate: PinViewDelegate?
@@ -149,6 +150,7 @@ class PinView: UIView {
         pinArea3.layer.cornerRadius = pinArea3.frame.height / 2
         pinArea4.layer.cornerRadius = pinArea4.frame.height / 2
         
+        titleLabel.text = lang.getLocalizedString(Localize.pinScreen.enter_the_pin.rawValue)
         
     }
     
@@ -238,11 +240,11 @@ class PinView: UIView {
             isVerify = isEntryMode
 
             if isInit {
-                titleLabel.text = "Bir Pin Belirleyin"
+                titleLabel.text = lang.getLocalizedString(Localize.pinScreen.enter_a_pin.rawValue)
             }
             
             if isEntryMode && !isTouchIDCanceled {
-                digiliraPay.touchID(reason: "Parmak izini okutarak giriş yapabilirsiniz.")
+                digiliraPay.touchID(reason: lang.getLocalizedString(Localize.pinScreen.use_biometrics.rawValue))
                 self.goBackButtonView.isHidden = true
                 
                 self.lastCode = String((user.pincode))
@@ -267,7 +269,7 @@ class PinView: UIView {
         if !isVerify {
             entryAreaView.isUserInteractionEnabled = true
             isUpdating = true
-            titleLabel.text = "Pini Doğrulayın"
+            titleLabel.text = lang.getLocalizedString(Localize.pinScreen.verify_pin.rawValue)
         }
         entered = [false, false, false, false]
         isVerify = true
@@ -293,14 +295,10 @@ class PinView: UIView {
     {
         guard isVerify else { return }
         if lastCode.count < 4
-        {
-            
+        { 
             while lastCode.count < 4  {
                 lastCode = "0" + lastCode
-
             }
-   
-        
         }
         
         if compareHashPressed(pin: firstCode, bcrypt: lastCode) {
@@ -328,7 +326,7 @@ class PinView: UIView {
                 warning2.isHidden = true
                 
                 firstCode.removeAll()
-                titleLabel.text = "Yeni Pin Belirleyin"
+                titleLabel.text = lang.getLocalizedString(Localize.pinScreen.enter_a_pin.rawValue)
                 isVerify = false
                 lastCode.removeAll()
                 isUpdateMode=false
@@ -353,8 +351,11 @@ class PinView: UIView {
                 goBackButtonView.isHidden = true
                 delegate?.blockUser()
             }
+                let localizedString = String(format: lang.getLocalizedString(Localize.pinScreen.remaining_wrong_entry.rawValue), (tryAgain - wrongEntry).description)
 
-            warning2.text = "Kalan deneme hakkınız: " + (tryAgain - wrongEntry).description
+                
+                warning1.text = lang.getLocalizedString(Localize.pinScreen.wrong_entry.rawValue)
+                warning2.text = localizedString
             }
             generator.notificationOccurred(.error)
             goVerify()
@@ -364,10 +365,9 @@ class PinView: UIView {
                 
             
             if !isEntryMode && !isUpdateMode  {
-            titleLabel.text = "Pini Girin"
-            isVerify = false
-            lastCode.removeAll()
-             
+                titleLabel.text = lang.getLocalizedString(Localize.pinScreen.enter_the_pin.rawValue)
+                isVerify = false
+                lastCode.removeAll()
             }
         }
  

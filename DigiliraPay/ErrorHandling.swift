@@ -25,20 +25,26 @@ class ErrorHandling: NSObject {
         switch error {
         
         case Constants.NAError.E_502:
-            alertWarning(title: lang.const(x: Localize.keys.an_error_occured.rawValue), message: "Şu anda işleminizi gerçekleştiremiyoruz. Lütfen daha sonra tekrar deneyin.", error: true)
+            alertWarning(title: lang.getLocalizedString(Localize.keys.an_error_occured.rawValue), message: lang.getLocalizedString(Localize.keys.cannot_perform_this_action_try_again.rawValue), error: true)
             break
             
         case Constants.NAError.missingParameters:
-            alertWarning(title: lang.const(x: Localize.keys.an_error_occured.rawValue), message: "Girdiğiniz bilgileri kontrol ederek tekrar deneyin.", error: true)
+            alertWarning(title: lang.getLocalizedString(Localize.keys.an_error_occured.rawValue),
+                         message: lang.getLocalizedString(Localize.messages.missing_parameters.rawValue),
+                         error: true)
             break
         case Constants.NAError.anErrorOccured:
-            alertWarning(title: lang.const(x: Localize.keys.an_error_occured.rawValue), message: "Lütfen tekrar deneyin.", error: true)
+            alertWarning(title: lang.getLocalizedString(Localize.keys.an_error_occured.rawValue),
+                         message: lang.getLocalizedString(Localize.messages.try_again.rawValue),
+                         error: true)
             break
         case Constants.NAError.emptyAuth:
-            alertWarning(title: lang.const(x: Localize.keys.an_error_occured.rawValue), message: "Kullanıcı bilgileri okunamadı")
+            alertWarning(title: lang.getLocalizedString(Localize.keys.an_error_occured.rawValue),
+                         message: lang.getLocalizedString(Localize.messages.empty_auth.rawValue))
             break
         case Constants.NAError.emptyPassword:
-            alertWarning(title: lang.const(x: Localize.keys.an_error_occured.rawValue), message: "Kullanıcı bilgileri okunamadı")
+            alertWarning(title: lang.getLocalizedString(Localize.keys.an_error_occured.rawValue),
+                         message: lang.getLocalizedString(Localize.messages.empty_auth.rawValue))
             break
         case Constants.NAError.notListedToken:
             break
@@ -47,62 +53,79 @@ class ErrorHandling: NSObject {
         case Constants.NAError.tokenNotFound:
             return
         case Constants.NAError.noAmount:
-            alertWarning(title: "Miktar Giriniz", message: "Minimum gönderme tutarının altında bir miktar girdiniz.")
+            alertWarning(title:lang.getLocalizedString(Localize.messages.enter_amount.rawValue),
+                         message: lang.getLocalizedString(Localize.messages.below_minimum.rawValue))
             return
         case NetworkError.negativeBalance:
-            alertWarning(title: "Yetersiz Bakiye", message: "Bakiyeniz bu transferi gerçekleştirebilmek için yeterli değil.")
+            alertWarning(title: lang.getLocalizedString(Localize.keys.out_of_balance_header.rawValue),
+                         message: lang.getLocalizedString(Localize.keys.out_of_balance_message.rawValue))
             break
         case NetworkError.internetNotWorking:
-            alertWarning(title: "Bağlantı Hatası", message: "İnternet bağlantınızın olduğundan emin olup tekrar deneyiniz.")
+            alertWarning(title: lang.getLocalizedString(Localize.messages.connection_problem.rawValue),
+                         message: lang.getLocalizedString(Localize.messages.no_internet.rawValue))
             break
         case NetworkError.message("Error while executing token-script: The recipient is not authorized to possess this SmartAsset!"):
-            alertWarning(title: "Yetkisiz İşlem", message: "Göndermeye çalıştığınız akıllı token bu adrese gönderilememektedir.")
+            alertWarning(title: lang.getLocalizedString(Localize.messages.access_denied.rawValue),
+                         message: lang.getLocalizedString(Localize.messages.cannot_send_this_token.rawValue))
             break
             
         case NetworkError.message("This asset has special requirements 2"):
-            alertWarning(title: "Yetkisiz İşlem", message: "Bu token ile ödeme yapabilmeniz için. Kullanıcı onayından geçmeniz gerekmektedir.")
+            alertWarning(title: lang.getLocalizedString(Localize.messages.access_denied.rawValue),
+                         message: lang.getLocalizedString(Localize.messages.verify_profile_to_make_payment.rawValue))
             break
         case NetworkError.message("Error while executing account-script: Can not transfer this asset 4"):
-            alertWarning(title: "Yetkisiz İşlem", message: "Bu token ile ödeme yapamazsınız.")
+            alertWarning(title: lang.getLocalizedString(Localize.messages.access_denied.rawValue),
+                         message: lang.getLocalizedString(Localize.messages.cannot_pay_with_this_token.rawValue))
             break
             
         case NetworkError.message("Error while executing account-script: Cannot use this token for none DigiliraPay users transfers."):
-            alertWarning(title: "Yetkisiz İşlem", message: "Akıllı kontrat bu işleme izin vermemektedir.")
+            alertWarning(title: lang.getLocalizedString(Localize.messages.access_denied.rawValue),
+                         message: lang.getLocalizedString(Localize.messages.smart_account_not_allowed.rawValue))
             break
         case NetworkError.scriptError:
-            alertWarning(title: "Yetkisiz İşlem", message: "Akıllı kontrat bu işleme izin vermemektedir.")
+            alertWarning(title:lang.getLocalizedString(Localize.messages.access_denied.rawValue),
+                         message: lang.getLocalizedString(Localize.messages.smart_account_not_allowed.rawValue))
             break
         case NetworkError.serverError:
-            alertWarning(title: "Bağlantı Hatası", message: "Blokzincir kaynaklı problemlerden dolayı işleminiz gerçekleşmemiştir.")
+            alertWarning(title:lang.getLocalizedString(Localize.messages.connection_problem.rawValue),
+                         message: lang.getLocalizedString(Localize.messages.blockchain_error_message.rawValue))
             break
         case Constants.NAError.noBalance:
-            alertWarning(title: "Blokzincir Hatası", message: "Blokzincir kaynaklı problemlerden dolayı işleminiz gerçekleşmemiştir. Lütfen daha sonra yeniden deneyin.")
+            alertWarning(title: lang.getLocalizedString(Localize.messages.blockchain_error.rawValue),
+                         message: lang.getLocalizedString(Localize.messages.blockchain_error_message_try_again.rawValue))
             break
         case Constants.NAError.minBalance:
             
-            alertWarning(title: "Blokzincir Hatası", message: "Minimum miktarın altında transfer gerçekleştiremezsiniz." .debugDescription)
+            alertWarning(title: lang.getLocalizedString(Localize.messages.blockchain_error.rawValue),
+                         message: lang.getLocalizedString(Localize.messages.not_allowed_below_minimum.rawValue))
             break
         case Constants.NAError.noPhone:
             
-            alertWarning(title: "Hatalı Giriş", message: "Telefon numarası bilgisini eksik veya hatalı girdiniz.")
+            alertWarning(title: lang.getLocalizedString(Localize.keys.wrong_entry_header.rawValue),
+                         message: lang.getLocalizedString(Localize.messages.tel_missing.rawValue))
             break
         case Constants.NAError.noEmail:
-            alertWarning(title: "Hatalı Giriş", message: "E-posta bilgisini eksik veya hatalı girdiniz.")
+            alertWarning(title: lang.getLocalizedString(Localize.keys.wrong_entry_header.rawValue),
+                         message: lang.getLocalizedString(Localize.messages.e_mail_missing.rawValue))
             break
         case Constants.NAError.noTC:
-            alertWarning(title: "Hatalı Giriş", message: "TC kimlik numaranızı eksik veya hatalı girdiniz.")
+            alertWarning(title: lang.getLocalizedString(Localize.keys.wrong_entry_header.rawValue),
+                         message: lang.getLocalizedString(Localize.messages.tc_missing.rawValue))
             break
         case Constants.NAError.noName:
-            alertWarning(title: "Hatalı Giriş", message: "Ad bilgisi hatalı.")
+            alertWarning(title: lang.getLocalizedString(Localize.keys.wrong_entry_header.rawValue),
+                         message: lang.getLocalizedString(Localize.messages.name_missing.rawValue))
             break
         case Constants.NAError.noSurname:
-            alertWarning(title: "Hatalı Giriş", message: "Soyad bilgisi hatalı.")
+            alertWarning(title: lang.getLocalizedString(Localize.keys.wrong_entry_header.rawValue),
+                         message: lang.getLocalizedString(Localize.messages.surname_missing.rawValue))
             break
         default:
             DispatchQueue.main.async {
                 print(error)
                 self.warningView.removeFromSuperview()
-                self.alertWarning(title: "Bir Hata Oluştu", message: "Geçersiz işlem")
+                self.alertWarning(title: self.lang.getLocalizedString(Localize.keys.an_error_occured.rawValue),
+                                  message: self.lang.getLocalizedString(Localize.messages.undefined.rawValue))
             }
             break
         }

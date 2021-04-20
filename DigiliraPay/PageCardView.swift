@@ -35,6 +35,7 @@ class PageCardView: UIView {
     
     var Ticker: BinanceService.BinanceMarketInfo = []
     let binanceAPI = BinanceService()
+    let lang = Localize()
     var ticker: Constants.ticker?
     
     var bexTicker: BexSign.bexAllTicker?
@@ -132,7 +133,7 @@ class PageCardView: UIView {
     @objc func letsPay()
     {
         if Filtered[currentPage].network == "bitexen" {
-            errors?.errorHandler(message: "Bitexen bakiyelerinizle ödeme işlemi henüz desteklenmemektedir.", title: "Yakında", error: false)
+            errors?.errorHandler(message: lang.getLocalizedString(Localize.messages.bitexen_not_avail.rawValue), title: lang.getLocalizedString(Localize.keys.soon.rawValue), error: false)
             return
         }
         if let order = Order {
@@ -148,7 +149,7 @@ class PageCardView: UIView {
             let delta = (t1 - t0) / 1000
             
             if delta > 120 {
-                errors?.errorHandler(message: "Ödeme süresi doldu. Lütfen yeni QR kod okutunuz.", title: "Geçersiz QR Kod", error: true)
+                errors?.errorHandler(message:lang.getLocalizedString(Localize.messages.qr_not_avail.rawValue), title: lang.getLocalizedString(Localize.messages.qr_not_valid.rawValue), error: true)
             } else {
                 delegate?.dismissNewSend1(params: order, network: network)
             }
@@ -283,8 +284,8 @@ class PageCardView: UIView {
                          
                         balanceCardView.setView(desc: coin.tokenName,
                                                 tl: MainScreen.df2so(tlfiyat),
-                                                amount: MainScreen.int2so(coin.availableBalance, digits: coin.decimal),
-                                                price: MainScreen.int2so(Int64(amount), digits: coin.decimal),
+                                                amount: coin.availableBalance.int2FormattedString(digits:  coin.decimal),
+                                                price: Int64(amount).int2FormattedString(digits: coin.decimal),
                                                 symbol: coin.tokenName, icon: icon)
                         
                         
@@ -311,8 +312,8 @@ class PageCardView: UIView {
                          
                         balanceCardView.setView(desc: coin.tokenName,
                                                 tl: MainScreen.df2so(tlfiyat),
-                                                amount: MainScreen.int2so(coin.availableBalance, digits: coin.decimal),
-                                                price: MainScreen.int2so(Int64(amount), digits: coin.decimal),
+                                                amount: coin.availableBalance.int2FormattedString(digits:  coin.decimal),
+                                                price: Int64(amount).int2FormattedString(digits: coin.decimal),
                                                 symbol: coin.tokenName, icon: icon)
                         
                         
@@ -473,7 +474,7 @@ class PageCardView: UIView {
                 payButton.alpha = 0.4
                 payButton.isUserInteractionEnabled = false
                 
-                errors?.errorCaution(message: "Ödeme yapabilmek için hesabınıza bakiye yüklemeniz gerekmektedir.", title: "Bakiye Yükleyin")
+                errors?.errorCaution(message: lang.getLocalizedString(Localize.messages.deposit_to_pay_message.rawValue), title: lang.getLocalizedString(Localize.messages.deposit_to_pay_title.rawValue))
             }
         }
         
@@ -501,7 +502,7 @@ extension PageCardView: UITableViewDelegate, UITableViewDataSource {
 //                }
                 
                let total = order.totalPrice
-                    shoppingCart.append(Constants.shoppingCart.init(label: "Toplam", price: total, mode: 2))
+            shoppingCart.append(Constants.shoppingCart.init(label: lang.getLocalizedString(Localize.keys.total.rawValue), price: total, mode: 2))
                 
             
         }

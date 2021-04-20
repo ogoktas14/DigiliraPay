@@ -14,11 +14,17 @@ class ImportAccountVC: UIViewController {
     @IBOutlet weak var nextButtonView: UIView!
     @IBOutlet weak var backButtonView: UIView!
     @IBOutlet weak var nextButtonLabel: UILabel!
-    @IBOutlet weak var desc: UILabel!
+    @IBOutlet weak var backButtonLabel: UILabel!
+    @IBOutlet weak var headerInfoLabel: UILabel!
+    @IBOutlet weak var subHeaderInfoLabel: UILabel!
+    @IBOutlet weak var topInfoLabel: UILabel!
+    @IBOutlet weak var bottomInfoLabel: UILabel!
     @IBOutlet weak var keyWordsTextView: UITextView!
     
     let BC = BlockchainService()
     let throwEngine = ErrorHandling()
+    
+    let lang = Localize()
     
     var isKeyboard = false
     
@@ -41,20 +47,30 @@ class ImportAccountVC: UIViewController {
         }
     }
     
+    private func setUI() {
+    
+        nextButtonLabel.text = lang.getLocalizedString(Localize.importAccountVals.start_button.rawValue)
+        backButtonLabel.text = lang.getLocalizedString(Localize.importAccountVals.back_button.rawValue)
+        headerInfoLabel.text = lang.getLocalizedString(Localize.importAccountVals.header_info.rawValue)
+        subHeaderInfoLabel.text = lang.getLocalizedString(Localize.importAccountVals.sub_header_info.rawValue)
+        topInfoLabel.text = lang.getLocalizedString(Localize.importAccountVals.top_info.rawValue)
+        bottomInfoLabel.text = lang.getLocalizedString(Localize.importAccountVals.bottom_info.rawValue)
+    }
+    
     override func viewDidLoad() {
-        
         
         let screenSize: CGRect = UIScreen.main.bounds
         if screenSize.height < 600 {
-            desc.isHidden = true
+            bottomInfoLabel.isHidden = true
         }
+        
+        setUI()
         
         super.viewDidLoad()
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .light
-        } else {
-            // Fallback on earlier versions
         }
+        
         keyWordsTextView.text = ""
         
         nextButtonView.layer.maskedCorners = [.layerMinXMinYCorner]

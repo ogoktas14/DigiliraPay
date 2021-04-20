@@ -69,24 +69,7 @@ class newSendView: UIView {
     private var selectedIndex: Int = 0
     
     let digiliraPay = DigiliraPayService()
-    
-    func setUI() {
-        
-    }
-    
-    func getStrings(key: String) -> String {
-        switch key {
-        case "FeeRemark":
-            return NSLocalizedString("Waves blokzinciri üzerinde yaptığınız transferlerde madencilere 0.005 Waves işlem ücreti ödenmektedir. DigiliraPay cüzdanları arasında yaptığınız transferlerde bu ücret DigiliraPay tarafından karşılanmaktadır.", comment: key)
-        case "FeeRemarkInterwallets":
-            return NSLocalizedString("DigiliraPay cüzdanları arasında yaptığınız transferlerde işlem komisyonu DigiliraPay tarafından karşılanmaktadır.", comment: key)
-        case "OutOfBalanceHeader":
-            return NSLocalizedString("You like?", comment: key)
-        default:
-            return ""
-        }
-    }
-    
+
     @objc func sendMoneyButton() {
         
         sendView.alpha = 0.4
@@ -375,7 +358,7 @@ class newSendView: UIView {
             
             var komisyon:Double = 0.005
             var komisyonCoin = "Waves"
-            var remark = getStrings(key: "FeeRemark")
+            var remark = lang.getLocalizedString(Localize.keys.fee_remark_unregistered.rawValue)
             
             var agKomisyonu: Double = 0
             var agCoin = coin.tokenName
@@ -393,33 +376,28 @@ class newSendView: UIView {
                 
                 komisyon = 5
                 komisyonCoin = "DigiliraPay"
-                remark = getStrings(key: "FeeRemarkInterwallets")
-                
+                remark = lang.getLocalizedString(Localize.keys.fee_remark_interwallets.rawValue)
             }
             
             if balance < m {
-                errors?.errorCaution(message: "Bakiyeniz bu transferi gerçekleştirebilmek için yeterli değil.", title: getStrings(key: "OutOfBalanceHeader"))
+                errors?.errorCaution(message: lang.getLocalizedString(Localize.keys.out_of_balance_message.rawValue), title: lang.getLocalizedString(Localize.keys.out_of_balance_header.rawValue))
                 sendView.isUserInteractionEnabled = true
                 sendView.alpha = 1
                 return
             }
             
-            let miktar = MainScreen.int2so(m, digits: coin.decimal) + " " + coin.tokenSymbol
+            let miktar = m.int2FormattedString(digits: coin.decimal) + " " + coin.tokenSymbol
             var minTotal = miktar
 
             if t.destination == Constants.transactionDestination.foreign {
                 let double = Double(m) / Double(truncating: pow(10,coin.decimal) as NSNumber)
                 minTotal = String(format: "%." + coin.decimal.description + "f", double - agKomisyonu) + " " + coin.tokenSymbol
-                remark = "Waves blokzinciri dışına yaptığınız transferlerde işlem komisyonu DigiliraPay tarafından karşılanmaktadır."
-
+                remark = lang.getLocalizedString(Localize.keys.fee_remark_foreign.rawValue)
             }
-            
-            
-            
-            
+             
             let confirmationMessage = Constants.txConfMsg.init(
-                title: "Transfer Onayı",
-                message: "Bilgileri Kontrol Edin",
+                title: lang.getLocalizedString(Localize.keys.transfer_confirmation.rawValue),
+                message: lang.getLocalizedString(Localize.keys.check_your_transfer.rawValue),
                 l1: t.merchant!,
                 sender: t.me,
                 l2: minTotal,
@@ -427,9 +405,9 @@ class newSendView: UIView {
                 l4: miktar,
                 t2: agKomisyonu.description + " " + agCoin , 
                 c2: coin.tokenName,
-                yes: "Onayla",
+                yes: lang.getLocalizedString(Localize.keys.confirm.rawValue),
                 remark: remark,
-                no: "Reddet",
+                no:lang.getLocalizedString(Localize.keys.reject.rawValue),
                 icon: "caution"
             )
             errors?.transferConfirmation(txConMsg: confirmationMessage, destination: .trxConfirm)
@@ -437,7 +415,7 @@ class newSendView: UIView {
     }
     
     func foreignTrx() {
-        errors?.errorCaution(message: "Bu cüzdan adresi DigiliraPay'de kayıtlı bir adres değildir. Transferinizden blokzincir komisyon ücreti düşecektir.", title: "Dikkat")
+        errors?.errorCaution(message: lang.getLocalizedString(Localize.keys.not_digilirapay_wallet.rawValue), title: lang.getLocalizedString(Localize.keys.attention.rawValue))
     }
     
     func setQR () {
@@ -535,12 +513,17 @@ class newSendView: UIView {
                 }
             }
             DispatchQueue.main.async { [self] in
+                let localizedString = String(format: lang.getLocalizedString(Localize.keys.x_token_balance_not_found.rawValue), y.tokenName)
                 
-                errors?.errorHandler(message: y.tokenName + " bakiyeniz bulunmamaktadır.", title: lang.const(x: Localize.keys.an_error_occured.rawValue), error: true)
+                errors?.errorHandler(message: localizedString,
+                                     title: lang.getLocalizedString(Localize.keys.an_error_occured.rawValue),
+                                     error: true)
             }
         } catch  {
             DispatchQueue.main.async { [self] in
-                errors?.errorHandler(message: "Token desteklenmemektedir.", title: lang.const(x: Localize.keys.an_error_occured.rawValue), error: true)
+                errors?.errorHandler(message: lang.getLocalizedString(Localize.keys.token_not_supported.rawValue),
+                                     title: lang.getLocalizedString(Localize.keys.an_error_occured.rawValue),
+                                     error: true)
             }
             return
         }
@@ -619,22 +602,29 @@ class newSendView: UIView {
                     minAmount = 1
                     break
                 }
-                
-                if t.destination == Constants.transactionDestination.foreign && !isWavesNetwork {
-                    
-                    let minTotal = coin.gatewayFee + minAmount
-                    
-                    commissionLabel.text =
-"""
-\(coin.network.capitalized) blokzincirine transfer yapmak üzeresiniz. Gönderebileceğiniz minimum tutar \(minAmount.description) \(coin.tokenName)'dir. Waves ağ geçidi ise \(coin.tokenName) transferlerinden \(coin.gatewayFee.description) \(coin.tokenName) işlem komisyonu almaktadır. Bu bedel, göndereceğiniz tutardan düşecektir. İşlem komisyonu dahil gönderebileceğiniz minimum tutar \(minTotal.description) \(coin.tokenName)'dir.
 
-\(coin.network.capitalized) transferleri için işlem ücreti ödemek istemiyorsanız başka bir DigiliraPay adresine transfer yapabilirsiniz. DigiliraPay kullanıcılarının kendi aralarında yapmış oldukları transferlerin işlem ücretleri DigiliraPay tarafından karşılanmaktadır.
-"""
+                if t.destination == Constants.transactionDestination.foreign && !isWavesNetwork {
+                    let minTotal = coin.gatewayFee + minAmount
+                    let localizedString = String(format: lang.getLocalizedString(Localize.keys.commision_info.rawValue),
+                                                 coin.network.capitalized,
+                                                 minAmount.description,
+                                                 coin.tokenName,
+                                                 coin.tokenName,
+                                                 coin.gatewayFee.description,
+                                                 coin.tokenName,
+                                                 minTotal.description,
+                                                 coin.tokenName,
+                                                 coin.network.capitalized
+                                                 )
+
+                    commissionLabel.text = localizedString
                     if isEthereumNetwork {
                         if coin.tokenName != "Tether USDT" && coin.tokenName != "Ethereum" {
+                            let localizedString = String(format: lang.getLocalizedString(Localize.keys.cannot_send_x_token_to_x_network.rawValue), Constants.ethereumNetwork.capitalized, coin.tokenName)
+                            
                             sendView.isUserInteractionEnabled = false
                             sendView.alpha = 0.4
-                            commissionLabel.text = "Ethereum blokzincirine \(coin.tokenName) gönderemezsiniz."
+                            commissionLabel.text = localizedString
                         } else {
                             sendView.isUserInteractionEnabled = true
                             sendView.alpha = 1
@@ -642,15 +632,18 @@ class newSendView: UIView {
                     }
                     commissionLabel.isHidden = false
                 } else {
-                    
-                    commissionLabel.text = "Minimum transfer miktarı: " + String(format: "%.\(coin.decimal)f", minAmount) + " " + coin.tokenName
+                    let localizedString = String(format: lang.getLocalizedString(Localize.keys.min_transfer_amount.rawValue), String(format: "%.\(coin.decimal)f", minAmount), coin.tokenName)
+                    commissionLabel.text = localizedString
                     commissionLabel.isHidden = false
                     
                     if t.destination != Constants.transactionDestination.interwallets {
                         if coin.symbol == "ONET" {
                             sendView.isUserInteractionEnabled = false
                             sendView.alpha = 0.4
-                            commissionLabel.text = "Waves blokzincirine \(coin.tokenName) gönderemezsiniz."
+                            
+                                let localizedString = String(format: lang.getLocalizedString(Localize.keys.cannot_send_x_token_to_x_network.rawValue), Constants.wavesNetwork.capitalized, coin.tokenName)
+                            
+                            commissionLabel.text = localizedString
                         } else {
                             sendView.isUserInteractionEnabled = true
                             sendView.alpha = 1
@@ -696,7 +689,8 @@ class newSendView: UIView {
                 memCheck()
                 
             } else {
-                errors?.errorHandler(message: "Geçerli bir adres bulunamadı. Seçtiğiniz kripto varlık ile göndermek istediğiniz adresin uyuştuğunu kontrol ediniz. \n\nYapıştırmaya çalıştığınız adres:\n\n" + text, title: "Tekrar Deneyin", error: true)
+                let localizedString = String(format: lang.getLocalizedString(Localize.keys.cannot_find_a_valid_address.rawValue), text)
+                errors?.errorHandler(message: localizedString, title: lang.getLocalizedString(Localize.keys.try_again.rawValue), error: true)
             }
         }
     }
@@ -856,19 +850,19 @@ class newSendView: UIView {
         
         switch g.view?.restorationIdentifier {
         case "b100":
-            textAmount.text = MainScreen.int2so(balance, digits: decimal)
+            textAmount.text = balance.int2FormattedString(digits: decimal)
             b100.alpha = 1
             break
         case "b50":
-            textAmount.text = MainScreen.int2so(balance / 2, digits: decimal)
+            textAmount.text = (balance / 2).int2FormattedString(digits: decimal)
             b50.alpha = 1
             break
         case "b25":
-            textAmount.text = MainScreen.int2so(balance / 4, digits: decimal)
+            textAmount.text = (balance / 4).int2FormattedString(digits: decimal)
             b25.alpha = 1
             break
         case "b10":
-            textAmount.text = MainScreen.int2so(balance / 10, digits: decimal)
+            textAmount.text = (balance / 10).int2FormattedString(digits: decimal)
             b10.alpha = 1
             break
         default:
@@ -946,7 +940,8 @@ class newSendView: UIView {
     @IBAction func tapRecipient(_ sender: UIButton) {
         let rec = recipientText.title(for: .normal)
         if rec == "" {
-            errors?.errorCaution(message: "Alıcı eklemek için Yapıştır ve QR kod butonlarını kullanabilirsiniz. ", title: "Dikkat")
+            errors?.errorCaution(message: lang.getLocalizedString(Localize.keys.use_buttons_to_add_an_address.rawValue),
+                                 title: lang.getLocalizedString(Localize.keys.attention.rawValue))
         }
     }
     
@@ -1026,14 +1021,14 @@ class newSendView: UIView {
             
             balanceCardView.setView(desc: coin.tokenName,
                                     tl: MainScreen.df2so(tlfiyat),
-                                    amount: MainScreen.int2so(coin.availableBalance, digits: coin.decimal),
-                                    price: MainScreen.int2so(Int64(amount), digits: coin.decimal),
+                                    amount: coin.availableBalance.int2FormattedString(digits: coin.decimal),
+                                    price: (Int64(amount).int2FormattedString(digits: coin.decimal)),
                                     symbol: coin.tokenName, icon: UIImage(named: coin.tokenName))
             
             balanceCardView.balanceTL.isHidden = true
             balanceCardView.balanceTLicon.isHidden = true
             balanceCardView.totalTitle.isHidden = false
-            balanceCardView.totalTitle.text = "Gönderilecek Tutar:"
+            balanceCardView.totalTitle.text = lang.getLocalizedString(Localize.keys.ammount_to_be_sent.rawValue)
             if coin.availableBalance >= (Int64(amount)) {
                 
             } else {
@@ -1205,7 +1200,7 @@ class newSendView: UIView {
             }
             
             scrollAreaView.addSubview(balanceCardView)
-            errors?.errorCaution(message: "Para transferi yapabilmek için hesabınıza bakiye yüklemeniz gerekmektedir.", title: "Bakiye Yükleyin")
+            errors?.errorCaution(message: lang.getLocalizedString(Localize.keys.deposit_to_send_tokens_message.rawValue), title: lang.getLocalizedString(Localize.keys.deposit_to_send_tokens_header.rawValue))  
             return
         }
         do {

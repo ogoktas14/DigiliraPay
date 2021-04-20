@@ -24,9 +24,8 @@ class OrderDetailView: UIView {
     var shoppingCart: [Constants.shoppingCart] = []
 
     let generator = UINotificationFeedbackGenerator()
+    let lang = Localize()
 
-    var title: String  = "Dikkat"
-    var message: String  = "Dikkat"
     var isError: Bool = true
     var isTransaction: Bool = false
     var order:PaymentModel?
@@ -34,8 +33,6 @@ class OrderDetailView: UIView {
     override func awakeFromNib() {
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .light
-        } else {
-            // Fallback on earlier versions
         }
         
         self.layer.cornerRadius = 10
@@ -125,7 +122,7 @@ extension OrderDetailView: UITableViewDelegate, UITableViewDataSource {
 //                }
                 
                 let total = order.totalPrice
-                    shoppingCart.append(Constants.shoppingCart.init(label: "Toplam", price: total, mode: 1))
+                    shoppingCart.append(Constants.shoppingCart.init(label: lang.getLocalizedString(Localize.keys.total.rawValue), price: total, mode: 1))
                
             }
             messageLabel.text = order.merchant

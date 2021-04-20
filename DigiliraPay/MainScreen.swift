@@ -157,9 +157,13 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
     let bitexenSign = BexSign()
     let binanceAPI = BinanceService()
     let throwEngine = ErrorHandling()
-    
+
     let digiliraPay = DigiliraPayService()
     var crud = centralRequest()
+    
+    private func setLang(_ key: String) -> String {
+        return lang.getLocalizedString(key)
+    }
 
     func checkEssentials() {
             
@@ -233,20 +237,17 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
             
             switch k.status {
             case 0:
-           
                 profileMenuView.profileWarning.image = UIImage(named: "warning")
                 break
             case 1:
-   
                 profileMenuView.profileWarning.image = UIImage(named: "success")
                 break
             case 2:
-          
                 profileMenuView.profileWarning.image = UIImage(named: "success")
                 break
             case 3:
                 profileMenuView.profileWarning.image = UIImage(named: "success")
-                profileMenuView.profileVerifyLabel.text = "Profilim"
+                profileMenuView.profileVerifyLabel.text = setLang(Localize.mainScreen.my_profile.rawValue)
                 break
             default:
                 break
@@ -342,7 +343,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         }
         
         refreshControl.alpha = 0
-        refreshControl.attributedTitle = NSAttributedString(string: "Güncellemek için çekiniz..")
+        refreshControl.attributedTitle = NSAttributedString(string: setLang(Localize.mainScreen.pull_to_refresh.rawValue))
         refreshControl.addTarget(self, action: #selector(refreshData(_:)), for: UIControl.Event.valueChanged)
         
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
@@ -358,8 +359,6 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
     }
     
     private func setBlockhainWatcher() {
-
-        
         BC.onAssetBalance = { [self] assets, waves in
             construct(assets: assets, waves:waves)
         }
@@ -474,9 +473,10 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
     }
     
     private func setBitexenWatcher() {
-        
         bitexenSign.onBitexenError = { res, sts in
-            self.throwEngine.alertWarning(title: "Bitexen API", message: "Bitexen API bilgileriniz doğrulanamadı.", error: true)
+            self.throwEngine.alertWarning(title: "Bitexen API",
+                                          message: self.setLang(Localize.mainScreen.bitexen_api_not_verified.rawValue),
+                                          error: true)
             self.isBitexenReload = true
         }
         
@@ -551,12 +551,10 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [self] in
                             if !isInformed {
                                 isInformed = true
-                                throwEngine.alertCaution(title: "Anahtar Kelimeler", message: "Anahtar kelimelerinizi sizden başka kimse bilemez. Buna biz de dahiliz. Lütfen anahtar kelimelerinizi yedekleyin. Cüzdanınızın silinmesi veya telefonunuzu değiştirmeniz durumunda bu kelimeleri kullanarak hesabınıza erişebileceksiniz. Bu uyarıyı almak istemiyorsanız yedekleme işlemini doğrulamanız gerekmektedir.")
+                                throwEngine.alertCaution(title: setLang(Localize.drawerMenu.seed.rawValue),
+                                                         message: setLang(Localize.mainScreen.seed_warning.rawValue))
                             }
-                            
-                            
                         }
-                        
                     }
                 }
                 if let qr = decodeDefaults(forKey: "QRARRAY2", conformance: Constants.QR.self, setNil: true) {
@@ -565,8 +563,6 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                 }
                 
                 checkIfBlocked()
-                //curtain.isHidden = true
-                
                 
                 isBitexenReload = false
                 isWavesReloaded = false
@@ -604,9 +600,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                     tableViewFiltered.removeAll()
                     tableViewFiltered.append(contentsOf: Waves)
                 }
-                
-
-                
+                 
                 self.checkHeaderExist()
             }
         }
@@ -634,9 +628,10 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                         curtain.isHidden = true
                         closePinView()
                         isInformed = true
-                        
                         UserDefaults.standard.set(false, forKey: "isBlocked")
-                        self.throwEngine.alertWarning(title: "Hesabınız Aktif Edildi", message: "Hesabınız yeniden kullanıma açılmıştır. Yeni bir pin kodu ayarlayabilirsiniz.", error: false)
+                        self.throwEngine.alertWarning(title: setLang(Localize.mainScreen.account_activated.rawValue),
+                                                      message: setLang(Localize.mainScreen.account_activated_message.rawValue),
+                                                      error: false)
                     }
                 } 
             }
@@ -646,7 +641,9 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                     if let selfied = UserDefaults.standard.value(forKey: "isSelfied") as? Bool {
                         if selfied {
                             UserDefaults.standard.set(false, forKey: "isSelfied")
-                            self.throwEngine.alertWarning(title: "Hesabınız Onaylandı", message: "Hesabınız Onaylanmıştır", error: false)
+                            self.throwEngine.alertWarning(title: setLang(Localize.mainScreen.account_verified.rawValue),
+                                                          message: setLang(Localize.mainScreen.account_verified_message.rawValue),
+                                                          error: false)
                         }
                     } 
                 }
@@ -656,7 +653,9 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
 
                 DispatchQueue.main.async { [self] in
                     UserDefaults.standard.set(true, forKey: "isBlocked")
-                    throwEngine.alertWarning(title: "Hesabınız Bloke Edildi", message: "Pin kodunuzu sıfırlamak için www.digilirapay.com/pin adresini ziyaret ediniz.", error: true)
+                    throwEngine.alertWarning(title: setLang(Localize.mainScreen.account_blocked.rawValue),
+                                             message: setLang(Localize.mainScreen.account_blocked_message.rawValue),
+                                             error: true)
                 }
                 break
             default:
@@ -674,23 +673,25 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                 
                 if let selfied = UserDefaults.standard.value(forKey: "isSelfied") as? Bool {
                     if selfied {
-                        throwEngine.alertWarning(title: "Hesabınız Onaylanmadı", message: "Lütfen kurallara uygun olarak yeniden görsel yükleyin.", error: true)
+                        throwEngine.alertWarning(title: setLang(Localize.mainScreen.account_not_verified.rawValue),
+                                                 message: setLang(Localize.mainScreen.account_not_verified_message.rawValue), error: true)
                         UserDefaults.standard.set(false, forKey: "isSelfied")
                     }
                 }
                 
                 if let identity = UserDefaults.standard.value(forKey: "isIdentity") as? Bool {
                     if identity {
-                        throwEngine.alertWarning(title: "Profiliniz Güncellendi", message: "Kimlik bilgileriniz doğrulandı, ancak KYC sürecini tamamlamak için kimliğinizin ön yüzü görünecek biçimde boş bir kağıda günün tarihini ve DigiliraPay yazarak Profil Onayı sayfasına yükleyin.", error: false)
+                        throwEngine.alertWarning(title: setLang(Localize.mainScreen.account_updated.rawValue),
+                                                 message: setLang(Localize.mainScreen.account_updated_message.rawValue), error: false)
                         UserDefaults.standard.set(false, forKey: "isIdentity")
-                        
                     }
                 }
-                 
                 break
-          
             case 3:
-                throwEngine.alertWarning(title: "Hesabınız Onaylandı", message: "Hesabınız Onaylanmıştır", error: false)
+                throwEngine.alertWarning(title: setLang(Localize.mainScreen.account_verified.rawValue),
+                                         message: setLang(Localize.mainScreen.account_verified_message.rawValue),
+                                         error: false)
+                
                 UserDefaults.standard.set(false, forKey: "isSelfied")
                 break
             default:
@@ -713,11 +714,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                 }
                 return
             }
-      
-             
         }
-         
-        
     }
     
     func construct(assets: NodeService.DTO.AddressAssetsBalance, waves: NodeService.DTO.AddressBalance) {
@@ -986,7 +983,8 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                             let pm = try crud.decodeDefaults(forKey: data, conformance: PaymentModel.self)
                             
                             if pm.status == 2 {
-                                self.errorCaution(message: "Bu ödeme kodu daha önce kullanılmış. Lütfen yeni bir QR kod okutunuz.", title: "Hatalı QR Kod")
+                                self.errorCaution(message: setLang(Localize.mainScreen.qr_code_is_invalid_message.rawValue),
+                                                  title: setLang(Localize.mainScreen.qr_code_is_invalid.rawValue))
                             } else {
                                 self.goPageCardView(ORDER: pm)
                             }
@@ -999,7 +997,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
                     case 400:
                         do {
                             let pm = try crud.decodeDefaults(forKey: data, conformance: Constants.NodeError.self)
-                            self.throwEngine.alertCaution(title: lang.const(x: Localize.keys.an_error_occured.rawValue), message: pm.message)
+                            self.throwEngine.alertCaution(title: lang.getLocalizedString(Localize.keys.an_error_occured.rawValue), message: pm.message)
                              
                         } catch {
                             print(error)
@@ -1091,7 +1089,6 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
     
     @objc func onTrxCompleted(_ sender: Notification) {
         // Do what you need, including updating IBOutlets
-
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
@@ -1214,54 +1211,51 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         }
     }
     
-    override func viewWillAppear(_ animated: Bool)
-    {
-        loadMenu()
-        
-        headerView.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
-        headerView.layer.shadowColor = UIColor.black.cgColor
-        headerView.layer.shadowOpacity = 0.4
-        headerView.layer.shadowOffset = .zero
-        headerView.layer.shadowRadius = 3
-        
-        contentView.layer.zPosition = -1
-        
-        tapProfileMenuGesture = UITapGestureRecognizer(target: self, action: #selector(openProfileView))
-        tapCloseProfileMenuGesture = UITapGestureRecognizer(target: self, action: #selector(closeProfileView))
-        let accountTapGesture = UITapGestureRecognizer(target: self, action: #selector(tapAccountButton))
-        accountButton.addGestureRecognizer(accountTapGesture)
-        accountButton.isUserInteractionEnabled = true
-        
-        //profileMenuButton.isUserInteractionEnabled = true
-        //profileMenuButton.addGestureRecognizer(tapProfileMenuGesture)
-        view.addGestureRecognizer(tapCloseProfileMenuGesture)
-        
-        tapCloseProfileMenuGesture.isEnabled = false
-        
-        let tapProfileMenuViewGesture = UITapGestureRecognizer(target: self, action: #selector(tapProfileMenuView))
-        menuView.addGestureRecognizer(tapProfileMenuViewGesture)
-        
-        let closeSendCoinViewGesture = UITapGestureRecognizer(target: self, action: #selector(closeSendView))
-        //let closeLoadCoinViewGesture = UITapGestureRecognizer(target: self, action: #selector(closeSendView))
-        sendMoneyBackButton.addGestureRecognizer(closeSendCoinViewGesture)
-        //sendMoneyBackButton.addGestureRecognizer(closeLoadCoinViewGesture)
-        sendMoneyBackButton.isUserInteractionEnabled = true
-        
-        profileView.translatesAutoresizingMaskIntoConstraints = true
-        profileView.center.x = -profileView.frame.width / 2
-        
-    }
+    override func viewWillAppear(_ animated: Bool) {
+    loadMenu()
     
-    override func viewDidAppear(_ animated: Bool)
-    {
+    headerView.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
+    headerView.layer.shadowColor = UIColor.black.cgColor
+    headerView.layer.shadowOpacity = 0.4
+    headerView.layer.shadowOffset = .zero
+    headerView.layer.shadowRadius = 3
+    
+    contentView.layer.zPosition = -1
+    
+    tapProfileMenuGesture = UITapGestureRecognizer(target: self, action: #selector(openProfileView))
+    tapCloseProfileMenuGesture = UITapGestureRecognizer(target: self, action: #selector(closeProfileView))
+    let accountTapGesture = UITapGestureRecognizer(target: self, action: #selector(tapAccountButton))
+    accountButton.addGestureRecognizer(accountTapGesture)
+    accountButton.isUserInteractionEnabled = true
+    
+    //profileMenuButton.isUserInteractionEnabled = true
+    //profileMenuButton.addGestureRecognizer(tapProfileMenuGesture)
+    view.addGestureRecognizer(tapCloseProfileMenuGesture)
+    
+    tapCloseProfileMenuGesture.isEnabled = false
+    
+    let tapProfileMenuViewGesture = UITapGestureRecognizer(target: self, action: #selector(tapProfileMenuView))
+    menuView.addGestureRecognizer(tapProfileMenuViewGesture)
+    
+    let closeSendCoinViewGesture = UITapGestureRecognizer(target: self, action: #selector(closeSendView))
+    //let closeLoadCoinViewGesture = UITapGestureRecognizer(target: self, action: #selector(closeSendView))
+    sendMoneyBackButton.addGestureRecognizer(closeSendCoinViewGesture)
+    //sendMoneyBackButton.addGestureRecognizer(closeLoadCoinViewGesture)
+    sendMoneyBackButton.isUserInteractionEnabled = true
+    
+    profileView.translatesAutoresizingMaskIntoConstraints = true
+    profileView.center.x = -profileView.frame.width / 2
+    
+}
+    
+    override func viewDidAppear(_ animated: Bool) {
         openPinView()
         setScrollView()
         headerView.translatesAutoresizingMaskIntoConstraints = true
         profileSettingsView.translatesAutoresizingMaskIntoConstraints = true
     }
     
-    func setScrollView() // Ana sayfadaki içeriklerin gösterildiği scrollView
-    {
+    func setScrollView() {
         contentScrollView.frame = CGRect(x: 0,
                                          y: 0,
                                          width: contentView.frame.width,
@@ -1279,8 +1273,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         fetch()
     }
     
-    func setTableView() // ana sayfa coinler tableview, paralar burada listeleniyor
-    {
+    func setTableView() {
         coinTableView.frame = CGRect(x: 0,
                                      y: 0,
                                      width: contentView.frame.width,
@@ -1295,8 +1288,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         
     }
     
-    func setWalletView() // Wallet ekranı detayları aşağıda
-    {
+    func setWalletView() {
         walletView = UIView().loadNib(name: "WalletView") as! WalletView
         walletView.frame = CGRect(x: contentView.frame.width,
                                   y: 0,
@@ -1359,18 +1351,17 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         return name 
     }
     
-    func setPaymentView() // payments ekranı
-    {
+    func setPaymentView() {
         var cards: [Constants.cardData] = []
         
         var bitexen = turkish.bitexenCard
         let oneTower = turkish.oneTower
         
         if let api = decodeDefaults(forKey: digiliraPay.returnBexChain(), conformance: BexSign.bitexenAPICred.self) {
-            bitexen.cardNumber = "Hesap Bilgilerini Düzenle"
+            bitexen.cardNumber = setLang(Localize.mainScreen.edit_account_details.rawValue)
             if (api.valid) { // if bitexen api valid
                 bitexen.apiSet = true
-                bitexen.cardNumber = "Hesap Aktif"
+                bitexen.cardNumber = setLang(Localize.mainScreen.account_active.rawValue)
                 bitexen.cardHolder = getName()
             }
         }
@@ -1401,8 +1392,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         contentScrollView.contentSize.width = contentScrollView.frame.width * CGFloat(contentScrollView.subviews.count)
     }
     
-    @objc func openProfileView() // yan profil menüsünün açılması işlemi
-    {
+    @objc func openProfileView() {
         if !isShowProfileMenu
         {
             isShowProfileMenu = !isShowProfileMenu
@@ -1418,8 +1408,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         }
     }
     
-    @objc func closeProfileView() // yan profil menüsünün kapanması işlemi
-    {
+    @objc func closeProfileView() {
         if isShowProfileMenu
         {
             isShowProfileMenu = !isShowProfileMenu
@@ -1433,24 +1422,20 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         }
     }
     
-    @objc func closeSendView()
-    {
+    @objc func closeSendView() {
         self.QR = Constants.QR.init()
         UserDefaults.standard.set(nil, forKey: "QRARRAY2")
         dismissLoadView()
-        
     }
     
-    @objc func tapAccountButton()
-    {
+    @objc func tapAccountButton() {
         goSettingsScreen()
     }
     
     @objc func tapProfileMenuView()
     { /* Block menu view close tap action */ }
     
-    func loadMenu() // alt menü view
-    {
+    func loadMenu() {
         menuXib = UIView().loadNib(name: "MenuView") as! MenuView
         menuXib.delegate = self
         menuXib.frame = menuView.frame
@@ -1459,41 +1444,18 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
         menuView.addSubview(menuXib)
         menuView.backgroundColor = .clear
     }
-    
-    @IBAction func menuViewPanGesture(_ sender: UIPanGestureRecognizer) // yan profil menüsünün kaydırarak kapaılması işlemi
-    {
-        guard let menuview = sender.view else { return }
-        let shift = sender.translation(in: menuview)
-        guard shift.x < 0 else { return }
-        UIView.animate(withDuration: 0.05) {
-            menuview.center.x = menuview.frame.width / 2 + shift.x
-        }
-        if sender.state == .ended
-        {
-            if menuview.center.x < menuview.center.x / 2
-            {
-                closeProfileView()
-            }
-            else
-            {
-                UIView.animate(withDuration: 0.3) {
-                    self.profileView.center.x = self.profileView.frame.width / 2
-                }
-            }
-        }
-    }
-    
+
     func chooseQRSource () {
-        let alert = UIAlertController(title: "QR Kod Seçin", message: nil, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "Kamera", style: .default, handler: { _ in
+        let alert = UIAlertController(title: setLang(Localize.mainScreen.select_a_qr_code.rawValue), message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title:  setLang(Localize.mainScreen.camera.rawValue), style: .default, handler: { _ in
             self.openCamera()
         }))
         
-        alert.addAction(UIAlertAction(title: "Galeri", style: .default, handler: { _ in
+        alert.addAction(UIAlertAction(title:  setLang(Localize.mainScreen.gallery.rawValue), style: .default, handler: { _ in
             self.openGallery()
         }))
         
-        alert.addAction(UIAlertAction.init(title: "İptal", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction.init(title:  setLang(Localize.mainScreen.cancel.rawValue), style: .cancel, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
     
@@ -1531,8 +1493,7 @@ class MainScreen: UIViewController, UINavigationControllerDelegate {
     }
 }
 
-extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ayarları, coinlerin listelenmesinde bu fonksiyonlar kullanılır.
-{
+extension MainScreen: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if tableViewFiltered.count == 1 {
             return 3
@@ -1545,7 +1506,6 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
             return
         }
         goWalletScreen(coin: "")
-        
     }
     
     @objc func handleTap(recognizer: MyTapGesture) {
@@ -1556,10 +1516,6 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
             let tokenArray = [token]
             showMyFQr(coin: tokenArray);
         }
-        
-        
-        //goWalletScreen(coin: recognizer.assetName)
-        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -1602,7 +1558,7 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
                 cell.type.text = text
                 tapped.assetName = asset.tokenName
                 
-                let double = MainScreen.int2so(asset.balance, digits: asset.decimal)
+                let double = asset.balance.int2FormattedString(digits: asset.decimal)
                 
                 cell.coinAmount.text = double
                 
@@ -1618,7 +1574,7 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
                     cell.coinName.text = asset.tokenName
                     cell.type.text = "₺" + MainScreen.df2so(asset.tlExchange)
                     
-                    let double = MainScreen.int2so(asset.balance, digits: asset.decimal)
+                    let double = asset.balance.int2FormattedString(digits: asset.decimal)
                     tapped.assetName = double
                     cell.coinAmount.text = double
                     return cell
@@ -1630,13 +1586,9 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
                 cell.type.text = "₺" + MainScreen.df2so(0)
                 tapped.assetName = demoin
 
-                let double = MainScreen.int2so(0, digits: 8)
-
-                cell.coinAmount.text = double
+                cell.coinAmount.text = "0.0"
             }
-            
             return cell
-            
         }
         else
         {
@@ -1649,8 +1601,7 @@ extension MainScreen: UITableViewDelegate, UITableViewDataSource // Tableview ay
 extension UIView {
     func fadeTransition(_ duration:CFTimeInterval) {
         let animation = CATransition()
-        animation.timingFunction = CAMediaTimingFunction(name:
-                                                            CAMediaTimingFunctionName.easeInEaseOut)
+        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
         animation.type = CATransitionType.fade
         animation.duration = duration
         layer.add(animation, forKey: CATransitionType.fade.rawValue)
@@ -1674,8 +1625,7 @@ extension UIColor {
     }
 }
 
-extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısmı
-{
+extension MainScreen: MenuViewDelegate {
     func goPayments() {
         menuXib.payments()
                 
@@ -1832,13 +1782,10 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
 
         } else {
             UIView.animate(withDuration: 0.3, animations: {
-                    self.headerView.frame.size.height =  self.headerHomeBuffer! + 70
+                self.headerView.frame.size.height =  self.headerHomeBuffer! + 70
             }, completion: { [self]_ in
-                
-                        setHeaderTotal()
-                    
+                setHeaderTotal()
             })
-            
         }
     }
     
@@ -1917,35 +1864,147 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
                                  height: self.view.frame.height)
         commissionsView.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         
-        let line1 = Constants.line.init(mode: "text", text: "DigiliraPay kullanıcıları arasındaki transferler")
-        let btc1 = Constants.line.init(mode: "coin", text: "Bitcoin", icon: UIImage(named: "WBTC"), l1: "Ücretsiz", l2: "Ücretsiz", minSend: "0.00000300 BTC", minReceive: "-")
-        let eth1 = Constants.line.init(mode: "coin", text: "Ethereum", icon: UIImage(named: "WETH"), l1: "Ücretsiz", l2: "Ücretsiz", minSend: "0.0001 ETH", minReceive: "-")
-        let waves1 = Constants.line.init(mode: "coin", text: "Waves", icon: UIImage(named: "Waves"), l1: "Ücretsiz", l2: "Ücretsiz", minSend: "0.01 WAVES", minReceive: "-")
-        let usd1 = Constants.line.init(mode: "coin", text: "Tether USDT", icon: UIImage(named: "USDT"), l1: "Ücretsiz", l2: "Ücretsiz", minSend: "0.1 USDT", minReceive: "-")
-        let onet1 = Constants.line.init(mode: "coin", text: "One Tower", icon: UIImage(named: "One Tower"), l1: "Ücretsiz", l2: "Ücretsiz", minSend: "1 ONET", minReceive: "-")
+        let line1 = Constants.line.init(mode: "text",
+                                        text: setLang(Localize.mainScreen.transfer_between_digilira_users.rawValue))
+        let btc1 = Constants.line.init(mode: "coin",
+                                       text: "Bitcoin",
+                                       icon: UIImage(named: "WBTC"),
+                                       l1: setLang(Localize.mainScreen.free.rawValue),
+                                       l2: setLang(Localize.mainScreen.free.rawValue),
+                                       minSend: "0.00000300 BTC",
+                                       minReceive: "-")
+        
+        let eth1 = Constants.line.init(mode: "coin",
+                                       text: "Ethereum",
+                                       icon: UIImage(named: "WETH"),
+                                       l1: setLang(Localize.mainScreen.free.rawValue),
+                                       l2: setLang(Localize.mainScreen.free.rawValue),
+                                       minSend: "0.0001 ETH",
+                                       minReceive: "-")
+        
+        let waves1 = Constants.line.init(mode: "coin",
+                                         text: "Waves",
+                                         icon: UIImage(named: "Waves"),
+                                         l1: setLang(Localize.mainScreen.free.rawValue),
+                                         l2: setLang(Localize.mainScreen.free.rawValue),
+                                         minSend: "0.01 WAVES",
+                                         minReceive: "-")
+        
+        let usd1 = Constants.line.init(mode: "coin",
+                                       text: "Tether USDT",
+                                       icon: UIImage(named: "USDT"),
+                                       l1: setLang(Localize.mainScreen.free.rawValue),
+                                       l2: setLang(Localize.mainScreen.free.rawValue),
+                                       minSend: "0.1 USDT",
+                                       minReceive: "-")
+        
+        let onet1 = Constants.line.init(mode: "coin",
+                                        text: "One Tower",
+                                        icon: UIImage(named: "One Tower"),
+                                        l1: setLang(Localize.mainScreen.free.rawValue),
+                                        l2: setLang(Localize.mainScreen.free.rawValue),
+                                        minSend: "1 ONET",
+                                        minReceive: "-")
         
         let sep1 = Constants.line.init(mode: "text", text: "")
         
-        let line2 = Constants.line.init(mode: "text", text: "DigiliraPay kullanıcılarının Waves blokzinciri üzerindeki transferleri")
+        let line2 = Constants.line.init(mode: "text",
+                                        text: setLang(Localize.mainScreen.transfer_to_waves.rawValue))
         
-        let head2 = Constants.line.init(mode: "header", text: "TOKEN", icon: UIImage(named: ""), l1: "Gönderme", l2: "Alma", minSend: "(min)", minReceive: "(min)")
+        let head2 = Constants.line.init(mode: "header",
+                                        text: "TOKEN",
+                                        icon: UIImage(named: ""),
+                                        l1: setLang(Localize.mainScreen.sending.rawValue),
+                                        l2: setLang(Localize.mainScreen.receiving.rawValue),
+                                        minSend: "(min)",
+                                        minReceive: "(min)")
         
-        let btc2 = Constants.line.init(mode: "coin", text: "Bitcoin", icon: UIImage(named: "WBTC"), l1: "0.005 Waves", l2: "Ücretsiz", minSend: "0.00000300 BTC", minReceive: "-")
-        let eth2 = Constants.line.init(mode: "coin", text: "Ethereum", icon: UIImage(named: "WETH"), l1: "0.005 Waves", l2: "Ücretsiz", minSend: "0.0001 ETH", minReceive: "-")
-        let waves2 = Constants.line.init(mode: "coin", text: "Waves", icon: UIImage(named: "Waves"), l1: "0.005 Waves", l2: "Ücretsiz", minSend: "0.01 WAVES", minReceive: "-")
-        let usd2 = Constants.line.init(mode: "coin", text: "Tether USDT", icon: UIImage(named: "USDT"), l1: "0.005 Waves", l2: "Ücretsiz", minSend: "0.1 USDT", minReceive: "-")
-        let onet2 = Constants.line.init(mode: "coin", text: "One Tower", icon: UIImage(named: "One Tower"), l1: "Gönderilmez", l2: "Gönderilmez", minSend: "-", minReceive: "-")
+        let btc2 = Constants.line.init(mode: "coin",
+                                       text: "Bitcoin",
+                                       icon: UIImage(named: "WBTC"),
+                                       l1: "0.005 Waves",
+                                       l2: setLang(Localize.mainScreen.free.rawValue),
+                                       minSend: "0.00000300 BTC",
+                                       minReceive: "-")
+        
+        let eth2 = Constants.line.init(mode: "coin",
+                                       text: "Ethereum",
+                                       icon: UIImage(named: "WETH"),
+                                       l1: "0.005 Waves",
+                                       l2:setLang(Localize.mainScreen.free.rawValue),
+                                       minSend: "0.0001 ETH",
+                                       minReceive: "-")
+        
+        let waves2 = Constants.line.init(mode: "coin",
+                                         text: "Waves",
+                                         icon: UIImage(named: "Waves"),
+                                         l1: "0.005 Waves",
+                                         l2: setLang(Localize.mainScreen.free.rawValue),
+                                         minSend: "0.01 WAVES",
+                                         minReceive: "-")
+        let usd2 = Constants.line.init(mode: "coin",
+                                       text: "Tether USDT",
+                                       icon: UIImage(named: "USDT"),
+                                       l1: "0.005 Waves",
+                                       l2: setLang(Localize.mainScreen.free.rawValue),
+                                       minSend: "0.1 USDT",
+                                       minReceive: "-")
+        
+        let onet2 = Constants.line.init(mode: "coin",
+                                        text: "One Tower",
+                                        icon: UIImage(named: "One Tower"),
+                                        l1: setLang(Localize.mainScreen.cannot_send.rawValue),
+                                        l2: setLang(Localize.mainScreen.cannot_send.rawValue),
+                                        minSend: "-",
+                                        minReceive: "-")
+        
         let sep2 = Constants.line.init(mode: "text", text: "")
         
-        let line3 = Constants.line.init(mode: "text", text: "DigiliraPay kullanıcılarının Waves blokzinciri dışındaki transferleri")
+        let line3 = Constants.line.init(mode: "text",
+                                        text: setLang(Localize.mainScreen.transfer_to_gateway.rawValue))
         
-        let btc3 = Constants.line.init(mode: "coin", text: "Bitcoin", icon: UIImage(named: "WBTC"), l1: "0.001 BTC", l2: "Ücretsiz", minSend: "0.001 BTC", minReceive: "0.001 BTC")
-        let eth3 = Constants.line.init(mode: "coin", text: "Ethereum", icon: UIImage(named: "WETH"), l1: "0.02 ETH", l2: "Ücretsiz", minSend: "0.01 ETH", minReceive: "0.01 ETH")
-        let waves3 = Constants.line.init(mode: "coin", text: "Waves", icon: UIImage(named: "Waves"), l1: "2 WAVES", l2: "Ücretsiz", minSend: "1 WAVES", minReceive: "1 WAVES")
-        let usd3 = Constants.line.init(mode: "coin", text: "Tether USDT", icon: UIImage(named: "USDT"), l1: "20 USDT", l2: "Ücretsiz", minSend: "10 USDT", minReceive: "10 USDT")
-        let onet3 = Constants.line.init(mode: "coin", text: "One Tower", icon: UIImage(named: "One Tower"), l1: "Gönderilmez", l2: "Gönderilmez", minSend: "-", minReceive: "-" )
+        let btc3 = Constants.line.init(mode: "coin",
+                                       text: "Bitcoin",
+                                       icon: UIImage(named: "WBTC"),
+                                       l1: "0.001 BTC",
+                                       l2: setLang(Localize.mainScreen.free.rawValue),
+                                       minSend: "0.001 BTC",
+                                       minReceive: "0.001 BTC")
         
-        let line4 = Constants.line.init(mode: "text", text: "(min): Komisyonlar hariç gönderebileceğiniz veya alabileceğiniz en az miktarları gösterir. Bu miktarların altında yapılan transferler alıcıya ulaşmaz ve iade talep edilemez.\n\n(kom): Waves blokzinciri dışına yapılan işlemler için Waves ağ geçidine ödenen ücreti ifade etmektedir.")
+        let eth3 = Constants.line.init(mode: "coin",
+                                       text: "Ethereum",
+                                       icon: UIImage(named: "WETH"),
+                                       l1: "0.02 ETH",
+                                       l2: setLang(Localize.mainScreen.free.rawValue),
+                                       minSend: "0.01 ETH",
+                                       minReceive: "0.01 ETH")
+        
+        let waves3 = Constants.line.init(mode: "coin",
+                                         text: "Waves",
+                                         icon: UIImage(named: "Waves"),
+                                         l1: "2 WAVES",
+                                         l2: setLang(Localize.mainScreen.free.rawValue),
+                                         minSend: "1 WAVES",
+                                         minReceive: "1 WAVES")
+        
+        let usd3 = Constants.line.init(mode: "coin",
+                                       text: "Tether USDT",
+                                       icon: UIImage(named: "USDT"),
+                                       l1: "20 USDT",
+                                       l2: setLang(Localize.mainScreen.free.rawValue),
+                                       minSend: "10 USDT",
+                                       minReceive: "10 USDT")
+        
+        let onet3 = Constants.line.init(mode: "coin",
+                                        text: "One Tower",
+                                        icon: UIImage(named: "One Tower"),
+                                        l1: setLang(Localize.mainScreen.cannot_send.rawValue),
+                                        l2: setLang(Localize.mainScreen.cannot_send.rawValue),
+                                        minSend: "-",
+                                        minReceive: "-" )
+        
+        let line4 = Constants.line.init(mode: "text", text: setLang(Localize.mainScreen.commissions_info.rawValue))
+        
          commissionsView.lines = [line1, head2, btc1, eth1, waves1, usd1, onet1, sep1,
                                  line2, head2, btc2, eth2, waves2, usd2, onet2, sep2,
                                  line3, head2, btc3, eth3, waves3, usd3, onet3, sep2, line4
@@ -2031,8 +2090,7 @@ extension MainScreen: MenuViewDelegate // alt menünün butonlara tıklama kısm
     } 
 }
 
-extension MainScreen: OperationButtonsDelegate
-{
+extension MainScreen: OperationButtonsDelegate {
     func send(params: SendTrx)
     {
         let transactionRecipient: String = params.merchant!
@@ -2120,12 +2178,14 @@ extension MainScreen: OperationButtonsDelegate
                 
                 if let identity = UserDefaults.standard.value(forKey: "isIdentity") as? Bool {
                     if identity {
-                        self.throwEngine.alertCaution(title: "Profil Onayı", message: "Profil onay süreciniz devam etmektedir.")
+                        self.throwEngine.alertCaution(title: setLang(Localize.mainScreen.account_verify_in_progress.rawValue),
+                                                      message: setLang(Localize.mainScreen.account_verify_in_progree_message.rawValue))
                         return
                     }
                 }
                 
-                self.throwEngine.alertCaution(title: "Profil Onayı", message: "Müşterini tanı politikası gereğince hesabınıza para yükleyebilmek için profil onay sürecini tamamlamanız gerekmektedir.")
+                self.throwEngine.alertCaution(title: setLang(Localize.mainScreen.account_verify_in_progress.rawValue),
+                                              message: setLang(Localize.mainScreen.account_verify_proceed_to_kyc.rawValue))
             }
             return
         }
@@ -2197,8 +2257,7 @@ extension MainScreen: OperationButtonsDelegate
  
 }
 
-extension MainScreen: BitexenAPIDelegate
-{
+extension MainScreen: BitexenAPIDelegate {
     func dismissBitexen() {
         UIView.animate(withDuration: 0.4, animations: {
             self.sendWithQRView.frame.origin.y = self.view.frame.height
@@ -2246,7 +2305,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
                 self.closeProfileView()
             }
         }
-        digiliraPay.touchID(reason: "API bilgilerini görüntüleyebilmek için kimliğinizi onaylamanız gerekmektedir.")
+        digiliraPay.touchID(reason: setLang(Localize.mainScreen.verify_profile_to_proceed.rawValue))
     }
     
     func showSeedView() {
@@ -2276,7 +2335,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
             }
         }
         
-        digiliraPay.touchID(reason: "Transferin gerçekleşebilmesi için biometrik onayınız gerekmektedir!")
+        digiliraPay.touchID(reason: setLang(Localize.mainScreen.biometric_verification_needed.rawValue))
     }
     
     func verifyProfile()
@@ -2295,7 +2354,8 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
                 
                 if let isIdentity = UserDefaults.standard.value(forKey: "isIdentity") as? Bool {
                     if isIdentity {
-                        throwEngine.alertWarning(title: "Kontrol Aşamasında", message: "Gönderdiğiniz bilgiler kontrol edildikten sonra tarafınıza bildirim yapılacaktır. Eğer bildirimleri açmadıysanız, telefonunuzun ayarlar bölümünden bildirimlere izin vermeniz gerekmektedir.")
+                        throwEngine.alertWarning(title: setLang(Localize.mainScreen.account_verify_in_progress.rawValue),
+                                                 message: setLang(Localize.mainScreen.you_will_be_notified.rawValue))
                         return
                     }
                 }
@@ -2313,8 +2373,8 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
                 { subView.removeFromSuperview() }
                 
                 if kullanici.status == 3 {
-                    verifyProfileXib.descLabel.text =  "Profiliniz Onaylanmıştır."
-                    verifyProfileXib.titleLabel.text = "Profilim"
+                    verifyProfileXib.descLabel.text = setLang(Localize.mainScreen.account_verified_message.rawValue)
+                    verifyProfileXib.titleLabel.text = setLang(Localize.mainScreen.my_profile.rawValue)
                     verifyProfileXib.nameText.isEnabled = false
                     verifyProfileXib.surnameText.isEnabled = false
                     verifyProfileXib.tcText.isEnabled = false
@@ -2362,7 +2422,8 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
                     self.qrView.alpha = 1
                 }
             case 2:
-                throwEngine.alertWarning(title: "Profil Onayı", message: "Gönderdiğiniz bilgiler kontrol edilmektedir.", error: false)
+                throwEngine.alertWarning(title:  setLang(Localize.mainScreen.account_verify_in_progress.rawValue),
+                                         message: setLang(Localize.mainScreen.in_progress.rawValue), error: false)
                 
                 break
             default:
@@ -2372,13 +2433,9 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         } catch {
             
         }
-        
-        
-        
     }
     
-    func goProfileSettings()
-    {
+    func goProfileSettings()  {
         profileSettingsView.frame.origin.y = view.frame.height
         let profileSettingsXib = UIView().loadNib(name: "ProfileSettingsView") as! ProfileSettingsView
         profileSettingsXib.delegate = self
@@ -2398,8 +2455,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         }
     }
     
-    func goExtraPayment()
-    {
+    func goExtraPayment()  {
         paymentCat.frame.origin.y = view.frame.height
         let paymentCatXib = UIView().loadNib(name: "PaymentCategories") as! PaymentCat
         paymentCatXib.delegate = self
@@ -2420,7 +2476,6 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
     }
     
     func goNewSendView() {
-        
         newSendMoneyView = UIView().loadNib(name: "newSendView") as! newSendView
         sendWithQRView.frame.origin.y = self.view.frame.height
         newSendMoneyView.frame = CGRect(x: 0,
@@ -2450,8 +2505,7 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         }
         
     }
-    
-    
+     
     func goPageCardView(ORDER: PaymentModel) {
         
         pageCardView = UIView().loadNib(name: "PageCardView") as! PageCardView
@@ -2481,7 +2535,8 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
                 }
             } catch {
                 DispatchQueue.main.async { [self] in
-                    errorHandler(message: "Token Desteklenmemektedir.", title: "Token Hatalı", error: true)
+                    errorHandler(message: setLang(Localize.mainScreen.token_not_supported.rawValue),
+                                 title: setLang(Localize.mainScreen.invalid_token.rawValue), error: true)
                     return
                 }
             }
@@ -2492,7 +2547,9 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         }
         
         if !doesHave {
-            errorHandler(message: "Bu ödeme sadece " + tokenName +  " ile yapılabilir. Hesabınızda " + tokenName + " bulunmadığı için ödeme yapamazsınız.", title: "Yetersiz Bakiye", error: true)
+            let localisedString = String(format: setLang(Localize.mainScreen.exclusive_payment.rawValue),tokenName)
+            errorHandler(message: localisedString,
+                         title: setLang(Localize.keys.out_of_balance_header.rawValue), error: true)
             return
         }
          
@@ -2533,16 +2590,16 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         do {
             let asset = try BC.returnAsset(assetId: transaction.assetID)
             
-            let amount:String = MainScreen.int2so(transaction.amount, digits: asset.decimal)
-
-            let message = amount + " " + asset.tokenName + " Gönderiliyor."
+            let amount:String = transaction.amount.int2FormattedString(digits: asset.decimal)
+            let message = String(format: setLang(Localize.mainScreen.sending_x_token.rawValue),amount, asset.tokenName)
             switch mode {
             case 1:
-                throwEngine.alertTransaction(title: "Doğrulanıyor", message: message, verifying: true)
+                throwEngine.alertTransaction(title: setLang(Localize.mainScreen.verifying_transfer.rawValue), message: message, verifying: true)
                 break
             case 2:
                 fetch()
-                throwEngine.alertWarning(title: "Transfer Başarılı", message: "Transferiniz gerçekleşti.", error: false)
+                throwEngine.alertWarning(title: setLang(Localize.mainScreen.transfer_successful.rawValue),
+                                         message: setLang(Localize.mainScreen.transfer_ok.rawValue), error: false)
             default:
                 break
             }
@@ -2554,9 +2611,10 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         
     }
     
-    func showTermsofUse()
-    {
-        showLegal(mode: Constants.terms.init(title: Constants.termsOfUse.title, text: Constants.termsOfUse.text))
+    func showTermsofUse() {
+        showLegal(mode: Constants.terms.init(title: lang.getLocalizedString(Localize.keys.new_terms_of_use_title.rawValue),
+                                             text: Constants.termsOfUse.text,
+                                             mode: 1))
     }
     
     func openGallery()
@@ -2569,7 +2627,9 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         }
         else
         {
-            self.throwEngine.alertWarning(title: "Dikkat", message: "Galeriye erişim izniniz bulunmamaktadır", error: true)
+            self.throwEngine.alertWarning(title: setLang(Localize.keys.attention.rawValue),
+                                          message: setLang(Localize.mainScreen.gallery_permission.rawValue),
+                                          error: true)
         }
     }
     
@@ -2591,10 +2651,10 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
         return nil
     }
     
-    func showLegalText()
-    {
-        showLegal(mode: Constants.terms.init(title: Constants.legalView.title, text: Constants.legalView.text))
+    func showLegalText() {
+        showLegal(mode: Constants.terms.init(title: lang.getLocalizedString(Localize.keys.new_legal_view_title.rawValue), text: Constants.legalView.text, mode: 0))
     }
+    
     func showPinView() {
         isNewPin = true
         openPinView()
@@ -2656,10 +2716,6 @@ extension MainScreen: ProfileMenuDelegate // Profil doğrulama, profil ayarları
             } catch  {
                 print (error)
             }
-       
-        
-        
-        
     }
     
     func popup (image: UIImage?) {
@@ -2718,7 +2774,9 @@ extension MainScreen: UIImagePickerControllerDelegate {
                     if let user = res {
                         kullanici = user
                         self.throwEngine.warningView.removeFromSuperview()
-                        self.throwEngine.alertWarning(title: "Bilgileriniz Yüklendi", message: "Gönderdiğiniz bilgiler kontrol edildikten sonra profiliniz güncellenecektir.", error: false)
+                        self.throwEngine.alertWarning(title: setLang(Localize.mainScreen.data_uploaded.rawValue),
+                                                      message: setLang(Localize.mainScreen.your_profile_will_be_updated.rawValue),
+                                                      error: false)
                         
                         if isIdentityUpload {
                             UserDefaults.standard.set(true, forKey: "isIdentity")
@@ -2734,7 +2792,7 @@ extension MainScreen: UIImagePickerControllerDelegate {
             }
         }
         
-            throwEngine.alertTransaction(title: "Yükleniyor...", message: "Fotoğrafınız yükleniyor lütfen bekleyin.", verifying: true)
+            throwEngine.alertTransaction(title: setLang(Localize.mainScreen.uploading.rawValue), message: setLang(Localize.mainScreen.selfie_uploading.rawValue), verifying: true)
             
             
             if let img = image.resizeWithWidth(width: 700) {
@@ -2768,15 +2826,15 @@ extension MainScreen: UIImagePickerControllerDelegate {
                         
                         
                     } else {
-                        throwEngine.alertWarning(title: lang.const(x: Localize.keys.an_error_occured.rawValue), message: "Dosya yüklenemedi. Lütfen tekrar deneyin. Sıkıştırma Hatası", error: true)
+                        throwEngine.alertWarning(title: lang.getLocalizedString(Localize.keys.an_error_occured.rawValue), message: setLang(Localize.mainScreen.upload_error_compression.rawValue), error: true)
                         return
                     }
                 } else {
-                    throwEngine.alertWarning(title: lang.const(x: Localize.keys.an_error_occured.rawValue), message: "Dosya yüklenemedi. Lütfen tekrar deneyin. Düzenleme Hatası", error: true)
+                    throwEngine.alertWarning(title: lang.getLocalizedString(Localize.keys.an_error_occured.rawValue), message: setLang(Localize.mainScreen.upload_error_sizing.rawValue), error: true)
                     return
                 }
             } else {
-                throwEngine.alertWarning(title: lang.const(x: Localize.keys.an_error_occured.rawValue), message: "Dosya yüklenemedi. Lütfen tekrar deneyin.", error: true)
+                throwEngine.alertWarning(title: lang.getLocalizedString(Localize.keys.an_error_occured.rawValue), message: setLang(Localize.mainScreen.upload_error_try_again.rawValue), error: true)
                 return
             }
   
@@ -2787,9 +2845,10 @@ extension MainScreen: UIImagePickerControllerDelegate {
                     if (row.messageString != "") {
                         OpenUrlManager.notSupportedYet = { [self] res, network in
                             if !res {
-                                throwEngine.alertWarning(title: "Geçersiz Cüzdan", message: "Cüzdan adresi geçersiz veya desteklenmemektedir.")
+                                throwEngine.alertWarning(title: setLang(Localize.mainScreen.invalid_wallet.rawValue), message: setLang(Localize.mainScreen.invalid_wallet_message.rawValue))
                             } else {
-                                throwEngine.alertCaution(title: network, message: network + " blokzinciri henüz desteklenmemektedir.")
+                                let localisedString = String(format: setLang(Localize.mainScreen.x_blockchain_not_supported.rawValue),network)
+                                throwEngine.alertCaution(title: network, message: localisedString)
                             }
                         }
                         

@@ -43,6 +43,9 @@ class Verify_StartView: UIView {
     @IBOutlet weak var label15: UILabel!
     @IBOutlet weak var okButton: UIButton!
 
+    @IBOutlet weak var headerLabel: UILabel!
+    @IBOutlet weak var subHeaderLabel: UILabel!
+
     @IBOutlet weak var overall: UILabel!
     
     var keywordArray: [String] = []
@@ -51,7 +54,7 @@ class Verify_StartView: UIView {
     private var seed: String?
     
     var verified: Bool = false
-    
+    let lang = Localize()
     var word: Int8 = 0
     
     var labelSelectedFont = UIFont(name: "Avenir-Black", size: 16)
@@ -66,7 +69,13 @@ class Verify_StartView: UIView {
         setView1()
     }
     
+    
+    
     func setView1() {
+        headerLabel.text = lang.getLocalizedString(Localize.letsStartVc.last_page_header.rawValue)
+        subHeaderLabel.text = lang.getLocalizedString(Localize.letsStartVc.verify_and_start_message.rawValue)
+        okButton.setTitle(lang.getLocalizedString(Localize.letsStartVc.skip_this.rawValue), for: .normal)
+        
         var sensitiveSource = "sensitive"
         
         if let environment = UserDefaults.standard.value(forKey: "environment") {
@@ -149,11 +158,11 @@ class Verify_StartView: UIView {
                 if selectedWords == keywordArray {
                     overall.textColor = .blue
                     verified = true
-                    okButton.setTitle("Doğrula", for: .normal)
+                    okButton.setTitle(lang.getLocalizedString(Localize.keys.verify.rawValue), for: .normal)
                 } else {
                     verified = false
                     overall.textColor = .red
-                    okButton.setTitle("Bu aşamayı atla", for: .normal)
+                    okButton.setTitle(lang.getLocalizedString(Localize.keys.skip_this.rawValue), for: .normal)
                 }
             }
              

@@ -25,6 +25,7 @@ class BitexenAPIView: UIView {
 
     let digiliraPay = DigiliraPayService()
     let bitexenSign = BexSign()
+    let lang = Localize()
 
     @IBAction func btnExit(_ sender: Any) {
         delegate?.dismissBitexen()
@@ -93,7 +94,9 @@ class BitexenAPIView: UIView {
                 res.valid = true
                 save2defaults(forKey: digiliraPay.returnBexChain(), data: res)
                 delegate?.dismissBitexen()
-                errors?.errorHandler(message: "API bilgileriniz kaydedildi.", title: "İşlem Başarılı", error: false)
+                errors?.errorHandler(message: lang.getLocalizedString(Localize.messages.bitexen_api_saved_message.rawValue),
+                                     title: lang.getLocalizedString(Localize.messages.bitexen_api_saved_title.rawValue),
+                                     error: false)
                 
             } 
             

@@ -1051,7 +1051,7 @@ class BlockchainService: NSObject {
                 self.onSensitive!(Constants.wallet.init(seed: "", wavesToken: ""), err)
             }
         }
-        digiliraPay.touchID(reason: lang.const(x: "touch_id_reason"))
+        digiliraPay.touchID(reason: lang.getLocalizedString(Localize.keys.touch_id_reason.rawValue))
     }
     
     private func getSeed() throws -> Constants.wallet {

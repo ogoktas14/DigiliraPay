@@ -23,8 +23,10 @@ class ProfileMenuView: UIView {
     @IBOutlet weak var userTextLabel: UILabel!
     @IBOutlet weak var securityLabel: UILabel!
     @IBOutlet weak var securityPinLabel: UILabel!
-    @IBOutlet weak var languageLabel: UILabel!
-     
+    @IBOutlet weak var bitexenLabel: UILabel!
+    @IBOutlet weak var commissionsLabel: UILabel!
+    @IBOutlet weak var testnetMainnet: UILabel!
+
     @IBOutlet weak var bitexenAPI: UIView!
     
     @IBOutlet weak var verifyProfileView: UIView!
@@ -42,11 +44,8 @@ class ProfileMenuView: UIView {
     @IBOutlet weak var pinWarning: UIImageView!
     
     let throwEngine = ErrorHandling()
+    let lang = Localize()
 
-    var currentLanguage: Languages = .TR
-    var changeLanguageforEN = UITapGestureRecognizer()
-    var changeLanguageforTR = UITapGestureRecognizer()
-    
     var frameValue = CGRect()
 
     var ViewOriginMaxXValue: CGPoint = CGPoint(x: 0, y: 0)
@@ -55,6 +54,11 @@ class ProfileMenuView: UIView {
     
     override func awakeFromNib()
     {
+        setGesture()
+        setView()
+    }
+    
+    private func setGesture() {
         let verifyProfileTap = UITapGestureRecognizer(target: self, action: #selector(verifyProfile))
         verifyProfileView.addGestureRecognizer(verifyProfileTap)
         
@@ -76,24 +80,34 @@ class ProfileMenuView: UIView {
         let showCommissions = UITapGestureRecognizer(target: self, action: #selector(openCommissions))
         commissions.addGestureRecognizer(showCommissions)
         
+    }
+    
+    func setView() {
+        profileVerifyLabel.text = lang.getLocalizedString(Localize.drawerMenu.verify_profile.rawValue)
+        keywordsLabel.text = lang.getLocalizedString(Localize.drawerMenu.seed.rawValue)
+        termsofUseLabel.text = lang.getLocalizedString(Localize.drawerMenu.usage.rawValue)
+        userTextLabel.text = lang.getLocalizedString(Localize.drawerMenu.legal_view.rawValue)
+        securityPinLabel.text = lang.getLocalizedString(Localize.drawerMenu.pin_settings.rawValue)
+        bitexenLabel.text = lang.getLocalizedString(Localize.drawerMenu.bitexen_api.rawValue)
+        commissionsLabel.text = lang.getLocalizedString(Localize.drawerMenu.commissions.rawValue)
+        testnetMainnet.text = lang.getLocalizedString(Localize.drawerMenu.mainnet.rawValue)
+
         let authContext = LAContext()
-        
             let _ = authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
             switch(authContext.biometryType) {
             case .none:
-                securityLabel.text = "Pin"
+                securityLabel.text = lang.getLocalizedString(Localize.drawerMenu.biometrics_pin.rawValue)
                 biometricSecurityToggle.setOn(true, animated: true)
                 biometricSecurityToggle.isEnabled = false
             case .touchID:
-                securityLabel.text = "Touch ID"
+                securityLabel.text = lang.getLocalizedString(Localize.drawerMenu.biometrics_touch_id.rawValue)
             case .faceID:
-                securityLabel.text = "Face ID"
+                securityLabel.text = lang.getLocalizedString(Localize.drawerMenu.biometrics_face_id.rawValue)
             @unknown default:
-                securityLabel.text = "Pin"
+                securityLabel.text = lang.getLocalizedString(Localize.drawerMenu.biometrics_pin.rawValue)
                 biometricSecurityToggle.setOn(true, animated: true)
                 biometricSecurityToggle.isEnabled = false
             }
-        
         
         if let isSecure = UserDefaults.standard.value(forKey: "isSecure") as? Bool
         {
@@ -104,11 +118,9 @@ class ProfileMenuView: UIView {
         {
             mainnetTestnet.isOn = isMainnet
         }
-    }
-    
-    func setView() {
         
     }
+    
     @objc func verifyProfile()
     {
         delegate?.verifyProfile()
@@ -148,17 +160,5 @@ class ProfileMenuView: UIView {
         UserDefaults.standard.setValue(mainnetTestnet.isOn, forKey: "environment")
         throwEngine.resetApp()
     }
-    
- 
-    @objc func changeLanguage()
-    {
-        if currentLanguage == .EN
-        {
-            currentLanguage = .TR
-        }
-        else if currentLanguage == .TR
-        {
-            currentLanguage = .EN
-        }
-    }
+  
 }

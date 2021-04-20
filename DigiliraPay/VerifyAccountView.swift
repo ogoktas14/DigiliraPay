@@ -58,6 +58,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
     var isTooManyErrors:Int = 0
     
     let digiliraPay = DigiliraPayService()
+    let lang = Localize()
     var kullanici = try? secretKeys.userData()
     
     override func didMoveToSuperview() {
@@ -149,7 +150,8 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
             delegate?.uploadIdentity()
             
         } else {
-            errors?.errorCaution(message: "Verdiğiniz bilgilerinizin doğruluğunu işaretlemediniz.", title: "Bilgilerinizi Doğrulayın")
+            errors?.errorCaution(message: lang.getLocalizedString(Localize.messages.checkmark_not_selected.rawValue),
+                                 title: lang.getLocalizedString(Localize.messages.verify_your_information.rawValue))
         }
     }
     
@@ -222,8 +224,8 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
                     
                     if (res == nil) {
                         errors?.evaluate(error: Constants.NAError.missingParameters)
-                    } else {
-                        errors?.errorHandler(message: "Kimlik bilgileriniz doğrulandı, ancak KYC sürecini tamamlamak için kimliğinizin ön yüzü görünecek biçimde boş bir kağıda günün tarihini ve DigiliraPay yazarak Profil Onayı sayfasına yükleyin.", title: "Profiliniz Güncellendi", error: false)
+                    } else { //
+                        errors?.errorHandler(message: lang.getLocalizedString(Localize.messages.profile_verified.rawValue), title: lang.getLocalizedString(Localize.mainScreen.account_verified.rawValue), error: false)
                         
                         delegate?.loadEssentials()
                     }
@@ -269,7 +271,8 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
                     errors?.evaluate(error: Constants.NAError.missingParameters)
                 } else {
                     vTCNA.isHidden = false
-                    errors?.errorCaution(message: "Kimliğinizi doğrulamakta sorun yaşıyorsanız farklı bir doğrulama yöntemi kullanabilirsiniz.", title:"Doğrulama Hatası")
+                    errors?.errorCaution(message: lang.getLocalizedString(Localize.messages.alternatice_verification.rawValue),
+                                         title:lang.getLocalizedString(Localize.messages.verfication_error.rawValue))
                     
                 }
                 understand.isEnabled = true
@@ -377,7 +380,7 @@ class VerifyAccountView: UIView, UITextFieldDelegate, XMLParserDelegate
         onayImage.isUserInteractionEnabled = true
         onayImage.addGestureRecognizer(upload)
         
-        infoTitle.text = "Bir kağıda;\n- DigiliraPay\n- Günün tarihini\n- E-posta adresinizi\n- Cep telefonu numaranızı \nyazınız.\n\nYukarıda gösterildiği gibi kimliğinizin ön yüzünü ve yazdığınız bilgileri elinizde tutarak çektiğiniz bir fotoğrafı yükleyin.\nKimlik üzerindeki bilgilerin okunabilir olmasına dikkat edin."
+        infoTitle.text = lang.getLocalizedString(Localize.keys.upload_selfie_info.rawValue)
         
         let sendAndContiuneGesture = UITapGestureRecognizer(target: self, action: #selector(sendAndContiune))
         let t1 = UITapGestureRecognizer(target: self, action: #selector(showHide))

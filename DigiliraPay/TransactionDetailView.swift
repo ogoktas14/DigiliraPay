@@ -23,7 +23,8 @@ class TransactionDetailView: UIView
     var transaction:Constants.transfer?
 
     let BC = BlockchainService()
-    
+    let lang = Localize()
+
     var fetching: Bool = false
     let generator = UINotificationFeedbackGenerator()
     
@@ -93,7 +94,7 @@ class TransactionDetailView: UIView
     }
     
     @objc func getOr(recognizer: MyTapGesture) {
-        if recognizer.qrAttachment == "Diğer" {
+        if recognizer.qrAttachment == lang.getLocalizedString(Localize.keys.other.rawValue) {
             generator.notificationOccurred(.error)
             return
         }
@@ -155,7 +156,8 @@ class TransactionDetailView: UIView
                 crud.request(rURL: crud.getApiURL() + Constants.api.transferGet, postData: try? JSONEncoder().encode(data), signature: data.signed)
                 
                 DispatchQueue.main.async { [self] in
-                    delegate?.alertT(message: "Transfer detaylarınız yükleniyor...", title: "Detaylar")
+                    delegate?.alertT(message: lang.getLocalizedString(Localize.keys.details_loading.rawValue),
+                                     title: lang.getLocalizedString(Localize.keys.details.rawValue))
                 
             }
         } catch {
@@ -199,6 +201,15 @@ extension TransactionDetailView: UITableViewDelegate, UITableViewDataSource
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let address_copied = lang.getLocalizedString(Localize.keys.address_copied.rawValue)
+        let transfer_time = lang.getLocalizedString(Localize.keys.transfer_time.rawValue)
+        let click_to_see_details = lang.getLocalizedString(Localize.keys.click_to_see_deta.rawValue)
+        let transfer_type = lang.getLocalizedString(Localize.keys.transfer_type.rawValue)
+        let receiver = lang.getLocalizedString(Localize.keys.receiver.rawValue)
+        let sender = lang.getLocalizedString(Localize.keys.sender.rawValue)
+        let other =  lang.getLocalizedString(Localize.keys.details.rawValue)
+        
         if indexPath.row == 0
         {
             if let cell = UITableViewCell().loadXib(name: "TransactionHistoryDetailCellHeader") as? TransactionHistoryDetailCellHeader {
@@ -211,7 +222,7 @@ extension TransactionDetailView: UITableViewDelegate, UITableViewDataSource
                         cell.cellImage.image = UIImage(named: coin.tokenSymbol)
                         
                         cell.cellTitle.text = coin.tokenName
-                        cell.cellAmount.text = MainScreen.int2so(t.amount, digits: coin.decimal)
+                        cell.cellAmount.text = t.amount.int2FormattedString(digits: coin.decimal)
                         
                     } catch  {
                     }
@@ -226,33 +237,33 @@ extension TransactionDetailView: UITableViewDelegate, UITableViewDataSource
                 
                 if let t = transaction {
                     switch indexPath.row {
-                    
+                   
                     case 1:
-                        cell.setView(image: UIImage(named: "send")!, title: "Gönderici", detail: t.sender!)
+                        cell.setView(image: UIImage(named: "send")!, title: sender, detail: t.sender!)
                         let tapped = CopyGesture.init(target: self, action: #selector(copyText))
                         tapped.cp = t.sender
                         tapped.btn = cell.cellDetailBtn
-                        tapped.msg = "Adres Kopyalandı"
+                        tapped.msg = address_copied
                         cell.addGestureRecognizer(tapped)
                     case 2:
-                        cell.setView(image: UIImage(named: "receive")!, title: "Alıcı", detail: t.recipient!)
+                        cell.setView(image: UIImage(named: "receive")!, title: receiver, detail: t.recipient!)
                         
                         let tapped = CopyGesture.init(target: self, action: #selector(copyText))
                         tapped.cp = t.recipient
                         tapped.btn = cell.cellDetailBtn
-                        tapped.msg = "Adres Kopyalandı"
+                        tapped.msg = address_copied
                         cell.addGestureRecognizer(tapped)
                     case 3:
-                        cell.setView(image: UIImage(named: "time")!, title: "İşlem Zamanı", detail: t.timestamp!)
+                        cell.setView(image: UIImage(named: "time")!, title: transfer_time, detail: t.timestamp!)
                     case 4:
-                        cell.setView(image: UIImage(named: "verifying")!, title: "Detaylar İçin Tıklayın", detail: t.attachment ?? "Diğer" )
+                        cell.setView(image: UIImage(named: "verifying")!, title: click_to_see_details, detail: t.attachment ?? other )
                         
-                        if (t.attachment == "Diğer") {
-                            cell.setView(image: UIImage(named: "verifying")!, title: "İşlem Türü", detail: t.attachment ?? "Diğer" )
+                        if (t.attachment == other) {
+                            cell.setView(image: UIImage(named: "verifying")!, title: transfer_type, detail: t.attachment ?? other )
                         }
                         
                         let tapped = MyTapGesture.init(target: self, action: #selector(getOr))
-                        tapped.qrAttachment = t.attachment ?? "Diğer"
+                        tapped.qrAttachment = t.attachment ?? other
                         
                         tapped.trxId = t.id!
                         if t.attachment == "DIGILIRA TRANSFER" {

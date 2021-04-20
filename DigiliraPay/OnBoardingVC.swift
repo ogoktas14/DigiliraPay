@@ -64,6 +64,11 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
         }
     }
     
+    private func setUI() {
+        letsGoLabel.text = lang.getLocalizedString(Localize.onBoardingView.lets_start.rawValue)
+        importAccountView.text = lang.getLocalizedString(Localize.onBoardingView.import_account.rawValue)
+    }
+    
     func checkSeed() {
         var sensitiveSource = "sensitive"
         
@@ -122,7 +127,7 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
         performSegue(withIdentifier: "toMainScreen", sender: nil)
     }
     
-    func initialWaves() -> Bool {
+    func initialWaves() {
         
         if let environment = UserDefaults.standard.value(forKey: "environment") {
             if let E = environment as? Bool {
@@ -131,7 +136,7 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
                                                                    node: [],
                                                                    matcher: []),
                                             enviroment: .init(server: .testNet, timestampServerDiff: 0))
-                    return false
+                    return
                 }
             }
         }
@@ -142,22 +147,21 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
                                                        node: [],
                                                        matcher: []),
                                 enviroment: .init(server: .mainNet, timestampServerDiff: 0))
-        return true
+        return
     }
     
     override func viewDidLoad() {
-        if initialWaves() {
+        initialWaves()
 
-        }
         initial2()
+        setUI()
         UNUserNotificationCenter.current().delegate = self;
         
         super.viewDidLoad()
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .light
-        } else {
-            // Fallback on earlier versions
         }
+        
         let tapLetsGoViewGesture = UITapGestureRecognizer(target: self, action: #selector(letsGO))
         letsGoView.addGestureRecognizer(tapLetsGoViewGesture)
         letsGoView.isUserInteractionEnabled = true
@@ -167,6 +171,7 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
         
         
     }
+    
     override func viewDidAppear(_ animated: Bool) {
         setScrollView()
         setLetsGoView()         
@@ -231,12 +236,12 @@ class OnBoardingVC: UIViewController, DisplayViewControllerDelegate {
                     })
                 }
             case 400:
-                self.alertWarning(title: lang.const(x: Localize.keys.an_error_occured.rawValue), message: "Girdiğiniz bilgileri kontrol edip tekrar deneyin.", error: true)
+                self.alertWarning(title: lang.getLocalizedString(Localize.keys.an_error_occured.rawValue), message: lang.getLocalizedString(Localize.keys.check_the_information_entered.rawValue), error: true)
                 letsGoView.isHidden = false
             case 502:
-                self.alertWarning(title: lang.const(x: Localize.keys.an_error_occured.rawValue), message: "Şu anda işleminizi gerçekleştiremiyoruz. Lütfen daha sonra tekrar deneyin.", error: true)
+                self.alertWarning(title: lang.getLocalizedString(Localize.keys.an_error_occured.rawValue), message: lang.getLocalizedString(Localize.keys.cannot_perform_this_action_try_again.rawValue), error: true)
             default:
-                self.alertWarning(title: lang.const(x: Localize.keys.an_error_occured.rawValue), message: "Şu anda işleminizi gerçekleştiremiyoruz. Lütfen daha sonra tekrar deneyin.", error: true)
+                self.alertWarning(title: lang.getLocalizedString(Localize.keys.an_error_occured.rawValue), message: lang.getLocalizedString(Localize.keys.cannot_perform_this_action_try_again.rawValue), error: true)
             }
         }
         
@@ -266,9 +271,9 @@ extension OnBoardingVC: UIScrollViewDelegate
         
         let onBoardingView1: OnBoardingView = UIView().loadOnBoardingNib()
         onBoardingView1.setView(image: UIImage(named: "letsStart1")!,
-                                titleFirst: "Blokzincir",
-                                titleSecond: "Ödeme Geçidi",
-                                desc: "DigiliraPay’e hoşgeldin.\nKripto paranı güvenle sakla, transfer et, alışverişlerinde kullan.")
+                                titleFirst: lang.getLocalizedString(Localize.onBoardingView.page_1_line_1.rawValue),
+                                titleSecond: lang.getLocalizedString(Localize.onBoardingView.page_1_line_2.rawValue),
+                                desc: lang.getLocalizedString(Localize.onBoardingView.page_1_line_3.rawValue))
         
         onBoardingView1.frame = CGRect(x: 0,
                                        y: 0,
@@ -277,9 +282,9 @@ extension OnBoardingVC: UIScrollViewDelegate
         
         let onBoardingView2: OnBoardingView = UIView().loadOnBoardingNib()
         onBoardingView2.setView(image: UIImage(named: "onboarding2")!,
-                                titleFirst: "Kripto Paralarınızı",
-                                titleSecond: "Güvenle Saklayın",
-                                desc: "Cüzdanınız sadece sizin kontrolünüzde olsun!")
+                                titleFirst: lang.getLocalizedString(Localize.onBoardingView.page_2_line_1.rawValue),
+                                titleSecond: lang.getLocalizedString(Localize.onBoardingView.page_2_line_2.rawValue),
+                                desc: lang.getLocalizedString(Localize.onBoardingView.page_2_line_3.rawValue))
         
         onBoardingView2.frame = CGRect(x: scrollViewSize.width,
                                        y: 0,
@@ -288,9 +293,9 @@ extension OnBoardingVC: UIScrollViewDelegate
         
         let onBoardingView3: OnBoardingView = UIView().loadOnBoardingNib()
         onBoardingView3.setView(image: UIImage(named: "onboarding3")!,
-                                titleFirst: "Merkeziyetsiz",
-                                titleSecond: "Finans ile Tanışın!",
-                                desc: "Tüm işlemlerinizi tek hesaptan yönetin, \nMerkeziyetsiz finansın kapısını DigiliraPay ile aralayın.")
+                                titleFirst: lang.getLocalizedString(Localize.onBoardingView.page_3_line_1.rawValue),
+                                titleSecond: lang.getLocalizedString(Localize.onBoardingView.page_3_line_2.rawValue),
+                                desc: lang.getLocalizedString(Localize.onBoardingView.page_3_line_3.rawValue))
         
         onBoardingView3.frame = CGRect(x: scrollViewSize.width * 2,
                                        y: 0,
@@ -391,17 +396,18 @@ class DynamicViewController: UIViewController, LegalDelegate {
         legalXib.backView.isHidden = true
         
         if versionLegal == nil {
-            legalXib.titleLabel.text = Constants.legalView.title
+            legalXib.titleLabel.text = NSLocalizedString(Localize.keys.new_legal_view_title.rawValue, comment: "")
             legalXib.contentText.text = Constants.legalView.text
+            legalXib.setView(mode: 0)
         }
         
         if versionTerms == nil {
-            legalXib.titleLabel.text = Constants.termsOfUse.title
+            legalXib.titleLabel.text = NSLocalizedString(Localize.keys.new_terms_of_use_title.rawValue, comment: "")
             legalXib.contentText.text = Constants.termsOfUse.text
+            legalXib.setView(mode: 1)
         }
         
         
-        legalXib.setView()
         
         view.addSubview(legalXib)
     }

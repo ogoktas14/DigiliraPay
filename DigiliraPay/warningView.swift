@@ -14,6 +14,7 @@ class WarningView: UIView {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var warningLabel: UILabel!
+    @IBOutlet weak var okLabel: UILabel!
     @IBOutlet weak var loading: UIProgressView!
 
     @IBOutlet weak var ok: UIView!
@@ -22,9 +23,10 @@ class WarningView: UIView {
     @IBOutlet weak var icon: UIImageView!
 
     let generator = UINotificationFeedbackGenerator()
+    let lang = Localize()
 
-    var title: String  = "Dikkat"
-    var message: String  = "Dikkat"
+    var title: String!
+    var message: String!
     var isError: Bool = true
     var isCaution: Bool = false
     var isTransaction: Bool = false
@@ -32,13 +34,10 @@ class WarningView: UIView {
     override func awakeFromNib() {
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .light
-        } else {
-            // Fallback on earlier versions
         }
         self.layer.cornerRadius = 10
         titleView.layer.cornerRadius = 10
-//        msg.frame.origin.y = 0 - self.frame.height
-        
+ 
         ok.layer.cornerRadius = 25
         
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(exitView))
@@ -77,7 +76,7 @@ class WarningView: UIView {
         if loading.progress > 0.95 {
             loading.isHidden = true
             warningLabel.isHidden = true
-            messageLabel.text = "İşleminiz normalden uzun sürüyor. İşlem sonuçlandığında bildirim yapılacaktır."
+            messageLabel.text = lang.getLocalizedString(Localize.messages.abnormal_situation.rawValue)
             ok.isHidden = false
             return
         }
@@ -117,5 +116,6 @@ class WarningView: UIView {
         
         titleLabel.text = title
         messageLabel.text = message
+        okLabel.text = lang.getLocalizedString(Localize.keys.ok.rawValue)
     }
 }

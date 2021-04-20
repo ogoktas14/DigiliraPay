@@ -13,6 +13,7 @@ class LegalView: UIView {
     
     @IBOutlet weak var resetAppLink: UIButton!
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var confirmLabel: UILabel!
     @IBOutlet weak var contentText: UITextView!
     @IBOutlet weak var confirmView: UIView!
     @IBOutlet weak var confirmAreaView: UIView!
@@ -26,7 +27,8 @@ class LegalView: UIView {
     var isKeyboard: Bool = false
     
     var buffer: CGFloat?
-    
+    let lang = Localize()
+
     let BC = BlockchainService()
     
     override func didMoveToSuperview() {
@@ -68,9 +70,8 @@ class LegalView: UIView {
             }
         }
     }
-    
+     
     @objc func keyboardHide(notification: NSNotification) {
-
         isKeyboard = false
     }
 
@@ -135,23 +136,23 @@ class LegalView: UIView {
     @IBAction func entry(_ sender: Any) {
 
     }
-    func setView() {
+    func setView(mode: Int) {
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .light
-        } else {
-            // Fallback on earlier versions
         }
 
         tapOkGesture = UITapGestureRecognizer(target: self, action: #selector(setOK))
         confirmView.addGestureRecognizer(tapOkGesture)
         tapOkGesture.isEnabled = true
 
-        switch titleLabel.text  {
-        case Constants.legalView.title:
+        confirmLabel.text = lang.getLocalizedString(Localize.keys.read_and_agreed.rawValue)
+
+        switch mode {
+        case 0:
             m = "isLegalView"
             v = Constants.legalView.version
             break
-        case Constants.termsOfUse.title:
+        case 1:
             m = "isTermsOfUse"
             v = Constants.termsOfUse.version
             break

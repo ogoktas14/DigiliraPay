@@ -24,7 +24,8 @@ class WalletView: UIView {
     
     var transactionHistoryOrigin: CGPoint = CGPoint(x: 0, y: 0)
     var transactionHistoryOriginLast: CGPoint = CGPoint(x: 0, y: 0)
-    
+    let lang = Localize()
+
     var transactionDetailView = TransactionDetailView()
     
     private let refreshControl = UIRefreshControl()
@@ -222,15 +223,13 @@ extension WalletView: UITableViewDelegate, UITableViewDataSource
         cell.layoutMargins = UIEdgeInsets.zero
         
         if trxs.count == 0 {
-            
             return cell
         }
-      
             do {
                
                 let coin = try BC.returnAsset(assetId: trxs[indexPath[1]].assetId)
                 
-                cell.operationAmount.text = MainScreen.int2so(trxs[indexPath[1]].amount, digits: coin.decimal)
+                cell.operationAmount.text = trxs[indexPath[1]].amount.int2FormattedString(digits:  coin.decimal)
                 cell.operationTitle.text = coin.tokenName
                 cell.operationDate.text = trxs[indexPath[1]].timestamp!
                 
@@ -325,9 +324,9 @@ extension WalletView: TransactionDetailCloseDelegate
     
     func alertTransfer(order: TransferModel) {
         if let coin = try? BC.returnAsset(assetId: order.assetID) {
-            var m = "Gelen Transfer"
+            var m = lang.getLocalizedString(Localize.keys.received_transfer.rawValue)
             if wallet == order.wallet {
-                m = "Giden Transfer"
+                m = lang.getLocalizedString(Localize.keys.sent_transfer.rawValue)
             }
             
             var feeAsset = ""
@@ -338,21 +337,21 @@ extension WalletView: TransactionDetailCloseDelegate
                 feeAsset = "DigiliraPay"
             case "WAVES":
                 feeAsset = "Waves"
-                fee = MainScreen.int2so(order.fee, digits: 8)
+                fee = order.fee.int2FormattedString(digits: 8)
             default:
                 break
             }
             
-            var x = Double(MainScreen.int2so(order.amount, digits: coin.decimal))!
+            var x = order.amount.int2double(digits: coin.decimal)
             var z = 0.0.description + " " + coin.tokenSymbol
-            let y = MainScreen.int2so(order.amount, digits: coin.decimal)
+            let y = order.amount.int2FormattedString(digits: coin.decimal)
             
             if order.destination == Constants.transactionDestination.foreign {
                 x = x - coin.gatewayFee
                 z = String(format: "%." + coin.decimal.description + "f", coin.gatewayFee)  + " " + coin.tokenSymbol
             }
             
-            let t = Constants.txConfMsg.init(title: "Transfer Detayları",
+            let t = Constants.txConfMsg.init(title: lang.getLocalizedString(Localize.keys.transfer_details.rawValue),
                                             message: m,
                                             l1: order.recipientName,
                                             sender: order.myName,
@@ -361,11 +360,31 @@ extension WalletView: TransactionDetailCloseDelegate
                                             l4: y + " " + coin.tokenSymbol,
                                             t2: z,
                                             c2: coin.tokenName,
-                                            yes: "Tamam",
+                                            yes: lang.getLocalizedString(Localize.keys.ok.rawValue),
                                             remark: "",
                                             no: "",
                                             icon: "success")
             throwEngine.transferConfirmation(txConMsg: t, destination: .trxConfirm)
         }
+    }
+}
+
+
+extension Int64 {
+
+    func int2double(digits: Int) -> Double {
+        return Double(self) / Double(truncating: pow(10,digits) as NSNumber)
+    }
+    
+    func int2FormattedString(digits: Int) -> String {
+        let numberFormatter = NumberFormatter()
+        numberFormatter.groupingSeparator = ","
+        numberFormatter.groupingSize = 3
+        numberFormatter.usesGroupingSeparator = true
+        numberFormatter.decimalSeparator = "."
+        numberFormatter.numberStyle = .decimal
+        numberFormatter.maximumFractionDigits = digits
+        
+        return numberFormatter.string(from: self.int2double(digits: digits) as NSNumber) ?? "0.0"
     }
 }

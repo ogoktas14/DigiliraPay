@@ -18,7 +18,4 @@ class LogoAnimation: UIView {
     func setImage() {
         view.rotate()
     }
-    
-
-    
 }

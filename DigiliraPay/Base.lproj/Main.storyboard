@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -244,6 +244,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="VZF-3v-MVh"/>
                     <connections>
+                        <outlet property="backButtonLabel" destination="aso-gc-YQB" id="71k-XH-Nb1"/>
                         <outlet property="backButtonView" destination="0IZ-bb-Csd" id="606-7Q-Fv5"/>
                         <outlet property="nextButtonContentView" destination="K81-Kh-xus" id="lxy-dM-FF6"/>
                         <outlet property="nextButtonLabel" destination="YUb-xM-Prq" id="bFE-Kj-560"/>
@@ -625,11 +626,15 @@ scan, text, view, shape, pool, chapter </string>
                     </view>
                     <navigationItem key="navigationItem" id="WMC-4f-ExF"/>
                     <connections>
+                        <outlet property="backButtonLabel" destination="Kf3-9h-RLb" id="WKD-x9-5MH"/>
                         <outlet property="backButtonView" destination="qjK-SY-Afi" id="eHv-L4-71O"/>
-                        <outlet property="desc" destination="1li-IX-pan" id="iUj-AO-r9K"/>
+                        <outlet property="bottomInfoLabel" destination="1li-IX-pan" id="zDj-z5-d44"/>
+                        <outlet property="headerInfoLabel" destination="KHh-lj-yr7" id="V41-Ms-kr9"/>
                         <outlet property="keyWordsTextView" destination="ChR-Zf-9fJ" id="fPl-Nd-mJ9"/>
                         <outlet property="nextButtonLabel" destination="YqD-d8-lER" id="uve-Lo-5PJ"/>
                         <outlet property="nextButtonView" destination="W0Y-Lv-EUL" id="pvU-ei-ZOB"/>
+                        <outlet property="subHeaderInfoLabel" destination="FgH-Eh-C0B" id="J76-eQ-WhP"/>
+                        <outlet property="topInfoLabel" destination="BGV-HL-vda" id="ys2-D1-Lrs"/>
                         <segue destination="kMp-XD-wqz" kind="presentation" identifier="toMainVCFromImport" modalPresentationStyle="fullScreen" id="d5S-nY-SlF"/>
                     </connections>
                 </viewController>
@@ -639,7 +644,7 @@ scan, text, view, shape, pool, chapter </string>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="oyz-da-CHm"/>
+        <segue reference="7SV-Fw-NHp"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="appLogoBlack" width="157" height="66"/>

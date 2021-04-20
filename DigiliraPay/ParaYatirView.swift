@@ -30,7 +30,8 @@ class ParaYatirView:UIView {
 
     var ccView = CreditCardView()
     let generator = UINotificationFeedbackGenerator()
-    
+    let lang = Localize()
+
     weak var delegate: LoadCoinDelegate?
     weak var errors: ErrorsDelegate?
     
@@ -63,31 +64,21 @@ class ParaYatirView:UIView {
     func constants (coin: String, symbol: String, min: String, mode: Int){
         v1.isHidden = true
         
-        var array:[String] = []
         switch mode {
         case 0:
-             array = [
-                "Herhangi bir yatırma limiti bulunmamaktadır.\n\nBu adrese dilediğiniz kadar " + coin + " gönderebilirsiniz."
-            ]
+            l1.text = String(format: lang.getLocalizedString(Localize.depositVc.deposit_info_3.rawValue), coin)
+            break
         case 1:
-             array = [
-                "\(coin) sadakat jetonudur.\n\nHerhangi bir yatırma limiti bulunmamaktadır."
-            ]
+            l1.text = String(format: lang.getLocalizedString(Localize.depositVc.deposit_info_2.rawValue), coin)
+            break
         default:
-             array = [
-                "Bu adrese sadece " + coin + " gönderin. Bu adrese " + coin + " dışında yapılan gönderimler kayıplara neden olur.\n\nMinimum yatırım tutarı " + min + " " + symbol + "'dir. Bu tutarın altındaki yatırma işlemleri iade edilmeyecektir.\n\nGönderdiğiniz tutar blokzincirde en az 3 onay aldıktan sonra DigiliraPAY hesabınıza aktarılacaktır.\n\nÖdeme almak için QR kodunuzu paylaşabilirsiniz."
-            ]
+            l1.text = String(format: lang.getLocalizedString(Localize.depositVc.deposit_info_1.rawValue), coin, coin, min, symbol)
+            break
         }
-        for (i, c) in array.enumerated() {
-            switch i {
-            case 0:
-                l1.fadeTransition(0.4)
-                l1.text = c
-                v1.isHidden = false
-            default:
-                break
-            }
-        }
+        
+        l1.fadeTransition(0.4)
+        v1.isHidden = false
+ 
     }
     
     override func awakeFromNib() {
@@ -135,7 +126,8 @@ class ParaYatirView:UIView {
         if let user = kullanici {
             if user.status == 0 {
                 DispatchQueue.main.async { [self] in
-                    self.errors?.errorHandler(message: "Hesabınıza para yükleyebilmek için profil onayı sürecini tamamlamanız gerekmektedir.", title: "Profil Onayı", error: true)
+                    self.errors?.errorHandler(message: lang.getLocalizedString(Localize.mainScreen.account_verify_proceed_to_kyc.rawValue),
+                                              title: lang.getLocalizedString(Localize.mainScreen.account_verify_in_progress.rawValue), error: true)
                 }
             }
         }
@@ -211,7 +203,7 @@ class ParaYatirView:UIView {
         }
         switch PHPhotoLibrary.authorizationStatus() {
         case .denied:
-            errors?.errorHandler(message: "Ayarlar menüsünden Galeri'ye erişim izni vermeniz gerekmektedir.", title: "Dikkat", error: true)
+            errors?.errorHandler(message: lang.getLocalizedString(Localize.depositVc.gallery_permission.rawValue), title: lang.getLocalizedString(Localize.keys.attention.rawValue), error: true)
             break
         default:
             break
@@ -219,7 +211,8 @@ class ParaYatirView:UIView {
     }
     
     @objc func saveError(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
-        errors?.errorHandler(message: "QR Kodunuz galeriye kaydedildi", title: "Başarılı", error: false)
+        errors?.errorHandler(message: lang.getLocalizedString(Localize.depositVc.qr_saved.rawValue),
+                             title: lang.getLocalizedString(Localize.depositVc.qr_saved_title.rawValue), error: false)
         imgSave.alpha = 1
         
         self.saveView.alpha = 1
@@ -244,8 +237,6 @@ class ParaYatirView:UIView {
                         let activityViewController = UIActivityViewController(activityItems:filesToShare, applicationActivities: nil)
                         if #available(iOS 13.0, *) {
                             activityViewController.isModalInPresentation = true
-                        } else {
-                            // Fallback on earlier versions
                         }
                         
                         activityViewController.excludedActivityTypes = [ UIActivity.ActivityType.saveToCameraRoll ]
@@ -520,11 +511,11 @@ extension UIView {
 extension UITextField {
     func addDoneCancelToolbar(onDone: (target: Any, action: Selector)? = nil, onCancel: (target: Any, action: Selector)? = nil) {
         let onDone = onDone ?? (target: self, action: #selector(doneButtonTapped))
-        
+       
         let toolbar: UIToolbar = UIToolbar()
         toolbar.barStyle = .default
         toolbar.items = [
-            UIBarButtonItem(title: "Tamam", style: .done, target: onDone.target, action: onDone.action)
+            UIBarButtonItem(title: NSLocalizedString(Localize.keys.total.rawValue, comment: ""), style: .done, target: onDone.target, action: onDone.action)
         ]
         toolbar.sizeToFit()
         

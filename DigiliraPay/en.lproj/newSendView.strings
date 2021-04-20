@@ -3,16 +3,16 @@
 "2uM-E9-htR.text" = "%50";
 
 /* Class = "UILabel"; text = "Gönder"; ObjectID = "8YY-TE-LN4"; */
-"8YY-TE-LN4.text" = "Send";
+"8YY-TE-LN4.text" = "Gönder";
 
 /* Class = "UILabel"; text = "%25"; ObjectID = "FdU-Kb-b2e"; */
 "FdU-Kb-b2e.text" = "%25";
 
 /* Class = "UILabel"; text = "MİKTAR"; ObjectID = "W0A-QM-dyk"; */
-"W0A-QM-dyk.text" = "Amount";
+"W0A-QM-dyk.text" = "MİKTAR";
 
 /* Class = "UILabel"; text = "Gönder"; ObjectID = "dN0-J5-7UY"; */
-"dN0-J5-7UY.text" = "Send";
+"dN0-J5-7UY.text" = "Gönder";
 
 /* Class = "UISegmentedControl"; oe7-7U-zmr.segmentTitles[0] = "₺"; ObjectID = "oe7-7U-zmr"; */
 "oe7-7U-zmr.segmentTitles[0]" = "₺";
@@ -27,4 +27,4 @@
 "twO-m1-WLQ.text" = "PASTE";
 
 /* Class = "UILabel"; text = "ALICI"; ObjectID = "uXb-fY-wSf"; */
-"uXb-fY-wSf.text" = "RECIPIENT";
+"uXb-fY-wSf.text" = "ALICI";

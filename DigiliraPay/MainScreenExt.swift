@@ -560,7 +560,7 @@ extension MainScreen: LegalDelegate // kullanım sözleşmesi gibi view'ların g
         
         legalXib.titleLabel.text = mode.title
         legalXib.contentText.text = mode.text
-        legalXib.setView()
+        legalXib.setView(mode: mode.mode)
         for subView in profileSettingsView.subviews
         { subView.removeFromSuperview() }
         
@@ -665,7 +665,7 @@ extension MainScreen: SendWithQrDelegate
     }
     
     func alertError () {
-        let alert = UIAlertController(title: Constants.messages.profileUpdateHeader, message: Constants.messages.profileUpdateMessage, preferredStyle: .alert)
+        let alert = UIAlertController(title: lang.getLocalizedString(Localize.keys.profile_update_header.rawValue), message: lang.getLocalizedString(Localize.keys.profile_update_message.rawValue), preferredStyle: .alert)
         
         alert.addAction(UIAlertAction(title: "Güncelle", style: .default, handler: { action in
             self.verifyProfile()

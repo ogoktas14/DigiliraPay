@@ -15,7 +15,6 @@ enum DeviceLockState {
 }
  
 struct Constants {
-    
     static let dummyName = "Satoshi Nakamoto"
     
     struct requestMethod {
@@ -23,6 +22,7 @@ struct Constants {
         static let post = "POST"
         static let get = "GET"
     }
+    
     struct api {
         static let sslpin = "https://pay.digilirapay.com/"
         static let url = "https://server1.digilirapay.com/v4"
@@ -43,7 +43,6 @@ struct Constants {
     }
     
     struct wavesApiEndpoints {
-        
         static let getToken = "/v1/oauth2/token"
         static let getDeposit = "/v1/deposit/addresses/"
         static let getCurrencies = "/v1/deposit/currencies"
@@ -118,25 +117,12 @@ struct Constants {
         static let commit = "/b2b/v1/app/commit_payment/"
         static let cancel = "/b2b/v1/app/cancel_payment/"
     }
+    
     struct binanceURL {
         static let baseUrl = "https://www.binance.com"
         static let ticker = "/api/v3/ticker/price"
     }
-    struct messages {
-        static let profileUpdateHeader = "Profilinizi Güncelleyin"
-        static let profileUpdateMessage = "Müşteri tanıma politikası kapsamında önce profil bilgilerinizi tamamlamanız gerekmektedir."
-        static let qrErrorHeader = "QR Kod Hatası"
-        static let qrErrorMessage = "Ödeme bilgileri bulunamadı"
-        static let newTermsOfUseMessage = "Kullanım sözleşmemiz güncellendi."
-        static let newTermsOfUseTitle = "Kullanım Sözleşmesi"
-        static let newLegalViewMessage = "Aydınlatma metni güncellendi."
-        static let newLegalViewTitle = "Aydınlatma Metni"
-    }
-    
-    struct prompt {
-        static let ok = "Tamam" 
-    }
-    
+
     struct coin {
          var token: String
          var symbol: String
@@ -197,7 +183,6 @@ struct Constants {
                             network: "waves",
                             tokenSymbol: "Waves",
                             gatewayFee: 0)
-//
  
     struct transactionDestination {
         static let domestic = "domestic"
@@ -240,7 +225,6 @@ struct Constants {
     }
     
     struct legalView {
-        static let title = "Aydınlatma Metni"
         static let text = """
         Üye olmanız halinde DIGILIRAPAY TEKNOLOJİ ANONİM ŞİRKETİ  ('DigiliraPay'), ad soyad, elektronik posta, cep telefonu, cinsiyet (isteğe bağlı) ve doğum tarihine ait kişisel verilerinizi ve üyeliğiniz sırasında gerçekleştireceğiniz işlemler neticesinde paylaşacağınız Kişisel Verilerin İşlenmesi ve Korunması Politikası'nda ('Politika') belirtilen diğer verilerinizi (2.A. Maddesi); başta üyelik işlemlerinin gerçekleştirilmesi, sorun ve şikâyetlerinizin çözümlenmesi, ticari elektronik ileti onayınızı vermişseniz hizmetlerimize ilişkin haberlere, bilgilere ve güncellemelere, tekliflerimize ve özel etkinliklerle ilgili ve ilginizi çekebilecek diğer pazarlama iletişimlerini gönderme amaçları olmak üzere Politika'da yer alan diğer amaçlar (2.B. Maddesi) için işleyecektir. Kişisel verileriniz; iş geliştirme hizmetlerinin sağlanması, istatistiksel ve teknik hizmetlerin temini ve müşteri ilişkilerinin yürütülmesi, arşivleme ve depolama amacıyla yurt dışında bulunan bilişim teknolojileri desteği alınan sunucular, hosting şirketleri, bulut bilişim gibi elektronik ortamlara aktarılması için ve Politikada yer alan Kişisel Verilerin Yurt dışına Aktarılması (5.B. Maddesi) başlığı kapsamında diğer veri ve amaçlar uyarınca yurt dışındaki iş ortaklarımızla paylaşılacaktır. KVK Kanunu'nun 11.maddesi ve ilgili mevzuat uyarınca; Şirket’e başvurarak kendinizle ilgili; kişisel veri işlenip işlenmediğini öğrenme ve Politika’da yer alan Veri Sahibinin Haklarının Gözetilmesi (8. Madde) kapsamında diğer haklarınızı ve DigiliraPay’e başvuru yollarınızı öğrenebilirsiniz. Detaylı bilgiye Kişisel Verilerin İşlenmesi ve Korunması Politikası'ndan ulaşabilirsiniz.
         """
@@ -248,7 +232,7 @@ struct Constants {
     }
     
     struct termsOfUse {
-        static let title = "Kullanım Sözleşmesi"
+
         static let text =
 """
 1. BAŞLANGIÇ
@@ -428,6 +412,7 @@ Onsekiz (17) sayfa ve on iki (12) ana maddeden ibaret işbu Sözleşme, Kullanı
     struct terms: Encodable {
         var title: String
         var text: String
+        var mode: Int
     }
     
     // MARK: - NodeError
@@ -452,6 +437,7 @@ Onsekiz (17) sayfa ve on iki (12) ana maddeden ibaret işbu Sözleşme, Kullanı
         var script: String?
         var chainId: Int64?
     }
+    
     struct transfer: Encodable {
         var type: Int?
         var id: String?
@@ -511,7 +497,6 @@ Onsekiz (17) sayfa ve on iki (12) ana maddeden ibaret işbu Sözleşme, Kullanı
         var signed: String?
         var publicKey: String?
         var timestamp: Int64?
-        
     }
 
     struct login: Codable {
@@ -577,17 +562,7 @@ Onsekiz (17) sayfa ve on iki (12) ana maddeden ibaret işbu Sözleşme, Kullanı
         let network: String
         let wallet: String
     }
- 
-    struct tr {
-        static let noEmail = "E-posta"
-        static let noPhone = "Telefon"
-        static let noSurname = "Soyad"
-        static let noName = "Ad"
-        static let noTC = "TC kimlik numarası"
-        
 
-    }
-    
     enum NAError: Error {
         case emptyAuth
         case emptyPassword
@@ -622,8 +597,6 @@ Onsekiz (17) sayfa ve on iki (12) ana maddeden ibaret işbu Sözleşme, Kullanı
         case noTC
         case noAmount
     }
-
-    
    
     // MARK: - MarketInfoElement
     struct MarketInfoElement: Codable {
@@ -692,10 +665,4 @@ Onsekiz (17) sayfa ve on iki (12) ana maddeden ibaret işbu Sözleşme, Kullanı
             try container.encodeNil()
         }
     }
-
-    
-    
 }
-
-
-

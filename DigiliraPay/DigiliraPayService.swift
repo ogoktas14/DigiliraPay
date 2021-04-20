@@ -637,7 +637,7 @@ class OpenUrlManager {
                 picker.sourceType = .camera
                 self.viewController!.present(picker, animated: true, completion: nil)
             } else {
-                let alert = UIAlertController(title: lang.const(x: "attention") , message: lang.const(x: "no_camera"), preferredStyle: UIAlertController.Style.alert)
+                let alert = UIAlertController(title: lang.getLocalizedString(Localize.keys.attention.rawValue) , message: lang.getLocalizedString(Localize.keys.no_camera.rawValue), preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "Tamam", style: UIAlertAction.Style.default, handler: nil))
                 alert.show(self.viewController!, sender: nil)
             }

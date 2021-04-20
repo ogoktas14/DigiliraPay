@@ -1,0 +1,317 @@
+/* 
+  Localizable.strings
+  DigiliraPay
+
+  Created by Hayrettin İletmiş on 19.04.2021.
+  Copyright © 2021 DigiliraPay. All rights reserved.
+*/
+
+/* No comment provided by engineer. */
+"fee_remark_interwallets" = "DigiliraPay cüzdanları arasında yaptığınız transferlerde işlem komisyonu DigiliraPay tarafından karşılanmaktadır.";
+
+/* No comment provided by engineer. */
+"fee_remark_unregistered" = "Waves blokzinciri üzerinde yaptığınız transferlerde madencilere 0.005 Waves işlem ücreti ödenmektedir. DigiliraPay cüzdanları arasında yaptığınız transferlerde bu ücret DigiliraPay tarafından karşılanmaktadır.";
+
+"fee_remark_foreign" =  "Waves blokzinciri dışına yaptığınız transferlerde işlem komisyonu DigiliraPay tarafından karşılanmaktadır.";
+
+"not_digilirapay_wallet" = "Bu cüzdan adresi DigiliraPay'de kayıtlı bir adres değildir. Transferinizden blokzincir komisyon ücreti düşecektir.";
+
+"out_of_balance_header" = "Bakiye Yetersiz";
+
+/* Transferin gerçekleşebilmesi için biometrik onayınız gerekmektedir! */
+"touch_id_reason" = "Transferin gerçekleşebilmesi için biometrik onayınız gerekmektedir!";
+
+"attention" = "Dikkat";
+
+/* Bir Hata Oluştu. */
+"an_error_occured" = "Bir Hata Oluştu";
+
+/* Bakiyeniz bu transferi gerçekleştirebilmek için yeterli değil. */
+"out_of_balance_message" = "Bakiyeniz bu transferi gerçekleştirebilmek için yeterli değil.";
+
+"token_not_supported." = "Token desteklenmemektedir.";
+
+"x_token_balance_not_found" = "%@ bakiyeniz bulunmamaktadır.";
+
+"commision_info" = "%@ blokzincirine transfer yapmak üzeresiniz. Gönderebileceğiniz minimum tutar %@ %@'dir. Waves ağ geçidi ise %@ transferlerinden %@ %@ işlem komisyonu almaktadır. Bu bedel, göndereceğiniz tutardan düşecektir. İşlem komisyonu dahil gönderebileceğiniz minimum tutar %@ %@'dir.
+
+%@ transferleri için işlem ücreti ödemek istemiyorsanız başka bir DigiliraPay adresine transfer yapabilirsiniz. DigiliraPay kullanıcılarının kendi aralarında yapmış oldukları transferlerin işlem ücretleri DigiliraPay tarafından karşılanmaktadır.";  
+
+"cannot_send_x_token_to_x_network" = "%@ blokzincirine %@ gönderemezsiniz.";
+
+"cannot_find_a_valid_address" = "Geçerli bir adres bulunamadı. Seçtiğiniz kripto varlık ile göndermek istediğiniz adresin uyuştuğunu kontrol ediniz. \n\nYapıştırmaya çalıştığınız adres:\n\n%@";
+
+"try_again" = "Tekrar Deneyin";
+
+"use_buttons_to_add_an_address" = "Alıcı eklemek için Yapıştır ve QR kod butonlarını kullanabilirsiniz.";
+
+"ammount_to_be_sent" =  "Gönderilecek Tutar:";
+
+"deposit_to_send_tokens_message" = "Para transferi yapabilmek için hesabınıza bakiye yüklemeniz gerekmektedir.";
+
+"deposit_to_send_tokens_header" = "Bakiye Yükleyin";
+
+"min_transfer_amount" = "Minimum transfer miktarı: %@ %@";
+
+"transfer_confirmation" = "Transfer Onayı";
+
+"check_your_transfer" = "Bilgileri Kontrol Edin";
+
+"confirm" = "Onayla";
+
+"reject" = "Reddet";
+
+"wrong_entry_header" = "Hatalı Giriş";
+
+"profile_update_header" = "Profilinizi Güncelleyin";
+
+"profile_update_message" = "Müşteri tanıma politikası kapsamında önce profil bilgilerinizi tamamlamanız gerekmektedir.";
+
+"qr_error_header" = "QR Kod Hatası";
+
+"qr_error_message" = "Ödeme bilgileri bulunamadı";
+
+"new_terms_of_use_message" = "Kullanım sözleşmemiz güncellendi.";
+
+"new_terms_of_use_title" = "Kullanım Sözleşmesi";
+
+"new_legal_view_message" = "Aydınlatma metni güncellendi.";
+
+"new_legal_view_title" = "Aydınlatma Metni";
+
+"check_the_information_entered" = "Girdiğiniz bilgileri kontrol edip tekrar deneyin.";
+
+"cannot_perform_this_action_try_again" =  "Şu anda işleminizi gerçekleştiremiyoruz. Lütfen daha sonra tekrar deneyin.";
+
+/* Blokzincir */
+"page_1_line_1" = "Blokzincir";
+
+/* Ödeme Geçidi */
+"page_1_line_2" = "Ödeme Geçidi";
+
+/* DigiliraPay’e hoşgeldin.\nKripto paranı güvenle sakla, transfer et, alışverişlerinde kullan. */
+"page_1_line_3" = "DigiliraPay’e hoşgeldin.\nKripto paranı güvenle sakla, transfer et, alışverişlerinde kullan.";
+
+/* Kripto Paralarınızı */
+"page_2_line_1" = "Kripto Paralarınızı";
+
+/* Güvenle Saklayın */
+"page_2_line_2" = "Güvenle Saklayın";
+
+/* Cüzdanınız sadece sizin kontrolünüzde olsun! */
+"page_2_line_3" = "Cüzdanınız sadece sizin kontrolünüzde olsun!";
+
+/* Merkeziyetsiz */
+"page_3_line_1" = "Merkeziyetsiz";
+
+/* Finans ile Tanışın! */
+"page_3_line_2" = "Finans ile Tanışın!";
+
+/* Tüm işlemlerinizi tek hesaptan yönetin, \nMerkeziyetsiz finansın kapısını DigiliraPay ile aralayın. */
+"page_3_line_3" = "Tüm işlemlerinizi tek hesaptan yönetin, \nMerkeziyetsiz finansın kapısını DigiliraPay ile aralayın.";
+
+/* Hadi Başlayalım */
+"lets_start" = "Hadi Başlayalım";
+
+/* Hesabı İçeri Aktar */
+"import_account" = "Hesabı İçeri Aktar";
+
+/* Başlangıç ekranı */
+"start" = "Başla";
+
+/* Başlangıç ekranı */
+"continue_to" = "Devam Et";
+
+/* Başlangıç ekranı */
+"create_seed_keys" = "Anahtar Oluştur";
+
+/* Başlangıç ekranı */
+"backed_up" = "Yedekledim";
+
+/* Başlangıç ekranı */
+"verify_and_start" = "Doğrula ve Başla";
+
+/* Blokzincir dünyasına */
+"lets_page_1_line_1" = "Blokzincir dünyasına";
+
+/* hoşgeldiniz! */
+"lets_page_1_line_2" = "hoşgeldiniz!";
+
+/* Dijital cüzdanını oluşturmaya hemen başlayalım. */
+"lets_page_1_line_3" = "Dijital cüzdanını oluşturmaya hemen başlayalım.";
+
+/* Blokzincir cüzdanınız */
+"lets_page_2_line_1" = "Blokzincir cüzdanınız";
+
+/* şeffaf bir kasa gibidir */
+"lets_page_2_line_2" = "şeffaf bir kasa gibidir";
+
+/* Bu kasayı açabilecek anahtar ise sadece sizin kontrolünüzdedir. Bu kasayı sizden başka kimse açamaz. Anahtarı kaybederseniz buna siz de dahilsiniz. */
+"lets_page_2_line_3" = "Bu kasayı açabilecek anahtar ise sadece sizin kontrolünüzdedir. Bu kasayı sizden başka kimse açamaz. Anahtarı kaybederseniz buna siz de dahilsiniz.";
+
+/* Anahtar kelimeler ile */
+"lets_page_3_line_1" = "Anahtar kelimeler ile";
+
+/* her zaman güvende ol! */
+"lets_page_3_line_2" = "her zaman güvende ol!";
+
+/* Anahtar kelimelerini senden başka kimse bilemez. Buna biz de dahiliz. Bir sonraki ekranda kullandığınız cihaz üzerinde oluşturulan 15 'anahtar kelime'yi sırasıyla güvenli bir yere kaydetmeyi unutmayın. */
+"lets_page_3_line_3" = "Anahtar kelimelerini senden başka kimse bilemez. Buna biz de dahiliz. Bir sonraki ekranda kullandığınız cihaz üzerinde oluşturulan 15 'anahtar kelime'yi sırasıyla güvenli bir yere kaydetmeyi unutmayın.";
+
+"last_page_header" = "Anahtar kelimelerinizi";
+
+"last_page_message" = "asla kaybetmeyin!";
+
+"verify_and_start_message" = "doğrulayın.";
+
+"skip_this" = "Bu Aşamayı Atla";
+
+"last_page_desc" = "Eğer uygulamanız silinirse veya cüzdanınızı başka bir cihaza aktarmanız gerekirse bu kelimelere ihtiyaç duyacaksınız. Bu kelimeleri sırasıyla not alın!";
+
+"do_not_take_screenshots" = "Ekran görüntüsü alarak anahtar kelimeleri yedeklemeniz durumunda, anahtar kelimeleriniz sizden başka birisinin eline geçebilir ve kripto paralarınızı kaybedebilirsiniz. Lütfen daha güvenli bir yedekleme metodu gerçekleştiriniz.";
+ 
+"enter_the_pin" = "Pini Girin";
+
+"enter_a_pin" = "Bir Pin Belirleyin";
+
+"verify_pin" = "Pini Doğrulayın";
+
+"use_biometrics" = "Parmak izini okutarak giriş yapabilirsiniz.";
+
+"remaining_wrong_entry" = "Kalan deneme hakkınız: %@";
+
+"wrong_entry" = "Hatalı Giriş Yaptınız";
+
+"verify_profile" = "Profil Onayı";
+"verified_profile" = "Profil Onaylı";
+"seed" = "Anahtar Kelimeler";
+"usage" = "Kullanım Sözleşmesi";
+"legal_view" = "Aydınlatma Metni";
+"biometrics_touch_id" = "Touch ID";
+"biometrics_face_id" = "Face ID";
+"biometrics_pin" = "Pin";
+"pin_settings" = "Pin Ayarı";
+"bitexen_api" = "Bitexen API";
+"commissions" = "Ücretler ve Komisyonlar";
+"testnet" = "TestNet";
+"mainnet" = "MainNet";
+"transfer_details" = "Transfer Detayları";
+"wallet_address_copied" = "Cüzdan Adresiniz Kopyalandı";
+"withdraw" = "Gönder";
+"deposite" = "Yatır";
+"no_transaction" = "İşleminiz Bulunmamaktadır";
+"transaction_access_area" = "Yaptığınız işlemlere buradan ulaşabilirsiniz.";
+"read_and_agreed" = "Okudum, Onaylıyorum";
+
+"my_profile" = "Profilim";
+"pull_to_refresh" = "Güncellemek için çekiniz..";
+"bitexen_api_not_verified" = "Bitexen API bilgileriniz doğrulanamadı.";
+"seed_warning" = "Anahtar kelimelerinizi sizden başka kimse bilemez. Buna biz de dahiliz. Lütfen anahtar kelimelerinizi yedekleyin. Cüzdanınızın silinmesi veya telefonunuzu değiştirmeniz durumunda bu kelimeleri kullanarak hesabınıza erişebileceksiniz. Bu uyarıyı almak istemiyorsanız yedekleme işlemini doğrulamanız gerekmektedir.";
+"account_activated" = "Hesabınız Aktif Edildi";
+"account_activated_message" = "Hesabınız yeniden kullanıma açılmıştır. Yeni bir pin kodu ayarlayabilirsiniz.";
+"account_blocked" = "Hesabınız Bloke Edildi";
+"account_blocked_message" = "Pin kodunuzu sıfırlamak için www.digilirapay.com/pin adresini ziyaret ediniz.";
+"account_verified" = "Hesabınız Onaylandı";
+"account_verified_message" = "Hesabınız Onaylanmıştır.";
+"account_verify_in_progress" = "Profil Onayı";
+"account_verify_in_progree_message" = "Profil onay süreciniz devam etmektedir.";
+"account_verify_proceed_to_kyc" = "Müşterini tanı politikası gereğince hesabınıza para yükleyebilmek için profil onay sürecini tamamlamanız gerekmektedir.";
+"account_not_verified" = "Hesabınız Onaylanmadı";
+"account_not_verified_message" = "Lütfen kurallara uygun olarak yeniden görsel yükleyin.";
+"account_updated" = "Profiliniz Güncellendi";
+"account_updated_message" = "Kimlik bilgileriniz doğrulandı, ancak KYC sürecini tamamlamak için kimliğinizin ön yüzü görünecek biçimde boş bir kağıda günün tarihini ve DigiliraPay yazarak Profil Onayı sayfasına yükleyin.";
+
+"qr_code_is_invalid_message" = "Bu ödeme kodu daha önce kullanılmış. Lütfen yeni bir QR kod okutunuz.";
+"qr_code_is_invalid" = "Hatalı QR Kod";
+"edit_account_details" = "Hesap Bilgilerini Düzenle";
+"account_active" = "Hesap Aktif";
+"select_a_qr_code" = "QR Kod Seçin";
+"camera" = "Kamera";
+"gallery" = "Galeri";
+"cancel" = "İptal";
+"ok" = "Tamam";
+"transfer_between_digilira_users" = "DigiliraPay kullanıcıları arasındaki transferler";
+"free" = "Ücretsiz";
+"transfer_to_waves" = "DigiliraPay kullanıcılarının Waves blokzinciri üzerindeki transferleri";
+"sending" = "Gönderme";
+"receiving" = "Alma";
+"cannot_send" = "Gönderilmez";
+"transfer_to_gateway" = "DigiliraPay kullanıcılarının Waves blokzinciri dışındaki transferleri";
+"commissions_info" = "(min): Komisyonlar hariç gönderebileceğiniz veya alabileceğiniz en az miktarları gösterir. Bu miktarların altında yapılan transferler alıcıya ulaşmaz ve iade talep edilemez.\n\n(kom): Waves blokzinciri dışına yapılan işlemler için Waves ağ geçidine ödenen ücreti ifade etmektedir.";
+"verify_profile_to_proceed" = "API bilgilerini görüntüleyebilmek için kimliğinizi onaylamanız gerekmektedir.";
+"biometric_verification_needed" = "Transferin gerçekleşebilmesi için biometrik onayınız gerekmektedir!";
+"you_will_be_notified" = "Gönderdiğiniz bilgiler kontrol edildikten sonra tarafınıza bildirim yapılacaktır. Eğer bildirimleri açmadıysanız, telefonunuzun ayarlar bölümünden bildirimlere izin vermeniz gerekmektedir.";
+"in_progress" = "Gönderdiğiniz bilgiler kontrol edilmektedir.";
+"token_not_supported" = "Token Desteklenmemektedir.";
+"invalid_token" = "Token Hatalı";
+"exclusive_payment" = "Bu ödeme sadece %@ ile yapılabilir. Hesabınızda %@ bulunmadığı için ödeme yapamazsınız.";
+"sending_x_token" = "%@ %@ Gönderiliyor.";
+"verifying_transfer" = "Doğrulanıyor";
+"transfer_successful" = "Transfer Başarılı";
+"transfer_ok" = "Transferiniz gerçekleşti.";
+"gallery_permission" = "Galeriye erişim izniniz bulunmamaktadır";
+"data_uploaded" = "Bilgileriniz Yüklendi";
+"your_profile_will_be_updated" = "Gönderdiğiniz bilgiler kontrol edildikten sonra profiliniz güncellenecektir.";
+"uploading" = "Yükleniyor...";
+"selfie_uploading" = "Fotoğrafınız yükleniyor lütfen bekleyin.";
+"upload_error_compression" = "Dosya yüklenemedi. Lütfen tekrar deneyin. Sıkıştırma Hatası";
+"upload_error_sizing" = "Dosya yüklenemedi. Lütfen tekrar deneyin. Düzenleme Hatası";
+"upload_error_try_again" = "Dosya yüklenemedi. Lütfen tekrar deneyin.";
+"invalid_wallet" = "Geçersiz Cüzdan";
+"invalid_wallet_message" = "Cüzdan adresi geçersiz veya desteklenmemektedir.";
+"x_blockchain_not_supported" = "%@ blokzinciri henüz desteklenmemektedir.";
+  
+"top_info" = "Yedeklediğiniz anahtar kelimelerinizi küçük harfleri kullanarak giriniz. Kelimeler arasında sadece bir karakter boşluk bırakınız.";
+"header_info" = "Anahtar kelimelerini";
+"sub_header_info" = "kullanarak hesabını içeri aktar.";
+"bottom_info" = "Anahtar kelimelerinle hesabın her zaman güvende. Uygulamanı sildiysen veya yeni bir cihaza aktarman gerekiyorsa yukarıya 15 adet anahtar kelimeni yazarak hesabını içeri aktarabilirsin.";
+"back_button" = "Geri";
+"start_button" = "Başla";
+"total" = "Toplam";
+
+"abnormal_situation" = "İşleminiz normalden uzun sürüyor. İşlem sonuçlandığında bildirim yapılacaktır.";
+
+"missing_parameters" = "Girdiğiniz bilgileri kontrol ederek tekrar deneyin.";
+"try_again" = "Lütfen tekrar deneyin.";
+"empty_auth" = "Kullanıcı bilgileri okunamadı";
+"enter_amount" = "Miktar Giriniz";
+"below_minimum" = "Minimum gönderme tutarının altında bir miktar girdiniz.";
+"connection_problem" = "Bağlantı Hatası";
+"no_internet" = "İnternet bağlantınızın olduğundan emin olup tekrar deneyiniz.";
+"access_denied" = "Yetkisiz İşlem";
+"cannot_send_this_token" = "Göndermeye çalıştığınız akıllı token bu adrese gönderilememektedir.";
+"verify_profile_to_make_payment" = "Bu token ile ödeme yapabilmeniz için. Kullanıcı onayından geçmeniz gerekmektedir.";
+"cannot_pay_with_this_token" = "Bu token ile ödeme yapamazsınız.";
+"smart_account_not_allowed" = "Akıllı kontrat bu işleme izin vermemektedir.";
+"blockchain_error" = "Blokzincir Hatası";
+"blockchain_error_message" = "Blokzincir kaynaklı problemlerden dolayı işleminiz gerçekleşmemiştir.";
+"blockchain_error_message_try_again" = "Blokzincir kaynaklı problemlerden dolayı işleminiz gerçekleşmemiştir. Lütfen daha sonra yeniden deneyin.";
+"not_allowed_below_minimum" = "Minimum miktarın altında transfer gerçekleştiremezsiniz.";
+"tel_missing" = "Telefon numarası bilgisini eksik veya hatalı girdiniz.";
+"e_mail_missing" = "E-posta bilgisini eksik veya hatalı girdiniz.";
+"tc_missing" = "TC kimlik numaranızı eksik veya hatalı girdiniz.";
+"name_missing" = "Ad bilgisi hatalı.";
+"surname_missing" = "Soyad bilgisi hatalı.";
+"undefined" = "Geçersiz işlem";
+
+"upload_selfie_info" = "Bir kağıda;\n- DigiliraPay\n- Günün tarihini\n- E-posta adresinizi\n- Cep telefonu numaranızı \nyazınız.\n\nYukarıda gösterildiği gibi kimliğinizin ön yüzünü ve yazdığınız bilgileri elinizde tutarak çektiğiniz bir fotoğrafı yükleyin.\nKimlik üzerindeki bilgilerin okunabilir olmasına dikkat edin.";
+"alternatice_verification" = "Kimliğinizi doğrulamakta sorun yaşıyorsanız farklı bir doğrulama yöntemi kullanabilirsiniz.";
+"verification_error" = "Doğrulama Hatası";
+"profile_verified" = "Kimlik bilgileriniz doğrulandı, ancak KYC sürecini tamamlamak için kimliğinizin ön yüzü görünecek biçimde boş bir kağıda günün tarihini ve DigiliraPay yazarak Profil Onayı sayfasına yükleyin.";
+"checkmark_not_selected" = "Verdiğiniz bilgilerinizin doğruluğunu işaretlemediniz.";
+"verify_your_information" = "Bilgilerinizi Doğrulayın";
+"bitexen_api_saved_message" = "API bilgileriniz kaydedildi.";
+"bitexen_api_saved_title" = "İşlem Başarılı";
+"bitexen_not_avail" = "Bitexen bakiyelerinizle ödeme işlemi henüz desteklenmemektedir.";
+"qr_not_avail" = "Ödeme süresi doldu. Lütfen yeni QR kod okutunuz.";
+"qr_not_valid" = "Geçersiz QR Kod";
+"deposit_to_pay_message" = "Ödeme yapabilmek için hesabınıza bakiye yüklemeniz gerekmektedir.";
+"deposit_to_pay_title" = "Bakiye Yükleyin";
+"soon" = "Yakında";
+
+"words_do_not_match" = "Anahtar kelimeleriniz ile seçilen kelimeler uyuşmamaktadır. Lütfen tekrar deneyin.";
+"hide_words" = "Kelimeleri Gizle";
+"show_words" = "Kelimeleri Göster";
+"verify" = "Doğrula";
+"no_one_knows_your_seed" = "Anahtar kelimelerinizi sizden başka kimse bilemez. Buna biz de dahiliz. Lütfen anahtar kelimelerinizi yedekleyin.";
+"if_backed" = "Anahtar kelimelerinizi yedekledikten sonra Yedekledim butonuna basarak doğrulama sürecini başlatabilirsiniz. Kelimeler karışık olarak sıralanacak, sizden yeniden sıralamanız istenecek.";

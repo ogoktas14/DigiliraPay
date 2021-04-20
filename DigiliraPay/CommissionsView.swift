@@ -51,7 +51,6 @@ class CommissionsView: UIView, UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    
     weak var delegate: BitexenAPIDelegate?
     weak var errors: ErrorsDelegate?
     @IBOutlet weak var tableView: UITableView!

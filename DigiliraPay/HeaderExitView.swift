@@ -19,6 +19,7 @@ class HeaderExitView: UIView{
     
     weak var delegate: SeedBackupDelegate?
     let generator = UINotificationFeedbackGenerator()
+    let lang = Localize()
 
     @IBOutlet weak var s01: UILabel!
     @IBOutlet weak var s02: UILabel!
@@ -69,13 +70,13 @@ class HeaderExitView: UIView{
         if isSeedHidden {
             isSeedHidden = false
             show()
-            verifyLabel.text = "Kelimeleri Gizle"
+            verifyLabel.text = lang.getLocalizedString(Localize.messages.hide_words.rawValue)
         } else {
             
             if !isVerified {
                 show()
             }else {
-                verifyLabel.text = "Kelimeleri Göster"
+                verifyLabel.text = lang.getLocalizedString(Localize.messages.show_words.rawValue)
                 isSeedHidden = true
                 for i in 0..<15 {
                     self.labelArray[i].text = "***"
@@ -111,7 +112,7 @@ class HeaderExitView: UIView{
                     selectArray = []
                     isPressed = 0
                     start()
-                    compare.text = "Anahtar kelimeleriniz ile seçilen kelimeler uyuşmamaktadır. Lütfen tekrar deneyin."
+                    compare.text = lang.getLocalizedString(Localize.messages.words_do_not_match.rawValue)
                     return
                 }
                 
@@ -133,7 +134,7 @@ class HeaderExitView: UIView{
                 
                 verify.isUserInteractionEnabled = false
                 verify.alpha = 0.4
-                verifyLabel.text = "Doğrula"
+                verifyLabel.text = lang.getLocalizedString(Localize.messages.verify.rawValue)
                 compare.text = ""
             }
         } catch {
@@ -197,7 +198,7 @@ class HeaderExitView: UIView{
             s15.addGestureRecognizer(click15)
             
             if isVerified {
-                compare.text = "Anahtar kelimelerinizi sizden başka kimse bilemez. Buna biz de dahiliz. Lütfen anahtar kelimelerinizi yedekleyin."
+                compare.text = lang.getLocalizedString(Localize.messages.no_one_knows_your_seed.rawValue)
                 verify.addGestureRecognizer(showSeeds)
                
                 fx_showSeeds()
@@ -206,13 +207,14 @@ class HeaderExitView: UIView{
                  
                 verify.addGestureRecognizer(shuffle)
                 
-                verifyLabel.text = "Yedekledim"
-                compare.text = "Anahtar kelimelerinizi yedekledikten sonra Yedekledim butonuna basarak doğrulama sürecini başlatabilirsiniz. Kelimeler karışık olarak sıralanacak, sizden yeniden sıralamanız istenecek."
+                verifyLabel.text = lang.getLocalizedString(Localize.letsStartVc.backed_up.rawValue)
+                compare.text = lang.getLocalizedString(Localize.messages.if_backed.rawValue)
             }
     }
     
     @objc func screenshotTaken() {
-        delegate?.alertSomething(title: "Dikkat", message: "Ekran görüntüsü alarak anahtar kelimeleri yedeklemeniz durumunda, anahtar kelimeleriniz sizden başka birisinin eline geçebilir ve kripto paralarınızı kaybedebilirsiniz. Lütfen daha güvenli bir yedekleme metodu gerçekleştiriniz.")
+        delegate?.alertSomething(title: lang.getLocalizedString(Localize.keys.attention.rawValue),
+                                 message: lang.getLocalizedString(Localize.keys.do_not_take_screenshots.rawValue))
     }
     
     private var seedContainer: String = ""

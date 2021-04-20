@@ -18,6 +18,7 @@ class CreditCardView : UIView {
     @IBOutlet weak var address: UIButton!
     @IBOutlet weak var imageView: UIImageView!
     let pasteboard = UIPasteboard.general
+    let lang = Localize()
 
     func setView(tokenName: String, wallet: String, qr: UIImage, ad:String)
     {
@@ -36,7 +37,7 @@ class CreditCardView : UIView {
     {
         let t = address.title(for: .normal)
         pasteboard.string = address.title(for: .normal)
-        self.address.setTitle("Cüzdan Adresiniz Kopyalandı", for: .normal)
+        self.address.setTitle(lang.getLocalizedString(Localize.keys.wallet_address_copied.rawValue), for: .normal)
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [self] in
             self.address.setTitle(t, for: .normal)
